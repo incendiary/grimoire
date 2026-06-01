@@ -1,6 +1,6 @@
 # python-ci-template
 
-> **Status:** promoted
+> **Status:** COMPLETE
 > **Cluster:** 07-devops
 > **Source:** archive session (pattern detected 8x)
 
@@ -70,11 +70,52 @@ jobs:
 
 Adjust the version matrix and omit `codecov` if not needed.
 
+## Variant selection
+
+Three templates are available — pick the one that matches the project:
+
+| Template | When to use |
+|----------|-------------|
+| `ci.yml` (above) | Project has `pyproject.toml` with `[project.optional-dependencies]` dev group; test suite exists |
+| `ci-requirements-only.yml` | Dependencies in `requirements.txt`; test suite exists |
+| `ci-no-tests.yml` | No test suite yet — lint + secret scan only |
+
+Copy the chosen template to `.github/workflows/ci.yml` in the target project.
+
+## Jython exception
+
+Jython projects (e.g. Burp Suite extensions compiled against Jython) must **not** use
+ruff or black. Neither tool supports Jython-compatible Python syntax, and ruff will
+raise `SyntaxError` on Jython-only constructs. For Jython projects:
+
+1. Skip the lint job entirely, or replace it with `pycodestyle` or a manual review note
+2. Keep the secret-scan job — gitleaks is language-agnostic
+3. For the test job: Jython projects typically can't run under CPython; omit pytest
+4. A minimal Jython CI is just secret-scan:
+
+```yaml
+# .github/workflows/ci.yml (Jython — no lint, no pytest)
+name: CI
+on: [push, pull_request]
+jobs:
+  secret-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+```
+
 ## Gotchas
-- `burps` is Jython-only — do not add ruff/black; use a manual lint step or skip
+- `burps` (Jython Burp extension) — do not add ruff/black; use Jython-only config above
 - Coverage upload requires `CODECOV_TOKEN` set as a GitHub Actions secret
-- Some projects use `requirements.txt` rather than a `pyproject.toml` — adjust the install step accordingly
-- Pylint `too-many-locals` and unused import errors will fail CI if not pre-fixed — run locally before pushing
+- Some projects use `requirements.txt` rather than `pyproject.toml` — use `ci-requirements-only.yml`
+- Pylint `too-many-locals` and unused import errors will fail CI if not pre-fixed — run `check-ci-ready.sh` locally before pushing
 
 ## Suggested scripts
-- `check-ci-ready.sh` — runs ruff and black locally, reports any failures before push
+- `check-ci-ready.sh` — runs ruff and black locally, mirrors the lint job exactly
+- `ci-no-tests.yml` — variant for projects without a test suite
+- `ci-requirements-only.yml` — variant for `requirements.txt`-only projects
