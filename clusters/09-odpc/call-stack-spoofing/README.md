@@ -8,5 +8,5 @@ inspection. Maps to ODPC Chapters 29 and 30.
 ## Roadmap
 
 - [x] SKILL.md written: return address patching, synthetic frame construction, thread pool call chain, integration with sleep masking, gotchas
-- [ ] Add x64 unwind data reference (what .pdata entries look like for thread pool functions)
-- [ ] Add worked example: before/after stack walk output for a spoofed chain
+- [x] Add x64 unwind data reference (what .pdata entries look like for thread pool functions)
+- [x] Add worked example: before/after stack walk output for a spoofed chain
