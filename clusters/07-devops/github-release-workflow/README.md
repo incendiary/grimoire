@@ -62,4 +62,4 @@ gh release create vX.Y.Z
 - [ ] Add CHANGELOG generation step
 - [ ] Add variant for repos without a release branch (direct tag on main)
 - [ ] Test on DNSResolver v2 release
-- [ ] Ship: copy to `~/.claude/skills/github-release-workflow/`
+- [x] Ship: copy to `~/.claude/skills/github-release-workflow/`

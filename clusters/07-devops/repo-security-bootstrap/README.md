@@ -14,4 +14,4 @@ Extracted from a session where the same two files were committed to 16 repos ide
 - [x] Handle archived-repo unarchive/re-archive in the script
 - [ ] Test on one repo end-to-end (requires real session)
 - [ ] Document any new gotchas from real usage (requires real session)
-- [ ] Ship: copy to `~/.claude/skills/repo-security-bootstrap/`
+- [x] Ship: copy to `~/.claude/skills/repo-security-bootstrap/`

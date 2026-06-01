@@ -57,4 +57,4 @@ Functions to watch: decrypt_payload, parse_zone_file
 - [ ] Add `.pylintrc` template with standard settings
 - [ ] Add ruff + pylint pre-commit hook snippet
 - [ ] Test on Slice-N-Dice and DNSResolver
-- [ ] Ship: copy to `~/.claude/skills/python-ci-lint-precheck/`
+- [x] Ship: copy to `~/.claude/skills/python-ci-lint-precheck/`

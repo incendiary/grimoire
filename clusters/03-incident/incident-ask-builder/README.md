@@ -107,4 +107,4 @@ Output grouped by owner (so each block is forwardable)
 - [ ] Add worked example for common incident types
 - [ ] Add HSM/Developer Portal retention window specifics
 - [ ] Test on 2 real incident scenarios
-- [ ] Ship: copy to `~/.claude/skills/incident-ask-builder/`
+- [x] Ship: copy to `~/.claude/skills/incident-ask-builder/`

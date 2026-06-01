@@ -18,4 +18,4 @@ Consolidated from three session-extracted stubs: `precommit-bootstrap` (×7),
 - [x] Expand pre-commit hook version pinning section
 - [ ] Test end-to-end on one new repo (requires real session)
 - [ ] Document any new gotchas from real usage (requires real usage)
-- [ ] Ship: copy to `~/.claude/skills/repo-publication-prep/`
+- [x] Ship: copy to `~/.claude/skills/repo-publication-prep/`

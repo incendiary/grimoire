@@ -107,4 +107,4 @@ Output: action plan table + decision log
 - [ ] Add example governance tiers (who signs off at what risk level)
 - [ ] Add pen test finding format examples
 - [ ] Test on 3 real risk items
-- [ ] Ship: copy to `~/.claude/skills/risk-to-action/`
+- [x] Ship: copy to `~/.claude/skills/risk-to-action/`

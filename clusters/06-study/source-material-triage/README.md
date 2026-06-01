@@ -110,4 +110,4 @@ Move SKIP files to _triage-review/ (never delete directly)
 - [ ] Write `syllabus-map.md` for CAIML, ARTOC, RTO2
 - [ ] Test incremental rerun (triage-log.json skip logic)
 - [ ] Test on a real study folder
-- [ ] Ship: copy to `~/.claude/skills/source-material-triage/`
+- [x] Ship: copy to `~/.claude/skills/source-material-triage/`

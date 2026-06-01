@@ -74,4 +74,4 @@ pip show <package> | grep Version
 - [ ] Write `verify_version.sh`
 - [ ] Add `.pyc` cache-clearing step to the post-pull checklist
 - [ ] Test on DNSResolver and Slice-N-Dice sessions
-- [ ] Ship: copy to `~/.claude/skills/verify-code-version/`
+- [x] Ship: copy to `~/.claude/skills/verify-code-version/`

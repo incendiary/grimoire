@@ -49,4 +49,4 @@ When it says "An argument named X is not expected here" inside a block → X mov
 - [x] SKILL.md written and validated
 - [ ] Add resource type gotchas as they are encountered
 - [ ] Add provider version matrix for known argument type changes
-- [ ] Ship: copy to `~/.claude/skills/terraform-aws-syntax/`
+- [x] Ship: copy to `~/.claude/skills/terraform-aws-syntax/`

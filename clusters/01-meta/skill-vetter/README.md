@@ -98,4 +98,4 @@ User decides whether to install
 - [x] Add PyPI package reputation check step
 - [x] Add integration note for `session-skill-extractor` (auto-flag proposed stubs for vetting)
 - [ ] Test on 3 real third-party skills (requires real sessions)
-- [ ] Ship: copy to `~/.claude/skills/skill-vetter/`
+- [x] Ship: copy to `~/.claude/skills/skill-vetter/`

@@ -111,4 +111,4 @@ Revoking before step 4 breaks live deployments. This rule applies in all scenari
 - [ ] Write `check-manifest.sh` (OTA manifest parse and verification)
 - [ ] Add Apple Developer Portal log retention window specifics
 - [ ] Test on a real IPA integrity scenario
-- [ ] Ship: copy to `~/.claude/skills/ios-signing-risk/`
+- [x] Ship: copy to `~/.claude/skills/ios-signing-risk/`
