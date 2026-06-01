@@ -101,6 +101,73 @@ ULONG_PTR* pStack = (ULONG_PTR*)pSyntheticStack;
 *pStack++ = (ULONG_PTR)/* your wait/sleep function return site */;
 ```
 
+## x64 unwind data reference
+
+EDRs that walk stacks structurally use the `.pdata` section to validate each frame.
+Each function entry is a `RUNTIME_FUNCTION` record:
+
+```c
+typedef struct _RUNTIME_FUNCTION {
+    DWORD BeginAddress;      // RVA of function start
+    DWORD EndAddress;        // RVA of function end (exclusive)
+    DWORD UnwindInfoAddress; // RVA of UNWIND_INFO — bit 0 set = chained entry
+} RUNTIME_FUNCTION;
+```
+
+The `UNWIND_INFO` it points to:
+
+```c
+typedef struct _UNWIND_INFO {
+    BYTE  VersionAndFlags;   // bits 0-2: version (always 1); bits 3-7: flags
+    BYTE  SizeOfProlog;      // length of function prolog in bytes
+    BYTE  CountOfCodes;      // number of UNWIND_CODE slots (each 2 bytes)
+    BYTE  FrameRegAndOff;    // bits 0-3: frame register; bits 4-7: scaled offset
+    // UNWIND_CODE UnwindCode[CountOfCodes] follows
+    // exception handler / chained info follows (if flags set)
+} UNWIND_INFO;
+// Flags: UNW_FLAG_NHANDLER=0x0  UNW_FLAG_EHANDLER=0x1
+//        UNW_FLAG_UHANDLER=0x2  UNW_FLAG_CHAININFO=0x4
+```
+
+**Why this matters for synthetic frames:**
+Thread pool functions (`TpCallbackIndirection`, `TpProcessWork`, `TppWorkerThread`) have
+valid `.pdata` entries. When the stack unwinder walks your synthetic chain, it reads each
+function's `UNWIND_INFO` to know how many bytes to advance `Rsp` per frame. Your synthetic
+stack must place return addresses at the exact offsets the unwinder expects — derive these
+by inspecting the real thread pool frames in WinDbg or x64dbg.
+
+Quick lookup in WinDbg:
+```
+.fnent ntdll!TpCallbackIndirection    ; shows RUNTIME_FUNCTION + UNWIND_INFO
+.fnent ntdll!TpProcessWork
+.fnent ntdll!TppWorkerThread
+```
+
+## Before/after stack walk
+
+**Before spoofing** — EDR sees unbacked RX memory at the top of the stack:
+```
+  #  Call Site
+ 00  0x00007ff4a2001234  ← private RX allocation (FLAGGED: not backed by module on disk)
+ 01  ntdll!NtWaitForSingleObject+0x14
+ 02  KernelBase!WaitForSingleObjectEx+0x8f
+```
+
+**After spoofing** — synthetic thread pool chain; all frames backed by ntdll / kernel32:
+```
+  #  Call Site
+ 00  ntdll!NtWaitForSingleObject+0x14
+ 01  ntdll!TpCallbackIndirection+0x6e
+ 02  ntdll!TpProcessWork+0x164
+ 03  ntdll!TppWorkerThread+0x5f4
+ 04  kernel32!BaseThreadInitThunk+0x10
+ 05  ntdll!RtlUserThreadStart+0x21
+```
+
+All return addresses are inside legitimate, disk-backed modules. The chain is consistent
+with a thread pool worker that woke up to process a callback — exactly what a BITS or
+WMI worker thread looks like.
+
 ## Integration with sleep masking
 
 Return address patching and synthetic frames are most commonly used as part of a
