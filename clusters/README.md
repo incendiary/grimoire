@@ -17,12 +17,13 @@ folder with its own README describing the skills inside it.
 | 06 | [study](06-study/) | Study discipline: structured burst sessions, material triage |
 | 07 | [devops](07-devops/) | Dev workflow: CI templates, repo publication prep, history wiping, secret scanning |
 | 08 | [offsec](08-offsec/) | Offensive development: shellcode, BOFs, process injection, EDR iteration, C2 integration |
+| 09 | [odpc](09-odpc/) | White Knight Labs ODPC: chapter-mapped implementation guides for syscalls, ETW evasion, call stack spoofing, .NET offensive, and Caro-Kann injection |
 
 ---
 
 ## Adding a new cluster
 
-1. Create a folder with the next available number prefix: `08-name/`
+1. Create a folder with the next available number prefix: `09-name/`
 2. Add a `README.md` in the new folder following the format in any existing cluster README
 3. Update this index table
 4. Update the main `loadout/README.md` skills index
