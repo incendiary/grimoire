@@ -148,6 +148,91 @@ roadmap items, or starting a structured delivery session on any project.
    gh release view vX.0.0
    ```
 
+## Monorepo variant
+
+When the repo is a monorepo (multiple packages or clusters under one root):
+
+- Iterate per package/subdirectory: scope each PR to a single package where feasible.
+  A PR that touches `packages/foo/` and `packages/bar/` for unrelated reasons is hard to review.
+- Version files may be per-package (`packages/foo/VERSION`) rather than at the root.
+  Bump the relevant per-package version after each PR, not the root version.
+- README roadmap items may appear at multiple levels: root `README.md` AND
+  `packages/foo/README.md`. Tick both when an item is delivered.
+- Branch names should include the package: `feat/foo/add-retry-logic` rather than
+  just `feat/add-retry-logic`.
+- The final major version bump and release should wait until *all* package roadmaps
+  are complete. If packages have independent release cadences, do per-package releases
+  and a root release at the end.
+
+## Required reviewers
+
+If the repo has required reviewers or branch protection rules, `gh pr merge` will fail
+with a "merge blocked" error even after CI is green. Handle it:
+
+1. **Check protection rules before starting:**
+   ```bash
+   gh api repos/OWNER/REPO/branches/main/protection --jq '.required_pull_request_reviews'
+   ```
+
+2. **Mark the PR as ready for review (if it was a draft):**
+   ```bash
+   gh pr ready <PR-number>
+   ```
+
+3. **Request review explicitly:**
+   ```bash
+   gh pr review <PR-number> --request-reviewers <github-username>
+   ```
+
+4. **Wait for approval before attempting merge.** Do not attempt `gh pr merge` until
+   the review is approved — it will error and leave the PR in a confusing state.
+
+5. **After approval, merge normally:**
+   ```bash
+   gh pr merge <PR-number> --squash --delete-branch
+   ```
+
+If you are the sole maintainer and required-reviewer rules prevent self-merge:
+- Either disable the rule temporarily (Settings → Branches → edit protection rule)
+- Or use the GitHub web UI to bypass if you have admin rights
+
+## Post-delivery checklist
+
+Run this after the final PR is merged and the major version release is created:
+
+```bash
+# 1. No stale feature branches remain
+git branch -r --merged main | grep -v 'main\|HEAD'
+# → should be empty
+
+# 2. No open PRs or draft PRs
+gh pr list --state open
+# → should be empty
+
+# 3. All tags backed by releases (no loose tags)
+git tag --sort=-creatordate | head -10
+gh release list --limit 10
+# → every tag should appear in release list
+
+# 4. Final release marked Latest
+gh release view --json tagName,isLatest,publishedAt
+# → isLatest: true
+
+# 5. README roadmap fully ticked
+grep -- "- \[ \]" README.md
+# → should return nothing (all items complete or explicitly deferred)
+
+# 6. CI green on main
+gh run list --limit 3
+# → all runs: completed / success
+
+# 7. Install script works cleanly
+bash install-all.sh
+# → should print "Installed" or "Skipped" for every skill, no errors
+```
+
+If any check fails, fix it before declaring the delivery complete.
+
 ## Gotchas
 - Always read nested READMEs. A top-level README often says "see subdirectory X"
   and the real roadmap is buried one level down.
