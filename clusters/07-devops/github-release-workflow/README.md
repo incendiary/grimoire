@@ -58,7 +58,7 @@ gh release create vX.Y.Z
 ## Roadmap
 
 - [x] SKILL.md written and validated
-- [ ] Write `release.sh` parameterised script
+- [x] Write `release.sh` parameterised script
 - [ ] Add CHANGELOG generation step
 - [ ] Add variant for repos without a release branch (direct tag on main)
 - [ ] Test on DNSResolver v2 release
