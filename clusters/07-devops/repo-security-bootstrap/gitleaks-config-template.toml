@@ -1,0 +1,37 @@
+title = "gitleaks config"
+
+# Extends gitleaks' built-in ruleset. Built-in rules cover common secrets:
+# API keys, tokens, private keys, connection strings.
+[extend]
+useDefault = true
+
+# Corporate reference rule — customise the regex before committing to a project.
+# Replace <CORP_NAME>, <DOMAIN_SUFFIX>, <ENGAGEMENT_HOSTNAME> with real values
+# in a project-specific copy of this file; never commit real values to a public repo.
+#
+# Examples of real values (do NOT commit these in public repos):
+#   <CORP_NAME>       → "AcmeCorp", "WidgetCo"
+#   <DOMAIN_SUFFIX>   → "acmecorp\.com", "widgetco\.internal"
+#   <ENGAGEMENT_HOSTNAME> → "vpn\.acmecorp\.com", "192\.168\.10\."
+#
+# For a private skills/tools repo, uncomment and fill in real values.
+# For a public repo, either leave as placeholders or remove this rule entirely.
+
+[[rules]]
+id = "corporate-refs"
+description = "Internal corporate or client references"
+regex = '''(?i)(<CORP_NAME>|<DOMAIN_SUFFIX>|<ENGAGEMENT_HOSTNAME>)'''
+tags = ["corporate", "sensitive"]
+
+# Allowlist: paths where the patterns above are expected to appear legitimately.
+# Add config files, test fixtures, or documentation that intentionally reference
+# the organisation name without risk.
+[allowlist]
+paths = [
+  '''.gitleaks\.toml''',
+  '''\.git/''',
+]
+
+# Stopwords: short strings that would cause the corporate-refs rule to false-fire.
+# Add tokens here if the regex is too broad for a particular project.
+# stopwords = ["acmecorp-public-doc"]
