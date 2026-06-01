@@ -76,5 +76,5 @@ Collision check against full DLL export list
 - [x] README.md written
 - [x] Write `hash-api.py` (multi-algorithm hash printer)
 - [x] Write `collision-check.py` (validates target function set against DLL export list)
-- [ ] Add x86 variant with `fs:[0x30]` PEB offset
+- [x] Add x86 variant with `fs:[0x30]` PEB offset
 - [ ] Add worked end-to-end example pairing with `shellcode-dev-conventions`

