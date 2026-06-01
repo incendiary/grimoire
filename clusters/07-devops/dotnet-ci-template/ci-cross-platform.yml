@@ -1,0 +1,57 @@
+name: CI
+# Variant: cross-platform (library projects — no WinAPI dependencies)
+# Runs on ubuntu-latest. Use for class libraries, CLI tools, and projects
+# that do not import Windows-specific namespaces.
+# Switch to ci-windows-only.yml for WinAPI/BOF/P-Invoke projects.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        configuration: [Debug, Release]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Restore
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --configuration ${{ matrix.configuration }} --no-restore
+
+      - name: Test
+        run: dotnet test --configuration ${{ matrix.configuration }} --no-build --verbosity normal
+
+  format-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Restore
+        run: dotnet restore
+
+      - name: Format check
+        run: dotnet format --verify-no-changes
+
+  secret-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
