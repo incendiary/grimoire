@@ -115,6 +115,7 @@ bash install-all.sh to make the new skill available
 6. **[06-study](clusters/06-study/)** — Study discipline: structured burst sessions, material triage.
 7. **[07-devops](clusters/07-devops/)** — Dev workflow: CI templates, repo publication, history wiping, secret scanning.
 8. **[08-offsec](clusters/08-offsec/)** — Offensive development: shellcode, BOFs, process injection, EDR iteration, C2 integration.
+9. **[09-odpc](clusters/09-odpc/)** — White Knight Labs ODPC: chapter-mapped implementation guides for syscalls, injection, ETW evasion, call stack spoofing, and .NET offensive techniques.
 
 ---
 
@@ -164,6 +165,13 @@ bash install-all.sh to make the new skill available
 | 08-offsec | `edr-test-loop` | ✅ complete | ODPC, 2026-05-24 |
 | 08-offsec | `bof-dev-conventions` | ✅ complete | ODPC, 2026-05-24 |
 | 08-offsec | `c2-integration-checklist` | ✅ complete | ODPC, 2026-05-24 |
+| 09-odpc | `odpc-lab-setup` | ✅ complete | WKL ODPC, 2026-06-02 |
+| 09-odpc | `pe-resource-shellcode` | ✅ complete | WKL ODPC, 2026-06-02 |
+| 09-odpc | `syscall-techniques` | ✅ complete | WKL ODPC, 2026-06-02 |
+| 09-odpc | `call-stack-spoofing` | ✅ complete | WKL ODPC, 2026-06-02 |
+| 09-odpc | `dotnet-offensive` | ✅ complete | WKL ODPC, 2026-06-02 |
+| 09-odpc | `etw-evasion` | ✅ complete | WKL ODPC, 2026-06-02 |
+| 09-odpc | `caro-kann-injection` | ✅ complete | WKL ODPC, 2026-06-02 |
 
 ---
 
