@@ -71,6 +71,43 @@ strings, or reviewing existing hash-based resolution code for correctness.
    // DllBase is at offset 0x20 from InMemoryOrderLinks in the entry struct
    // BaseDllName.Buffer (unicode) is at offset 0x48 from InMemoryOrderLinks
    ```
+
+   **Module base from PEB (x86):**
+   ```c
+   // PEB at fs:[0x30] (TEB is at fs:[0x18]; PEB pointer is at TEB+0x30)
+   // Ldr  at PEB+0x0C
+   // InMemoryOrderModuleList at Ldr+0x14
+   // Each LIST_ENTRY forward link points to LDR_DATA_TABLE_ENTRY.InMemoryOrderLinks
+   //   InMemoryOrderLinks is at entry+0x08, so from the Flink pointer:
+   //   DllBase            at [flink + 0x10]   (entry+0x18)
+   //   BaseDllName.Buffer at [flink + 0x24]   (entry+0x2C)
+
+   // x86 MASM/inline ASM snippet:
+   // mov eax, fs:[0x30]          ; PEB
+   // mov eax, [eax + 0x0C]       ; PEB.Ldr
+   // mov eax, [eax + 0x14]       ; Ldr.InMemoryOrderModuleList.Flink
+   // ; eax now points to the first module's InMemoryOrderLinks
+   // ; walk the doubly-linked list by following Flink (at [eax]) until sentinel
+   ```
+
+   **x86 C equivalent (inline PEB walk):**
+   ```c
+   PVOID GetModuleBaseX86(DWORD targetNameHash) {
+       PPEB_LDR_DATA ldr = (PPEB_LDR_DATA)((*(PDWORD_PTR)(__readfsdword(0x30) + 0x0C)));
+       PLIST_ENTRY   head = &ldr->InMemoryOrderModuleList;
+       PLIST_ENTRY   cur  = head->Flink;
+       while (cur != head) {
+           // InMemoryOrderLinks is at entry+0x08; cast to get the entry
+           PLDR_DATA_TABLE_ENTRY entry = CONTAINING_RECORD(cur, LDR_DATA_TABLE_ENTRY, InMemoryOrderLinks);
+           // Hash the BaseDllName (wide string — take low byte of each char)
+           if (hashWide(entry->BaseDllName.Buffer) == targetNameHash)
+               return entry->DllBase;
+           cur = cur->Flink;
+       }
+       return NULL;
+   }
+   ```
+
    Canonical load order: [0] = image, [1] = ntdll, [2] = kernel32/kernelbase.
    For most shellcode: walk until the module name hash matches the target.
 
