@@ -79,7 +79,7 @@ fi
 CRT_HITS=$($OBJDUMP -t "$BOF" 2>/dev/null | grep -iE 'msvcrt|ucrtbase|vcruntime' || true)
 if [[ -n "$CRT_HITS" ]]; then
     echo "  [FAIL] CRT library references found:"
-    echo "$CRT_HITS" | sed 's/^/         /'
+    while IFS= read -r line; do echo "         $line"; done <<< "$CRT_HITS"
     FAIL=$((FAIL+1))
 else
     echo "  [PASS] No CRT library references"
