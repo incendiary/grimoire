@@ -78,8 +78,8 @@ inline-execute in Beacon
 
 - [x] SKILL.md written and validated
 - [x] README.md written
-- [ ] Write `bof-build.sh` (clang-cl wrapper with correct flags)
-- [ ] Write `bof-validate.sh` (static check for globals, missing cleanup)
+- [x] Write `bof-build.sh` (clang-cl wrapper with correct flags)
+- [x] Write `bof-validate.sh` (static check for globals, missing cleanup)
 - [ ] Add Havoc demon module API comparison
 - [ ] Add fork-and-run vs inline guidance with OPSEC notes
 - [ ] Add Makefile template
