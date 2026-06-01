@@ -29,15 +29,13 @@ After installing a skill, you can invoke it in two ways:
 
 **Explicit invocation** — reference the skill by name:
 ```
-/tone-check
-Audience: senior stakeholder
-Draft: [paste draft]
+/repo-compass
+Repo: incendiary/DNSResolver
 ```
 
 **Implicit invocation** — describe your task and Claude recognises the trigger:
 ```
-Check the tone of this before I send it to the CISO.
-[paste draft]
+What's still outstanding on DNSResolver? Give me the full picture.
 ```
 
 Most skills list their trigger phrases in the `SKILL.md` description. The skill's
