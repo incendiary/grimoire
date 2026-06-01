@@ -80,7 +80,7 @@ Measure size against delivery constraint
 
 - [x] SKILL.md written and validated
 - [x] README.md written
-- [ ] Write `null-byte-audit.sh`
-- [ ] Write `size-report.sh`
+- [x] Write `null-byte-audit.sh`
+- [x] Write `size-report.sh`
 - [ ] Add x86 `fs:[0x30]` PEB walk variant with concrete offsets
 - [ ] Add worked example: minimal `MessageBoxA` shellcode (x64) end-to-end
