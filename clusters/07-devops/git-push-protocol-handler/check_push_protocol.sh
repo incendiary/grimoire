@@ -49,9 +49,9 @@ case "$PROTOCOL" in
         echo "--- SSH connectivity test ---"
         # Extract host from git@host:owner/repo or ssh://host/...
         if [[ "$REMOTE_URL" == git@* ]]; then
-            SSH_HOST=$(echo "$REMOTE_URL" | sed 's/git@\([^:]*\):.*/\1/')
+            _tmp="${REMOTE_URL#git@}"; SSH_HOST="${_tmp%%:*}"
         else
-            SSH_HOST=$(echo "$REMOTE_URL" | sed 's|ssh://\([^/]*\)/.*|\1|')
+            _tmp="${REMOTE_URL#ssh://}"; SSH_HOST="${_tmp%%/*}"
         fi
         echo "  Host: $SSH_HOST"
 
