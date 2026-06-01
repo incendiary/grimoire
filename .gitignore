@@ -1,0 +1,7 @@
+proposed-skills/
+*.log
+.DS_Store
+.env_config
+.secrets
+config.local.json
+*.tar.gz

@@ -1,0 +1,41 @@
+name: validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  shellcheck:
+    name: Shellcheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install shellcheck
+        run: sudo apt-get install -y shellcheck
+      - name: Lint all shell scripts
+        run: find . -name "*.sh" -not -path "./.git/*" -exec shellcheck {} +
+
+  structure:
+    name: Skill structure
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Assert every skill directory has SKILL.md and README.md
+        run: |
+          set -e
+          failed=0
+          for dir in clusters/*/*/; do
+            if [ ! -f "${dir}SKILL.md" ]; then
+              echo "ERROR: missing SKILL.md in ${dir}"
+              failed=1
+            fi
+            if [ ! -f "${dir}README.md" ]; then
+              echo "ERROR: missing README.md in ${dir}"
+              failed=1
+            fi
+          done
+          if [ "$failed" -eq 1 ]; then
+            exit 1
+          fi
+          echo "All skill directories have SKILL.md and README.md"

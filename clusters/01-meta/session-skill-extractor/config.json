@@ -1,0 +1,8 @@
+{
+  "min_turns": 8,
+  "min_pattern_count": 2,
+  "output_dir": "~/.claude/proposed-skills",
+  "model": "claude-opus-4-5",
+  "tool_result_trim": 500,
+  "max_session_chars": 60000
+}

@@ -1,0 +1,69 @@
+# dotnet-ci-template
+
+> **Status:** promoted
+> **Cluster:** 07-devops
+> **Source:** archive session (pattern detected 5x)
+
+## Description
+Generates a standardised .NET CI workflow: build, test, format check, and secret scanning.
+Used across WindowsServiceTemplate, QueuserAPC, IncendiaryService, EarlyWorm, csharp-shellcode-runner.
+
+Invoke when: adding CI to a C# or .NET repo, or when asked to create a GitHub Actions
+workflow for a .NET project.
+
+## Context needed
+- Target framework (`net6.0`, `net8.0`, or multi-target)
+- Whether the project has a test project (look for `*.Tests.csproj` or `xunit`/`nunit` references)
+- Whether the build is Windows-only (some BOF/WinAPI projects must use `windows-latest`)
+
+## What to do
+
+Write `.github/workflows/ci.yml`:
+
+```yaml
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: windows-latest   # change to ubuntu-latest for cross-platform projects
+    strategy:
+      matrix:
+        configuration: [Debug, Release]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"   # adjust to target framework
+      - run: dotnet restore
+      - run: dotnet build --configuration ${{ matrix.configuration }} --no-restore
+      - run: dotnet test --configuration ${{ matrix.configuration }} --no-build
+        if: hashFiles('**/*.Tests.csproj') != ''
+      - run: dotnet format --verify-no-changes
+        if: matrix.configuration == 'Debug'
+
+  secret-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+```
+
+For projects without a test suite, omit the `dotnet test` step rather than failing CI.
+
+## Gotchas
+- SDK glob patterns (`**/*.csproj`) can accidentally sweep test project files into the main project — check `.csproj` includes explicitly
+- `xUnit` packages may need explicit restore if not in the solution file
+- `dotnet format --verify-no-changes` will fail if the code was not formatted locally first — run `dotnet format` before committing
+- BOF templates and WinAPI-heavy projects require `windows-latest`; cross-platform libraries can use `ubuntu-latest`
+- `net6.0` is EOL — flag any projects still targeting it for upgrade to `net8.0`
+
+## Suggested scripts
+- `format-check.sh` — runs `dotnet format --verify-no-changes` locally before push
