@@ -44,7 +44,7 @@ fi
 
 COUNT=$(echo "$NULLS" | wc -l | tr -d ' ')
 echo "FAIL — $COUNT null byte(s) found at offset(s):"
-echo "$NULLS" | sed 's/^/  /'
+while IFS= read -r line; do echo "  $line"; done <<< "$NULLS"
 echo ""
 echo "Fix: use null-free encoding (XOR, arithmetic, or avoid null-producing instructions)"
 echo "     e.g. 'mov eax, 0' → 'xor eax, eax'"
