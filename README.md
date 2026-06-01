@@ -140,7 +140,7 @@ bash install-all.sh to make the new skill available
 | 06-study | `study-burst-runner` | ✅ complete | — |
 | 06-study | `source-material-triage` | ✅ complete | — |
 | 07-devops | `repo-compass` | ✅ complete | — |
-| 07-devops | `repo-publication-prep` | 📋 promoted | PycharmProjects · DNSResolver · StudySaurus, 2026-05-24 |
+| 07-devops | `repo-publication-prep` | ✅ complete | — |
 | 07-devops | `github-history-wipe` | 📋 promoted | PycharmProjects session, 2026-05-24 |
 | 07-devops | `repo-security-bootstrap` | 📋 promoted | PycharmProjects session, 2026-05-24 |
 | 07-devops | `python-ci-template` | 📋 promoted | archive session, 2026-05-24 |
