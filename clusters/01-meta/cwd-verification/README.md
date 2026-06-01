@@ -70,4 +70,4 @@ iCloud paths always contain spaces — always quote them in shell commands.
 - [x] SKILL.md written and validated
 - [ ] Add all known path pairs as they are encountered
 - [ ] Add a `verify-cwd.sh` that runs `pwd && ls` and reports which known root is active
-- [ ] Ship: copy to `~/.claude/skills/cwd-verification/`
+- [x] Ship: copy to `~/.claude/skills/cwd-verification/`

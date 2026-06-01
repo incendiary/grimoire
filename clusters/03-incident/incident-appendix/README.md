@@ -109,4 +109,4 @@ Tables for structured data, numbered lists for sequences
 - [ ] Add iOS signing-specific IOC types (Developer ID, provisioning profile UUID)
 - [ ] Add AWS CloudTrail evidence citation format
 - [ ] Test on 2 real investigation write-ups
-- [ ] Ship: copy to `~/.claude/skills/incident-appendix/`
+- [x] Ship: copy to `~/.claude/skills/incident-appendix/`

@@ -69,4 +69,4 @@ Always included for security tooling:
 - [ ] Add README linter to check structure compliance post-generation
 - [ ] Add per-language examples (Python CLI, C# Windows tool, C++ BOF)
 - [ ] Test on 5 repos
-- [ ] Ship: copy to `~/.claude/skills/portfolio-readme-generator/`
+- [x] Ship: copy to `~/.claude/skills/portfolio-readme-generator/`

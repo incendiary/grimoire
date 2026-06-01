@@ -51,4 +51,4 @@ resource "aws_s3_bucket" "x" {
 - [x] SKILL.md written and validated
 - [ ] Write `validate-checkov-skip-placement.sh`
 - [ ] Add common skip patterns and their justifications
-- [ ] Ship: copy to `~/.claude/skills/terraform-checkov-skips/`
+- [x] Ship: copy to `~/.claude/skills/terraform-checkov-skips/`

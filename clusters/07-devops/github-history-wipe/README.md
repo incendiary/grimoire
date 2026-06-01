@@ -15,4 +15,4 @@ Extracted from a session where the same 9-step procedure was repeated verbatim 1
 - [x] Add author email override to the commit step
 - [ ] Test on one repo end-to-end (requires real session)
 - [ ] Document any new gotchas from real usage (requires real session)
-- [ ] Ship: copy to `~/.claude/skills/github-history-wipe/`
+- [x] Ship: copy to `~/.claude/skills/github-history-wipe/`

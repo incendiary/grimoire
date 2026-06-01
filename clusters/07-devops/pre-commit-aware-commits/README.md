@@ -52,4 +52,4 @@ git commit -m "..."         # now commit
 - [ ] Write `pre_commit_check.sh`
 - [ ] Add gitleaks false-positive allowlist template
 - [ ] Test on DNSResolver and Slice-N-Dice
-- [ ] Ship: copy to `~/.claude/skills/pre-commit-aware-commits/`
+- [x] Ship: copy to `~/.claude/skills/pre-commit-aware-commits/`

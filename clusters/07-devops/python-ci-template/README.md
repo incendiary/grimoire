@@ -15,4 +15,4 @@ Extracted from a session where the same workflow was written from scratch for 8 
 - [x] Document Jython exception with minimal Jython-compatible CI template
 - [ ] Test on one new repo (requires real session)
 - [ ] Document any new gotchas from real usage (requires real session)
-- [ ] Ship: copy to `~/.claude/skills/python-ci-template/`
+- [x] Ship: copy to `~/.claude/skills/python-ci-template/`

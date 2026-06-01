@@ -114,4 +114,4 @@ Output: convention-compliant code with inline documentation
 - [ ] Add worked example: full import table walk without WinAPI
 - [ ] Add worked example: section table traversal with RVA/file-offset conversion
 - [ ] Test on 2 real PE parsing sessions
-- [ ] Ship: copy to `~/.claude/skills/pe-binary-analysis/`
+- [x] Ship: copy to `~/.claude/skills/pe-binary-analysis/`

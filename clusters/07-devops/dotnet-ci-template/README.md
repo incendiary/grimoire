@@ -15,4 +15,4 @@ Extracted from a session where the same workflow was written from scratch for 5 
 - [x] Document net6.0 → net8.0 upgrade path in SKILL.md
 - [ ] Test on one new repo (requires real session)
 - [ ] Document any new gotchas from real usage (requires real session)
-- [ ] Ship: copy to `~/.claude/skills/dotnet-ci-template/`
+- [x] Ship: copy to `~/.claude/skills/dotnet-ci-template/`

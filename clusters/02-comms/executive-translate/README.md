@@ -107,4 +107,4 @@ human-rewrite style pass (British English, active voice, no jargon)
 - [ ] Build 3 worked examples (finding → CISO brief, incident → board summary, risk → C-suite ask)
 - [ ] Add worked examples for different audience tiers (CISO, C-suite, board)
 - [ ] Test on 3 real findings
-- [ ] Ship: copy to `~/.claude/skills/executive-translate/`
+- [x] Ship: copy to `~/.claude/skills/executive-translate/`

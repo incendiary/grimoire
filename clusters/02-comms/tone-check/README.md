@@ -90,4 +90,4 @@ User edits the flagged phrases directly, or asks for a rewrite
 - [x] SKILL.md written and validated
 - [ ] Test on 5 real drafts across different audience tiers
 - [ ] Add worked examples of PASS vs FLAG vs borderline for each axis
-- [ ] Ship: copy to `~/.claude/skills/tone-check/`
+- [x] Ship: copy to `~/.claude/skills/tone-check/`

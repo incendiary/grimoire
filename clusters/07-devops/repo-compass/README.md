@@ -110,4 +110,4 @@ github-release-workflow  (tag and release when done)
 - [x] README.md written
 - [ ] Add `repo-compass.sh` — runs all `gh` commands in sequence and outputs the summary
 - [ ] Test on 3 repos with varying states (tidy, lagged, genuinely outstanding)
-- [ ] Ship: copy to `~/.claude/skills/repo-compass/`
+- [x] Ship: copy to `~/.claude/skills/repo-compass/`

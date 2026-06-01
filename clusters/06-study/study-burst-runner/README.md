@@ -122,4 +122,4 @@ Use this log to track what has been covered and where gaps remain.
 - [ ] Add CAIML syllabus topic list so objectives can be matched to modules
 - [ ] Add variant for pure maths reconditioning (calculus, linear algebra)
 - [ ] Test on 5 real study bursts
-- [ ] Ship: copy to `~/.claude/skills/study-burst-runner/`
+- [x] Ship: copy to `~/.claude/skills/study-burst-runner/`

@@ -99,4 +99,4 @@ Return rewritten text only — no preamble
 - [ ] Build worked before/after examples for each style rule
 - [ ] Test on 5 real outputs from other skills
 - [ ] Add any further rules that emerge from real usage
-- [ ] Ship: copy to `~/.claude/skills/human-rewrite/`
+- [x] Ship: copy to `~/.claude/skills/human-rewrite/`

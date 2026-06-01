@@ -48,4 +48,4 @@ git push origin <branch>                                 # push via HTTPS
 - [ ] Write `check_push_protocol.sh`
 - [ ] Add SSH agent start/add sequence for when agent is simply not running
 - [ ] Test on a representative set of repos
-- [ ] Ship: copy to `~/.claude/skills/git-push-protocol-handler/`
+- [x] Ship: copy to `~/.claude/skills/git-push-protocol-handler/`
