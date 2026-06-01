@@ -1,6 +1,6 @@
 # repo-security-bootstrap
 
-> **Status:** promoted
+> **Status:** COMPLETE
 > **Cluster:** 07-devops
 > **Source:** PycharmProjects session (pattern detected 16x)
 
@@ -40,7 +40,10 @@ paths = [
 ]
 ```
 
-Replace `<internal-domain>` and `<engagement-hostname>` with actual values. Do not commit real values — parameterise or load from environment.
+The canonical template lives at `gitleaks-config-template.toml` in this skill directory.
+Copy it to `.gitleaks.toml` in the target project and fill in the `<CORP_NAME>`,
+`<DOMAIN_SUFFIX>`, and `<ENGAGEMENT_HOSTNAME>` placeholders with real values.
+Never commit real values to a public repo — use placeholders or remove the rule entirely.
 
 ### 2. Write `.github/workflows/secret-scan.yml`
 ```yaml
@@ -78,4 +81,5 @@ done
 - `useDefault = true` extends gitleaks' built-in ruleset; check it doesn't over-fire on test fixtures
 
 ## Suggested scripts
-- `bootstrap-security.sh` — accepts a repo list, clones each, adds files, commits, pushes
+- `bootstrap-security.sh` — accepts a repo list, handles unarchive/re-archive, deploys both files, commits, pushes
+- `gitleaks-config-template.toml` — parameterised template for `.gitleaks.toml`; copy and fill in `<CORP_NAME>`, `<DOMAIN_SUFFIX>`, `<ENGAGEMENT_HOSTNAME>`
