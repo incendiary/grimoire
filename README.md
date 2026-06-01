@@ -144,7 +144,7 @@ bash install-all.sh to make the new skill available
 | 07-devops | `github-history-wipe` | ✅ complete | — |
 | 07-devops | `repo-security-bootstrap` | ✅ complete | — |
 | 07-devops | `python-ci-template` | ✅ complete | — |
-| 07-devops | `dotnet-ci-template` | 📋 promoted | archive session, 2026-05-24 |
+| 07-devops | `dotnet-ci-template` | ✅ complete | — |
 | 01-meta | `test-before-asking` | ✅ complete | — |
 | 01-meta | `cwd-verification` | ✅ complete | — |
 | 01-meta | `verify-code-version` | ✅ complete | — |

@@ -1,6 +1,6 @@
 # dotnet-ci-template
 
-> **Status:** promoted
+> **Status:** COMPLETE
 > **Cluster:** 07-devops
 > **Source:** archive session (pattern detected 5x)
 
@@ -58,12 +58,56 @@ jobs:
 
 For projects without a test suite, omit the `dotnet test` step rather than failing CI.
 
+## Variant selection
+
+| Template | When to use |
+|----------|-------------|
+| `ci-windows-only.yml` | WinAPI, BOF, P-Invoke, shellcode projects — must compile on Windows |
+| `ci-cross-platform.yml` | Class libraries, CLI tools — no Windows-specific namespaces |
+
+Copy the chosen template to `.github/workflows/ci.yml` in the target project.
+
+## net6.0 → net8.0 upgrade path
+
+`net6.0` reached end-of-life in November 2024. When adding CI to a project still targeting
+`net6.0`, flag it for upgrade before the CI workflow is merged:
+
+1. **Update `TargetFramework` in `.csproj`:**
+   ```xml
+   <!-- Before -->
+   <TargetFramework>net6.0</TargetFramework>
+   <!-- After -->
+   <TargetFramework>net8.0</TargetFramework>
+   ```
+
+2. **Update `global.json` if present:**
+   ```json
+   { "sdk": { "version": "8.0.x", "rollForward": "latestMinor" } }
+   ```
+
+3. **Pin .NET version in CI template:**
+   ```yaml
+   - uses: actions/setup-dotnet@v4
+     with:
+       dotnet-version: "8.0.x"
+   ```
+
+4. **Check NuGet package compatibility:** some packages have separate net6/net8 releases.
+   Run `dotnet restore` and verify no `NU1201` incompatibility warnings.
+
+5. **Run tests locally on net8.0 before pushing the CI change.**
+
+For multi-target projects (`net6.0;net8.0`), keep both targets temporarily and remove
+`net6.0` once the net8.0 build and tests are confirmed green.
+
 ## Gotchas
 - SDK glob patterns (`**/*.csproj`) can accidentally sweep test project files into the main project — check `.csproj` includes explicitly
 - `xUnit` packages may need explicit restore if not in the solution file
-- `dotnet format --verify-no-changes` will fail if the code was not formatted locally first — run `dotnet format` before committing
+- `dotnet format --verify-no-changes` will fail if the code was not formatted locally first — run `format-check.sh` before committing
 - BOF templates and WinAPI-heavy projects require `windows-latest`; cross-platform libraries can use `ubuntu-latest`
-- `net6.0` is EOL — flag any projects still targeting it for upgrade to `net8.0`
+- `net6.0` is EOL — flag any projects still targeting it for upgrade to `net8.0` (see upgrade path above)
 
 ## Suggested scripts
-- `format-check.sh` — runs `dotnet format --verify-no-changes` locally before push
+- `format-check.sh` — runs `dotnet format --verify-no-changes` locally; auto-detects `.sln` or `.csproj`
+- `ci-windows-only.yml` — template for WinAPI/BOF projects
+- `ci-cross-platform.yml` — template for library/cross-platform projects
