@@ -1,6 +1,6 @@
 # github-history-wipe
 
-> **Status:** promoted
+> **Status:** COMPLETE
 > **Cluster:** 07-devops
 > **Source:** PycharmProjects session (pattern detected 16x)
 
@@ -54,12 +54,50 @@ git push --force --set-upstream origin main
 
 Always confirm with the user after step 4, before step 5. Never wipe without explicit approval.
 
+## Archived repo handling
+
+If the repo is archived, unarchive it before attempting the force push:
+
+```bash
+gh repo unarchive incendiary/<repo>
+# ... perform wipe and force push ...
+gh repo archive incendiary/<repo>
+```
+
+The `gh repo unarchive` step requires owner permissions. If the repo is organisation-owned,
+check that your token has the `repo` and `admin:org` scopes.
+
+## Author email override
+
+The commit author email is embedded in the initial commit metadata. To ensure the
+fresh history does not leak a non-public email address, override at commit time:
+
+```bash
+GIT_AUTHOR_EMAIL="<public-email>" GIT_COMMITTER_EMAIL="<public-email>" \
+  git commit -m "chore: initial commit" --author="Your Name <<public-email>>"
+```
+
+Or configure locally before the commit (scoped to this repo only):
+```bash
+git config user.email "<public-email>"
+git commit -m "chore: initial commit"
+```
+
+Verify the result:
+```bash
+git log --format="%H %ae %ce" -1
+```
+
+Both author email (`%ae`) and committer email (`%ce`) must show the intended public address.
+
 ## Gotchas
 - Archived repos must be unarchived before force push, then re-archived afterwards
 - `git author email` in commit metadata survives content wipes — override explicitly at commit time
 - GitHub releases are not part of git history — they will be lost and must be recreated manually
 - If the repo has open PRs or branch protection, the force push will fail — resolve first
+- Tags without corresponding releases are separate from `gh release list` — run both
+  `git tag -l` and `gh release list` before wiping; there is no way to recover them after
 
 ## Suggested scripts
-- `capture-releases.sh` — dumps all releases and tags to JSON before wipe
-- `recreate-releases.sh` — reads JSON and calls `gh release create` for each entry
+- `capture-releases.sh` — dumps all releases to JSON before wipe
+- `recreate-releases.sh` — reads JSON and calls `gh release create` for each entry, skipping any that already exist
