@@ -108,6 +108,6 @@ github-release-workflow  (tag and release when done)
 
 - [x] SKILL.md written and validated
 - [x] README.md written
-- [ ] Add `repo-compass.sh` — runs all `gh` commands in sequence and outputs the summary
+- [x] Add `repo-compass.sh` — runs all `gh` commands in sequence and outputs the summary
 - [ ] Test on 3 repos with varying states (tidy, lagged, genuinely outstanding)
 - [x] Ship: copy to `~/.claude/skills/repo-compass/`

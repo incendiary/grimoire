@@ -45,7 +45,7 @@ git push origin <branch>                                 # push via HTTPS
 ## Roadmap
 
 - [x] SKILL.md written and validated
-- [ ] Write `check_push_protocol.sh`
+- [x] Write `check_push_protocol.sh`
 - [ ] Add SSH agent start/add sequence for when agent is simply not running
 - [ ] Test on a representative set of repos
 - [x] Ship: copy to `~/.claude/skills/git-push-protocol-handler/`
