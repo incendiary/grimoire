@@ -8,5 +8,5 @@ Maps to ODPC Chapters 5 (PE Primer) and 11 (Shellcode in Resources Section).
 ## Roadmap
 
 - [x] SKILL.md written: FindResource/LoadResource/LockResource pattern, XOR encryption, allocation tradeoffs, full loader skeleton, behavioural signatures to avoid
-- [ ] Add Python encrypt helper script as a standalone file
-- [ ] Add RC file template for Visual Studio resource embedding
+- [x] Add Python encrypt helper script as a standalone file
+- [x] Add RC file template for Visual Studio resource embedding
