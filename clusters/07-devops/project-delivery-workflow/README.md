@@ -94,6 +94,6 @@ gh release view — confirm release is correct
 
 - [x] SKILL.md written and validated
 - [x] README.md written
-- [ ] Add variant for monorepo (multiple packages, separate version files)
-- [ ] Add guidance for repos with required reviewers (can't self-merge)
-- [ ] Add post-delivery checklist (branch cleanup, stale draft PR cleanup, tag verification)
+- [x] Add monorepo variant section (per-package branching, per-package version files, dual README ticking)
+- [x] Add required-reviewer guidance (check protection rules, request review, wait before merge, admin bypass options)
+- [x] Add post-delivery checklist (stale branches, open PRs, tag/release alignment, CI status, install-all.sh verification)
