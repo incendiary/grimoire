@@ -77,8 +77,8 @@ Repeat until no detection → test sleep/memory-at-rest separately
 
 - [x] SKILL.md written and validated
 - [x] README.md written
-- [ ] Write `run-log.sh` (appends dated entry to `edr-test-log.md`)
-- [ ] Write `static-audit.sh` (strings + entropy + YARA pre-flight)
+- [x] Write `run-log.sh` (appends dated entry to `edr-test-log.md`)
+- [x] Write `static-audit.sh` (strings + entropy + YARA pre-flight)
 - [ ] Add AMSI bypass sub-loop
 - [ ] Add ETW patching considerations and risk notes
 - [ ] Add memory-at-rest (sleep mask) test sub-loop
