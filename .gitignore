@@ -1,6 +1,8 @@
 proposed-skills/
 *.log
 .DS_Store
+.env
+.env.*
 .env_config
 .secrets
 config.local.json

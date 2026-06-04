@@ -77,6 +77,8 @@ Return playlist URL
 - [x] SKILL.md written: full workflow, scoring criteria, filter defaults, gotchas
 - [x] README.md written
 - [x] Write `yt-curator.py` (search, playlists, create, add subcommands)
+- [x] Add `copy-playlist` command (copies a public playlist into a private one)
+- [x] Add channel management commands (videos, video-get, upload, video-update, video-delete, stats)
 - [x] Ship: copy to `~/.claude/skills/yt-curator/`
 - [ ] Add `--channel-allowlist` / `--channel-blocklist` flags
 - [ ] Add `--export-json` flag to save curation results without adding to playlist
