@@ -173,6 +173,65 @@ Output:
 | Results per query | 50 | `--max N` |
 | Videos to add | top 12 | (edit selection before adding) |
 
+## Optional: copy an existing public playlist into a private one
+
+If you have a curated source playlist (e.g. a course creator's public playlist) and want
+a private copy, skip the search/score steps:
+
+```bash
+python yt-curator.py create --title "ODPC — Module 5 Evasion"
+# note the returned playlist_id
+
+python yt-curator.py copy-playlist \
+  --url "https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab" \
+  --playlist-id PL...
+```
+
+This fetches all video IDs from the source and adds them to your private playlist.
+
+---
+
+## Channel management commands
+
+These operate on your own YouTube channel and run directly (no Claude scoring step needed).
+
+```bash
+# Channel statistics
+python yt-curator.py stats
+
+# Video statistics
+python yt-curator.py stats --video-id VIDEO_ID
+
+# List own videos
+python yt-curator.py videos --limit 10
+
+# Get full details of a video
+python yt-curator.py video-get --video-id VIDEO_ID
+
+# Upload a video (defaults to private)
+python yt-curator.py upload \
+  --file ~/recordings/demo.mp4 \
+  --title "BOF demo — process enumeration" \
+  --description "Walkthrough of the ODPC BOF exercise" \
+  --privacy private \
+  --thumbnail ~/recordings/thumb.png
+
+# Schedule a publish date (must be private until that time)
+python yt-curator.py upload --file video.mp4 --title "..." \
+  --publish-at "2026-08-01T09:00:00Z"
+
+# Update video metadata
+python yt-curator.py video-update --video-id VIDEO_ID \
+  --title "New title" --privacy unlisted
+
+# Delete a video (safety flag required)
+python yt-curator.py video-delete --video-id VIDEO_ID --confirm
+```
+
+All management commands support `--json` for machine-readable output.
+
+---
+
 ## Gotchas
 
 - **YouTube search quota:** Each search request costs ~100 units; default quota is 10 000/day.
@@ -181,10 +240,10 @@ Output:
   The `yt-curator.py search` command converts these to minutes automatically.
 - **Private playlist visibility:** Playlists created via the API with `privacyStatus: private`
   are only visible to you. Verify in YouTube Studio if unsure.
-- **Token expiry:** The cached OAuth token auto-refreshes via `google-auth-oauthlib`.
-  If it fails, delete `~/.cache/yt-curator/token.json` and re-run to re-authorise.
+- **Token expiry:** The cached OAuth token auto-refreshes. If it fails, run `python yt-curator.py auth` again.
 - **Channel quality signal:** View count and recency are the only automated metrics.
   Claude's scoring should factor in channel name/reputation visible in the description field.
+- **Upload safety:** Videos upload as `private` by default. Use `--privacy public` explicitly only when ready.
 
 ## Related skills
 
