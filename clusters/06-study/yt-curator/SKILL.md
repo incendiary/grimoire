@@ -20,27 +20,32 @@ videos for a course topic, or curating reference material for a specific technic
 
 ## One-time setup
 
-Before first use, set up the YouTube Data API credentials:
+**If you have previously used `youtube_cli.py auth`**, the token at
+`~/.youtube-cli-token.json` is already valid — skip straight to step 2.
 
 ```bash
-# 1. Google Cloud Console → new project → APIs & Services → Enable API
-#    Search for: YouTube Data API v3 → Enable
-
-# 2. APIs & Services → Credentials → Create Credentials → OAuth 2.0 Client ID
-#    Application type: Desktop app
-#    Download the JSON → save as:
-mkdir -p ~/.config/yt-curator
-mv ~/Downloads/client_secret_*.json ~/.config/yt-curator/client_secrets.json
-
-# 3. Install dependencies (use a venv)
+# 1. Install dependencies (use a venv)
 cd ~/.claude/skills/yt-curator
 python3 -m venv .venv && source .venv/bin/activate
-pip install google-api-python-client google-auth-oauthlib isodate
+pip install google-api-python-client google-auth-oauthlib isodate python-dotenv
 
-# 4. First run triggers browser OAuth consent; token cached at:
-#    ~/.cache/yt-curator/token.json
-#    Subsequent runs are silent.
+# 2. Verify auth is working
+python yt-curator.py playlists
+# Should print your existing YouTube playlists as JSON
 ```
+
+**First-time auth (no existing token):**
+```bash
+# Copy the .env from your youtube_cli.py project (contains CLIENT_ID + CLIENT_SECRET)
+cp ~/tmp/claude_youtube/learning/tool/.env ~/.claude/skills/yt-curator/.env
+
+# Run the auth flow (opens browser for Google consent)
+python yt-curator.py auth
+# Token saved to ~/.youtube-cli-token.json — shared with youtube_cli.py
+```
+
+The token at `~/.youtube-cli-token.json` is shared between `yt-curator.py` and
+`youtube_cli.py`. Authenticating once in either tool covers both.
 
 Required OAuth scope: `https://www.googleapis.com/auth/youtube`
 

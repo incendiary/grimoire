@@ -12,14 +12,21 @@ Usage:
     python yt-curator.py playlists
     python yt-curator.py create   --title TEXT [--description TEXT]
     python yt-curator.py add      --playlist-id ID --video-ids id1,id2,...
+    python yt-curator.py auth     (first-time setup only)
 
 Auth:
-    Credentials: ~/.config/yt-curator/client_secrets.json
-    Token cache: ~/.cache/yt-curator/token.json
-    First run opens a browser for OAuth2 consent (Desktop app flow).
+    Token:       ~/.youtube-cli-token.json  (shared with youtube_cli.py)
+    Credentials: YOUTUBE_CLIENT_ID + YOUTUBE_CLIENT_SECRET in .env (first-time auth only)
+
+    If you have already run 'python youtube_cli.py auth', the token is already valid
+    and no further setup is needed.
+
+    For first-time setup, copy your .env to this skill directory:
+        cp ~/tmp/claude_youtube/learning/tool/.env ~/.claude/skills/yt-curator/.env
+    Then run: python yt-curator.py auth
 
 Requires:
-    pip install google-api-python-client google-auth-oauthlib isodate
+    pip install google-api-python-client google-auth-oauthlib isodate python-dotenv
 """
 
 import argparse
@@ -31,6 +38,7 @@ from pathlib import Path
 
 try:
     import isodate
+    from dotenv import load_dotenv
     from google.oauth2.credentials import Credentials
     from google_auth_oauthlib.flow import InstalledAppFlow
     from google.auth.transport.requests import Request
@@ -38,40 +46,71 @@ try:
     from googleapiclient.errors import HttpError
 except ImportError as e:
     print(f"ERROR: missing dependency — {e}", file=sys.stderr)
-    print("Run: pip install google-api-python-client google-auth-oauthlib isodate",
+    print("Run: pip install google-api-python-client google-auth-oauthlib isodate python-dotenv",
           file=sys.stderr)
     sys.exit(1)
 
 # ── Paths ─────────────────────────────────────────────────────────────────────
-CREDENTIALS_PATH = Path.home() / ".config" / "yt-curator" / "client_secrets.json"
-TOKEN_PATH       = Path.home() / ".cache" / "yt-curator" / "token.json"
-SCOPES           = ["https://www.googleapis.com/auth/youtube"]
+# Shared token with youtube_cli.py — one auth setup covers both tools
+TOKEN_PATH = Path.home() / ".youtube-cli-token.json"
+SCOPES     = ["https://www.googleapis.com/auth/youtube"]
+
+# Load .env from skill directory for first-time auth (CLIENT_ID + CLIENT_SECRET)
+_skill_dir = Path(__file__).parent
+load_dotenv(_skill_dir / ".env")
 
 # ── Auth ──────────────────────────────────────────────────────────────────────
 
 def get_authenticated_service():
-    """Return an authenticated YouTube API service object."""
-    if not CREDENTIALS_PATH.exists():
-        print(f"ERROR: credentials not found at {CREDENTIALS_PATH}", file=sys.stderr)
-        print("  See SKILL.md one-time setup for instructions.", file=sys.stderr)
+    """Return an authenticated YouTube API service object.
+
+    Uses ~/.youtube-cli-token.json (shared with youtube_cli.py).
+    The token JSON contains client_id + client_secret inline, so refresh
+    works without a separate credentials file.
+    """
+    if not TOKEN_PATH.exists():
+        print(f"ERROR: No token found at {TOKEN_PATH}", file=sys.stderr)
+        print("  If you have used youtube_cli.py before, re-run: python youtube_cli.py auth", file=sys.stderr)
+        print("  For first-time setup, run: python yt-curator.py auth", file=sys.stderr)
         sys.exit(1)
 
-    creds = None
+    creds = Credentials.from_authorized_user_file(str(TOKEN_PATH), SCOPES)
 
-    TOKEN_PATH.parent.mkdir(parents=True, exist_ok=True)
-
-    if TOKEN_PATH.exists():
-        creds = Credentials.from_authorized_user_file(str(TOKEN_PATH), SCOPES)
-
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
+    if not creds.valid:
+        if creds.expired and creds.refresh_token:
             creds.refresh(Request())
+            TOKEN_PATH.write_text(creds.to_json())
         else:
-            flow = InstalledAppFlow.from_client_secrets_file(str(CREDENTIALS_PATH), SCOPES)
-            creds = flow.run_local_server(port=0)
-        TOKEN_PATH.write_text(creds.to_json())
+            print("ERROR: Token is invalid. Run: python yt-curator.py auth", file=sys.stderr)
+            sys.exit(1)
 
     return build("youtube", "v3", credentials=creds)
+
+
+def cmd_auth(_args):
+    """First-time OAuth setup. Opens browser for consent. Saves token to ~/.youtube-cli-token.json."""
+    client_id     = os.getenv("YOUTUBE_CLIENT_ID", "")
+    client_secret = os.getenv("YOUTUBE_CLIENT_SECRET", "")
+
+    if not client_id or not client_secret:
+        print("ERROR: YOUTUBE_CLIENT_ID and YOUTUBE_CLIENT_SECRET not set.", file=sys.stderr)
+        print(f"  Copy your .env to: {_skill_dir}/.env", file=sys.stderr)
+        print(f"  Or: export YOUTUBE_CLIENT_ID=... YOUTUBE_CLIENT_SECRET=...", file=sys.stderr)
+        sys.exit(1)
+
+    client_config = {
+        "installed": {
+            "client_id":     client_id,
+            "client_secret": client_secret,
+            "auth_uri":      "https://accounts.google.com/o/oauth2/auth",
+            "token_uri":     "https://oauth2.googleapis.com/token",
+            "redirect_uris": ["http://localhost"],
+        }
+    }
+    flow  = InstalledAppFlow.from_client_config(client_config, SCOPES)
+    creds = flow.run_local_server(port=8080, prompt="consent", access_type="offline", open_browser=False)
+    TOKEN_PATH.write_text(creds.to_json())
+    print(f"Authentication successful. Token saved to {TOKEN_PATH}")
 
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
@@ -278,7 +317,15 @@ def main():
     p_add.add_argument("--video-ids",   required=True,
                        help="Comma-separated video IDs to add")
 
+    # auth (first-time only)
+    sub.add_parser("auth", help="First-time OAuth setup (opens browser)")
+
     args = parser.parse_args()
+
+    # auth doesn't need an existing token
+    if args.command == "auth":
+        cmd_auth(args)
+        return
 
     youtube = get_authenticated_service()
 
