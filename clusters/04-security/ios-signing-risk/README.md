@@ -107,8 +107,8 @@ Revoking before step 4 breaks live deployments. This rule applies in all scenari
 ## Roadmap
 
 - [x] SKILL.md written and validated
-- [ ] Write `verify-ipa.sh` (hash + codesign verification)
-- [ ] Write `check-manifest.sh` (OTA manifest parse and verification)
+- [x] Write `verify-ipa.sh` (hash + codesign verification)
+- [x] Write `check-manifest.sh` (OTA manifest parse and verification)
 - [ ] Add Apple Developer Portal log retention window specifics
 - [ ] Test on a real IPA integrity scenario
 - [x] Ship: copy to `~/.claude/skills/ios-signing-risk/`
