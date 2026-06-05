@@ -49,7 +49,7 @@ git commit -m "..."         # now commit
 ## Roadmap
 
 - [x] SKILL.md written and validated
-- [ ] Write `pre_commit_check.sh`
+- [x] Write `pre_commit_check.sh`
 - [ ] Add gitleaks false-positive allowlist template
 - [ ] Test on DNSResolver and Slice-N-Dice
 - [x] Ship: copy to `~/.claude/skills/pre-commit-aware-commits/`
