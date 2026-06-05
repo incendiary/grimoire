@@ -106,7 +106,7 @@ Move SKIP files to _triage-review/ (never delete directly)
 ## Roadmap
 
 - [x] SKILL.md written and validated
-- [ ] Write `file-classifier.py` (directory walk, SHA-256, skip log support)
+- [x] Write `file-classifier.py` (directory walk, SHA-256, skip log support)
 - [ ] Write `syllabus-map.md` for CAIML, ARTOC, RTO2
 - [ ] Test incremental rerun (triage-log.json skip logic)
 - [ ] Test on a real study folder
