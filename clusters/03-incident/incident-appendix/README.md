@@ -105,8 +105,8 @@ Tables for structured data, numbered lists for sequences
 ## Roadmap
 
 - [x] SKILL.md written and validated
-- [ ] Write `appendix-template.md` as a fillable section structure
-- [ ] Add iOS signing-specific IOC types (Developer ID, provisioning profile UUID)
-- [ ] Add AWS CloudTrail evidence citation format
+- [x] Write `appendix-template.md` as a fillable section structure
+- [x] Add iOS signing-specific IOC types (Developer ID, provisioning profile UUID)
+- [x] Add AWS CloudTrail evidence citation format
 - [ ] Test on 2 real investigation write-ups
 - [x] Ship: copy to `~/.claude/skills/incident-appendix/`

@@ -103,8 +103,8 @@ Output grouped by owner (so each block is forwardable)
 ## Roadmap
 
 - [x] SKILL.md written and validated
-- [ ] Write `incident-ask-template.md` for common incident types
+- [x] Write `incident-ask-template.md` for common incident types
 - [ ] Add worked example for common incident types
-- [ ] Add HSM/Developer Portal retention window specifics
+- [x] Add HSM/Developer Portal retention window specifics
 - [ ] Test on 2 real incident scenarios
 - [x] Ship: copy to `~/.claude/skills/incident-ask-builder/`
