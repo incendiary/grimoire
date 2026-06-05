@@ -57,7 +57,7 @@ else
     MANIFEST_FILE="$MANIFEST_INPUT"
 fi
 
-cleanup() { $CLEANUP && rm -f "$MANIFEST_FILE" 2>/dev/null || true; }
+cleanup() { if $CLEANUP; then rm -f "$MANIFEST_FILE" 2>/dev/null; fi; }
 trap cleanup EXIT
 
 echo ""
