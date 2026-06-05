@@ -103,8 +103,8 @@ Output: action plan table + decision log
 ## Roadmap
 
 - [x] SKILL.md written and validated
-- [ ] Write `risk-action-template.md` for reuse
-- [ ] Add example governance tiers (who signs off at what risk level)
-- [ ] Add pen test finding format examples
+- [x] Write `risk-action-template.md` for reuse
+- [x] Add example governance tiers (who signs off at what risk level)
+- [x] Add pen test finding format examples
 - [ ] Test on 3 real risk items
 - [x] Ship: copy to `~/.claude/skills/risk-to-action/`
