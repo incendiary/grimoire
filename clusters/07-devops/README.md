@@ -111,6 +111,12 @@ to extract the roadmap, work each item as a feature branch → PR → CI check �
 tick READMEs and bump versions throughout, close with a major version bump and release.
 → [Full documentation](project-delivery-workflow/README.md)
 
+### [readme-version-pin](readme-version-pin/) ✅ complete
+Keeps README install instructions pinned to the latest tagged release. `pin_readme_version.sh`
+rewrites `@main`/`@master`/old tag refs across all READMEs to the current version;
+`check_readme_version.sh` asserts correctness and gates commits as a pre-commit hook.
+→ [Full documentation](readme-version-pin/README.md)
+
 ---
 
 ## Typical chain
