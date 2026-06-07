@@ -78,8 +78,6 @@ fi
 echo "--- Provider constraints ---"
 echo ""
 
-CONFLICT=false
-
 python3 - "$PROVIDER_JSON" <<'PYEOF'
 import sys
 import json
