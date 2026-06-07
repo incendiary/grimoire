@@ -102,7 +102,7 @@ info "Running: npm audit signatures (this may take a moment...)"
 echo ""
 
 # Capture output; npm audit signatures exits 0 even with findings
-AUDIT_OUTPUT=$(cd "$PROJECT_DIR" && npm audit signatures 2>&1 || true)
+AUDIT_OUTPUT=$(npm audit signatures --prefix "$PROJECT_DIR" 2>&1) || true
 
 # Parse the output categories
 # npm audit signatures output format (as of npm 9.x):
