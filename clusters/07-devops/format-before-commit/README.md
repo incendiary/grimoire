@@ -51,7 +51,7 @@ git add -u && git diff --staged   # review, then commit
 ## Roadmap
 
 - [x] SKILL.md written and validated
-- [ ] Add `.pre-commit-config.yaml` snippet with current pinned versions
-- [ ] Add pyproject.toml `[tool.black]` template with line-length
+- [x] Add `.pre-commit-config.yaml` snippet with current pinned versions
+- [x] Add pyproject.toml `[tool.black]` template with line-length
 - [ ] Test on 3 Python repos
 - [x] Ship: copy to `~/.claude/skills/format-before-commit/`
