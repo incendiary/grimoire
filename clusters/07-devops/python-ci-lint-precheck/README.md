@@ -54,7 +54,7 @@ Functions to watch: decrypt_payload, parse_zone_file
 ## Roadmap
 
 - [x] SKILL.md written and validated
-- [ ] Add `.pylintrc` template with standard settings
-- [ ] Add ruff + pylint pre-commit hook snippet
+- [x] Add `.pylintrc` template with standard settings
+- [x] Add ruff + pylint pre-commit hook snippet (via .pre-commit-config.yaml in format-before-commit)
 - [ ] Test on Slice-N-Dice and DNSResolver
 - [x] Ship: copy to `~/.claude/skills/python-ci-lint-precheck/`
