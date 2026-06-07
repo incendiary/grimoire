@@ -137,6 +137,13 @@ integrity hashes confirm content hasn't changed; provenance confirms where it ca
 `check-provenance.sh` runs `npm audit signatures` and inspects critical package attestations.
 → [Full documentation](npm-provenance-attestation/README.md)
 
+### [python-lockfile-integrity](python-lockfile-integrity/) ✅ complete
+Enforces content-hash-based dependency verification for Python projects. Covers four toolchains:
+pip-tools (`--require-hashes`), poetry (`poetry install`), pipenv (`--deploy`), and uv (`--frozen`).
+`check-python-lockfile-integrity.sh` detects the toolchain in use, verifies sha256 hash coverage,
+and audits CI pipelines for bare `pip install` usage. Mirrors `npm-lockfile-integrity` for Python.
+→ [Full documentation](python-lockfile-integrity/README.md)
+
 ---
 
 ## Typical chain
