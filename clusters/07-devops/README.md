@@ -123,6 +123,13 @@ Builds and pushes CPU and GPU Docker images to GHCR pinned to the current releas
 `docker-test.sh` smoke-tests each variant (CPU, GPU, docker-compose) before pushing.
 → [Full documentation](docker-ghcr-publish/README.md)
 
+### [npm-lockfile-integrity](npm-lockfile-integrity/) ✅ complete
+Enforces content-hash-based dependency verification for Node.js projects. Version pinning
+alone does not prevent a republished package at the same version — `sha512` integrity hashes
+in `package-lock.json`, enforced via `npm ci`, are the correct control.
+`check-lockfile-integrity.sh` audits lockfile version, integrity coverage, and CI pipeline usage.
+→ [Full documentation](npm-lockfile-integrity/README.md)
+
 ---
 
 ## Typical chain
