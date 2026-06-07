@@ -117,6 +117,12 @@ rewrites `@main`/`@master`/old tag refs across all READMEs to the current versio
 `check_readme_version.sh` asserts correctness and gates commits as a pre-commit hook.
 → [Full documentation](readme-version-pin/README.md)
 
+### [docker-ghcr-publish](docker-ghcr-publish/) ✅ complete
+Builds and pushes CPU and GPU Docker images to GHCR pinned to the current release version.
+`docker-publish.sh` builds/tags/pushes and updates README deployment instructions;
+`docker-test.sh` smoke-tests each variant (CPU, GPU, docker-compose) before pushing.
+→ [Full documentation](docker-ghcr-publish/README.md)
+
 ---
 
 ## Typical chain
