@@ -80,6 +80,6 @@ Commit .terraform.lock.hcl
 
 - [x] SKILL.md written and validated
 - [x] README.md written
-- [ ] Write `check-provider-compat.sh` — extracts `required_providers` from all modules
+- [x] Write `check-provider-compat.sh` — extracts `required_providers` from all modules
       and reports constraint conflicts
 - [ ] Add known-good version matrix for frequently used module combinations
