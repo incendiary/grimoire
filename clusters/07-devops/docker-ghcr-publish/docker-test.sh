@@ -84,25 +84,19 @@ run_container() {
     local extra_flags="${2:-}"
     local cmd="${3:-}"
 
-    local run_args="--rm --timeout ${TIMEOUT}"
+    # Build flag and command arrays for safe word-splitting
+    local -a flag_args=()
+    [[ -n "$extra_flags" ]] && read -ra flag_args <<< "$extra_flags"
+    local -a cmd_args=()
+    [[ -n "$cmd" ]] && read -ra cmd_args <<< "$cmd"
 
     # docker run doesn't have a --timeout; use `timeout` command wrapper
-    if [[ -n "$cmd" ]]; then
-        if timeout "$TIMEOUT" docker run --rm $extra_flags "$tag" $cmd; then
-            return 0
-        else
-            return 1
-        fi
+    if [[ ${#cmd_args[@]} -gt 0 ]]; then
+        timeout "$TIMEOUT" docker run --rm "${flag_args[@]}" "$tag" "${cmd_args[@]}"
     else
-        if timeout "$TIMEOUT" docker run --rm $extra_flags "$tag"; then
-            return 0
-        else
-            local code=$?
-            # Exit code 0 from the container is pass; non-zero is fail
-            # But the container may legitimately exit 0 with no output (e.g. --version)
-            return $code
-        fi
+        timeout "$TIMEOUT" docker run --rm "${flag_args[@]}" "$tag"
     fi
+    return $?
 }
 
 # ── CPU test ───────────────────────────────────────────────────────────────
