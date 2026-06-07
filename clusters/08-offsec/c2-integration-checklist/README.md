@@ -78,7 +78,7 @@ Deploy to engagement
 
 - [x] SKILL.md written and validated
 - [x] README.md written
-- [ ] Write `c2-preflight.sh` (c2lint + cert expiry + OPSEC summary)
+- [x] Write `c2-preflight.sh` (c2lint + cert expiry + OPSEC summary)
 - [ ] Add Havoc-specific demon module integration details
 - [ ] Add DNS listener OPSEC checklist (TTL, NS delegation, authoritative zone config)
 - [ ] Add post-engagement cleanup checklist (artifact removal, implant termination confirmation)
