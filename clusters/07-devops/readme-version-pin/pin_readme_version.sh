@@ -81,6 +81,7 @@ fi
 #   checkout main              → checkout v1.2.9
 #   checkout master            → checkout v1.2.9
 
+# shellcheck disable=SC2016  # \& is a sed backreference, not a shell expression
 ESC_VER=$(printf '%s\n' "$VERSION" | sed 's/[[\.*^$()+?{|]/\\&/g')
 
 CHANGED=0
