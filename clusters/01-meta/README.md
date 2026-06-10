@@ -48,3 +48,27 @@ Pauses at natural phase boundaries during long multi-step tasks and checks wheth
 new instructions have been added since execution started. One-line prompt, then
 resumes. Activates on tasks with 3+ planned steps.
 → [Full documentation](mid-task-checkin/README.md)
+
+### [karpathy-framework](karpathy-framework/) ✅ complete
+Umbrella entry point for the Karpathy three-layer framework. Routes to the right layer
+(spec, verify, environment) based on where you are in a task. No content of its own —
+use when unsure which Karpathy layer to start with.
+→ [Full documentation](karpathy-framework/README.md)
+
+### [karpathy-spec](karpathy-spec/) ✅ complete
+Layer 1 of the Karpathy framework. Transforms vague requests into precise, agile specs
+before work begins. Defines success criteria upfront so `karpathy-verify` has something
+concrete to test against.
+→ [Full documentation](karpathy-spec/README.md)
+
+### [karpathy-verify](karpathy-verify/) ✅ complete
+Layer 2 of the Karpathy framework. Evaluates output against defined criteria via second
+opinion (different model or role) and external signal (test claims against reality).
+Feedback loops improve output quality 2–3× per invocation.
+→ [Full documentation](karpathy-verify/README.md)
+
+### [karpathy-environment](karpathy-environment/) ✅ complete
+Layer 3 of the Karpathy framework. Builds the durable workspace that makes Layers 1 and 2
+faster over time: CLAUDE.md, structured knowledge base, custom skills roadmap, and guardrails.
+Compounds — each session setup is faster than the last.
+→ [Full documentation](karpathy-environment/README.md)
