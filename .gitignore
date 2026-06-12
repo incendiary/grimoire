@@ -7,3 +7,6 @@ proposed-skills/
 .secrets
 config.local.json
 *.tar.gz
+
+# Build outputs — generated from SKILL.md source
+prompts/
