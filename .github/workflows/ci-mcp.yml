@@ -1,0 +1,49 @@
+name: CI — MCP Server
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "mcp-server/**"
+      - ".github/workflows/ci-mcp.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "mcp-server/**"
+      - ".github/workflows/ci-mcp.yml"
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build & Lint
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mcp-server
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: "mcp-server/.nvmrc"
+          cache: "npm"
+          cache-dependency-path: "mcp-server/package-lock.json"
+      - run: npm ci
+      - run: npx tsc --noEmit
+      - run: npm run lint
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    needs: build
+    defaults:
+      run:
+        working-directory: mcp-server
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: "mcp-server/.nvmrc"
+          cache: "npm"
+          cache-dependency-path: "mcp-server/package-lock.json"
+      - run: npm ci
+      - run: npm test
