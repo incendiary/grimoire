@@ -1,0 +1,7 @@
+title = "grimoire gitleaks config"
+
+[allowlist]
+  paths = [
+    '''.secrets\.baseline''',
+    '''\.gitleaks\.toml''',
+  ]
