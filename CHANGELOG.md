@@ -7,6 +7,127 @@ This project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [Unreleased]
+
+---
+
+## [1.4.2] — 2026-06-13
+
+Install script, documentation, and version alignment.
+
+### Changed
+- `install-vscode.sh`: auto-detects VS Code `settings.json` (macOS, Linux, Windows),
+  deep-merges `chat.promptFilesLocations` and `mcp.servers.grimoire` using `node -e`.
+  Supports `--apply` (non-interactive), `--dry-run`, and interactive confirmation.
+- `README.md`: full rewrite for clarity — Quick Start / Architecture / Clusters /
+  Skills Index structure. Removed Claude Code tutorial (moved to `clusters/README.md`).
+  Added 13 missing skills to the index.
+- `clusters/README.md`: added "How Claude Code skills work" section (moved from
+  main README). Fixed stale `loadout/` reference. Updated cluster 05/06 descriptions.
+- `mcp-server/package.json`: version aligned from `0.1.0` to `1.4.2` (single source
+  of truth: `VERSION` file).
+
+### Fixed
+- `CHANGELOG.md`: back-filled entries for v1.1.0–v1.4.1 (previously undocumented).
+
+---
+
+## [1.4.1] — 2026-06-12
+
+Dependency upgrades and identity sanitisation.
+
+### Changed
+- Bumped all npm dependencies to latest: `@modelcontextprotocol/sdk` 1.29.0,
+  `vitest` 4.1.8, `typescript` 6.0.3, `eslint` 10.4.1, `tsx` 4.22.4.
+- Resolved all npm audit vulnerabilities (esbuild transitive via vitest).
+
+### Security
+- Rewrote git history with `git-filter-repo` to remove corporate email from
+  author/committer fields across all commits.
+
+---
+
+## [1.4.0] — 2026-06-11
+
+Multi-platform delivery: VS Code prompt files + MCP server.
+
+### Added
+- `mcp-server/` — TypeScript MCP server exposing action skills as callable tools.
+  Uses `@modelcontextprotocol/sdk`, stdio transport, reads `registry.json` at startup.
+- `mcp-server/registry.json` — declares 16 action skills (3 from 01-meta, 13 from 07-devops).
+- `mcp-server/src/__tests__/registry.test.ts` — bidirectional validation (7 tests):
+  every registry entry has a valid `SKILL.md`, every action `SKILL.md` is in the registry.
+- `build.sh` — generates `.prompt.md` files from `SKILL.md` source to `prompts/` (gitignored).
+- `install-vscode.sh` — one-command VS Code setup (build MCP + generate prompts).
+- `.github/workflows/ci-mcp.yml` — TypeScript CI (build, lint, test), path-filtered.
+- `.github/workflows/secret-scan.yml` — gitleaks v3 + TruffleHog on push/PR.
+- `Type:` field added to all skills (`instructional` or `action`).
+
+### Changed
+- `validate.yml`: added `registry-sync` job for bidirectional SKILL.md ↔ registry validation.
+- `CLAUDE.md`: documented multi-platform delivery architecture.
+
+---
+
+## [1.3.0] — [TODO: fill from git log]
+
+<!-- TODO: run `git log v1.2.12..v1.3.0 --oneline` to populate -->
+
+### Added
+- `09-odpc` cluster — White Knight Labs ODPC chapter-mapped implementation guides.
+
+---
+
+## [1.3.1] — [TODO: fill from git log]
+
+<!-- TODO: run `git log v1.3.0..v1.3.1 --oneline` to populate -->
+
+---
+
+## [1.3.2] — [TODO: fill from git log]
+
+<!-- TODO: run `git log v1.3.1..v1.3.2 --oneline` to populate -->
+
+---
+
+## [1.3.3] — [TODO: fill from git log]
+
+<!-- TODO: run `git log v1.3.2..v1.3.3 --oneline` to populate -->
+
+---
+
+## [1.3.4] — [TODO: fill from git log]
+
+<!-- TODO: run `git log v1.3.3..v1.3.4 --oneline` to populate -->
+
+---
+
+## [1.2.0] — [TODO: fill from git log]
+
+<!-- TODO: run `git log v1.1.0..v1.2.0 --oneline` to populate -->
+
+### Added
+- `08-offsec` cluster — offensive development skills (shellcode, BOFs, process
+  injection, EDR iteration, C2 integration).
+
+---
+
+## [1.2.1] – [1.2.12] — [TODO: fill from git log]
+
+<!-- TODO: run `git log v1.2.0..v1.2.12 --oneline` to populate.
+     These were patch releases adding individual skills to 08-offsec and 07-devops. -->
+
+---
+
+## [1.1.0] — [TODO: fill from git log]
+
+<!-- TODO: run `git log v1.0.0..v1.1.0 --oneline` to populate -->
+
+### Added
+- `06-study` cluster skills: `study-burst-runner`, `source-material-triage`.
+
+---
+
 ## [1.0.0] — 2026-06-01
 
 Full roadmap delivery. All promoted skills built out and verified.
@@ -34,10 +155,6 @@ Repo migrated from `loadout` to `grimoire`; employer references removed from wor
 - Repo renamed `loadout` → `grimoire`
 - All employer/platform references removed (working tree and history wiped)
 - Skills Index updated: all `📋 promoted` entries promoted to `✅ complete`
-
----
-
-## [Unreleased]
 
 ---
 
