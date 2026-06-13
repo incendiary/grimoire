@@ -28,9 +28,22 @@ missed forwarded exports, and hash collisions in the target function set.
 
 ## Installation
 
+### Claude Code
+
 ```bash
-cp -r ~/Claude/Skills/grimoire/clusters/08-offsec/api-hashing-conventions ~/.claude/skills/
+cp -r clusters/08-offsec/api-hashing-conventions ~/.claude/skills/
 ```
+
+### VS Code (prompt file)
+
+After running `bash build.sh`, reference in Copilot Chat:
+```
+#api-hashing-conventions
+```
+
+> **Note:** This is an `instructional` type skill — prompt file and Claude Code only.
+> Not exposed as an MCP tool.
+
 
 ---
 

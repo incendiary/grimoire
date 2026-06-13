@@ -1,6 +1,7 @@
 # api-hashing-conventions
 
 > **Status:** COMPLETE
+> **Type:** instructional
 > **Cluster:** 08-offsec
 
 ## Description

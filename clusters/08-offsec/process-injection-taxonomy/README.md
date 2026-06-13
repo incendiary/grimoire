@@ -27,9 +27,22 @@ try hollowing...") by providing a structured decision path: target characteristi
 
 ## Installation
 
+### Claude Code
+
 ```bash
-cp -r ~/Claude/Skills/grimoire/clusters/08-offsec/process-injection-taxonomy ~/.claude/skills/
+cp -r clusters/08-offsec/process-injection-taxonomy ~/.claude/skills/
 ```
+
+### VS Code (prompt file)
+
+After running `bash build.sh`, reference in Copilot Chat:
+```
+#process-injection-taxonomy
+```
+
+> **Note:** This is an `instructional` type skill — prompt file and Claude Code only.
+> Not exposed as an MCP tool.
+
 
 ---
 

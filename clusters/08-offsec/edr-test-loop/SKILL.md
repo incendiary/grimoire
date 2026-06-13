@@ -1,6 +1,7 @@
 # edr-test-loop
 
 > **Status:** COMPLETE
+> **Type:** instructional
 > **Cluster:** 08-offsec
 
 ## Description
