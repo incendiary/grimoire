@@ -11,6 +11,29 @@ This project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [1.6.0] — 2025-07-14
+
+README standardisation across all public clusters + global roadmap.
+
+### Added
+- `ROADMAP.md` — auto-generated overview of 95 open items across 50 skills
+- `scripts/roadmap-collect.sh` — generates roadmap from skill README checkboxes (supports `--json`)
+- Multi-platform Installation section in all 50 public skill READMEs:
+  - Claude Code (`cp -r` to `~/.claude/skills/`)
+  - VS Code prompt file reference (`#skill-name` in Copilot Chat)
+  - MCP tool registration note (action-type skills only)
+- `> **Type:** action|instructional` metadata field added to all SKILL.md files
+
+### Changed
+- `validate.yml` readme-quality job now enforces standard on all public clusters
+  (previously scoped to 01-meta only)
+- Stale path references (`~/Claude/Skills/...`) replaced with relative paths
+
+### Fixed
+- 15 SKILL.md files in clusters 02-05 and 08-offsec were missing `Type:` metadata
+
+---
+
 ## [1.5.0] — 2026-06-13
 
 Public/private cluster split via git submodule.
