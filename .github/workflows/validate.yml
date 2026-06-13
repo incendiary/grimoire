@@ -85,7 +85,7 @@ jobs:
           set -e
           failed=0
           # Enforce on migrated clusters only (add clusters as they are standardised)
-          for readme in clusters/01-meta/*/README.md; do
+          for readme in clusters/01-meta/*/README.md clusters/02-comms/*/README.md clusters/03-incident/*/README.md clusters/04-security/*/README.md clusters/05-technical/*/README.md; do
             [ -f "$readme" ] || continue
             if ! grep -q '## Installation' "$readme"; then
               echo "ERROR: missing ## Installation in $readme"

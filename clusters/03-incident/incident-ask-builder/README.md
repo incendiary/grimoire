@@ -34,11 +34,23 @@ redrafting.
 
 ## Installation
 
+### Claude Code
+
 ```bash
-cp -r ~/Claude/Skills/grimoire/clusters/03-incident/incident-ask-builder ~/.claude/skills/
+cp -r clusters/03-incident/incident-ask-builder ~/.claude/skills/
 ```
 
-No hook wiring required.
+### VS Code (prompt file)
+
+After running `bash build.sh`, reference in Copilot Chat:
+```
+#incident-ask-builder
+```
+
+> **Note:** This is an `instructional` type skill — prompt file and Claude Code only.
+> Not exposed as an MCP tool.
+
+
 
 ---
 

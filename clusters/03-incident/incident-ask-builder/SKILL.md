@@ -1,6 +1,7 @@
 # incident-ask-builder
 
 > **Status:** COMPLETE
+> **Type:** instructional
 > **Cluster:** 03-incident
 
 ## Description

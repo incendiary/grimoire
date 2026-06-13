@@ -1,6 +1,7 @@
 # incident-appendix
 
 > **Status:** COMPLETE
+> **Type:** instructional
 > **Cluster:** 03-incident
 
 ## Description

@@ -1,6 +1,7 @@
 # tone-check
 
 > **Status:** COMPLETE
+> **Type:** instructional
 > **Cluster:** 02-comms
 
 ## Description

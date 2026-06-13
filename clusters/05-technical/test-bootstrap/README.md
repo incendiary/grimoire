@@ -29,9 +29,23 @@ red-first (failing stub proves the harness works before assertions are written).
 
 ## Installation
 
+### Claude Code
+
 ```bash
-cp -r ~/Claude/skills/grimoire/clusters/05-technical/test-bootstrap ~/.claude/skills/
+cp -r clusters/05-technical/test-bootstrap ~/.claude/skills/
 ```
+
+### VS Code (prompt file)
+
+After running `bash build.sh`, reference in Copilot Chat:
+```
+#test-bootstrap
+```
+
+> **Note:** This is an `instructional` type skill — prompt file and Claude Code only.
+> Not exposed as an MCP tool.
+
+
 
 ---
 
