@@ -107,19 +107,22 @@ bash install-all.sh (or install-vscode.sh)
 
 ## Clusters
 
-Nine clusters, each documented in [clusters/README.md](clusters/README.md):
+Seven public clusters + two private (via submodule). See [clusters/README.md](clusters/README.md).
 
-| # | Cluster | Purpose |
-|---|---------|---------|
-| 01 | [meta](clusters/01-meta/) | Skill management, session extraction, task decomposition |
-| 02 | [comms](clusters/02-comms/) | Tone review, style rewriting, executive translation |
-| 03 | [incident](clusters/03-incident/) | Evidence collection, incident docs, risk action plans |
-| 04 | [security](clusters/04-security/) | iOS signing risk analysis |
-| 05 | [technical](clusters/05-technical/) | PE binary parsing, test bootstrapping |
-| 06 | [study](clusters/06-study/) | Burst study sessions, material triage, YouTube curation |
-| 07 | [devops](clusters/07-devops/) | CI templates, repo publication, history wiping, secrets |
-| 08 | [offsec](clusters/08-offsec/) | Shellcode, BOFs, process injection, EDR, C2 |
-| 09 | [odpc](clusters/09-odpc/) | WKL ODPC: syscalls, ETW evasion, call-stack spoofing |
+| # | Cluster | Location | Purpose |
+|---|---------|----------|---------||
+| 01 | [meta](clusters/01-meta/) | public | Skill management, session extraction, task decomposition |
+| 02 | [comms](clusters/02-comms/) | public | Tone review, style rewriting, executive translation |
+| 03 | [incident](clusters/03-incident/) | public | Evidence collection, incident docs, risk action plans |
+| 04 | [security](clusters/04-security/) | public | iOS signing risk analysis |
+| 05 | [technical](clusters/05-technical/) | public | PE binary parsing, test bootstrapping |
+| 06 | study | **private** | Burst study sessions, material triage, YouTube curation |
+| 07 | [devops](clusters/07-devops/) | public | CI templates, repo publication, history wiping, secrets |
+| 08 | [offsec](clusters/08-offsec/) | public | Shellcode, BOFs, process injection, EDR, C2 |
+| 09 | odpc | **private** | WKL ODPC: syscalls, ETW evasion, call-stack spoofing |
+
+> **Private clusters** live in a separate repo ([grimoire-private](https://github.com/incendiary/grimoire-private))
+> mounted as a git submodule at `clusters-private/`. See [Private submodule](#private-submodule) below.
 
 ---
 
@@ -151,9 +154,7 @@ Nine clusters, each documented in [clusters/README.md](clusters/README.md):
 | 04-security | `ios-signing-risk` | ✅ |
 | 05-technical | `pe-binary-analysis` | ✅ |
 | 05-technical | `test-bootstrap` | ✅ |
-| 06-study | `study-burst-runner` | ✅ |
-| 06-study | `source-material-triage` | ✅ |
-| 06-study | `yt-curator` | ✅ |
+| 06-study | *(private submodule)* | — |
 | 07-devops | `repo-compass` | ✅ |
 | 07-devops | `repo-publication-prep` | ✅ |
 | 07-devops | `github-history-wipe` | ✅ |
@@ -182,13 +183,35 @@ Nine clusters, each documented in [clusters/README.md](clusters/README.md):
 | 08-offsec | `edr-test-loop` | ✅ |
 | 08-offsec | `bof-dev-conventions` | ✅ |
 | 08-offsec | `c2-integration-checklist` | ✅ |
-| 09-odpc | `odpc-lab-setup` | ✅ |
-| 09-odpc | `pe-resource-shellcode` | ✅ |
-| 09-odpc | `syscall-techniques` | ✅ |
-| 09-odpc | `call-stack-spoofing` | ✅ |
-| 09-odpc | `dotnet-offensive` | ✅ |
-| 09-odpc | `etw-evasion` | ✅ |
-| 09-odpc | `caro-kann-injection` | ✅ |
+| 09-odpc | *(private submodule)* | — |
+
+---
+
+## Private submodule
+
+Personal or team-specific clusters that don't belong in the shared repo live in a
+separate private repository, mounted as a git submodule at `clusters-private/`.
+
+### Using the existing private submodule
+
+```bash
+git submodule init && git submodule update
+```
+
+Or clone with `--recurse-submodules`. The install scripts (`install-all.sh`,
+`build.sh`, `install-vscode.sh`) automatically detect and include skills from
+`clusters-private/clusters/` when the submodule is initialised.
+
+### Creating your own private submodule
+
+If you're forking grimoire and want your own private clusters:
+
+```bash
+bash scripts/init-private-submodule.sh
+```
+
+This creates a new private GitHub repo, scaffolds the correct directory structure,
+and wires it as a submodule. See the script's `--help` for options.
 
 ---
 

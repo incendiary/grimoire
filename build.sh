@@ -13,6 +13,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROMPTS_DIR="${SCRIPT_DIR}/prompts"
 CLUSTERS_DIR="${SCRIPT_DIR}/clusters"
+PRIVATE_CLUSTERS_DIR="${SCRIPT_DIR}/clusters-private/clusters"
 
 # --- Clean mode ---
 if [[ "${1:-}" == "--clean" ]]; then
@@ -25,7 +26,13 @@ mkdir -p "${PROMPTS_DIR}"
 generated=0
 skipped=0
 
-for skill_md in "${CLUSTERS_DIR}"/*/SKILL.md "${CLUSTERS_DIR}"/*/*/SKILL.md; do
+# Collect SKILL.md from public clusters and private submodule (if present)
+SKILL_PATHS=("${CLUSTERS_DIR}"/*/SKILL.md "${CLUSTERS_DIR}"/*/*/SKILL.md)
+if [[ -d "${PRIVATE_CLUSTERS_DIR}" ]]; then
+    SKILL_PATHS+=("${PRIVATE_CLUSTERS_DIR}"/*/SKILL.md "${PRIVATE_CLUSTERS_DIR}"/*/*/SKILL.md)
+fi
+
+for skill_md in "${SKILL_PATHS[@]}"; do
     [[ -f "${skill_md}" ]] || continue
 
     # Only process skills with a Type: field
