@@ -2,14 +2,23 @@
 set -euo pipefail
 
 SKILLS_DIR="${HOME}/.claude/skills"
-CLUSTERS_DIR="$(cd "$(dirname "$0")/clusters" && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+CLUSTERS_DIR="${SCRIPT_DIR}/clusters"
+PRIVATE_CLUSTERS_DIR="${SCRIPT_DIR}/clusters-private/clusters"
 
 mkdir -p "${SKILLS_DIR}"
 
 installed=()
 skipped=()
 
-for skill_path in "${CLUSTERS_DIR}"/*/*; do
+# Collect all cluster paths (public + private submodule if present)
+CLUSTER_PATHS=("${CLUSTERS_DIR}")
+if [[ -d "${PRIVATE_CLUSTERS_DIR}" ]]; then
+    CLUSTER_PATHS+=("${PRIVATE_CLUSTERS_DIR}")
+fi
+
+for cluster_root in "${CLUSTER_PATHS[@]}"; do
+for skill_path in "${cluster_root}"/*/*; do
     [[ -d "${skill_path}" ]] || continue
     skill_name="$(basename "${skill_path}")"
     dest="${SKILLS_DIR}/${skill_name}"
@@ -21,6 +30,8 @@ for skill_path in "${CLUSTERS_DIR}"/*/*; do
         installed+=("${skill_name}")
     fi
 done
+
+done  # end cluster_root loop
 
 # Wire the Stop hook for session-skill-extractor if it was just installed
 if [[ " ${installed[*]:-} " == *" session-skill-extractor "* ]]; then

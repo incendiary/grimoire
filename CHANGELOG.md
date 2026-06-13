@@ -11,6 +11,30 @@ This project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [1.5.0] — 2026-06-13
+
+Public/private cluster split via git submodule.
+
+### Added
+- `clusters-private/` git submodule pointing to `incendiary/grimoire-private`
+- `scripts/init-private-submodule.sh` — skeleton generator for colleagues to create
+  their own private submodule with the correct structure
+- `grimoire-private` repo with full security posture (gitleaks, TruffleHog,
+  detect-secrets, dependabot, CI validation)
+
+### Changed
+- Moved `06-study` and `09-odpc` clusters to `grimoire-private` (personal content)
+- `install-all.sh`: scans `clusters-private/clusters/` if submodule is initialised
+- `build.sh`: generates prompt files from private clusters if present
+- `validate.yml`: skips `clusters-private/` (private repo has its own CI)
+- `README.md`: updated clusters table (7 public + 2 private), added Private
+  Submodule section, updated Skills Index
+- `clusters/README.md`: updated cluster index, added private cluster instructions
+- `CHANGELOG.md`: back-filled v1.1.0–v1.3.4 with actual commit messages
+- `VERSION`: 1.4.2 → 1.5.0
+
+---
+
 ## [1.4.2] — 2026-06-13
 
 Install script, documentation, and version alignment.
@@ -69,62 +93,165 @@ Multi-platform delivery: VS Code prompt files + MCP server.
 
 ---
 
-## [1.3.0] — [TODO: fill from git log]
+## [1.3.0] — 2026-06-06
 
-<!-- TODO: run `git log v1.2.12..v1.3.0 --oneline` to populate -->
-
-### Added
-- `09-odpc` cluster — White Knight Labs ODPC chapter-mapped implementation guides.
-
----
-
-## [1.3.1] — [TODO: fill from git log]
-
-<!-- TODO: run `git log v1.3.0..v1.3.1 --oneline` to populate -->
-
----
-
-## [1.3.2] — [TODO: fill from git log]
-
-<!-- TODO: run `git log v1.3.1..v1.3.2 --oneline` to populate -->
-
----
-
-## [1.3.3] — [TODO: fill from git log]
-
-<!-- TODO: run `git log v1.3.2..v1.3.3 --oneline` to populate -->
-
----
-
-## [1.3.4] — [TODO: fill from git log]
-
-<!-- TODO: run `git log v1.3.3..v1.3.4 --oneline` to populate -->
-
----
-
-## [1.2.0] — [TODO: fill from git log]
-
-<!-- TODO: run `git log v1.1.0..v1.2.0 --oneline` to populate -->
+Final Cat 5 delivery: c2-preflight.sh.
 
 ### Added
-- `08-offsec` cluster — offensive development skills (shellcode, BOFs, process
-  injection, EDR iteration, C2 integration).
+- `08-offsec/c2-integration-checklist`: `c2-preflight.sh` script
 
 ---
 
-## [1.2.1] – [1.2.12] — [TODO: fill from git log]
-
-<!-- TODO: run `git log v1.2.0..v1.2.12 --oneline` to populate.
-     These were patch releases adding individual skills to 08-offsec and 07-devops. -->
-
----
-
-## [1.1.0] — [TODO: fill from git log]
-
-<!-- TODO: run `git log v1.0.0..v1.1.0 --oneline` to populate -->
+## [1.3.1] — 2026-06-07
 
 ### Added
-- `06-study` cluster skills: `study-burst-runner`, `source-material-triage`.
+- `07-devops/npm-lockfile-integrity` — content-hash dependency verification skill
+
+---
+
+## [1.3.2] — 2026-06-07
+
+### Added
+- `07-devops/npm-provenance-attestation` — Sigstore build transparency verification skill
+
+---
+
+## [1.3.3] — 2026-06-08
+
+### Added
+- `07-devops/python-lockfile-integrity` — content-hash enforcement for
+  pip, poetry, pipenv, and uv lockfiles
+
+---
+
+## [1.3.4] — 2026-06-09
+
+### Added
+- `01-meta/karpathy-spec` — spec generation skill
+- `01-meta/karpathy-verify` — implementation verification skill
+- `01-meta/karpathy-environment` — environment/context gathering skill
+- `CLAUDE.md` — project-level delivery workflow conventions
+
+---
+
+## [1.2.0] — 2026-06-04
+
+Offsec scripts, ODPC C1–C5, devops utilities. Roadmap sync across 30 READMEs.
+
+### Added
+- `08-offsec/shellcode-dev-conventions`: `null-byte-audit.sh`, `size-report.sh`
+- `08-offsec/api-hashing-conventions`: `hash-api.py`, `collision-check.py`
+- `08-offsec/bof-dev-conventions`: BOF build and validate scripts
+- `08-offsec/edr-test-loop`: `run-log.sh`, `static-audit.sh`
+- `09-odpc/syscall-techniques`: NtCreateThreadEx stub, SSN table, `syscall-stubs.asm`
+- `09-odpc/call-stack-spoofing`: unwind data reference, before/after stack walk
+- `09-odpc/etw-evasion`: per-provider ETW patch and detection signatures
+- `09-odpc/pe-resource-shellcode`: `encrypt.py`, `shellcode.rc`
+- `09-odpc/caro-kann-injection`: QueueUserAPC variant, heap encryption, x86 PEB walk
+- `07-devops`: utility scripts for four skills
+
+### Changed
+- Roadmap-sync: ticked Ship items across 30 skill READMEs
+
+---
+
+## [1.2.1] — 2026-06-04
+
+### Added
+- `05-technical/test-bootstrap` skill
+
+---
+
+## [1.2.2] — 2026-06-04
+
+### Added
+- `06-study/yt-curator` skill
+
+---
+
+## [1.2.3] — 2026-06-04
+
+### Fixed
+- `yt-curator`: aligned auth with existing `youtube_cli.py` token model
+
+---
+
+## [1.2.4] — 2026-06-04
+
+### Changed
+- Consolidated `youtube_cli.py` into `yt-curator` — full YouTube CLI skill
+
+---
+
+## [1.2.5] — 2026-06-05
+
+### Added
+- `01-meta/task-decomposer` skill
+- `01-meta/task-handoff` skill
+
+---
+
+## [1.2.6] — 2026-06-05
+
+### Added
+- Cat 5 D1: meta utility scripts
+
+---
+
+## [1.2.7] — 2026-06-05
+
+### Added
+- Cat 5 D2: incident and risk templates
+
+---
+
+## [1.2.8] — 2026-06-05
+
+### Added
+- Cat 5 D3: iOS signing scripts
+
+---
+
+## [1.2.9] — 2026-06-05
+
+### Added
+- Cat 5 D4: `source-material-triage` file-classifier
+
+---
+
+## [1.2.10] — 2026-06-05
+
+### Added
+- `07-devops/readme-version-pin` skill
+
+---
+
+## [1.2.11] — 2026-06-05
+
+### Added
+- `07-devops/docker-ghcr-publish` skill
+
+---
+
+## [1.2.12] — 2026-06-06
+
+### Added
+- Cat 5 D5: devops remaining scripts and config templates
+
+### Changed
+- `validate.yml`: added `workflow_dispatch` trigger
+
+---
+
+## [1.1.0] — 2026-06-02
+
+### Added
+- `09-odpc` cluster — White Knight Labs ODPC chapter-mapped skills (7 skills:
+  odpc-lab-setup, pe-resource-shellcode, syscall-techniques, call-stack-spoofing,
+  dotnet-offensive, etw-evasion, caro-kann-injection)
+
+### Changed
+- Updated invocation example in main README to use `repo-compass`
 
 ---
 

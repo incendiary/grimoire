@@ -15,7 +15,7 @@ jobs:
       - name: Install shellcheck
         run: sudo apt-get install -y shellcheck
       - name: Lint all shell scripts
-        run: find . -name "*.sh" -not -path "./.git/*" -exec shellcheck {} +
+        run: find . -name "*.sh" -not -path "./.git/*" -not -path "./clusters-private/*" -exec shellcheck {} +
 
   structure:
     name: Skill structure
@@ -26,6 +26,7 @@ jobs:
         run: |
           set -e
           failed=0
+          # Only check public clusters — private submodule has its own CI
           for dir in clusters/*/*/; do
             if [ ! -f "${dir}SKILL.md" ]; then
               echo "ERROR: missing SKILL.md in ${dir}"

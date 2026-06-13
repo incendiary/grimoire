@@ -1,0 +1,3 @@
+[submodule "clusters-private"]
+	path = clusters-private
+	url = https://github.com/incendiary/grimoire-private.git
