@@ -2,6 +2,7 @@
 
 > **Status:** COMPLETE
 > **Cluster:** 01-meta
+> **Type:** instructional
 
 ## Description
 Decomposes a large task into discrete, self-contained chunks before context pressure

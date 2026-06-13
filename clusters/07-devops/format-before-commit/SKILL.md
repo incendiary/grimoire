@@ -2,6 +2,7 @@
 
 > **Status:** COMPLETE
 > **Cluster:** 07-devops
+> **Type:** action
 
 ## Description
 Run black and ruff format locally before every commit to prevent formatting CI failures.

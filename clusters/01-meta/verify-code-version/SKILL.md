@@ -2,6 +2,7 @@
 
 > **Status:** COMPLETE
 > **Cluster:** 01-meta
+> **Type:** action
 
 ## Description
 After a `git pull` or branch switch, verify the running code actually reflects HEAD

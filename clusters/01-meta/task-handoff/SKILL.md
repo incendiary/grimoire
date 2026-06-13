@@ -2,6 +2,7 @@
 
 > **Status:** COMPLETE
 > **Cluster:** 01-meta
+> **Type:** instructional
 
 ## Description
 Packages the current session's state into a self-contained handoff document when

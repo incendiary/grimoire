@@ -2,6 +2,7 @@
 
 > **Status:** COMPLETE
 > **Cluster:** 07-devops
+> **Type:** action
 
 ## Description
 After merging a PR or closing an issue, update the README roadmap section to reflect

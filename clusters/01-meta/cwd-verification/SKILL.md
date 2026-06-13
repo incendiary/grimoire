@@ -2,6 +2,7 @@
 
 > **Status:** COMPLETE
 > **Cluster:** 01-meta
+> **Type:** action
 
 ## Description
 Verify the working directory at session start and before any bulk file operations,

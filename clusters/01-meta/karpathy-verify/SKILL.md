@@ -2,6 +2,7 @@
 
 > **Status:** COMPLETE
 > **Cluster:** 01-meta
+> **Type:** instructional
 
 ## Description
 Layer 2 of the Karpathy framework. Evaluates output against precise criteria by routing

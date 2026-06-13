@@ -2,6 +2,7 @@
 
 > **Status:** COMPLETE
 > **Cluster:** 07-devops
+> **Type:** action
 
 ## Description
 Before any push, verify SSH agent connectivity. If SSH fails, switch the remote to

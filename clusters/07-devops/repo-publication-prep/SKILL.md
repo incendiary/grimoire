@@ -2,6 +2,7 @@
 
 > **Status:** complete
 > **Cluster:** 07-devops
+> **Type:** instructional
 > **Merged from:** `precommit-bootstrap`, `repo-publication-prep`, `github-repo-prep`
 
 ## Description

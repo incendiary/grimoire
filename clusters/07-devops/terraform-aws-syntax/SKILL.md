@@ -2,6 +2,7 @@
 
 > **Status:** COMPLETE
 > **Cluster:** 07-devops
+> **Type:** instructional
 
 ## Description
 Prevent common AWS provider Terraform syntax errors: block-vs-attribute confusion

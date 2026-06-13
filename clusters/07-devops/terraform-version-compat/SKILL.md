@@ -2,6 +2,7 @@
 
 > **Status:** COMPLETE
 > **Cluster:** 07-devops
+> **Type:** instructional
 
 ## Description
 Before adding or upgrading a Terraform module, check provider version compatibility

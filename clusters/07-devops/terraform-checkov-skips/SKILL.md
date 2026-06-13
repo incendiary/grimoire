@@ -2,6 +2,7 @@
 
 > **Status:** COMPLETE
 > **Cluster:** 07-devops
+> **Type:** instructional
 
 ## Description
 Ensure checkov:skip comments are placed correctly inside resource blocks. Comments
