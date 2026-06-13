@@ -25,9 +25,25 @@ rabbit hole — this skill says: check once, fall back fast, ship the work.
 
 ## Installation
 
+### Claude Code
+
 ```bash
-cp -r ~/Claude/Skills/grimoire/clusters/07-devops/git-push-protocol-handler ~/.claude/skills/
+cp -r clusters/07-devops/git-push-protocol-handler ~/.claude/skills/
 ```
+
+### VS Code (prompt file)
+
+After running `bash build.sh`, reference in Copilot Chat:
+```
+#git-push-protocol-handler
+```
+
+### MCP client
+
+Register the grimoire MCP server — this skill is exposed as tool `git_push_protocol_handler`.
+
+> **Note:** This is an `action` type skill — available as MCP tool, prompt file, and Claude Code.
+
 
 ---
 

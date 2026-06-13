@@ -5,6 +5,26 @@
 Standardised Python CI workflow (ruff + black + pytest-cov + secret scan).
 Extracted from a session where the same workflow was written from scratch for 8 repos.
 
+---
+
+## Installation
+
+### Claude Code
+
+```bash
+cp -r clusters/07-devops/python-ci-template ~/.claude/skills/
+```
+
+### VS Code (prompt file)
+
+After running `bash build.sh`, reference in Copilot Chat:
+```
+#python-ci-template
+```
+
+> **Note:** This is an `instructional` type skill — prompt file and Claude Code only.
+> Not exposed as an MCP tool.
+
 ## Roadmap
 
 - [x] Extracted from archive session (8x repetition — htb-canvas, Slice-N-Dice, bgp_rogue, burps, others)

@@ -28,9 +28,25 @@ make a roadmap that looks abandoned.
 
 ## Installation
 
+### Claude Code
+
 ```bash
-cp -r ~/Claude/Skills/grimoire/clusters/07-devops/roadmap-sync ~/.claude/skills/
+cp -r clusters/07-devops/roadmap-sync ~/.claude/skills/
 ```
+
+### VS Code (prompt file)
+
+After running `bash build.sh`, reference in Copilot Chat:
+```
+#roadmap-sync
+```
+
+### MCP client
+
+Register the grimoire MCP server — this skill is exposed as tool `roadmap_sync`.
+
+> **Note:** This is an `action` type skill — available as MCP tool, prompt file, and Claude Code.
+
 
 ---
 

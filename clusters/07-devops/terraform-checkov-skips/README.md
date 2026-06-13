@@ -24,9 +24,22 @@ Any Terraform session where checkov is part of the CI pipeline.
 
 ## Installation
 
+### Claude Code
+
 ```bash
-cp -r ~/Claude/Skills/grimoire/clusters/07-devops/terraform-checkov-skips ~/.claude/skills/
+cp -r clusters/07-devops/terraform-checkov-skips ~/.claude/skills/
 ```
+
+### VS Code (prompt file)
+
+After running `bash build.sh`, reference in Copilot Chat:
+```
+#terraform-checkov-skips
+```
+
+> **Note:** This is an `instructional` type skill — prompt file and Claude Code only.
+> Not exposed as an MCP tool.
+
 
 ---
 

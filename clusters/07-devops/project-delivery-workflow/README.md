@@ -28,9 +28,22 @@ tags before the SSH key is confirmed.
 
 ## Installation
 
+### Claude Code
+
 ```bash
-cp -r ~/Claude/Skills/grimoire/clusters/07-devops/project-delivery-workflow ~/.claude/skills/
+cp -r clusters/07-devops/project-delivery-workflow ~/.claude/skills/
 ```
+
+### VS Code (prompt file)
+
+After running `bash build.sh`, reference in Copilot Chat:
+```
+#project-delivery-workflow
+```
+
+> **Note:** This is an `instructional` type skill — prompt file and Claude Code only.
+> Not exposed as an MCP tool.
+
 
 ---
 

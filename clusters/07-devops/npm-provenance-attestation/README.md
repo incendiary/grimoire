@@ -44,9 +44,22 @@ deep provenance inspection for a named list of critical packages.
 
 ## Installation
 
+### Claude Code
+
 ```bash
-cp -r ~/Claude/Skills/grimoire/clusters/07-devops/npm-provenance-attestation ~/.claude/skills/
+cp -r clusters/07-devops/npm-provenance-attestation ~/.claude/skills/
 ```
+
+### VS Code (prompt file)
+
+After running `bash build.sh`, reference in Copilot Chat:
+```
+#npm-provenance-attestation
+```
+
+> **Note:** This is an `instructional` type skill — prompt file and Claude Code only.
+> Not exposed as an MCP tool.
+
 
 ---
 
