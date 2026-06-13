@@ -11,7 +11,7 @@ jobs:
     name: Shellcheck
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Install shellcheck
         run: sudo apt-get install -y shellcheck
       - name: Lint all shell scripts
@@ -21,7 +21,7 @@ jobs:
     name: Skill structure
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Assert every skill directory has SKILL.md and README.md
         run: |
           set -e
@@ -45,7 +45,7 @@ jobs:
     name: Registry sync
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Every Type:action SKILL.md must be in registry
         run: |
           set -e
