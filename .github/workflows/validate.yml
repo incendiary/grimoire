@@ -74,3 +74,49 @@ jobs:
           done
           if [ "$failed" -eq 1 ]; then exit 1; fi
           echo "All registry entries are valid"
+
+  readme-quality:
+    name: README quality
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Every skill README has Installation section with multi-platform
+        run: |
+          set -e
+          failed=0
+          for readme in clusters/*/*/README.md; do
+            [ -f "$readme" ] || continue
+            if ! grep -q '## Installation' "$readme"; then
+              echo "WARNING: missing ## Installation in $readme"
+              failed=1
+            fi
+            # Check for at least 2 platform targets
+            platforms=0
+            if grep -q 'claude/skills' "$readme"; then platforms=$((platforms+1)); fi
+            if grep -q '#<\|#skill-name\|prompt\|Copilot Chat' "$readme"; then platforms=$((platforms+1)); fi
+            if grep -q 'MCP\|mcp' "$readme"; then platforms=$((platforms+1)); fi
+            if [ "$platforms" -lt 2 ]; then
+              echo "WARNING: $readme has fewer than 2 platform targets ($platforms found)"
+              failed=1
+            fi
+          done
+          if [ "$failed" -eq 1 ]; then
+            echo ""
+            echo "Some READMEs need multi-platform install sections."
+            echo "See docs/skill-readme-template.md for the expected format."
+            exit 1
+          fi
+          echo "All skill READMEs have multi-platform installation"
+      - name: No stale path references
+        run: |
+          set -e
+          failed=0
+          for readme in clusters/*/*/README.md; do
+            [ -f "$readme" ] || continue
+            if grep -q '/path/to/grimoire\|loadout/' "$readme"; then
+              echo "ERROR: stale path reference in $readme"
+              failed=1
+            fi
+          done
+          if [ "$failed" -eq 1 ]; then exit 1; fi
+          echo "No stale paths found"

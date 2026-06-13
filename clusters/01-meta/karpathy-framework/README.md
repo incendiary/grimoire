@@ -26,14 +26,26 @@ Provides a routing table and default sequence for the three Karpathy layers:
 
 ---
 
+---
+
 ## Installation
 
+### Claude Code
+
 ```bash
-cp -r ~/Claude/Skills/grimoire/clusters/01-meta/karpathy-framework ~/.claude/skills/
-cp -r ~/Claude/Skills/grimoire/clusters/01-meta/karpathy-spec ~/.claude/skills/
-cp -r ~/Claude/Skills/grimoire/clusters/01-meta/karpathy-verify ~/.claude/skills/
-cp -r ~/Claude/Skills/grimoire/clusters/01-meta/karpathy-environment ~/.claude/skills/
+cp -r clusters/01-meta/karpathy-framework ~/.claude/skills/
 ```
+
+### VS Code (prompt file)
+
+After running `bash build.sh`, reference in Copilot Chat:
+```
+#karpathy-framework
+```
+
+> **Note:** This is an `instructional` type skill — prompt file and Claude Code only.
+> Not exposed as an MCP tool.
+
 
 ---
 

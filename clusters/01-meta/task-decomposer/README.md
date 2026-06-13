@@ -27,9 +27,22 @@ resumed cleanly across sessions.
 
 ## Installation
 
+### Claude Code
+
 ```bash
-cp -r ~/Claude/skills/grimoire/clusters/01-meta/task-decomposer ~/.claude/skills/
+cp -r clusters/01-meta/task-decomposer ~/.claude/skills/
 ```
+
+### VS Code (prompt file)
+
+After running `bash build.sh`, reference in Copilot Chat:
+```
+#task-decomposer
+```
+
+> **Note:** This is an `instructional` type skill — prompt file and Claude Code only.
+> Not exposed as an MCP tool.
+
 
 ---
 

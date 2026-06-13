@@ -28,9 +28,22 @@ context without losing state.
 
 ## Installation
 
+### Claude Code
+
 ```bash
-cp -r ~/Claude/skills/grimoire/clusters/01-meta/task-handoff ~/.claude/skills/
+cp -r clusters/01-meta/task-handoff ~/.claude/skills/
 ```
+
+### VS Code (prompt file)
+
+After running `bash build.sh`, reference in Copilot Chat:
+```
+#task-handoff
+```
+
+> **Note:** This is an `instructional` type skill — prompt file and Claude Code only.
+> Not exposed as an MCP tool.
+
 
 ---
 

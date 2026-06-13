@@ -30,9 +30,22 @@ straight through to completion on whatever was understood at the start.
 
 ## Installation
 
+### Claude Code
+
 ```bash
-cp -r ~/Claude/Skills/grimoire/clusters/01-meta/mid-task-checkin ~/.claude/skills/
+cp -r clusters/01-meta/mid-task-checkin ~/.claude/skills/
 ```
+
+### VS Code (prompt file)
+
+After running `bash build.sh`, reference in Copilot Chat:
+```
+#mid-task-checkin
+```
+
+> **Note:** This is an `instructional` type skill — prompt file and Claude Code only.
+> Not exposed as an MCP tool.
+
 
 ---
 

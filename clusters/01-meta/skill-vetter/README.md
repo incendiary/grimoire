@@ -35,9 +35,22 @@ review process before they are committed here.
 
 ## Installation
 
+### Claude Code
+
 ```bash
-cp -r ~/Claude/Skills/grimoire/clusters/01-meta/skill-vetter ~/.claude/skills/
+cp -r clusters/01-meta/skill-vetter ~/.claude/skills/
 ```
+
+### VS Code (prompt file)
+
+After running `bash build.sh`, reference in Copilot Chat:
+```
+#skill-vetter
+```
+
+> **Note:** This is an `instructional` type skill — prompt file and Claude Code only.
+> Not exposed as an MCP tool.
+
 
 No hook wiring required. This is a context-load skill only.
 
@@ -87,7 +100,7 @@ User decides whether to install
 
 - It will not automatically install the skill. The verdict is advisory; you decide.
 - It will not run scripts from the skill being vetted during the review.
-- It will not flag skills from the `loadout` repo (those are already reviewed).
+- It will not flag skills from the `grimoire` repo (those are already reviewed).
 
 ---
 
