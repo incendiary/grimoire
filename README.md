@@ -1,10 +1,18 @@
 # grimoire
 
-A private library of Claude Code skills — structured, composable `SKILL.md` folders
-that encode context, constraints, and scripts for recurring workflows. Skills are
-organised into clusters of atomic, chainable units rather than monolithic all-in-one
-prompts. New skills are promoted into this repo via the `session-skill-extractor`
-meta-skill after each session.
+A private library of structured skills — composable `SKILL.md` folders that encode
+context, constraints, and scripts for recurring workflows. Skills are organised into
+clusters of atomic, chainable units rather than monolithic all-in-one prompts.
+
+Grimoire is **platform-agnostic at source** with multiple delivery targets:
+
+| Platform | Mechanism | Install |
+|----------|-----------|---------|
+| Claude Code | `~/.claude/skills/` auto-loading | `bash install-all.sh` |
+| VS Code (prompts) | `.prompt.md` files via `chat.promptFilesLocations` | `bash build.sh` |
+| VS Code / any MCP client | MCP server exposing action skills as tools | `bash install-vscode.sh` |
+
+The canonical source is always `SKILL.md`. Everything else is a build output.
 
 > **Process note:** every time a skill is added or promoted, update the Skills Index
 > table below. This is the single source of truth for what is in the library and what
@@ -76,6 +84,61 @@ After installing, open a Claude Code session and check the skill loads:
 What skills do you have loaded?
 ```
 Claude will list the skills it has read from `~/.claude/skills/`.
+
+---
+
+## VS Code / MCP Installation
+
+### Full setup (prompts + MCP server)
+
+```bash
+bash install-vscode.sh
+```
+
+This builds the MCP server, generates prompt files, and prints the VS Code
+settings to add. Requires Node.js 22+.
+
+### Prompt files only
+
+```bash
+bash build.sh
+```
+
+Generates `.prompt.md` files to `prompts/`. Add to VS Code settings:
+```json
+"chat.promptFilesLocations": [
+    {"path": "/path/to/grimoire/prompts"}
+]
+```
+
+Then reference skills in Copilot Chat with `#skill-name`.
+
+### MCP server only
+
+```bash
+cd mcp-server && npm ci && npm run build
+```
+
+Add to VS Code settings:
+```json
+"mcp": {
+    "servers": {
+        "grimoire": {
+            "command": "node",
+            "args": ["/path/to/grimoire/mcp-server/dist/server.js"]
+        }
+    }
+}
+```
+
+### Skill types
+
+Each `SKILL.md` has a `Type:` field:
+
+| Type | Prompt file | MCP tool | Use case |
+|------|-------------|----------|----------|
+| `instructional` | ✅ | — | Thinking frameworks, conventions, checklists |
+| `action` | ✅ | ✅ | Skills that execute shell commands |
 
 ---
 

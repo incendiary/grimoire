@@ -7,12 +7,21 @@ Read this at session start; merge with global `~/.claude/CLAUDE.md`.
 
 ## Repo overview
 
-Private skill library at `/Users/adz/Claude/skills/grimoire`.
+Private skill library (cloned locally; path varies per machine).
 Nine clusters (`01-meta` through `09-odpc`); each skill directory contains `SKILL.md` + `README.md`
 and zero or more scripts/templates.
 
-CI: `.github/workflows/validate.yml` — shellcheck all `.sh` files + structure check
-(every skill dir must have `SKILL.md` + `README.md`). Now has `workflow_dispatch` trigger.
+**Multi-platform delivery:**
+- Claude Code: `install-all.sh` copies skill folders to `~/.claude/skills/`
+- VS Code (MCP): `mcp-server/` — TypeScript MCP server, reads `registry.json` at startup,
+  exposes action skills as callable tools. Build with `cd mcp-server && npm ci && npm run build`.
+- VS Code (prompts): `build.sh` generates `.prompt.md` files to `prompts/` (gitignored).
+  Point VS Code at this path via `chat.promptFilesLocations` setting.
+
+CI workflows:
+- `validate.yml` — shellcheck, skill structure, registry sync
+- `ci-mcp.yml` — TypeScript build, lint, test (path-filtered to `mcp-server/`)
+- `secret-scan.yml` — gitleaks + TruffleHog
 
 VERSION file: semver. Patch bump per PR, minor bump when a cluster's delivery batch completes.
 

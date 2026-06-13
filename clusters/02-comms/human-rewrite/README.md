@@ -31,7 +31,7 @@ A Slack message that sounds like an email is itself an AI marker.
 
 ## When to use it
 
-- After any other skill produces a draft (`singtel-security-email`, `executive-translate`, `incident-appendix`)
+- After any other skill produces a draft (`executive-translate`, `incident-appendix`)
 - When Claude has drafted something in the session and it needs a style pass before sending
 - When you have written something yourself but want a cleanup pass
 - Any time the output "sounds like ChatGPT"
