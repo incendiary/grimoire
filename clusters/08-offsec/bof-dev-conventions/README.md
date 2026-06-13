@@ -26,9 +26,22 @@ parsing, and handles that leak into Beacon's long-running process memory.
 
 ## Installation
 
+### Claude Code
+
 ```bash
-cp -r ~/Claude/Skills/grimoire/clusters/08-offsec/bof-dev-conventions ~/.claude/skills/
+cp -r clusters/08-offsec/bof-dev-conventions ~/.claude/skills/
 ```
+
+### VS Code (prompt file)
+
+After running `bash build.sh`, reference in Copilot Chat:
+```
+#bof-dev-conventions
+```
+
+> **Note:** This is an `instructional` type skill — prompt file and Claude Code only.
+> Not exposed as an MCP tool.
+
 
 ---
 

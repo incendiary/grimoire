@@ -1,6 +1,7 @@
 # c2-integration-checklist
 
 > **Status:** COMPLETE
+> **Type:** instructional
 > **Cluster:** 08-offsec
 
 ## Description

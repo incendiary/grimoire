@@ -1,6 +1,7 @@
 # bof-dev-conventions
 
 > **Status:** COMPLETE
+> **Type:** instructional
 > **Cluster:** 08-offsec
 
 ## Description

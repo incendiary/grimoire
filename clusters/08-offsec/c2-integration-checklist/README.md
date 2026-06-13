@@ -29,9 +29,22 @@ checkbox list that can be worked through before deployment.
 
 ## Installation
 
+### Claude Code
+
 ```bash
-cp -r ~/Claude/Skills/grimoire/clusters/08-offsec/c2-integration-checklist ~/.claude/skills/
+cp -r clusters/08-offsec/c2-integration-checklist ~/.claude/skills/
 ```
+
+### VS Code (prompt file)
+
+After running `bash build.sh`, reference in Copilot Chat:
+```
+#c2-integration-checklist
+```
+
+> **Note:** This is an `instructional` type skill — prompt file and Claude Code only.
+> Not exposed as an MCP tool.
+
 
 ---
 

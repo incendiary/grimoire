@@ -1,6 +1,7 @@
 # process-injection-taxonomy
 
 > **Status:** COMPLETE
+> **Type:** instructional
 > **Cluster:** 08-offsec
 
 ## Description
