@@ -2,6 +2,7 @@
 
 > **Status:** COMPLETE
 > **Cluster:** 07-devops
+> **Type:** action
 
 ## Description
 Execute the full issue → branch → PR → CI wait → merge → tag → GitHub release flow

@@ -2,6 +2,7 @@
 
 > **Status:** COMPLETE
 > **Cluster:** 07-devops
+> **Type:** action
 
 ## Description
 Enforces content-hash-based dependency verification for Python projects. Version pinning

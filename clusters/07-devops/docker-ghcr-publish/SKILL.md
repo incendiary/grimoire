@@ -2,6 +2,7 @@
 
 > **Status:** COMPLETE
 > **Cluster:** 07-devops
+> **Type:** instructional
 
 ## Description
 Builds, tags, and pushes Docker images to GitHub Container Registry (GHCR) pinned to

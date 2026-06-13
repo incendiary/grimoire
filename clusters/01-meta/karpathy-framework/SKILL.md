@@ -2,6 +2,7 @@
 
 > **Status:** COMPLETE
 > **Cluster:** 01-meta
+> **Type:** instructional
 
 ## Description
 Entry point for the Karpathy three-layer framework — a meta-system for doing better

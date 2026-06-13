@@ -2,6 +2,7 @@
 
 > **Status:** COMPLETE
 > **Cluster:** 01-meta
+> **Type:** instructional
 
 ## Description
 Layer 1 of the Karpathy framework. Transforms vague requests into precise, agile specs

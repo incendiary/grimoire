@@ -2,6 +2,7 @@
 
 > **Status:** COMPLETE
 > **Cluster:** 07-devops
+> **Type:** action
 
 ## Description
 Run pre-commit checks before attempting `git commit` to avoid the commit-fail-fix-recommit

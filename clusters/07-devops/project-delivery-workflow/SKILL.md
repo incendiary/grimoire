@@ -2,6 +2,7 @@
 
 > **Status:** COMPLETE
 > **Cluster:** 07-devops
+> **Type:** instructional
 
 ## Description
 End-to-end workflow for delivering a GitHub project from cold checkout to final

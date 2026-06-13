@@ -2,6 +2,7 @@
 
 > **Status:** COMPLETE
 > **Cluster:** 07-devops
+> **Type:** instructional
 > **Source:** archive session (pattern detected 8x)
 
 ## Description

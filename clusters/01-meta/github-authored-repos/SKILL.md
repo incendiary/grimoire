@@ -2,6 +2,7 @@
 
 > **Status:** promoted
 > **Cluster:** 01-meta
+> **Type:** action
 > **Source:** archive session (pattern detected 3x)
 
 ## Description

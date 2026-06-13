@@ -2,6 +2,7 @@
 
 > **Status:** COMPLETE
 > **Cluster:** 07-devops
+> **Type:** instructional
 
 ## Description
 Verifies npm package provenance attestations — Sigstore-backed build transparency records
