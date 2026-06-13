@@ -34,11 +34,23 @@ a CISO gets more technical framing than a C-suite peer.
 
 ## Installation
 
+### Claude Code
+
 ```bash
-cp -r ~/Claude/Skills/grimoire/clusters/02-comms/executive-translate ~/.claude/skills/
+cp -r clusters/02-comms/executive-translate ~/.claude/skills/
 ```
 
-No hook wiring required.
+### VS Code (prompt file)
+
+After running `bash build.sh`, reference in Copilot Chat:
+```
+#executive-translate
+```
+
+> **Note:** This is an `instructional` type skill — prompt file and Claude Code only.
+> Not exposed as an MCP tool.
+
+
 
 ---
 

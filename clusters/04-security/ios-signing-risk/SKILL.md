@@ -1,6 +1,7 @@
 # ios-signing-risk
 
 > **Status:** COMPLETE
+> **Type:** instructional
 > **Cluster:** 04-security
 
 ## Description

@@ -31,11 +31,23 @@ a finding of confirmed safe / confirmed compromised / inconclusive with what wou
 
 ## Installation
 
+### Claude Code
+
 ```bash
-cp -r ~/Claude/Skills/grimoire/clusters/04-security/ios-signing-risk ~/.claude/skills/
+cp -r clusters/04-security/ios-signing-risk ~/.claude/skills/
 ```
 
-No hook wiring required.
+### VS Code (prompt file)
+
+After running `bash build.sh`, reference in Copilot Chat:
+```
+#ios-signing-risk
+```
+
+> **Note:** This is an `instructional` type skill — prompt file and Claude Code only.
+> Not exposed as an MCP tool.
+
+
 
 ---
 

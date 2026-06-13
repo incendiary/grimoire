@@ -35,9 +35,23 @@ or reviewed in the session:
 
 ## Installation
 
+### Claude Code
+
 ```bash
-cp -r ~/Claude/Skills/grimoire/clusters/05-technical/pe-binary-analysis ~/.claude/skills/
+cp -r clusters/05-technical/pe-binary-analysis ~/.claude/skills/
 ```
+
+### VS Code (prompt file)
+
+After running `bash build.sh`, reference in Copilot Chat:
+```
+#pe-binary-analysis
+```
+
+> **Note:** This is an `instructional` type skill — prompt file and Claude Code only.
+> Not exposed as an MCP tool.
+
+
 
 No hook wiring required. Load at the start of any PE-related coding session.
 

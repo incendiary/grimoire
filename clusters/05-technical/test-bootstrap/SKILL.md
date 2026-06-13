@@ -1,6 +1,7 @@
 # test-bootstrap
 
 > **Status:** COMPLETE
+> **Type:** instructional
 > **Cluster:** 05-technical
 
 ## Description

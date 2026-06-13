@@ -1,6 +1,7 @@
 # executive-translate
 
 > **Status:** COMPLETE
+> **Type:** instructional
 > **Cluster:** 02-comms
 
 ## Description
