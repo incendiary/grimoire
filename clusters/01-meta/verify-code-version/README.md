@@ -32,11 +32,24 @@ Load this skill for sessions that involve:
 
 ## Installation
 
+### Claude Code
+
 ```bash
-cp -r ~/Claude/Skills/grimoire/clusters/01-meta/verify-code-version ~/.claude/skills/
+cp -r clusters/01-meta/verify-code-version ~/.claude/skills/
 ```
 
-No hook wiring required.
+### VS Code (prompt file)
+
+After running `bash build.sh`, reference in Copilot Chat:
+```
+#verify-code-version
+```
+
+### MCP client
+
+This is an `action` type skill — it's available as a callable tool via the grimoire
+MCP server after running `bash install-vscode.sh`. Invoked automatically when relevant.
+
 
 ---
 

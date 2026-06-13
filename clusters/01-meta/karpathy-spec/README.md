@@ -34,9 +34,22 @@ forces goal clarity and breaks work into independently verifiable chunks.
 
 ## Installation
 
+### Claude Code
+
 ```bash
-cp -r ~/Claude/Skills/grimoire/clusters/01-meta/karpathy-spec ~/.claude/skills/
+cp -r clusters/01-meta/karpathy-spec ~/.claude/skills/
 ```
+
+### VS Code (prompt file)
+
+After running `bash build.sh`, reference in Copilot Chat:
+```
+#karpathy-spec
+```
+
+> **Note:** This is an `instructional` type skill — prompt file and Claude Code only.
+> Not exposed as an MCP tool.
+
 
 ---
 
