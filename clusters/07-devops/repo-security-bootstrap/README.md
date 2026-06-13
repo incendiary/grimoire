@@ -5,6 +5,29 @@
 Deploys `.gitleaks.toml` and a GitHub Actions secret-scan workflow to repos in bulk.
 Extracted from a session where the same two files were committed to 16 repos identically.
 
+---
+
+## Installation
+
+### Claude Code
+
+```bash
+cp -r clusters/07-devops/repo-security-bootstrap ~/.claude/skills/
+```
+
+### VS Code (prompt file)
+
+After running `bash build.sh`, reference in Copilot Chat:
+```
+#repo-security-bootstrap
+```
+
+### MCP client
+
+Register the grimoire MCP server — this skill is exposed as tool `repo_security_bootstrap`.
+
+> **Note:** This is an `action` type skill — available as MCP tool, prompt file, and Claude Code.
+
 ## Roadmap
 
 - [x] Extracted from PycharmProjects session (16x repetition)

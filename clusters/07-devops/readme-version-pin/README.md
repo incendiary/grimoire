@@ -26,9 +26,25 @@ rewriting install code blocks on every release cut.
 
 ## Installation
 
+### Claude Code
+
 ```bash
-cp -r ~/Claude/skills/grimoire/clusters/07-devops/readme-version-pin ~/.claude/skills/
+cp -r clusters/07-devops/readme-version-pin ~/.claude/skills/
 ```
+
+### VS Code (prompt file)
+
+After running `bash build.sh`, reference in Copilot Chat:
+```
+#readme-version-pin
+```
+
+### MCP client
+
+Register the grimoire MCP server — this skill is exposed as tool `readme_version_pin`.
+
+> **Note:** This is an `action` type skill — available as MCP tool, prompt file, and Claude Code.
+
 
 ---
 

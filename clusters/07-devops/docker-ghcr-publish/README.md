@@ -31,9 +31,22 @@ correctly, and updates README deployment instructions with versioned pull comman
 
 ## Installation
 
+### Claude Code
+
 ```bash
-cp -r ~/Claude/skills/grimoire/clusters/07-devops/docker-ghcr-publish ~/.claude/skills/
+cp -r clusters/07-devops/docker-ghcr-publish ~/.claude/skills/
 ```
+
+### VS Code (prompt file)
+
+After running `bash build.sh`, reference in Copilot Chat:
+```
+#docker-ghcr-publish
+```
+
+> **Note:** This is an `instructional` type skill — prompt file and Claude Code only.
+> Not exposed as an MCP tool.
+
 
 ---
 

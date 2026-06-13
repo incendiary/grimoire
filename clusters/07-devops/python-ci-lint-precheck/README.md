@@ -35,9 +35,25 @@ Load this skill at the start of any Python session where:
 
 ## Installation
 
+### Claude Code
+
 ```bash
-cp -r ~/Claude/Skills/grimoire/clusters/07-devops/python-ci-lint-precheck ~/.claude/skills/
+cp -r clusters/07-devops/python-ci-lint-precheck ~/.claude/skills/
 ```
+
+### VS Code (prompt file)
+
+After running `bash build.sh`, reference in Copilot Chat:
+```
+#python-ci-lint-precheck
+```
+
+### MCP client
+
+Register the grimoire MCP server — this skill is exposed as tool `python_ci_lint_precheck`.
+
+> **Note:** This is an `action` type skill — available as MCP tool, prompt file, and Claude Code.
+
 
 ---
 

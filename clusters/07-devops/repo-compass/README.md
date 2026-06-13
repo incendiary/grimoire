@@ -37,11 +37,25 @@ Load at the start of any session where you need to know what's actually outstand
 
 ## Installation
 
+### Claude Code
+
 ```bash
-cp -r ~/Claude/Skills/grimoire/clusters/07-devops/repo-compass ~/.claude/skills/
+cp -r clusters/07-devops/repo-compass ~/.claude/skills/
 ```
 
-No hook wiring required.
+### VS Code (prompt file)
+
+After running `bash build.sh`, reference in Copilot Chat:
+```
+#repo-compass
+```
+
+### MCP client
+
+Register the grimoire MCP server — this skill is exposed as tool `repo_compass`.
+
+> **Note:** This is an `action` type skill — available as MCP tool, prompt file, and Claude Code.
+
 
 ---
 

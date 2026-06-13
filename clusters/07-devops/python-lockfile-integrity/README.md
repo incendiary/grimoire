@@ -37,9 +37,25 @@ Pairs with `npm-lockfile-integrity` if the project has both Python and Node.js c
 
 ## Installation
 
+### Claude Code
+
 ```bash
-cp -r ~/Claude/Skills/grimoire/clusters/07-devops/python-lockfile-integrity ~/.claude/skills/
+cp -r clusters/07-devops/python-lockfile-integrity ~/.claude/skills/
 ```
+
+### VS Code (prompt file)
+
+After running `bash build.sh`, reference in Copilot Chat:
+```
+#python-lockfile-integrity
+```
+
+### MCP client
+
+Register the grimoire MCP server — this skill is exposed as tool `python_lockfile_integrity`.
+
+> **Note:** This is an `action` type skill — available as MCP tool, prompt file, and Claude Code.
+
 
 ---
 
