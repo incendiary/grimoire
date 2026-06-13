@@ -2,6 +2,7 @@
 
 > **Status:** COMPLETE
 > **Cluster:** 07-devops
+> **Type:** action
 > **Source:** PycharmProjects session (pattern detected 16x)
 
 ## Description

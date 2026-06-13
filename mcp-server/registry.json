@@ -1,3 +1,84 @@
 {
-    "tools": []
+    "tools": [
+        {
+            "name": "cwd-verification",
+            "skill": "clusters/01-meta/cwd-verification/SKILL.md",
+            "description": "Verify working directory before bulk file operations"
+        },
+        {
+            "name": "verify-code-version",
+            "skill": "clusters/01-meta/verify-code-version/SKILL.md",
+            "description": "Check VERSION file, git tags, and release consistency"
+        },
+        {
+            "name": "github-authored-repos",
+            "skill": "clusters/01-meta/github-authored-repos/SKILL.md",
+            "description": "List GitHub repos authored by the authenticated user"
+        },
+        {
+            "name": "repo-compass",
+            "skill": "clusters/07-devops/repo-compass/SKILL.md",
+            "description": "Session-start orientation - GitHub state + README roadmap"
+        },
+        {
+            "name": "format-before-commit",
+            "skill": "clusters/07-devops/format-before-commit/SKILL.md",
+            "description": "Run black/ruff format check before every commit"
+        },
+        {
+            "name": "git-push-protocol-handler",
+            "skill": "clusters/07-devops/git-push-protocol-handler/SKILL.md",
+            "description": "Execute git push with pre-push protocol checks"
+        },
+        {
+            "name": "github-release-workflow",
+            "skill": "clusters/07-devops/github-release-workflow/SKILL.md",
+            "description": "Tag, create GitHub release, and verify publication"
+        },
+        {
+            "name": "github-history-wipe",
+            "skill": "clusters/07-devops/github-history-wipe/SKILL.md",
+            "description": "Rewrite git history to remove sensitive content"
+        },
+        {
+            "name": "pre-commit-aware-commits",
+            "skill": "clusters/07-devops/pre-commit-aware-commits/SKILL.md",
+            "description": "Run pre-commit hooks and handle failures before commit"
+        },
+        {
+            "name": "repo-security-bootstrap",
+            "skill": "clusters/07-devops/repo-security-bootstrap/SKILL.md",
+            "description": "Bootstrap secret scanning and security tooling on a repo"
+        },
+        {
+            "name": "portfolio-readme-generator",
+            "skill": "clusters/07-devops/portfolio-readme-generator/SKILL.md",
+            "description": "Generate portfolio README from GitHub repo metadata"
+        },
+        {
+            "name": "python-ci-lint-precheck",
+            "skill": "clusters/07-devops/python-ci-lint-precheck/SKILL.md",
+            "description": "Run Python linters locally before pushing to CI"
+        },
+        {
+            "name": "roadmap-sync",
+            "skill": "clusters/07-devops/roadmap-sync/SKILL.md",
+            "description": "Sync README roadmap checkboxes with actual project state"
+        },
+        {
+            "name": "npm-lockfile-integrity",
+            "skill": "clusters/07-devops/npm-lockfile-integrity/SKILL.md",
+            "description": "Verify npm lockfile integrity and hash consistency"
+        },
+        {
+            "name": "python-lockfile-integrity",
+            "skill": "clusters/07-devops/python-lockfile-integrity/SKILL.md",
+            "description": "Verify Python lockfile integrity (pip/poetry/uv)"
+        },
+        {
+            "name": "readme-version-pin",
+            "skill": "clusters/07-devops/readme-version-pin/SKILL.md",
+            "description": "Verify README version references match VERSION file"
+        }
+    ]
 }

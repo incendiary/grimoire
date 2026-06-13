@@ -40,3 +40,36 @@ jobs:
             exit 1
           fi
           echo "All skill directories have SKILL.md and README.md"
+
+  registry-sync:
+    name: Registry sync
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Every Type:action SKILL.md must be in registry
+        run: |
+          set -e
+          failed=0
+          for f in $(grep -rl '> \*\*Type:\*\* action' clusters/01-meta/*/SKILL.md clusters/07-devops/*/SKILL.md 2>/dev/null); do
+            if ! grep -q "\"$f\"" mcp-server/registry.json; then
+              echo "ERROR: $f has Type: action but no registry entry"
+              failed=1
+            fi
+          done
+          if [ "$failed" -eq 1 ]; then exit 1; fi
+          echo "All action skills are registered"
+      - name: Every registry entry must point to a valid Type:action SKILL.md
+        run: |
+          set -e
+          failed=0
+          for skill_path in $(python3 -c "import json; r=json.load(open('mcp-server/registry.json')); [print(t['skill']) for t in r['tools']]"); do
+            if [ ! -f "$skill_path" ]; then
+              echo "ERROR: registry entry points to missing file: $skill_path"
+              failed=1
+            elif ! grep -q '> \*\*Type:\*\* action' "$skill_path"; then
+              echo "ERROR: registry entry points to $skill_path which lacks Type: action"
+              failed=1
+            fi
+          done
+          if [ "$failed" -eq 1 ]; then exit 1; fi
+          echo "All registry entries are valid"

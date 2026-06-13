@@ -2,6 +2,7 @@
 
 > **Status:** COMPLETE
 > **Cluster:** 01-meta
+> **Type:** instructional
 
 ## Description
 Layer 3 of the Karpathy framework. Builds the durable, improving-over-time workspace
