@@ -72,3 +72,8 @@ Layer 3 of the Karpathy framework. Builds the durable workspace that makes Layer
 faster over time: CLAUDE.md, structured knowledge base, custom skills roadmap, and guardrails.
 Compounds — each session setup is faster than the last.
 → [Full documentation](karpathy-environment/README.md)
+
+### [grimoire-roadmap-status](grimoire-roadmap-status/) ✅ complete
+MCP-friendly roadmap query utility for `ROADMAP.md`. Returns open/complete totals,
+top clusters by outstanding items, and unresolved infrastructure actions.
+→ [Full documentation](grimoire-roadmap-status/README.md)

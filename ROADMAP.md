@@ -151,11 +151,11 @@ Items marked "Ship: copy to ~/.claude/skills/..." are legacy — the install pat
 
 These are repo-level improvements not tied to individual skills:
 
-- [ ] Add grimoire-private cluster README standardisation (mirror public format)
+- [x] Add grimoire-private cluster README standardisation (mirror public format)
 - [x] Add `scripts/roadmap-close.sh` — marks items done by skill name + index
-- [ ] Add MCP tool for roadmap query (`grimoire_roadmap_status`)
+- [x] Add MCP tool for roadmap query (`grimoire_roadmap_status`)
 - [ ] Investigate semantic search across SKILL.md content for skill discovery
-- [ ] Add skill dependency graph generation (which skills reference others)
+- [x] Add skill dependency graph generation (which skills reference others)
 - [x] Add `uninstall-vscode.sh` — removes grimoire entry from mcp.json, removes prompt path from settings.json, deletes prompts/ build output
 - [x] Add `uninstall-all.sh` — removes grimoire-managed skills from a target skills directory (default: `~/.claude/skills`)
 - [x] Timestamped versioned backups for `install-all.sh` (Claude Code) — same pattern as install-vscode.sh (date-stamped, keep last 5)

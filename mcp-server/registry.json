@@ -79,6 +79,11 @@
             "name": "readme-version-pin",
             "skill": "clusters/07-devops/readme-version-pin/SKILL.md",
             "description": "Verify README version references match VERSION file"
+        },
+        {
+            "name": "grimoire_roadmap_status",
+            "skill": "clusters/01-meta/grimoire-roadmap-status/SKILL.md",
+            "description": "Query roadmap totals, open clusters, and infrastructure status"
         }
     ]
 }
