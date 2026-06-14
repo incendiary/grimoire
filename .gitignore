@@ -10,3 +10,7 @@ config.local.json
 
 # Build outputs — generated from SKILL.md source
 prompts/
+
+# Working directories
+tmp/
+logs/
