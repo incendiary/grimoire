@@ -10,6 +10,7 @@ Grimoire is **platform-agnostic at source** with three delivery targets:
 |----------|-----------|---------|
 | Claude Code | `~/.claude/skills/` auto-loading | `bash install-all.sh` |
 | VS Code (Copilot Chat) | `.prompt.md` files + MCP tools | `bash install-vscode.sh` |
+| JetBrains MCP clients | MCP tool registration | `bash install-jetbrains.sh` |
 | Any MCP client | Standalone MCP server (stdio) | `cd mcp-server && npm ci && npm run build` |
 
 The canonical source is always `SKILL.md`. Everything else is a build output.
@@ -77,6 +78,16 @@ with `#skill-name`. Add to VS Code settings:
 ```json
 "chat.promptFilesLocations": [{"path": "/absolute/path/to/grimoire/prompts"}]
 ```
+
+### JetBrains MCP setup
+
+```bash
+bash install-jetbrains.sh
+```
+
+Builds the MCP server and merges a `grimoire` entry into JetBrains MCP config.
+Supports `--apply`, `--dry-run`, and explicit `--mcp-path /absolute/path/to/mcp.json`
+for environments where config location differs.
 
 ---
 
