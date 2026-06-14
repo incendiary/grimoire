@@ -89,6 +89,16 @@
             "name": "roadmap-driver",
             "skill": "clusters/01-meta/roadmap-driver/SKILL.md",
             "description": "Select next implementation-ready roadmap task and execution chain"
+        },
+        {
+            "name": "devops-practices",
+            "skill": "clusters/07-devops/devops-practices/SKILL.md",
+            "description": "Establish and audit standardised devops practices on a repo"
+        },
+        {
+            "name": "devops-practices-updater",
+            "skill": "clusters/07-devops/devops-practices-updater/SKILL.md",
+            "description": "Add a new practice to the devops-practices skill"
         }
     ]
 }

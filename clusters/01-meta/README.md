@@ -97,3 +97,115 @@ the roadmap" prompts. Chains: `repo-compass` → `task-decomposer` → `karpathy
 MCP-friendly roadmap query utility for `ROADMAP.md`. Returns open/complete totals,
 top clusters by outstanding items, and unresolved infrastructure actions.
 → [Full documentation](grimoire-roadmap-status/README.md)
+
+### [task-decomposer](task-decomposer/) ✅ complete
+
+Proactively breaks large tasks into self-contained chunks before context limits become an
+issue. Each chunk is a task file with everything a fresh session needs to execute independently.
+Used at the start of multi-session work to prevent context-window collisions.
+→ [Full documentation](task-decomposer/README.md)
+
+### [task-handoff](task-handoff/) ✅ complete
+
+Reactively packages the current session's state into a handoff document when context pressure
+is building mid-task. Captures git state, completed work, decisions made, and next chunk with
+verifiable done criteria. Enables a fresh session to pick up cleanly without replaying history.
+→ [Full documentation](task-handoff/README.md)
+
+---
+
+## When to invoke — workflow guide
+
+### Workflow 1: Starting a new large task
+
+**Trigger:** "Build X" / "Implement Y" / any task that feels multi-step or vague
+
+```
+karpathy-framework        → route to the right layer (usually spec first)
+        ↓
+karpathy-spec             → break the vague request into precise agile specs
+        ↓
+task-decomposer           → (if multi-session) split into independent chunks
+        ↓
+[do the work]
+        ↓
+karpathy-verify           → evaluate output against spec criteria
+        ↓
+karpathy-environment      → (if patterns emerged) capture in CLAUDE.md / skills
+```
+
+### Workflow 2: Mid-session context pressure
+
+**Trigger:** "Context is getting long" / session feels sluggish / about to hit limits
+
+```
+mid-task-checkin           → pause, check for new instructions, confirm direction
+        ↓
+task-handoff              → package state for a fresh session to continue
+        ↓
+[new session starts from handoff document]
+```
+
+### Workflow 3: Session start (any project)
+
+**Trigger:** Opening a new session / "where was I?" / resuming work
+
+```
+cwd-verification          → confirm you're in the right directory
+        ↓
+verify-code-version       → confirm working tree matches HEAD (no stale code)
+        ↓
+github-authored-repos     → (if multi-repo) scope to authored repos only
+```
+
+### Workflow 4: Evaluating existing output
+
+**Trigger:** "Is this good enough?" / reviewing generated code / before accepting AI output
+
+```
+karpathy-verify           → second-opinion evaluation against criteria
+        ↓
+test-before-asking        → try the reasonable interpretation rather than asking
+```
+
+### Workflow 5: Post-session / environment improvement
+
+**Trigger:** End of a productive session / "I keep doing the same thing" / session felt repetitive
+
+```
+session-skill-extractor   → scan transcript, propose new SKILL.md stubs
+        ↓
+skill-vetter              → (if third-party skill) review for safety before installing
+        ↓
+karpathy-environment      → update CLAUDE.md, knowledge base, skill roadmap
+```
+
+### Workflow 6: Installing or vetting new skills
+
+**Trigger:** "Should I trust this skill?" / found a third-party skill to install
+
+```
+skill-vetter              → repo health, script audit, prompt injection check
+        ↓
+[PASS / FLAG / REJECT decision]
+```
+
+---
+
+## Individual skill trigger reference
+
+| Skill | Invoke when... |
+|-------|---------------|
+| `karpathy-framework` | Unsure which layer to start with; onboarding someone to the framework |
+| `karpathy-spec` | Task is vague, large, or multi-step; need to define "done" before starting |
+| `karpathy-verify` | Output exists; need to evaluate quality before accepting; want a second opinion |
+| `karpathy-environment` | Session felt repetitive; patterns emerged worth capturing; setting up CLAUDE.md |
+| `task-decomposer` | Task will span multiple sessions; need independent chunks before starting |
+| `task-handoff` | Context pressure building mid-task; need to hand off cleanly to a fresh session |
+| `mid-task-checkin` | Long multi-step task in progress; natural phase boundary reached; 3+ steps planned |
+| `session-skill-extractor` | Session ending; want to extract reusable patterns into proposed skills |
+| `skill-vetter` | Evaluating a third-party skill before installing; need safety/quality check |
+| `github-authored-repos` | Multi-repo operation starting; need to exclude forks and reference clones |
+| `cwd-verification` | Starting a session; about to run bulk file operations; path might be wrong |
+| `verify-code-version` | After a pull; before debugging unexpected output; code might be stale |
+| `test-before-asking` | About to ask the user a clarifying question; check if you should just try first |
