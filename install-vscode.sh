@@ -266,15 +266,29 @@ if (existing.mcp) {
     console.log('  ℹ Removed legacy \"mcp\" key from settings.json (migrated to mcp.json)');
 }
 
-// Deep merge: chat.promptFilesLocations (append if path not already present)
-const promptLocations = existing['chat.promptFilesLocations'] || [];
-const alreadyHasPrompts = promptLocations.some(
-    entry => (typeof entry === 'string' ? entry : entry.path) === promptsPath
-);
-if (!alreadyHasPrompts) {
-    promptLocations.push({ path: promptsPath });
+// Deep merge: chat.promptFilesLocations
+// VS Code accepts two formats:
+//   Array: [{"path": "/abs/path"}]  (1.100+ recommended)
+//   Object: {"/path": true}         (legacy)
+// Detect existing format and extend in-kind.
+const rawLocations = existing['chat.promptFilesLocations'];
+if (Array.isArray(rawLocations)) {
+    const alreadyHasPrompts = rawLocations.some(
+        entry => (typeof entry === 'string' ? entry : entry.path) === promptsPath
+    );
+    if (!alreadyHasPrompts) {
+        rawLocations.push({ path: promptsPath });
+    }
+    existing['chat.promptFilesLocations'] = rawLocations;
+} else if (rawLocations !== null && typeof rawLocations === 'object') {
+    // Object format — add key if not already present
+    if (!(promptsPath in rawLocations)) {
+        rawLocations[promptsPath] = true;
+    }
+    existing['chat.promptFilesLocations'] = rawLocations;
+} else {
+    existing['chat.promptFilesLocations'] = [{ path: promptsPath }];
 }
-existing['chat.promptFilesLocations'] = promptLocations;
 
 fs.writeFileSync(settingsPath, JSON.stringify(existing, null, 4) + '\n');
 console.log('  ✓ settings.json updated — prompt file path registered');
