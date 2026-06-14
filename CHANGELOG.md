@@ -11,6 +11,23 @@ This project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [1.6.1] — 2026-06-14
+
+Fix MCP server registration to use VS Code's dedicated mcp.json file.
+
+### Fixed
+- `install-vscode.sh` now writes MCP server config to `mcp.json` instead of
+  the legacy `settings.json` location (VS Code 1.100+ uses a dedicated file)
+- Removes stale `"mcp"` key from `settings.json` during migration
+
+### Added
+- `.github/workflows/release-on-tag.yml` — auto-creates GitHub Release on tag push
+- `scripts/release-backfill.sh` — reconciliation script for tag↔release drift
+- Version-tag drift warning in `validate.yml` (annotation only, not a hard fail)
+- CI enforcement section in `github-release-workflow` SKILL.md (reusable pattern)
+
+---
+
 ## [1.6.0] — 2025-07-14
 
 README standardisation across all public clusters + global roadmap.
