@@ -43,8 +43,8 @@ function rotateIfNeeded(): void {
         // Remove oldest rotated logs beyond limit
         const rotated = existing.filter(f => f !== "mcp-server.log");
         while (rotated.length >= MAX_LOG_FILES) {
-            const oldest = rotated.shift()!;
-            unlinkSync(resolve(LOG_DIR, oldest));
+            const oldest = rotated.shift();
+            if (oldest) unlinkSync(resolve(LOG_DIR, oldest));
         }
 
         // Shift existing rotated files up by one

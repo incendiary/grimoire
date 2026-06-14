@@ -267,9 +267,7 @@ if (existing.mcp) {
 }
 
 // Deep merge: chat.promptFilesLocations
-// VS Code accepts two formats:
-//   Array: [{"path": "/abs/path"}]  (1.100+ recommended)
-//   Object: {"/path": true}         (legacy)
+// VS Code accepts two formats: array (1.100+ recommended) or legacy object
 // Detect existing format and extend in-kind.
 const rawLocations = existing['chat.promptFilesLocations'];
 if (Array.isArray(rawLocations)) {

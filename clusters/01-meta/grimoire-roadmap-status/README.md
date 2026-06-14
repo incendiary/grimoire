@@ -28,3 +28,21 @@ give me roadmap status and top outstanding clusters
 ```
 
 (When loaded via MCP registry as `grimoire_roadmap_status`, this runs automatically.)
+
+---
+
+## Installation
+
+### Claude Code
+
+```bash
+bash install-all.sh  # copies all skills including grimoire-roadmap-status
+```
+
+### VS Code (Copilot Chat)
+
+After running `bash build.sh`, reference with `#grimoire-roadmap-status` in Copilot Chat.
+
+### MCP tool
+
+Registered as `grimoire_roadmap_status` in `mcp-server/registry.json`.
