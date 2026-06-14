@@ -6,8 +6,9 @@ set -euo pipefail
 # What it does:
 #   1. Builds the MCP server (npm ci + tsc)
 #   2. Generates prompt files (build.sh)
-#   3. Detects VS Code settings.json on disk
-#   4. Merges grimoire config into settings (with confirmation or --apply)
+#   3. Detects VS Code config directory
+#   4. Writes MCP config to mcp.json (VS Code 1.100+ dedicated file)
+#   5. Merges prompt file path into settings.json
 #
 # Usage:
 #   bash install-vscode.sh            # interactive — prompts before editing settings
@@ -27,7 +28,7 @@ for arg in "$@"; do
         --help|-h)
             echo "Usage: bash install-vscode.sh [--apply|--dry-run]"
             echo ""
-            echo "  --apply    Edit VS Code settings.json without prompting"
+            echo "  --apply    Edit VS Code config files without prompting"
             echo "  --dry-run  Show what would be merged, don't write anything"
             echo ""
             exit 0
@@ -44,7 +45,7 @@ echo "=== grimoire VS Code setup ==="
 echo ""
 
 # --- Step 1: Build MCP server ---
-echo "[1/4] Building MCP server..."
+echo "[1/5] Building MCP server..."
 if ! command -v node &> /dev/null; then
     echo "ERROR: Node.js not found. Install Node 22+ first."
     exit 1
@@ -61,101 +62,186 @@ npm run build --silent
 echo "  ✓ MCP server built"
 
 # --- Step 2: Generate prompt files ---
-echo "[2/4] Generating prompt files..."
+echo "[2/5] Generating prompt files..."
 cd "${SCRIPT_DIR}"
 bash build.sh --clean
 echo "  ✓ Prompt files generated"
 
-# --- Step 3: Detect VS Code settings.json ---
-echo "[3/4] Detecting VS Code settings..."
+# --- Step 3: Detect VS Code config directory ---
+echo "[3/5] Detecting VS Code config..."
 
-detect_settings_path() {
+detect_vscode_user_dir() {
     local candidate=""
     case "$(uname -s)" in
         Darwin)
-            candidate="${HOME}/Library/Application Support/Code/User/settings.json"
+            candidate="${HOME}/Library/Application Support/Code/User"
             ;;
         Linux)
-            candidate="${HOME}/.config/Code/User/settings.json"
+            candidate="${HOME}/.config/Code/User"
             ;;
         MINGW*|MSYS*|CYGWIN*)
             if [[ -n "${APPDATA:-}" ]]; then
-                candidate="${APPDATA}/Code/User/settings.json"
+                candidate="${APPDATA}/Code/User"
             fi
             ;;
     esac
-    if [[ -n "${candidate}" && -f "${candidate}" ]]; then
+    if [[ -n "${candidate}" && -d "${candidate}" ]]; then
         echo "${candidate}"
     fi
 }
 
-SETTINGS_PATH="$(detect_settings_path)"
+VSCODE_USER_DIR="$(detect_vscode_user_dir)"
+SETTINGS_PATH=""
+MCP_PATH=""
 
-# --- Step 4: Merge settings ---
-echo "[4/4] Configuring VS Code settings..."
+if [[ -n "${VSCODE_USER_DIR}" ]]; then
+    SETTINGS_PATH="${VSCODE_USER_DIR}/settings.json"
+    MCP_PATH="${VSCODE_USER_DIR}/mcp.json"
+fi
+
+# --- Step 4: Write MCP config to mcp.json ---
+echo "[4/5] Configuring MCP server (mcp.json)..."
 echo ""
 
-# The JSON snippet we want to ensure exists in settings.json
-GRIMOIRE_CONFIG=$(node -e "
+MCP_CONFIG=$(node -e "
 const config = {
-    'chat.promptFilesLocations': [
-        { path: process.argv[1] }
-    ],
-    'mcp': {
-        servers: {
-            grimoire: {
-                command: 'node',
-                args: [process.argv[2]]
-            }
+    servers: {
+        grimoire: {
+            command: 'node',
+            args: [process.argv[1]],
+            type: 'stdio'
         }
     }
 };
-console.log(JSON.stringify(config, null, 4));
-" "${SCRIPT_DIR}/prompts" "${MCP_SERVER_DIR}/dist/server.js")
+console.log(JSON.stringify(config, null, '\t'));
+" "${MCP_SERVER_DIR}/dist/server.js")
 
-if [[ -z "${SETTINGS_PATH}" ]]; then
-    # Cannot find settings.json — fall back to manual instructions
-    echo "  ⚠ Could not locate VS Code settings.json on disk."
+if [[ -z "${VSCODE_USER_DIR}" ]]; then
+    echo "  ⚠ Could not locate VS Code config directory."
     echo ""
-    echo "  Add the following to your settings.json manually:"
+    echo "  Create mcp.json manually in your VS Code User directory:"
     echo ""
-    echo "${GRIMOIRE_CONFIG}"
+    echo "${MCP_CONFIG}"
     echo ""
     echo "  Common locations:"
-    echo "    macOS:   ~/Library/Application Support/Code/User/settings.json"
-    echo "    Linux:   ~/.config/Code/User/settings.json"
-    echo "    Windows: %APPDATA%\\Code\\User\\settings.json"
+    echo "    macOS:   ~/Library/Application Support/Code/User/mcp.json"
+    echo "    Linux:   ~/.config/Code/User/mcp.json"
+    echo "    Windows: %APPDATA%\\Code\\User\\mcp.json"
     echo ""
 else
-    echo "  Found: ${SETTINGS_PATH}"
-    echo ""
+    echo "  Target: ${MCP_PATH}"
 
     if [[ "${DRY_RUN}" == "true" ]]; then
-        echo "  [dry-run] Would merge the following into settings.json:"
         echo ""
-        echo "${GRIMOIRE_CONFIG}"
+        echo "  [dry-run] Would write to mcp.json:"
+        echo ""
+        echo "${MCP_CONFIG}"
+        echo ""
+    else
+        write_mcp_config() {
+            node -e "
+const fs = require('fs');
+const mcpPath = process.argv[1];
+const serverJsPath = process.argv[2];
+
+let existing = {};
+try {
+    if (fs.existsSync(mcpPath)) {
+        const raw = fs.readFileSync(mcpPath, 'utf8');
+        const cleaned = raw.replace(/^\uFEFF/, '').replace(/,(\s*[}\]])/g, '\$1');
+        existing = JSON.parse(cleaned);
+    }
+} catch (e) {
+    existing = {};
+}
+
+if (!existing.servers) existing.servers = {};
+existing.servers.grimoire = {
+    command: 'node',
+    args: [serverJsPath],
+    type: 'stdio'
+};
+if (!existing.inputs) existing.inputs = [];
+
+fs.writeFileSync(mcpPath, JSON.stringify(existing, null, '\t') + '\n');
+console.log('  ✓ mcp.json updated — grimoire MCP server registered');
+" "${MCP_PATH}" "${MCP_SERVER_DIR}/dist/server.js"
+        }
+
+        if [[ "${AUTO_APPLY}" == "true" ]]; then
+            write_mcp_config
+        else
+            echo ""
+            echo "  Will register grimoire server in: ${MCP_PATH}"
+            echo "    command: node"
+            echo "    args:    ${MCP_SERVER_DIR}/dist/server.js"
+            echo ""
+            printf "  Apply? [y/N] "
+            read -r response
+            if [[ "${response}" =~ ^[Yy]$ ]]; then
+                write_mcp_config
+            else
+                echo "  Skipped. Create mcp.json manually:"
+                echo ""
+                echo "${MCP_CONFIG}"
+                echo ""
+            fi
+        fi
+    fi
+fi
+
+# --- Step 5: Merge prompt file path into settings.json ---
+echo "[5/5] Configuring prompt files (settings.json)..."
+echo ""
+
+PROMPT_CONFIG=$(node -e "
+const config = {
+    'chat.promptFilesLocations': [
+        { path: process.argv[1] }
+    ]
+};
+console.log(JSON.stringify(config, null, 4));
+" "${SCRIPT_DIR}/prompts")
+
+if [[ -z "${VSCODE_USER_DIR}" || ! -f "${SETTINGS_PATH}" ]]; then
+    echo "  ⚠ Could not locate VS Code settings.json."
+    echo ""
+    echo "  Add the following to your settings.json:"
+    echo ""
+    echo "${PROMPT_CONFIG}"
+    echo ""
+else
+    echo "  Target: ${SETTINGS_PATH}"
+
+    if [[ "${DRY_RUN}" == "true" ]]; then
+        echo ""
+        echo "  [dry-run] Would merge into settings.json:"
+        echo ""
+        echo "${PROMPT_CONFIG}"
         echo ""
         echo "  No changes written."
     else
-        # Deep-merge using Node.js (already a prerequisite)
         merge_settings() {
             node -e "
 const fs = require('fs');
 const settingsPath = process.argv[1];
 const promptsPath = process.argv[2];
-const serverJsPath = process.argv[3];
 
-// Read existing settings
 let existing = {};
 try {
     const raw = fs.readFileSync(settingsPath, 'utf8');
-    // Strip trailing commas (common in VS Code settings) and BOM
     const cleaned = raw.replace(/^\uFEFF/, '').replace(/,(\s*[}\]])/g, '\$1');
     existing = JSON.parse(cleaned);
 } catch (e) {
-    console.error('  WARNING: Could not parse existing settings.json — creating backup');
+    console.error('  WARNING: Could not parse settings.json — creating backup');
     fs.copyFileSync(settingsPath, settingsPath + '.bak');
     existing = {};
+}
+
+// Remove legacy mcp key if present (migrated to mcp.json in VS Code 1.100+)
+if (existing.mcp) {
+    delete existing.mcp;
+    console.log('  ℹ Removed legacy \"mcp\" key from settings.json (migrated to mcp.json)');
 }
 
 // Deep merge: chat.promptFilesLocations (append if path not already present)
@@ -168,18 +254,9 @@ if (!alreadyHasPrompts) {
 }
 existing['chat.promptFilesLocations'] = promptLocations;
 
-// Deep merge: mcp.servers.grimoire (overwrite server entry)
-if (!existing.mcp) existing.mcp = {};
-if (!existing.mcp.servers) existing.mcp.servers = {};
-existing.mcp.servers.grimoire = {
-    command: 'node',
-    args: [serverJsPath]
-};
-
-// Write back with 4-space indent (VS Code default)
 fs.writeFileSync(settingsPath, JSON.stringify(existing, null, 4) + '\n');
-console.log('  ✓ Settings merged successfully');
-" "${SETTINGS_PATH}" "${SCRIPT_DIR}/prompts" "${MCP_SERVER_DIR}/dist/server.js"
+console.log('  ✓ settings.json updated — prompt file path registered');
+" "${SETTINGS_PATH}" "${SCRIPT_DIR}/prompts"
         }
 
         if [[ "${AUTO_APPLY}" == "true" ]]; then
@@ -187,14 +264,15 @@ console.log('  ✓ Settings merged successfully');
             echo "  Backup: ${SETTINGS_PATH}.grimoire-bak"
             merge_settings
         else
-            # Interactive — show preview and ask
-            echo "  Will merge into: ${SETTINGS_PATH}"
             echo ""
-            echo "  Keys to add/update:"
+            echo "  Will add to settings.json:"
             echo "    • chat.promptFilesLocations → ${SCRIPT_DIR}/prompts"
-            echo "    • mcp.servers.grimoire      → ${MCP_SERVER_DIR}/dist/server.js"
             echo ""
-            printf "  Apply these settings? [y/N] "
+            if grep -q '"mcp"' "${SETTINGS_PATH}" 2>/dev/null; then
+                echo "  Will also remove legacy \"mcp\" key (migrated to mcp.json)"
+                echo ""
+            fi
+            printf "  Apply? [y/N] "
             read -r response
             if [[ "${response}" =~ ^[Yy]$ ]]; then
                 cp "${SETTINGS_PATH}" "${SETTINGS_PATH}.grimoire-bak"
@@ -203,7 +281,7 @@ console.log('  ✓ Settings merged successfully');
             else
                 echo "  Skipped. Add manually:"
                 echo ""
-                echo "${GRIMOIRE_CONFIG}"
+                echo "${PROMPT_CONFIG}"
                 echo ""
             fi
         fi
@@ -214,7 +292,7 @@ echo ""
 echo "=== Setup complete ==="
 echo ""
 echo "Usage:"
-echo "  Prompt files: reference with #skill-name in Copilot Chat"
+echo "  Prompt files: type #skill-name in Copilot Chat"
 echo "  MCP tools:    available automatically when grimoire server is connected"
 echo ""
 echo "After pulling updates, re-run:"
