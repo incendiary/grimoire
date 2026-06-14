@@ -10,6 +10,7 @@ Grimoire is **platform-agnostic at source** with three delivery targets:
 |----------|-----------|---------|
 | Claude Code | `~/.claude/skills/` auto-loading | `bash install-all.sh` |
 | VS Code (Copilot Chat) | `.prompt.md` files + MCP tools | `bash install-vscode.sh` |
+| JetBrains MCP clients | MCP tool registration | `bash install-jetbrains.sh` |
 | Any MCP client | Standalone MCP server (stdio) | `cd mcp-server && npm ci && npm run build` |
 
 The canonical source is always `SKILL.md`. Everything else is a build output.
@@ -24,9 +25,29 @@ The canonical source is always `SKILL.md`. Everything else is a build output.
 bash install-all.sh
 ```
 
+Update existing installs safely:
+
+```bash
+bash install-all.sh --update
+```
+
+Force overwrite without backup:
+
+```bash
+bash install-all.sh --force
+```
+
 Copies every skill folder into `~/.claude/skills/`. Skills activate automatically
 when Claude recognises their trigger conditions. See [clusters/README.md](clusters/README.md)
 for how Claude Code skill invocation works.
+
+Remove installed grimoire-managed skills:
+
+```bash
+bash uninstall-all.sh --dry-run
+bash uninstall-all.sh
+bash uninstall-all.sh --skills-dir /path/to/skills
+```
 
 ### VS Code (full setup)
 
@@ -37,6 +58,13 @@ bash install-vscode.sh
 Builds the MCP server, generates prompt files, and offers to merge the required
 settings into your `settings.json`. Supports `--apply` (non-interactive) and
 `--dry-run`. Requires Node.js 22+.
+
+Remove VS Code integration:
+
+```bash
+bash uninstall-vscode.sh --dry-run
+bash uninstall-vscode.sh
+```
 
 ### VS Code (prompt files only)
 
@@ -50,6 +78,16 @@ with `#skill-name`. Add to VS Code settings:
 ```json
 "chat.promptFilesLocations": [{"path": "/absolute/path/to/grimoire/prompts"}]
 ```
+
+### JetBrains MCP setup
+
+```bash
+bash install-jetbrains.sh
+```
+
+Builds the MCP server and merges a `grimoire` entry into JetBrains MCP config.
+Supports `--apply`, `--dry-run`, and explicit `--mcp-path /absolute/path/to/mcp.json`
+for environments where config location differs.
 
 ---
 
@@ -82,6 +120,20 @@ resolves each skill's shell scripts for execution.
 - Runtime: Node 22+, TypeScript, ESM
 - Transport: stdio (compatible with VS Code, Cursor, any MCP client)
 - CI: `ci-mcp.yml` — build, lint, test on every push to `mcp-server/`
+
+### Known limitation: corporate-managed VS Code
+
+If your organisation manages Copilot via GitHub Enterprise policy, the setting
+`chat.mcp.access` may be locked to `none` ("Managed by organization"). This
+blocks **all** MCP servers — including local ones — from loading in VS Code.
+
+**Symptom:** `MCP: List Servers` shows empty despite correct `mcp.json` config.
+
+**Workaround:** Use prompt files only (`#skill-name` in Copilot Chat). Prompt files
+are unaffected by MCP policy — they load as context text, not as tool calls.
+Skills still work but Copilot interprets them as guidance rather than executing
+commands directly. For full action-skill execution, use Claude Code or an
+unmanaged VS Code profile.
 
 ---
 

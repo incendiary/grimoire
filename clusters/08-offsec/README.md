@@ -36,6 +36,55 @@ source-material-triage (06-study)
 
 ---
 
+## When to invoke — workflow guide
+
+### Workflow 1: New offensive technique implementation
+
+**Trigger:** "I need to implement this injection/shellcode technique"
+
+```
+process-injection-taxonomy  → choose technique based on privilege/visibility constraints
+          ↓
+shellcode-dev-conventions   → payload implementation guardrails
+          ↓
+api-hashing-conventions     → API resolver design and hash strategy
+          ↓
+bof-dev-conventions         → (if BOF path) Beacon-compatible implementation rules
+          ↓
+edr-test-loop               → detect/modify/retest cycle
+          ↓
+c2-integration-checklist    → operator-facing integration and OPSEC checks
+```
+
+### Workflow 2: EDR detection regression
+
+**Trigger:** "This payload gets detected, iterate to root cause"
+
+```
+edr-test-loop               → hypothesis and telemetry-driven iteration
+          ↓
+process-injection-taxonomy  → reassess technique choice against EDR surface
+          ↓
+shellcode-dev-conventions   → refactor payload for convention compliance
+          ↓
+c2-integration-checklist    → validate final deployment profile
+```
+
+---
+
+## Individual skill trigger reference
+
+| Skill | Invoke when... |
+|-------|----------------|
+| `process-injection-taxonomy` | Selecting an injection path under privilege/EDR/reliability constraints |
+| `shellcode-dev-conventions` | Writing/refactoring PIC payloads with strict low-level conventions |
+| `api-hashing-conventions` | Choosing/implementing hash-based API resolution strategy |
+| `edr-test-loop` | Running controlled detect-fix-retest cycles for payload changes |
+| `bof-dev-conventions` | Building BOFs with Beacon ABI and toolchain constraints |
+| `c2-integration-checklist` | Preparing payload/BOF delivery for C2 deployment and OPSEC checks |
+
+---
+
 ## Notes
 
 Skills in this cluster cover offensive development techniques used in authorised
