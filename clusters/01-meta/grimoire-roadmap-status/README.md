@@ -27,7 +27,7 @@ by outstanding work, and unresolved infrastructure roadmap items.
 give me roadmap status and top outstanding clusters
 ```
 
-(When loaded via MCP registry as `grimoire_roadmap_status`, this runs automatically.)
+(When loaded via MCP registry as `grimoire-roadmap-status`, this runs automatically.)
 
 ---
 
@@ -45,4 +45,4 @@ After running `bash build.sh`, reference with `#grimoire-roadmap-status` in Copi
 
 ### MCP tool
 
-Registered as `grimoire_roadmap_status` in `mcp-server/registry.json`.
+Registered as `grimoire-roadmap-status` in `mcp-server/registry.json`.

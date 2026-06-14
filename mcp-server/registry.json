@@ -81,7 +81,7 @@
             "description": "Verify README version references match VERSION file"
         },
         {
-            "name": "grimoire_roadmap_status",
+            "name": "grimoire-roadmap-status",
             "skill": "clusters/01-meta/grimoire-roadmap-status/SKILL.md",
             "description": "Query roadmap totals, open clusters, and infrastructure status"
         },
