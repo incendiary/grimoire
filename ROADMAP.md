@@ -75,6 +75,9 @@ Items marked "Ship: copy to ~/.claude/skills/..." are legacy — the install pat
 - **pe-binary-analysis**: Add worked example: full import table walk without WinAPI
 - **pe-binary-analysis**: Add worked example: section table traversal with RVA/file-offset conversion
 - **pe-binary-analysis**: Test on 2 real PE parsing sessions
+- **ui-ux-product-audit**: Add worked example: full SaaS UI audit with implemented top-3 fixes
+- **ui-ux-product-audit**: Add stack-specific checklist variants (React+Tailwind, Vue, Svelte)
+- **ui-ux-product-audit**: Test on 3 real frontend repos and capture recurring anti-patterns
 
 ### 07-devops
 
