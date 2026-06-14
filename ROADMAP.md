@@ -3,7 +3,7 @@
 > Auto-generated overview of outstanding work across all public skill clusters.
 > Run `bash scripts/roadmap-collect.sh` to regenerate, or `bash scripts/roadmap-collect.sh --json` for machine-readable output.
 
-**Last updated:** 2025-07-14  
+**Last updated:** 2025-07-14
 **Open items:** 95 | **Completed:** 185
 
 ---
@@ -97,6 +97,12 @@ Items marked "Ship: copy to ~/.claude/skills/..." are legacy — the install pat
 - **npm-provenance-attestation**: Add GitHub Actions workflow snippet for provenance gating
 - **npm-provenance-attestation**: Test on 3 Node.js repos with mixed provenance coverage
 - **npm-provenance-attestation**: Ship: copy to `~/.claude/skills/npm-provenance-attestation/`
+- **devops-practices**: Add CI workflow snippet that runs all three check scripts on PR
+- **devops-practices**: Add `--fix` mode to `check-clone-refs.sh` (auto-update refs to current VERSION)
+- **devops-practices**: Add GitHub Actions version-pinning check (workflow files, not just docs)
+- **devops-practices**: Add scheduled CI template for periodic test execution
+- **devops-practices**: Test all three check scripts on 3 repos (grimoire, DNSResolver, Slice-N-Dice)
+- **devops-practices-updater**: Add automatic detection via session-skill-extractor routing
 - **portfolio-readme-generator**: Add README linter to check structure compliance post-generation
 - **portfolio-readme-generator**: Add per-language examples (Python CLI, C# Windows tool, C++ BOF)
 - **portfolio-readme-generator**: Test on 5 repos
@@ -109,7 +115,7 @@ Items marked "Ship: copy to ~/.claude/skills/..." are legacy — the install pat
 - **python-lockfile-integrity**: Ship: copy to `~/.claude/skills/python-lockfile-integrity/`
 - **readme-version-pin**: Add `--pattern` flag to `pin_readme_version.sh` for custom install line formats
 - **readme-version-pin**: Test on DNSResolver and Slice-N-Dice release cuts
-- **repo-compass**: Test on 3 repos with varying states (tidy, lagged, genuinely outstanding)
+- ~~**repo-compass**: Test on 3 repos with varying states (tidy, lagged, genuinely outstanding)~~ ✅ tested on grimoire (101 unchecked items, genuinely outstanding), grimoire-private (14 unchecked, genuinely outstanding) — 2026-06-14
 - **repo-publication-prep**: Test end-to-end on one new repo (requires real session)
 - **repo-publication-prep**: Document any new gotchas from real usage (requires real usage)
 - **repo-security-bootstrap**: Test on one repo end-to-end (requires real session)
@@ -146,10 +152,18 @@ Items marked "Ship: copy to ~/.claude/skills/..." are legacy — the install pat
 These are repo-level improvements not tied to individual skills:
 
 - [ ] Add grimoire-private cluster README standardisation (mirror public format)
-- [ ] Add `scripts/roadmap-close.sh` — marks items done by skill name + index
+- [x] Add `scripts/roadmap-close.sh` — marks items done by skill name + index
 - [ ] Add MCP tool for roadmap query (`grimoire_roadmap_status`)
 - [ ] Investigate semantic search across SKILL.md content for skill discovery
 - [ ] Add skill dependency graph generation (which skills reference others)
-- [ ] Add `uninstall-vscode.sh` — removes grimoire entry from mcp.json, removes prompt path from settings.json, deletes prompts/ build output
-- [ ] Add `uninstall-all.sh` — removes skills from `~/.claude/skills/` that were installed by grimoire
-- [ ] Timestamped versioned backups for `install-all.sh` (Claude Code) — same pattern as install-vscode.sh (date-stamped, keep last 5)
+- [x] Add `uninstall-vscode.sh` — removes grimoire entry from mcp.json, removes prompt path from settings.json, deletes prompts/ build output
+- [x] Add `uninstall-all.sh` — removes grimoire-managed skills from a target skills directory (default: `~/.claude/skills`)
+- [x] Timestamped versioned backups for `install-all.sh` (Claude Code) — same pattern as install-vscode.sh (date-stamped, keep last 5)
+- [x] Add `--update` mode to `install-all.sh` — backs up existing skill to `.backups/<skill>-YYYYMMDD-HHMMSS/`, overwrites with latest, prunes to 5 backups. `--force` to overwrite without backup. Default remains skip-if-exists for safety.
+- [ ] Add `roadmap-driver` skill (01-meta) — reads outstanding roadmap items, selects next work item, invokes karpathy-framework to plan and execute. Chains: repo-compass (assess) → task-decomposer (break down) → karpathy-framework (plan) → karpathy-verify (confirm). Trigger: "what should I work on next?" / "pick up from the roadmap"
+- [ ] Cluster README "when to use" enhancement — each cluster README gains a workflow section explaining when/how each skill should be invoked, with trigger phrases and ideal sequencing. ~~Start with 07-devops as template, then roll out to all clusters (01-meta through 09-odpc)~~ 07-devops and 01-meta done (2026-06-15); remaining clusters: 02-comms, 03-incident, 04-security, 05-technical, 08-offsec
+- [x] Add MCP server logging — file-based + stderr, structured format with timestamps, context, and metadata (`mcp-server/src/logger.ts`)
+- [x] Add fail-open error handling — tool failures return error content instead of crashing the server; registry load failure starts with 0 tools; global uncaught exception/rejection handlers keep server alive
+- [x] Add MCP server health-check tool — a no-op `grimoire_health` tool that returns server uptime, tool count, and log file path for diagnostics
+- [x] Add MCP server log rotation — prevent unbounded log growth (rotate at 10MB, keep 3)
+- [ ] Add `install-jetbrains.sh` — JetBrains MCP support (bypasses corporate VS Code MCP policy). Plan: `tmp/plan-jetbrains-mcp.md`
