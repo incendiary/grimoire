@@ -41,6 +41,28 @@ for arg in "$@"; do
     esac
 done
 
+# --- Timestamped backup helper ---
+# Creates a dated backup and prunes to keep only the last 5.
+backup_file() {
+    local target="$1"
+    local timestamp
+    timestamp="$(date +%Y%m%d-%H%M%S)"
+    local backup="${target}.grimoire-${timestamp}.bak"
+    cp "${target}" "${backup}"
+    echo "  Backup: ${backup}"
+
+    # Prune old backups — keep only the 5 most recent
+    local count
+    # shellcheck disable=SC2012
+    count=$(ls -1 "${target}".grimoire-*.bak 2>/dev/null | wc -l | tr -d ' ')
+    if [[ "${count}" -gt 5 ]]; then
+        # shellcheck disable=SC2012
+        ls -1t "${target}".grimoire-*.bak | tail -n +6 | while IFS= read -r old; do
+            rm -f "${old}"
+        done
+    fi
+}
+
 echo "=== grimoire VS Code setup ==="
 echo ""
 
@@ -260,8 +282,7 @@ console.log('  ✓ settings.json updated — prompt file path registered');
         }
 
         if [[ "${AUTO_APPLY}" == "true" ]]; then
-            cp "${SETTINGS_PATH}" "${SETTINGS_PATH}.grimoire-bak"
-            echo "  Backup: ${SETTINGS_PATH}.grimoire-bak"
+            backup_file "${SETTINGS_PATH}"
             merge_settings
         else
             echo ""
@@ -275,8 +296,7 @@ console.log('  ✓ settings.json updated — prompt file path registered');
             printf "  Apply? [y/N] "
             read -r response
             if [[ "${response}" =~ ^[Yy]$ ]]; then
-                cp "${SETTINGS_PATH}" "${SETTINGS_PATH}.grimoire-bak"
-                echo "  Backup: ${SETTINGS_PATH}.grimoire-bak"
+                backup_file "${SETTINGS_PATH}"
                 merge_settings
             else
                 echo "  Skipped. Add manually:"
