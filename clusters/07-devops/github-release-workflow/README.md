@@ -75,7 +75,10 @@ gh release create vX.Y.Z
 
 - [x] SKILL.md written and validated
 - [x] Write `release.sh` parameterised script
-- [ ] Add CHANGELOG generation step
-- [ ] Add variant for repos without a release branch (direct tag on main)
+- [x] Add CHANGELOG generation step
+- [x] Add variant for repos without a release branch (direct tag on main)
+- [x] Add `release-on-tag.yml` CI workflow (auto-creates release from CHANGELOG)
+- [x] Add `release-backfill.sh` reconciliation script
+- [x] Add version-tag drift warning in validate.yml
 - [ ] Test on DNSResolver v2 release
 - [x] Ship: copy to `~/.claude/skills/github-release-workflow/`

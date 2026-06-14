@@ -1,0 +1,78 @@
+name: Release on tag
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  create-release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Extract version from tag
+        id: version
+        run: |
+          TAG="${GITHUB_REF#refs/tags/}"
+          VERSION="${TAG#v}"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Releasing: $TAG (version $VERSION)"
+
+      - name: Extract release notes from CHANGELOG
+        id: notes
+        run: |
+          TAG="${{ steps.version.outputs.tag }}"
+          VERSION="${{ steps.version.outputs.version }}"
+
+          # Try to extract the matching ## [X.Y.Z] section from CHANGELOG.md
+          NOTES=""
+          if [ -f "CHANGELOG.md" ]; then
+            # Match ## [X.Y.Z] or ## [vX.Y.Z] — extract body until next ## heading
+            NOTES=$(awk -v ver="$VERSION" '
+              /^## / {
+                if (found) exit
+                # Match [X.Y.Z] or [vX.Y.Z] in the heading
+                if (index($0, "[" ver "]") || index($0, "[v" ver "]")) {
+                  found=1
+                  next
+                }
+              }
+              found { print }
+            ' CHANGELOG.md | sed '/^$/N;/^\n$/d' | head -50)
+          fi
+
+          # Fallback: use --generate-notes if CHANGELOG extraction is empty
+          if [ -z "$NOTES" ]; then
+            echo "use_generate_notes=true" >> "$GITHUB_OUTPUT"
+            echo "No CHANGELOG section found for $VERSION — will use --generate-notes"
+          else
+            echo "use_generate_notes=false" >> "$GITHUB_OUTPUT"
+            # Write notes to file (avoids shell quoting issues)
+            printf '%s\n' "$NOTES" > /tmp/release-notes.md
+            echo "Extracted release notes from CHANGELOG.md"
+          fi
+
+      - name: Create GitHub Release (from CHANGELOG)
+        if: steps.notes.outputs.use_generate_notes == 'false'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${{ steps.version.outputs.tag }}" \
+            --title "${{ steps.version.outputs.tag }}" \
+            --notes-file /tmp/release-notes.md
+
+      - name: Create GitHub Release (auto-generated notes)
+        if: steps.notes.outputs.use_generate_notes == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${{ steps.version.outputs.tag }}" \
+            --title "${{ steps.version.outputs.tag }}" \
+            --generate-notes

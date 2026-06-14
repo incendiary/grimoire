@@ -119,3 +119,25 @@ jobs:
           done
           if [ "$failed" -eq 1 ]; then exit 1; fi
           echo "No stale paths found"
+
+  version-tag-sync:
+    name: Version-tag drift check
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Check VERSION matches latest tag
+        run: |
+          VERSION=$(tr -d '[:space:]' < VERSION)
+          LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "none")
+          EXPECTED_TAG="v${VERSION}"
+
+          if [ "$LATEST_TAG" = "none" ]; then
+            echo "::warning::No git tags found — VERSION is $VERSION but no tags exist"
+          elif [ "$LATEST_TAG" != "$EXPECTED_TAG" ]; then
+            echo "::warning::VERSION file ($VERSION) does not match latest tag ($LATEST_TAG). Did you forget to tag, or forget to bump VERSION?"
+          else
+            echo "✓ VERSION ($VERSION) matches latest tag ($LATEST_TAG)"
+          fi

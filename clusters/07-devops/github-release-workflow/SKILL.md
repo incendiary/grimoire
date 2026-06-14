@@ -66,3 +66,87 @@ Invoke when: releasing a new version of a repo. Trigger phrases: "cut a release"
 ## Suggested scripts
 - `release.sh` — parameterised script that runs the full flow from version bump to
   GitHub release creation
+- `release-backfill.sh` — one-off reconciliation: creates GitHub Releases for any
+  tags that are missing them (supports `--mark-prerelease-before`)
+
+## CI enforcement: release-on-tag workflow
+
+Add this workflow to any repo to guarantee every `v*` tag gets a GitHub Release.
+Prevents tag↔release drift regardless of who pushes the tag.
+
+```yaml
+# .github/workflows/release-on-tag.yml
+name: Release on tag
+on:
+  push:
+    tags: ["v*"]
+permissions:
+  contents: write
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Extract version from tag
+        id: version
+        run: |
+          TAG="${GITHUB_REF#refs/tags/}"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "version=${TAG#v}" >> "$GITHUB_OUTPUT"
+      - name: Extract release notes from CHANGELOG
+        id: notes
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          NOTES=""
+          if [ -f "CHANGELOG.md" ]; then
+            NOTES=$(awk -v ver="$VERSION" '
+              /^## / { if (found) exit; if (index($0,"["ver"]")) { found=1; next } }
+              found { print }
+            ' CHANGELOG.md | head -50)
+          fi
+          if [ -z "$NOTES" ]; then
+            echo "use_generate_notes=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "use_generate_notes=false" >> "$GITHUB_OUTPUT"
+            printf '%s\n' "$NOTES" > /tmp/release-notes.md
+          fi
+      - name: Create release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="${{ steps.version.outputs.tag }}"
+          if [ "${{ steps.notes.outputs.use_generate_notes }}" = "true" ]; then
+            gh release create "$TAG" --title "$TAG" --generate-notes
+          else
+            gh release create "$TAG" --title "$TAG" --notes-file /tmp/release-notes.md
+          fi
+```
+
+### Variant: direct tag on main (no release branch)
+
+For projects that tag directly on `main` without a release branch PR:
+
+```bash
+# Bump version, commit, tag, push, and let CI create the release
+echo "1.7.0" > VERSION
+git add VERSION && git commit -m "chore: bump version to 1.7.0"
+git tag v1.7.0
+git push origin main --tags
+# release-on-tag.yml will create the GitHub Release automatically
+```
+
+### Reconciliation: detecting drift
+
+Add to your validation CI (warning only, not a hard failure):
+
+```yaml
+- name: Version-tag drift check
+  run: |
+    VERSION=$(tr -d '[:space:]' < VERSION)
+    LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "none")
+    if [ "$LATEST_TAG" != "v${VERSION}" ]; then
+      echo "::warning::VERSION ($VERSION) ≠ latest tag ($LATEST_TAG)"
+    fi
+```
