@@ -98,6 +98,13 @@ is building mid-task. Captures git state, completed work, decisions made, and ne
 verifiable done criteria. Enables a fresh session to pick up cleanly without replaying history.
 → [Full documentation](task-handoff/README.md)
 
+### [grimoire-roadmap-status](grimoire-roadmap-status/) ✅ complete
+
+MCP-friendly roadmap query utility for `ROADMAP.md`. Returns open/completed totals,
+top clusters by outstanding items, and unresolved infrastructure roadmap actions.
+Use when choosing the next work batch or checking delivery progress at session start.
+→ [Full documentation](grimoire-roadmap-status/README.md)
+
 ---
 
 ## When to invoke — workflow guide
@@ -142,6 +149,8 @@ cwd-verification          → confirm you're in the right directory
 verify-code-version       → confirm working tree matches HEAD (no stale code)
         ↓
 github-authored-repos     → (if multi-repo) scope to authored repos only
+        ↓
+grimoire-roadmap-status   → query outstanding roadmap work before selecting tasks
 ```
 
 ### Workflow 4: Evaluating existing output
@@ -188,6 +197,7 @@ skill-vetter              → repo health, script audit, prompt injection check
 | `karpathy-environment` | Session felt repetitive; patterns emerged worth capturing; setting up CLAUDE.md |
 | `task-decomposer` | Task will span multiple sessions; need independent chunks before starting |
 | `task-handoff` | Context pressure building mid-task; need to hand off cleanly to a fresh session |
+| `grimoire-roadmap-status` | Need a quick roadmap snapshot (totals, top open clusters, infra open items) |
 | `mid-task-checkin` | Long multi-step task in progress; natural phase boundary reached; 3+ steps planned |
 | `session-skill-extractor` | Session ending; want to extract reusable patterns into proposed skills |
 | `skill-vetter` | Evaluating a third-party skill before installing; need safety/quality check |

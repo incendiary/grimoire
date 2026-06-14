@@ -19,6 +19,41 @@ audit; "establish my devops practices on this repo"; periodic health check.
 
 ---
 
+## Policy themes
+
+These are the portable governance themes that should be applied in any repo-specific
+test suite, CI policy, or release process:
+
+1. Single source of truth for versioning — one canonical version value per repo.
+2. Release reference pinning — no floating refs in user-facing commands.
+3. Version consistency across surfaces — code version, docs refs, tags, and release metadata align.
+4. Semver integrity — version formats and ordering must remain valid.
+5. Drift detection for stale refs — detect outdated version strings after version bumps.
+6. Release governance checks — completed release metadata is explicit and traceable.
+7. Roadmap ownership boundaries — roadmap lists stay in roadmap artifacts, not README usage docs.
+8. CI-enforced policy checks — controls run on PR/release workflows, not manual memory.
+9. In-flight release allowance — unreleased working version may be ahead of latest tag/release.
+10. Portable policy over repo specifics — this skill defines policy; each repo defines concrete tests.
+
+---
+
+## Theme to enforcement mapping
+
+| Theme | Primary enforcement | Secondary enforcement |
+|------|----------------------|------------------------|
+| Single source of truth for versioning | `check-version-sync.sh` | `github-release-workflow` |
+| Release reference pinning | `check-clone-refs.sh` | `readme-version-pin` |
+| Version consistency across surfaces | `check-version-sync.sh` | repo CI tests (`tests/test_version_sync.py` style) |
+| Semver integrity | `check-version-sync.sh` + release checks | `github-release-workflow` |
+| Drift detection for stale refs | `check-clone-refs.sh` | repo CI tests for stale refs |
+| Release governance checks | roadmap/release process checks | `roadmap-sync` |
+| Roadmap ownership boundaries | docs review + CI content checks | `roadmap-sync` |
+| CI-enforced policy checks | PR/release workflows running check scripts | `check-test-baseline.sh` |
+| In-flight release allowance | version-sync logic allows unreleased-forward state | release workflow discipline |
+| Portable policy over repo specifics | this SKILL.md policy definitions | repo-local test implementations |
+
+---
+
 ## Practice categories
 
 ### 1. Versioning

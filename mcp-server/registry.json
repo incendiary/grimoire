@@ -89,6 +89,11 @@
             "name": "devops-practices-updater",
             "skill": "clusters/07-devops/devops-practices-updater/SKILL.md",
             "description": "Add a new practice to the devops-practices skill"
+        },
+        {
+            "name": "grimoire_roadmap_status",
+            "skill": "clusters/01-meta/grimoire-roadmap-status/SKILL.md",
+            "description": "Query roadmap totals, open clusters, and infrastructure status"
         }
     ]
 }
