@@ -47,3 +47,43 @@ executive-translate   (executive summary)
       ↓
 risk-to-action        (what we do next)
 ```
+
+---
+
+## When to invoke — workflow guide
+
+### Workflow 1: Active incident response
+
+**Trigger:** "We have an incident; what do we need to collect first?"
+
+```
+incident-ask-builder  → owner-tagged evidence request plan
+      ↓
+incident-appendix     → source-backed technical appendix
+      ↓
+executive-translate   → leadership-ready summary
+      ↓
+risk-to-action        → mitigation plan and ownership horizon
+```
+
+### Workflow 2: Post-incident risk planning
+
+**Trigger:** "Convert this finding/risk into an actionable plan"
+
+```
+risk-to-action        → immediate/short/long-term action plan
+      ↓
+incident-appendix     → supporting evidence and assumptions
+      ↓
+executive-translate   → communication to decision-makers
+```
+
+---
+
+## Individual skill trigger reference
+
+| Skill | Invoke when... |
+|-------|----------------|
+| `incident-ask-builder` | Early incident phase needs precise evidence asks by owner and urgency |
+| `incident-appendix` | You need a defensible technical record with cited facts and assumptions |
+| `risk-to-action` | Risk statement must become execution-ready mitigation plan |

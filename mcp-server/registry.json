@@ -84,6 +84,11 @@
             "name": "grimoire_roadmap_status",
             "skill": "clusters/01-meta/grimoire-roadmap-status/SKILL.md",
             "description": "Query roadmap totals, open clusters, and infrastructure status"
+        },
+        {
+            "name": "roadmap-driver",
+            "skill": "clusters/01-meta/roadmap-driver/SKILL.md",
+            "description": "Select next implementation-ready roadmap task and execution chain"
         }
     ]
 }

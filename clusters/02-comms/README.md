@@ -43,3 +43,41 @@ human-rewrite       (final style pass)
         ↓
 Send
 ```
+
+---
+
+## When to invoke — workflow guide
+
+### Workflow 1: Executive audience communication
+
+**Trigger:** "Turn this technical update into an exec brief"
+
+```
+executive-translate   → produce business-impact-first narrative
+        ↓
+tone-check            → verify confidence, ownership, and clarity
+        ↓
+human-rewrite         → final style pass aligned to channel
+```
+
+### Workflow 2: Sensitive stakeholder message
+
+**Trigger:** "Draft a firm but non-inflammatory incident message"
+
+```
+tone-check            → identify blame/authority/vagueness risks
+        ↓
+human-rewrite         → rewrite with precise language and no filler
+        ↓
+executive-translate   → (optional) if leadership-facing summary is needed
+```
+
+---
+
+## Individual skill trigger reference
+
+| Skill | Invoke when... |
+|-------|----------------|
+| `tone-check` | You already have a draft and need issue spotting before rewriting |
+| `human-rewrite` | Final message needs natural, direct style with AI markers removed |
+| `executive-translate` | Audience is non-technical and needs concise impact + clear ask |

@@ -31,3 +31,29 @@ executive-translate       (stakeholder notification)
               ↓
 incident-appendix         (formal documentation)
 ```
+
+---
+
+## When to invoke — workflow guide
+
+### Workflow 1: iOS signing anomaly triage
+
+**Trigger:** "Is this app signing chain compromised or safe to continue?"
+
+```
+ios-signing-risk          → integrity/cert/manifest/revocation analysis
+              ↓
+incident-ask-builder      → collect missing evidence to resolve uncertainty
+              ↓
+executive-translate       → stakeholder decision brief
+              ↓
+incident-appendix         → preserve full technical record
+```
+
+---
+
+## Individual skill trigger reference
+
+| Skill | Invoke when... |
+|-------|----------------|
+| `ios-signing-risk` | You need structured technical assessment of IPA signing integrity and revocation state |
