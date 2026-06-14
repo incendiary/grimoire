@@ -79,6 +79,16 @@
             "name": "readme-version-pin",
             "skill": "clusters/07-devops/readme-version-pin/SKILL.md",
             "description": "Verify README version references match VERSION file"
+        },
+        {
+            "name": "devops-practices",
+            "skill": "clusters/07-devops/devops-practices/SKILL.md",
+            "description": "Establish and audit standardised devops practices on a repo"
+        },
+        {
+            "name": "devops-practices-updater",
+            "skill": "clusters/07-devops/devops-practices-updater/SKILL.md",
+            "description": "Add a new practice to the devops-practices skill"
         }
     ]
 }
