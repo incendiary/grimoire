@@ -150,3 +150,6 @@ These are repo-level improvements not tied to individual skills:
 - [ ] Add MCP tool for roadmap query (`grimoire_roadmap_status`)
 - [ ] Investigate semantic search across SKILL.md content for skill discovery
 - [ ] Add skill dependency graph generation (which skills reference others)
+- [ ] Add `uninstall-vscode.sh` — removes grimoire entry from mcp.json, removes prompt path from settings.json, deletes prompts/ build output
+- [ ] Add `uninstall-all.sh` — removes skills from `~/.claude/skills/` that were installed by grimoire
+- [ ] Timestamped versioned backups for `install-all.sh` (Claude Code) — same pattern as install-vscode.sh (date-stamped, keep last 5)
