@@ -9,6 +9,7 @@ communication workflows.
 ## Skills
 
 ### [ios-signing-risk](ios-signing-risk/) ✅ complete
+
 Structured analysis of iOS signing risk. Covers IPA integrity (hash and codesign
 verification), certificate authenticity and validity, OTA manifest verification,
 and revocation timing analysis with OCSP propagation lag. Always enforces the

@@ -10,6 +10,7 @@ without repetition.
 ## Skills
 
 ### [pe-binary-analysis](pe-binary-analysis/) ✅ complete
+
 Enforces manual PE structure parsing conventions: no WinAPI abstractions, no library
 wrappers, direct struct access only. Covers `ImageNtHeader`, `ImageRvaToVa`,
 and `ImageDirectoryEntryToData` replacements; RVA vs file offset annotation rules;
@@ -18,6 +19,7 @@ any PE parsing or binary introspection session.
 → [Full documentation](pe-binary-analysis/README.md)
 
 ### [test-bootstrap](test-bootstrap/) ✅ complete
+
 Adds a unit test layer to projects with no tests, or fills coverage gaps in partially
 tested projects. Detects language/framework, scaffolds failing tests first (red-first),
 implements assertions, and wires test execution into CI.
@@ -33,9 +35,9 @@ implements assertions, and wires test execution into CI.
 
 ```
 pe-binary-analysis         → enforce PE parsing and RVA/file-offset conventions
-	↓
+ ↓
 [implement/verify parser]  → direct struct access + annotation discipline
-	↓
+ ↓
 karpathy-verify            → validate correctness and edge-case handling
 ```
 
@@ -45,11 +47,11 @@ karpathy-verify            → validate correctness and edge-case handling
 
 ```
 test-bootstrap             → detect framework, scaffold failing tests, implement assertions
-	↓
+ ↓
 [run tests]                → confirm red-first then green
-	↓
+ ↓
 python-ci-template / dotnet-ci-template / workflow update
-			    → ensure CI enforces test execution
+       → ensure CI enforces test execution
 ```
 
 ---
