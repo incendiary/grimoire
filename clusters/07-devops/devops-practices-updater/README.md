@@ -38,3 +38,17 @@ disorganised.
 - `devops-practices` — the skill this updates
 - `session-skill-extractor` (01-meta) — discovers patterns; could route devops ones here
 - `karpathy-environment` (01-meta) — captures workspace-level patterns (broader scope)
+
+---
+
+## Installation
+
+### Claude Code
+
+```bash
+bash install-all.sh  # copies all skills including devops-practices-updater
+```
+
+### VS Code (Copilot Chat)
+
+After running `bash build.sh`, reference with `#devops-practices-updater` in Copilot Chat.

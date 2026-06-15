@@ -118,3 +118,17 @@ bash path/to/devops-practices/check-test-baseline.sh
 **`devops-practices-updater`** — invoke when a session reveals a new practice that should
 be standardised. It reads this skill, appends the new rule to the correct category, and
 updates enforcement scripts if applicable.
+
+---
+
+## Installation
+
+### Claude Code
+
+```bash
+bash install-all.sh  # copies all skills including devops-practices
+```
+
+### VS Code (Copilot Chat)
+
+After running `bash build.sh`, reference with `#devops-practices` in Copilot Chat.
