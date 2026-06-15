@@ -45,3 +45,22 @@ Use `task-decomposer` if implementation scope is large.
 - `task-decomposer` (01-meta)
 - `human-rewrite` (02-comms)
 - `tone-check` (02-comms)
+
+---
+
+## Installation
+
+### Claude Code
+
+```bash
+bash install-all.sh  # copies all skills including ui-ux-product-audit
+```
+
+### VS Code (Copilot Chat)
+
+After running `bash build.sh`, reference with `#ui-ux-product-audit` in Copilot Chat.
+
+### MCP (VS Code / JetBrains)
+
+This skill is instructional — loaded as a prompt file, not an MCP tool.
+Use `#ui-ux-product-audit` in Copilot Chat after running `bash build.sh`.
