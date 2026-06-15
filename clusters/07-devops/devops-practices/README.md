@@ -132,3 +132,8 @@ bash install-all.sh  # copies all skills including devops-practices
 ### VS Code (Copilot Chat)
 
 After running `bash build.sh`, reference with `#devops-practices` in Copilot Chat.
+
+### MCP (VS Code / JetBrains)
+
+This skill is instructional — loaded as a prompt file, not an MCP tool.
+Use `#devops-practices` in Copilot Chat after running `bash build.sh`.
