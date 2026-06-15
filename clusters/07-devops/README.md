@@ -181,6 +181,14 @@ practice. Reads the current skill, classifies the practice, appends to the corre
 and updates enforcement scripts if automatable. Ensures practices grow without becoming disorganised.
 → [Full documentation](devops-practices-updater/README.md)
 
+### [branch-surface-resolve](branch-surface-resolve/) ✅ complete
+
+Audits every local and remote branch, categorises each as READY / LOCAL-ONLY / HAS-PR /
+CONFLICT / STALE, and resolves what can be resolved automatically via PRs. Conflicts are
+surfaced with commit list, diff summary, and resolution options — never auto-merged.
+Invoke to clean up scattered branches and land all work on `main` via proper PRs.
+→ [Full documentation](branch-surface-resolve/README.md)
+
 ---
 
 ## When to invoke — workflow guide
@@ -294,6 +302,21 @@ pre-commit-aware-commits     → (if no hooks) install
 devops-practices-updater     → (if new practice discovered) capture it
 ```
 
+### Workflow 8: Surface and resolve scattered branches
+
+**Trigger:** "I have branches everywhere" / "Clean up my branches" / returning to a repo after a break
+
+```
+branch-surface-resolve        → audit all branches; see READY/LOCAL-ONLY/HAS-PR/CONFLICT/STALE
+        ↓
+branch-surface-resolve --resolve
+                              → auto-push and create PRs for READY and LOCAL-ONLY
+        ↓
+[manual resolution]           → for any CONFLICT branches (diff surfaced by script)
+        ↓
+repo-compass                  → verify final clean repo state
+```
+
 ---
 
 ## Individual skill trigger reference
@@ -324,3 +347,4 @@ devops-practices-updater     → (if new practice discovered) capture it
 | `project-delivery-workflow` | Full delivery loop: clone → roadmap → feature branches → PRs → release |
 | `devops-practices` | Establishing standards on a repo; auditing compliance; onboarding a project |
 | `devops-practices-updater` | Session revealed a new practice; need to capture it in the devops-practices skill |
+| `branch-surface-resolve` | Branches have accumulated across sessions; need to audit, surface conflicts, and land work via PRs |}
