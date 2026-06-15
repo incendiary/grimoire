@@ -89,6 +89,11 @@
             "name": "roadmap-driver",
             "skill": "clusters/01-meta/roadmap-driver/SKILL.md",
             "description": "Select next implementation-ready roadmap task and execution chain"
+        },
+        {
+            "name": "branch-surface-resolve",
+            "skill": "clusters/07-devops/branch-surface-resolve/SKILL.md",
+            "description": "Audit all branches, categorise by state, and resolve via PRs or surface conflicts"
         }
     ]
 }
