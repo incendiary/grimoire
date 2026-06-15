@@ -247,8 +247,12 @@ if [[ "${PRUNE_STALE}" == "true" && ${#STALE[@]} -gt 0 ]]; then
         printf "  Delete %s? [y/N] " "${branch}"
         read -r answer
         if [[ "${answer}" =~ ^[Yy]$ ]]; then
-            git branch -d "${branch}" 2>/dev/null && echo "  Deleted local: ${branch}" || true
-            git push origin --delete "${branch}" 2>/dev/null && echo "  Deleted remote: ${branch}" || true
+            if git branch -d "${branch}" 2>/dev/null; then
+                echo "  Deleted local: ${branch}"
+            fi
+            if git push origin --delete "${branch}" 2>/dev/null; then
+                echo "  Deleted remote: ${branch}"
+            fi
         fi
     done
     echo ""
