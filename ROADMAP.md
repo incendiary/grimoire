@@ -167,3 +167,4 @@ These are repo-level improvements not tied to individual skills:
 - [x] Add MCP server health-check tool — a no-op `grimoire_health` tool that returns server uptime, tool count, and log file path for diagnostics
 - [x] Add MCP server log rotation — prevent unbounded log growth (rotate at 10MB, keep 3)
 - [x] Add `install-jetbrains.sh` — JetBrains MCP support (bypasses corporate VS Code MCP policy). Includes path auto-detection, `--mcp-path` override, backup support, and dry-run/apply modes.
+- [ ] Post-merge changelog tidy pass — sync `CHANGELOG.md` with latest merged PRs and release notes after each infrastructure batch.
