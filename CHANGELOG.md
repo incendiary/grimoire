@@ -11,6 +11,22 @@ This project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [1.6.6] — 2026-06-16
+
+Project workflow guide + changelog tidy for recent release lineage.
+
+### Added
+- `PROJECT-WORKFLOWS.md` — practical skill-stack playbooks for common project types
+  (Node.js, Python, .NET, Terraform, security tooling, multi-repo operations)
+- `README.md` — Project Workflows section linking to the new guide
+
+### Changed
+- `CHANGELOG.md` — backfilled release notes for v1.6.2 through v1.6.5
+- `ROADMAP.md` — marked post-merge changelog tidy task complete in the
+  infrastructure checklist
+
+---
+
 ## [1.6.5] — 2026-06-16
 
 Add `branch-surface-resolve` skill for surfacing and resolving scattered branches.
