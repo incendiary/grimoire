@@ -62,6 +62,13 @@ Runs ruff and pylint before committing Python code, with rules for suppressing f
 positives (W0621, E0401, R0914) at the correct scope — no broad file-level disables.
 → [Full documentation](python-ci-lint-precheck/README.md)
 
+### [python-lint-gate](python-lint-gate/) ✅ complete
+
+Unified pre-commit gate for Python repos using Ruff + Black. Provides one command for
+check-only validation or safe auto-fix + re-check, and prints targeted guidance when
+issues remain.
+→ [Full documentation](python-lint-gate/README.md)
+
 ### [format-before-commit](format-before-commit/) ✅ complete
 
 Enforces running black and ruff in check-mode first, then auto-fix mode, then
@@ -241,6 +248,8 @@ docker-ghcr-publish       → (if containerised) build + push images
 ```
 format-before-commit      → run black + ruff check, then auto-fix, re-stage
         ↓
+python-lint-gate          → unified check/fix gate for ruff + black
+        ↓
 python-ci-lint-precheck   → ruff + pylint with correct suppression rules
         ↓
 pre-commit-aware-commits  → dry-run hooks, review changes, gitleaks check
@@ -330,6 +339,7 @@ repo-compass                  → verify final clean repo state
 | `python-ci-template` | Python repo has no CI or needs standardised CI from scratch |
 | `dotnet-ci-template` | .NET repo has no CI or needs standardised CI from scratch |
 | `python-ci-lint-precheck` | About to commit Python code; want to catch lint issues pre-push |
+| `python-lint-gate` | Need one command to run Ruff + Black checks (or safe auto-fixes) before commit |
 | `format-before-commit` | About to commit Python code; need to run formatters first |
 | `pre-commit-aware-commits` | Repo has pre-commit hooks; need to verify they haven't silently modified staged files |
 | `portfolio-readme-generator` | Repo needs a portfolio-quality README; publishing or updating docs |

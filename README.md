@@ -230,6 +230,7 @@ Seven public clusters + two private (via submodule). See [clusters/README.md](cl
 | 07-devops | `python-ci-template` | ✅ |
 | 07-devops | `dotnet-ci-template` | ✅ |
 | 07-devops | `python-ci-lint-precheck` | ✅ |
+| 07-devops | `python-lint-gate` | ✅ |
 | 07-devops | `format-before-commit` | ✅ |
 | 07-devops | `portfolio-readme-generator` | ✅ |
 | 07-devops | `pre-commit-aware-commits` | ✅ |

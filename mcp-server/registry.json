@@ -61,6 +61,11 @@
             "description": "Run Python linters locally before pushing to CI"
         },
         {
+            "name": "python-lint-gate",
+            "skill": "clusters/07-devops/python-lint-gate/SKILL.md",
+            "description": "Run a unified Ruff + Black gate in check or fix mode"
+        },
+        {
             "name": "roadmap-sync",
             "skill": "clusters/07-devops/roadmap-sync/SKILL.md",
             "description": "Sync README roadmap checkboxes with actual project state"
