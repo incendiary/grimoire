@@ -11,6 +11,77 @@ This project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [1.6.5] — 2026-06-16
+
+Add branch-surface-resolve skill for branch audit + PR-based resolution.
+
+### Added
+- `clusters/07-devops/branch-surface-resolve/SKILL.md` — new action skill to surface branch state (`READY`, `LOCAL-ONLY`, `HAS-PR`, `CONFLICT`, `STALE`) and route to safe resolution.
+- `clusters/07-devops/branch-surface-resolve/README.md` — usage, installation, and workflow guidance.
+- `clusters/07-devops/branch-surface-resolve/branch-surface-resolve.sh` — branch audit/resolution script with `--resolve` and `--prune-stale` modes.
+- MCP tool registration: `branch-surface-resolve` in `mcp-server/registry.json`.
+
+### Changed
+- `clusters/07-devops/README.md`: added skill entry, dedicated workflow, and trigger reference row.
+
+---
+
+## [1.6.4] — 2026-06-16
+
+Add devops-practices skill family to main branch.
+
+### Added
+- `clusters/07-devops/devops-practices/SKILL.md` and `README.md`.
+- `clusters/07-devops/devops-practices-updater/SKILL.md` and `README.md`.
+- Enforcement scripts:
+  - `clusters/07-devops/devops-practices/check-version-sync.sh`
+  - `clusters/07-devops/devops-practices/check-clone-refs.sh`
+  - `clusters/07-devops/devops-practices/check-test-baseline.sh`
+
+### Changed
+- `clusters/07-devops/README.md`: expanded workflow and trigger guidance for practices-driven audits.
+- `clusters/01-meta/README.md`: retained and reconciled `task-decomposer` / `task-handoff` workflow guidance in merged state.
+
+### Fixed
+- Registry/test compliance: instructional-only `devops-practices*` skills are not registered as MCP action tools.
+- README quality CI: added standard multi-platform installation sections for new skill READMEs.
+
+---
+
+## [1.6.3] — 2026-06-15
+
+Infrastructure roadmap execution batch.
+
+### Added
+- `install-jetbrains.sh` — JetBrains MCP installer with `--apply`, `--dry-run`, and `--mcp-path`.
+- `uninstall-all.sh` and `uninstall-vscode.sh`.
+- `clusters/01-meta/roadmap-driver/` skill.
+- `clusters/01-meta/grimoire-roadmap-status/` skill.
+- `scripts/roadmap-close.sh`.
+- `scripts/skill-dependency-graph.sh`.
+- MCP server logging module: `mcp-server/src/logger.ts`.
+
+### Changed
+- `install-all.sh` supports `--update` and `--force` with timestamped backups.
+- Cluster READMEs gained "When to invoke" workflow sections across remaining public clusters.
+- `mcp-server/src/server.ts` updated for fail-open behaviour and health reporting.
+
+### Fixed
+- `install-vscode.sh` now handles object-format `chat.promptFilesLocations` in VS Code `settings.json`.
+- MCP registry naming aligned to kebab-case (`grimoire-roadmap-status`) for test compatibility.
+- CI hardening for shellcheck/eslint/readme quality regressions encountered during rollout.
+
+---
+
+## [1.6.2] — 2026-06-14
+
+MCP schema compatibility fix.
+
+### Fixed
+- Tool registration updated to use Zod schema-compatible structure for MCP SDK `1.29.0`.
+
+---
+
 ## [1.6.1] — 2026-06-14
 
 Fix MCP server registration to use VS Code's dedicated mcp.json file.
