@@ -79,7 +79,7 @@ Confirm you're in the right directory before bulk operations.
 
 ## Project type: Python CLI tool or library
 
-**Skill stack:** karpathy-spec → task-decomposer → [dev] → python-ci-lint-precheck → format-before-commit → python-ci-template → github-release-workflow
+**Skill stack:** karpathy-spec → task-decomposer → python-black-ruff-authoring → [dev] → python-ci-lint-precheck → format-before-commit → python-ci-template → github-release-workflow
 
 ### Pre-development
 
@@ -89,17 +89,18 @@ Confirm you're in the right directory before bulk operations.
 
 ### Development
 
-4. **python-ci-lint-precheck** — Ruff + pylint before each commit
-5. **format-before-commit** — Black + ruff auto-format with review
+4. **python-black-ruff-authoring** — Write code in a style likely to pass Black + Ruff first pass
+5. **python-ci-lint-precheck** — Ruff + pylint before each commit
+6. **format-before-commit** — Black + ruff auto-format with review
 
 ### Release prep
 
-6. **python-ci-template** — Generate standardised CI (ruff, black, pytest, coverage matrix 3.9–3.12)
-7. **github-release-workflow** — Version bump → PR → CI → merge → tag → release
+7. **python-ci-template** — Generate standardised CI (ruff, black, pytest, coverage matrix 3.9–3.12)
+8. **github-release-workflow** — Version bump → PR → CI → merge → tag → release
 
 ### Post-release
 
-8. **karpathy-verify** — Verify release against spec
+9. **karpathy-verify** — Verify release against spec
 
 ---
 

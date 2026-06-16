@@ -33,6 +33,14 @@ an actionable implementation plan grouped into Today / This week / Later with ex
 Chains with `karpathy-spec` and `karpathy-verify`.
 → [Full documentation](ui-ux-product-audit/README.md)
 
+### [python-black-ruff-authoring](python-black-ruff-authoring/) ✅ complete
+
+Authoring guardrails for Python code that should pass Black and Ruff with minimal
+rework. Focuses on writing-time patterns (formatter-stable structure, clean imports,
+scoped suppressions) so code is lint/format-compatible by default before pre-commit
+checks run.
+→ [Full documentation](python-black-ruff-authoring/README.md)
+
 ---
 
 ## When to invoke — workflow guide
@@ -70,6 +78,7 @@ python-ci-template / dotnet-ci-template / workflow update
 |-------|----------------|
 | `pe-binary-analysis` | Working on PE internals, imports/exports, RVA math, or syscall hook checks |
 | `test-bootstrap` | Repo lacks tests or a changed module/class needs baseline coverage and CI wiring |
+| `python-black-ruff-authoring` | Writing/refactoring Python code in repos that use black/ruff and you want fewer lint-fix follow-up commits |
 
 ---
 

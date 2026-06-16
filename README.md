@@ -221,6 +221,7 @@ Seven public clusters + two private (via submodule). See [clusters/README.md](cl
 | 04-security | `ios-signing-risk` | ✅ |
 | 05-technical | `pe-binary-analysis` | ✅ |
 | 05-technical | `test-bootstrap` | ✅ |
+| 05-technical | `python-black-ruff-authoring` | ✅ |
 | 06-study | *(private submodule)* | — |
 | 07-devops | `repo-compass` | ✅ |
 | 07-devops | `repo-publication-prep` | ✅ |
