@@ -25,6 +25,14 @@ tested projects. Detects language/framework, scaffolds failing tests first (red-
 implements assertions, and wires test execution into CI.
 → [Full documentation](test-bootstrap/README.md)
 
+### [ui-ux-product-audit](ui-ux-product-audit/) ✅ complete
+Production-grade UI/UX audit and implementation loop for frontend applications.
+Evaluates product experience from code (hierarchy, consistency, responsiveness,
+accessibility, states, design system quality), ranks findings by severity, and requires
+an actionable implementation plan grouped into Today / This week / Later with exact files.
+Chains with `karpathy-spec` and `karpathy-verify`.
+→ [Full documentation](ui-ux-product-audit/README.md)
+
 ---
 
 ## When to invoke — workflow guide
