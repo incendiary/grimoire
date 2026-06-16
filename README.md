@@ -157,6 +157,21 @@ bash install-all.sh (or install-vscode.sh)
 
 ---
 
+## Project Workflows
+
+**New to grimoire?** See [PROJECT-WORKFLOWS.md](PROJECT-WORKFLOWS.md) for skill stacks for common project types:
+- Node.js libraries and services
+- Python CLI tools
+- .NET / C# libraries
+- Terraform / IaC infrastructure
+- Security tools and exploits
+- Multi-repo bulk operations
+- Repository assessment
+
+Each workflow shows which skills to invoke, in what order, and why.
+
+---
+
 ## Clusters
 
 Seven public clusters + two private (via submodule). See [clusters/README.md](clusters/README.md).
