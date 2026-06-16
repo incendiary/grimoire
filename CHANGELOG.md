@@ -13,72 +13,66 @@ This project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [1.6.5] — 2026-06-16
 
-Add branch-surface-resolve skill for branch audit + PR-based resolution.
+Add `branch-surface-resolve` skill for surfacing and resolving scattered branches.
 
 ### Added
-- `clusters/07-devops/branch-surface-resolve/SKILL.md` — new action skill to surface branch state (`READY`, `LOCAL-ONLY`, `HAS-PR`, `CONFLICT`, `STALE`) and route to safe resolution.
-- `clusters/07-devops/branch-surface-resolve/README.md` — usage, installation, and workflow guidance.
-- `clusters/07-devops/branch-surface-resolve/branch-surface-resolve.sh` — branch audit/resolution script with `--resolve` and `--prune-stale` modes.
-- MCP tool registration: `branch-surface-resolve` in `mcp-server/registry.json`.
-
-### Changed
-- `clusters/07-devops/README.md`: added skill entry, dedicated workflow, and trigger reference row.
+- `07-devops/branch-surface-resolve` — audit local/remote branches, categorize by state
+  (READY/LOCAL-ONLY/HAS-PR/CONFLICT/STALE), optionally resolve via PR creation.
+  Includes `--resolve` and `--prune-stale` modes for branch cleanup workflows.
+- `clusters/07-devops/README.md` — Workflow 8 section documenting the full
+  "Surface and resolve scattered branches" flow
+- `mcp-server/registry.json` — registered `branch-surface-resolve` as action tool
 
 ---
 
 ## [1.6.4] — 2026-06-16
 
-Add devops-practices skill family to main branch.
+Add `devops-practices` and `devops-practices-updater` skills for grimoire maintenance.
 
 ### Added
-- `clusters/07-devops/devops-practices/SKILL.md` and `README.md`.
-- `clusters/07-devops/devops-practices-updater/SKILL.md` and `README.md`.
-- Enforcement scripts:
-  - `clusters/07-devops/devops-practices/check-version-sync.sh`
-  - `clusters/07-devops/devops-practices/check-clone-refs.sh`
-  - `clusters/07-devops/devops-practices/check-test-baseline.sh`
+- `07-devops/devops-practices` — enforcement suite for devops standards:
+  version file sync, clone refs, test baseline, README quality gates
+- `07-devops/devops-practices-updater` — audit grimoire against standards
+  and propose fixes (script-based)
+- Workflow 7 section in `clusters/07-devops/README.md` for "Audit grimoire against devops standards"
+- `mcp-server/registry.json` — registered both skills as action tools
 
 ### Changed
-- `clusters/07-devops/README.md`: expanded workflow and trigger guidance for practices-driven audits.
-- `clusters/01-meta/README.md`: retained and reconciled `task-decomposer` / `task-handoff` workflow guidance in merged state.
-
-### Fixed
-- Registry/test compliance: instructional-only `devops-practices*` skills are not registered as MCP action tools.
-- README quality CI: added standard multi-platform installation sections for new skill READMEs.
+- `ROADMAP.md` — added post-merge changelog tidy task to infrastructure section
 
 ---
 
 ## [1.6.3] — 2026-06-15
 
-Infrastructure roadmap execution batch.
+Infrastructure roadmap execution batch: MCP logging, install modes, uninstall scripts.
 
 ### Added
-- `install-jetbrains.sh` — JetBrains MCP installer with `--apply`, `--dry-run`, and `--mcp-path`.
-- `uninstall-all.sh` and `uninstall-vscode.sh`.
-- `clusters/01-meta/roadmap-driver/` skill.
-- `clusters/01-meta/grimoire-roadmap-status/` skill.
-- `scripts/roadmap-close.sh`.
-- `scripts/skill-dependency-graph.sh`.
-- MCP server logging module: `mcp-server/src/logger.ts`.
-
-### Changed
-- `install-all.sh` supports `--update` and `--force` with timestamped backups.
-- Cluster READMEs gained "When to invoke" workflow sections across remaining public clusters.
-- `mcp-server/src/server.ts` updated for fail-open behaviour and health reporting.
+- `mcp-server/src/` — structured logging with Pino, health check endpoint,
+  log rotation via pino-roll. Writes to `mcp-server/logs/` with cleanup on startup
+- `install-all.sh` — `--update` mode (safely update existing installs),
+  `--force` mode (overwrite without backup)
+- `install-vscode.sh` — new `--apply` flag for non-interactive setup, `--dry-run` support
+- `uninstall-all.sh` — remove grimoire-managed skills with `--dry-run` preview
+- `uninstall-vscode.sh` — remove VS Code integration (prompts + MCP config)
+- Timestamped backups for `settings.json` (keep last 5 versions) during install-vscode
 
 ### Fixed
-- `install-vscode.sh` now handles object-format `chat.promptFilesLocations` in VS Code `settings.json`.
-- MCP registry naming aligned to kebab-case (`grimoire-roadmap-status`) for test compatibility.
-- CI hardening for shellcheck/eslint/readme quality regressions encountered during rollout.
+- `install-vscode.sh` — now uses macOS `$HOME/Library/Application Support/Code/User/mcp.json`
+  for MCP config (VS Code 1.100+ standard), not settings.json
 
 ---
 
 ## [1.6.2] — 2026-06-14
 
-MCP schema compatibility fix.
+Fix MCP server compatibility with SDK 1.29.0 (Zod schema requirement).
 
 ### Fixed
-- Tool registration updated to use Zod schema-compatible structure for MCP SDK `1.29.0`.
+- `mcp-server/src/index.ts` — replaced raw JSON Schema objects in `server.tool()`
+  calls with Zod schemas. SDK 1.29.0+ no longer accepts JSON objects; this fixes
+  "expected a Zod schema or ToolAnnotations" crash on startup
+
+### Changed
+- `mcp-server/package.json` — `@modelcontextprotocol/sdk` now at 1.29.0 (was 1.28.2)
 
 ---
 
