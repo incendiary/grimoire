@@ -11,6 +11,19 @@ This project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [1.6.7] — 2026-06-18
+
+Add worked examples to the 02-comms cluster skills.
+
+### Added
+- `02-comms/executive-translate` — 3 worked examples: finding → CISO brief,
+  incident → board summary, risk → C-suite ask; covers CISO, C-suite, and board tiers
+- `02-comms/human-rewrite` — before/after pair for each of the 9 style rules
+- `02-comms/tone-check` — PASS, FLAG, and borderline example for each of the 4 axes
+  (blame, authority, vagueness, softness) with full annotation block output
+
+---
+
 ## [1.6.6] — 2026-06-16
 
 Project workflow guide, two new Python skills, and changelog tidy for recent release lineage.
