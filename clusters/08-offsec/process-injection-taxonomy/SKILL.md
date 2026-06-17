@@ -38,6 +38,8 @@ reliability to a peer.
    | Reflective DLL injection | Medium — no LoadLibrary call; self-mapping; but VirtualAllocEx RW→X transition is visible | Same user | High | Standard operational technique |
    | Process doppelgänging (TxF) | Low-medium — abuses NTFS transaction; no hooks on TxF path (EDR-version dependent) | Same user | Low — unstable on Windows 10 1903+ | Largely patched out of reliability |
    | Phantom DLL hollowing | Low — stomps a never-executed DLL; no private allocation | Same user | Medium | Requires finding a suitable never-executed module |
+   | Thread pool (TpAllocWork) | Medium-low — NT thread pool API; no CreateRemoteThread; less hooked than classic paths | Same user | Medium | Executes callback via TpPostWork; avoids direct thread creation; pool thread origin blends into normal activity |
+   | Kernel-mode (driver-based) | Lowest — operates below user-mode EDR hooks entirely | Kernel (driver loaded) | High — complex; HVCI/DSE blocking risk | DKOM, APC injection from kernel, direct EPROCESS manipulation; blocked by HVCI on Secured-Core PCs; requires signed driver or BYOVD |
 
 2. **Apply target process selection criteria before choosing the technique:**
 
@@ -74,7 +76,14 @@ reliability to a peer.
      inside `ntdll` rather than executing it from your own allocation. Fewer YARA
      matches on `0F 05` in private memory.
 
-5. **Record the chosen technique and rationale before implementing.** One line:
+5. **Validate the chosen technique against the target EDR before engagement deployment.**
+   Use `edr-test-loop` to iterate against a lab environment matching the target's EDR
+   product and version. Do not skip lab validation for a technique you have not tested
+   against the specific EDR version in scope.
+
+   See: [`edr-test-loop`](../edr-test-loop/SKILL.md)
+
+6. **Record the chosen technique and rationale before implementing.** One line:
    ```
    Technique: Early-Bird APC
    Target: svchost.exe (spawned fresh, suspended)
@@ -83,6 +92,24 @@ reliability to a peer.
    EDR tier assumed: user-mode hooks + ETW
    Syscall strategy: direct syscalls for NtAllocateVirtualMemory + NtWriteVirtualMemory
    ```
+
+## Cobalt Strike delivery decision matrix
+
+When operating with a Cobalt Strike Beacon, choose the delivery vehicle before choosing
+the injection technique. The delivery mechanism determines how the injection runs and
+what EDR telemetry it generates.
+
+| Delivery | How it runs | EDR surface | When to use |
+|----------|------------|------------|-------------|
+| **BOF (inline-execute)** | Runs in the Beacon thread. No fork. No new process. | Lowest — no process creation event; BOF is JIT-compiled C in the Beacon's own thread | Enumeration, credential access, token manipulation. Any task that is fast, memory-safe, and needs no persistent thread. |
+| **Post-ex DLL (fork-and-run)** | Beacon spawns a sacrificial process (`spawnto`), injects the post-ex DLL into it, runs the task there, then kills the process. | Medium — one process creation event (the sacrificial process) + one DLL injection | Long-running tasks (screenshot, keylogger, port scan), tasks that may crash, or tasks producing large output. |
+| **Reflective DLL / shellcode (manual injection)** | You choose the target process and injection technique. Beacon executes the injection using the technique selected from the taxonomy above. | Depends on technique chosen | Custom implants, lateral movement payloads, dropping a second-stage into a specific process. |
+
+**Decision rules:**
+- Use a **BOF** if the task can be expressed in safe, short-running C and does not require a persistent thread.
+- Use **fork-and-run** if the task is long-running, third-party, or unstable — the sacrificial process absorbs the crash and keeps the Beacon alive.
+- Use **manual injection** when you need to control exactly which process receives the payload (e.g. injecting into a process making legitimate outbound connections to blend C2 traffic).
+- Set `spawnto` to a legitimate signed binary before any fork-and-run operation. The default `rundll32.exe` is a well-known indicator.
 
 ## Gotchas
 - Early-Bird APC only fires before the main thread's TLS callbacks if the process

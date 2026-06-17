@@ -86,7 +86,7 @@ Implement → edr-test-loop to validate assumption
 
 - [x] SKILL.md written and validated
 - [x] README.md written
-- [ ] Add Cobalt Strike-specific guidance (BOF vs post-ex DLL vs fork-and-run)
-- [ ] Add table row for thread pool injection (TpAllocWork)
-- [ ] Add table row for kernel-mode techniques (driver-based)
-- [ ] Link edr-test-loop workflow for validation phase
+- [x] Add Cobalt Strike-specific guidance (BOF vs post-ex DLL vs fork-and-run)
+- [x] Add table row for thread pool injection (TpAllocWork)
+- [x] Add table row for kernel-mode techniques (driver-based)
+- [x] Link edr-test-loop workflow for validation phase

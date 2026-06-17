@@ -11,6 +11,22 @@ This project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [1.6.10] — 2026-06-18
+
+Offsec taxonomy expansion and C2 integration checklist additions.
+
+### Added
+- `08-offsec/process-injection-taxonomy` — two new technique table rows (thread pool
+  TpAllocWork, kernel-mode driver-based); Cobalt Strike delivery decision matrix
+  (BOF vs post-ex DLL vs fork-and-run); link to `edr-test-loop` in validation step
+- `08-offsec/c2-integration-checklist` — expanded Havoc demon module checklist
+  (RegisterCommand, task dispatcher, sleep mask interaction, beacon vs demon comms
+  model differences); DNS listener OPSEC checklist (TTL, NS delegation, SOA, canary
+  domain split, wildcard record); post-engagement cleanup checklist (implant termination,
+  artifact removal, infrastructure teardown, IOC handoff)
+
+---
+
 ## [1.6.9] — 2026-06-18
 
 DevOps GHA snippets, multi-arch Docker support, script enhancements.
