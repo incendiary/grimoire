@@ -113,10 +113,112 @@ human-rewrite style pass (British English, active voice, no jargon)
 
 ---
 
+## Worked examples
+
+### Example 1 — Finding → CISO brief
+
+**Audience:** CISO
+**Ask:** approve emergency patch outside change freeze
+
+**Raw technical input:**
+```
+CVE authentication bypass in /api/v1/auth/login. JWT validation does not verify the
+algorithm field. Attacker can set "alg": "none", causing the server to accept unsigned
+tokens. Grants access to any account without credentials. CVSS 9.8. Confirmed in
+staging. Production uses the same codebase.
+```
+
+**Translated output:**
+> Any external attacker can log in as any user — including administrators — without a
+> password. Production is affected now.
+>
+> The authentication service accepts tampered login tokens that bypass password
+> verification entirely. We confirmed this in staging, which shares the production
+> codebase. An attacker who finds this before we patch can access any account, including
+> privileged ones, with no credentials required. Exposure runs from the last deployment
+> until the fix is live.
+>
+> The ask: approve an emergency patch outside the change freeze window. Engineering has a
+> fix ready; deployment needs your sign-off for the change control exception. If we cannot
+> patch today, the fallback is to take the login service offline — which affects all users
+> but closes the exposure immediately.
+
+**Rules applied:** leads with impact, quantified window of exposure, single clear ask
+with named owner, no jargon ("CVE", "CVSS", "JWT algorithm confusion" removed from main
+body), consequence of inaction stated.
+
+---
+
+### Example 2 — Incident → board summary
+
+**Audience:** Board
+**Ask:** no immediate ask; awareness and confidence-building
+
+**Raw technical input:**
+```
+Ransomware precursor activity detected. Threat actor obtained domain admin credentials
+via phishing. Lateral movement observed across 14 endpoints. EDR isolated affected
+systems within 6 minutes of detection. Ransomware payload was staged but not detonated.
+Forensics confirmed no data exfiltration. Full containment achieved at T+4 hours.
+IR retainer engaged. Remediation in progress.
+```
+
+**Translated output:**
+> An attacker gained administrator-level access to part of our network but was stopped
+> before causing any damage. No data was taken and no systems were encrypted.
+>
+> The attacker entered through a phishing email and moved through 14 internal systems
+> before our security tooling detected and isolated them. The ransomware was in position
+> but never triggered. Our external incident response partner has been engaged and is
+> working with the team on remediation and a full investigation.
+>
+> No customer data was affected and operations were not disrupted. We will provide a
+> written summary of lessons learned and remediation steps at the next board cycle.
+
+**Rules applied:** opened with outcome (stopped, no damage), avoided "lateral movement",
+"EDR", "T+4", "precursor" — replaced with plain-language equivalents, no ask imposed
+where none is needed.
+
+---
+
+### Example 3 — Risk → C-suite ask
+
+**Audience:** C-suite (CEO sign-off, CFO for budget)
+**Ask:** approve £180k MFA rollout across all staff
+
+**Raw technical input:**
+```
+Current posture: password-only authentication on all corporate systems including email,
+VPN, and SaaS. No MFA enforced. Credential stuffing and phishing attacks are primary
+initial access vectors in 80% of confirmed breaches industry-wide. Internal phishing
+simulation success rate: 23%. Recommended control: FIDO2 hardware tokens or authenticator
+app MFA for all 600 staff. Estimated cost: £180k capex + £30k/year opex. Reduces
+estimated breach probability by ~70% based on industry data.
+```
+
+**Translated output:**
+> A single stolen password is currently enough to give an attacker full access to our
+> email, VPN, and business systems. This is the starting point in the majority of
+> breaches affecting organisations our size.
+>
+> One in four of our staff clicked a simulated phishing link in a recent test — a
+> realistic proxy for how attackers get in. Adding a second verification step (a phone
+> app or hardware token) means a stolen password alone is no longer enough. Industry
+> data shows this reduces the probability of a successful breach by around 70%.
+>
+> The ask: approve £180k to deploy two-factor login for all 600 staff, with £30k per
+> year ongoing. For context, the average cost of a breach at our scale is £1.2m — the
+> ROI on this control is significant even in a low-probability scenario.
+
+**Rules applied:** no acronyms (FIDO2, MFA, VPN expanded or replaced), lead with risk
+not solution, single ask with cost and return stated, consequence quantified.
+
+---
+
 ## Roadmap
 
 - [x] SKILL.md written and validated
-- [ ] Build 3 worked examples (finding → CISO brief, incident → board summary, risk → C-suite ask)
-- [ ] Add worked examples for different audience tiers (CISO, C-suite, board)
+- [x] Build 3 worked examples (finding → CISO brief, incident → board summary, risk → C-suite ask)
+- [x] Add worked examples for different audience tiers (CISO, C-suite, board)
 - [ ] Test on 3 real findings
 - [x] Ship: copy to `~/.claude/skills/executive-translate/`
