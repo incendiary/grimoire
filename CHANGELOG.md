@@ -11,6 +11,21 @@ This project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [1.6.8] — 2026-06-18
+
+Add worked examples to 01-meta and 05-technical skills.
+
+### Added
+- `01-meta/task-decomposer` — worked example: comms cluster decomposed into 3 chunks
+  with run-book, per-chunk scope, verifiable done criteria, and reasoning notes
+- `01-meta/task-handoff` — worked example: mid-session handoff document from a real
+  grimoire documentation task, including decisions made, remaining work, and fresh-session
+  load prompt
+- `05-technical/python-black-ruff-authoring` — before/after examples for F401 (unused
+  import), F841 (unused variable), E722 (bare except), and B904 (raise without from)
+
+---
+
 ## [1.6.7] — 2026-06-18
 
 Add worked examples to the 02-comms cluster skills.
