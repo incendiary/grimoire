@@ -76,4 +76,4 @@ Invoke karpathy-environment to audit and improve my setup.
 
 - [x] SKILL.md written and validated
 - [x] README.md written
-- [ ] Ship: copy to `~/.claude/skills/karpathy-environment/`
+- [x] Ship: copy to `~/.claude/skills/karpathy-environment/`

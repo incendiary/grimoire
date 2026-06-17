@@ -76,4 +76,4 @@ Invoke karpathy-verify on [output].
 
 - [x] SKILL.md written and validated
 - [x] README.md written
-- [ ] Ship: copy to `~/.claude/skills/karpathy-verify/`
+- [x] Ship: copy to `~/.claude/skills/karpathy-verify/`

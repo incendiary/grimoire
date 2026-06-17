@@ -11,6 +11,17 @@ This project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [1.6.11] — 2026-06-18
+
+README lag ticks for installed skills.
+
+### Changed
+- `01-meta/karpathy-environment`, `karpathy-framework`, `karpathy-spec`, `karpathy-verify`
+  — tick Ship roadmap items (all four installed via `install-all.sh --update`)
+- `07-devops/python-lockfile-integrity` — tick Ship roadmap item (installed)
+
+---
+
 ## [1.6.10] — 2026-06-18
 
 Offsec taxonomy expansion and C2 integration checklist additions.
