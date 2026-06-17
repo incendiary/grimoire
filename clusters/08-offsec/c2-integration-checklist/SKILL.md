@@ -36,11 +36,27 @@ or preparing a previously tested payload for live engagement deployment.
 
    **Havoc demon module checklist:**
    ```
-   □ Module compiled against the matching Havoc API headers
-   □ Module loaded via teamserver UI or havoc.py script; confirm demon callback
-   □ Command registration verified in the teamserver console
-   □ Output format (JSON or raw bytes) matches what the handler expects
+   □ Module compiled against the matching Havoc API headers (havoc.h / demon.h)
+   □ RegisterCommand() called for every command the module exposes
+   □ Task dispatcher hooked: DemonTaskDispatch or equivalent entry point present
+   □ Module loaded via teamserver UI (Payloads → Modules) or havoc.py script
+   □ Demon callback confirmed in the teamserver event log after load
+   □ Command registration visible in demon console (help output lists new command)
+   □ Output format matches handler expectation: JSON (structured) or raw bytes (binary)
+   □ Sleep mask config: module respects demon's obfuscation state (does not execute
+     during mask interval; does not allocate RWX during sleep)
+   □ Error path tested: module returns a clean error to the demon on failure;
+     demon does not crash or hang
    ```
+
+   **Beacon vs demon comms model — key differences:**
+   - Cobalt Strike Beacon uses a request/response polling model (check-in interval)
+   - Havoc Demon uses a persistent async connection by default; tasks are pushed
+     rather than polled. Module output must be sent via `DemonSendResult()` or the
+     equivalent API — there is no implicit polling buffer.
+   - Memory layout differs: Demon does not use a Beacon heap equivalent. Modules
+     manage their own allocations; leaking memory in a module will grow the demon's
+     working set over the engagement lifetime.
 
 2. **Configure and verify sleep mask / in-memory obfuscation.**
    A Beacon sleeping without obfuscation sits in a private RWX region in memory —
@@ -111,6 +127,65 @@ or preparing a previously tested payload for live engagement deployment.
    Step 6: Confirm no residual artifacts after termination (check prefetch, event logs)
    Step 7: Document the lab validation run before starting the engagement
    ```
+
+## DNS listener OPSEC checklist
+
+DNS C2 is lower-bandwidth and more resilient to network blocks than HTTP/S, but
+introduces unique OPSEC requirements around the DNS infrastructure itself.
+
+```
+□ TTL set to ≤300 seconds on operational records (allows fast pivot if domain is blocked;
+  high TTL = long resolver cache = slow takedown response)
+□ NS delegation chain is clean: authoritative NS records point to infrastructure you control,
+  not to a shared provider that logs queries
+□ Authoritative zone configured — implant resolves to your nameserver, not a shared DNS host
+□ Canary domain separate from operational domain: use a throwaway domain for initial
+  beaconing detection tests; pivot to the clean operational domain for live engagements
+□ Operational domain categorised (infrastructure, CDN, or SaaS — avoid uncategorised TLDs)
+□ SOA record aligned: SOA serial, MNAME, and RNAME do not expose operator identity
+  (default BIND/PowerDNS SOA fields include hostnames and email addresses)
+□ DNS over HTTPS (DoH) logging: if target uses DoH resolvers (e.g. Cloudflare 1.1.1.1),
+  queries are encrypted but logged by the DoH provider — account for this in OPSEC model
+□ Wildcard A record on the operational domain: *.c2.example.com → listener IP,
+  so subdomain rotation works without manual DNS updates per beacon
+□ Verify resolution path end-to-end in lab before engagement:
+  dig @8.8.8.8 <beacon-subdomain>.c2.example.com → should resolve to listener IP
+```
+
+## Post-engagement cleanup checklist
+
+Run this at engagement end, before handing off to blue team or closing scope.
+
+```
+Implant termination:
+□ All active implants confirmed killed (beacon/demon self-destructs or manual kill issued)
+□ Kill date triggered and verified: advance a test VM clock to engagement end date;
+  confirm implant does not call back
+□ Persistence mechanisms removed: registry keys, scheduled tasks, WMI subscriptions,
+  startup entries created during the engagement
+□ Injected processes confirmed clean: verify no residual injected threads in
+  long-running target processes (reboot or process restart if required by client)
+
+Artifact removal:
+□ Staged payloads deleted from all drop locations (web shares, UNC paths, temp dirs)
+□ Aggressor scripts and Havoc scripts unloaded from teamserver
+□ Listener deactivated and removed from teamserver/teamserver config
+□ Staging server (if used) wiped or reverted to snapshot
+
+Infrastructure teardown:
+□ DNS records for operational domain removed or redirected to sinkhole
+□ SSL certificate for listener domain noted for revocation (if client requires)
+□ Redirectors / CDN rules removed
+□ VPS / cloud instances deprovisioned or snapshotted and shut down
+
+IOC handoff to blue team:
+□ Compile artifact manifest: hashes of all payloads delivered, file paths, timestamps
+□ List all C2 domains, IPs, listener ports, and User-Agent strings used
+□ List persistence mechanisms created (even if removed)
+□ List accounts accessed or created during the engagement
+□ List processes injected into with timestamps
+□ Confirm handoff document is delivered before scope closes
+```
 
 ## Gotchas
 - Beacon version drift: if the Cobalt Strike server is updated between engagements,
