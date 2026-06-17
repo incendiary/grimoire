@@ -79,10 +79,184 @@ Always included for security tooling:
 
 ---
 
+## Per-language skeleton examples
+
+Reference structures for the three most common repo types in this portfolio.
+Each skeleton shows the section order and representative content — adapt to the actual repo.
+
+---
+
+### Python CLI tool
+
+```markdown
+# tool-name
+
+One-sentence description of what it does and why.
+
+## Features
+
+- Feature A (what it catches / what it fixes)
+- Feature B
+
+## Requirements
+
+- Python 3.9+
+- `pip install requests` (or list key deps)
+
+## Installation
+
+```bash
+git clone -b v1.2.0 https://github.com/incendiary/tool-name.git
+cd tool-name
+pip install -r requirements.txt
+```
+
+## Usage
+
+```bash
+python tool.py --target example.com --output results.json
+python tool.py --help
+```
+
+## Roadmap
+
+- [x] Core feature
+- [ ] Planned enhancement
+
+## Disclaimer
+
+> This tool is intended for use in authorised security assessments, research, and
+> educational purposes only. Usage against systems you do not own or have explicit
+> written permission to test is illegal. The author assumes no liability for misuse.
+
+## Licence
+
+MIT
+```
+
+---
+
+### C# Windows tool
+
+```markdown
+# ToolName
+
+One-sentence description — what it does on Windows and in what context.
+
+## Features
+
+- Feature A
+- Feature B
+
+## Requirements
+
+- Windows 10/11 or Windows Server 2019+
+- .NET 8.0 Runtime ([download](https://dotnet.microsoft.com/download))
+- Administrator privileges (if required)
+
+## Build
+
+```bash
+dotnet build -c Release
+# Output: bin/Release/net8.0/ToolName.exe
+```
+
+## Usage
+
+```cmd
+ToolName.exe --target <pid> --output dump.bin
+ToolName.exe --help
+```
+
+## Roadmap
+
+- [x] Core injection/enumeration/analysis feature
+- [ ] Planned enhancement
+
+## Disclaimer
+
+> This tool is intended for use in authorised security assessments, research, and
+> educational purposes only. Usage against systems you do not own or have explicit
+> written permission to test is illegal. The author assumes no liability for misuse.
+
+## Licence
+
+MIT
+```
+
+---
+
+### C++ BOF (Beacon Object File)
+
+```markdown
+# bof-name
+
+One-sentence description — what the BOF does, which C2 framework it targets.
+
+## Features
+
+- Feature A (e.g. enumerates X without touching disk)
+- Feature B
+
+## Requirements
+
+- Cobalt Strike 4.x or Havoc C2
+- Visual Studio 2019+ or mingw-w64 cross-compiler
+- x64 target (x86 not supported)
+
+## Build
+
+```bash
+# mingw cross-compile
+x86_64-w64-mingw32-gcc -o bof-name.o -c bof-name.c \
+    -masm=intel -Wall -DBOF
+
+# Or with the provided Makefile
+make
+```
+
+## Usage
+
+**Cobalt Strike — load via Aggressor:**
+
+```
+beacon> bof-name <arg1> <arg2>
+```
+
+**Aggressor script:**
+
+```
+beacon_command_register("bof-name", "Short description",
+    "Usage: bof-name <arg1> <arg2>");
+alias bof-name {
+    local('$bdata');
+    $bdata = bof_pack($1, "zz", $2, $3);
+    beacon_inline_execute($1, readb(script_resource("bof-name.o")), "go", $bdata);
+}
+```
+
+## Roadmap
+
+- [x] Initial implementation
+- [ ] x86 support
+
+## Disclaimer
+
+> This tool is intended for use in authorised penetration tests and red team engagements
+> only. A signed scope of work must be in place before use. The author assumes no
+> liability for misuse.
+
+## Licence
+
+MIT
+```
+
+---
+
 ## Roadmap
 
 - [x] SKILL.md written and validated
 - [ ] Add README linter to check structure compliance post-generation
-- [ ] Add per-language examples (Python CLI, C# Windows tool, C++ BOF)
+- [x] Add per-language examples (Python CLI, C# Windows tool, C++ BOF)
 - [ ] Test on 5 repos
 - [x] Ship: copy to `~/.claude/skills/portfolio-readme-generator/`

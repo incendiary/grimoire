@@ -4,10 +4,11 @@ set -euo pipefail
 
 MODE="check"
 TARGET="."
+STAGED_ONLY=false
 
 usage() {
     cat <<'EOF'
-Usage: bash lint-gate.sh [--check|--fix] [--target PATH]
+Usage: bash lint-gate.sh [--check|--fix] [--target PATH] [--staged]
 
 Modes:
   --check    Run validation only (default): ruff check + black --check
@@ -15,6 +16,7 @@ Modes:
 
 Options:
   --target PATH  Directory or file to check (default: .)
+  --staged       Check only files staged in git (overrides --target)
 
 Exit codes:
   0 = gate passed
@@ -31,6 +33,10 @@ while [[ $# -gt 0 ]]; do
         ;;
     --fix)
         MODE="fix"
+        shift
+        ;;
+    --staged)
+        STAGED_ONLY=true
         shift
         ;;
     --target)
@@ -63,21 +69,41 @@ require_cmd() {
 require_cmd ruff
 require_cmd black
 
-if [[ ! -e "$TARGET" ]]; then
-    echo "ERROR: Target not found: $TARGET" >&2
-    exit 2
+# Resolve staged-only mode
+if [[ "$STAGED_ONLY" == "true" ]]; then
+    if ! git rev-parse --git-dir >/dev/null 2>&1; then
+        echo "ERROR: --staged requires a git repository" >&2
+        exit 2
+    fi
+    mapfile -t STAGED_PY < <(git diff --cached --name-only -- '*.py' 2>/dev/null)
+    if [[ ${#STAGED_PY[@]} -eq 0 ]]; then
+        echo "[lint-gate] no staged Python files — nothing to check"
+        exit 0
+    fi
+    echo "[lint-gate] staged=${#STAGED_PY[*]} file(s) mode=$MODE"
+else
+    if [[ ! -e "$TARGET" ]]; then
+        echo "ERROR: Target not found: $TARGET" >&2
+        exit 2
+    fi
+    echo "[lint-gate] target=$TARGET mode=$MODE"
 fi
-
-echo "[lint-gate] target=$TARGET mode=$MODE"
 
 run_checks() {
     local ok=0
+    local targets=()
 
-    if ! ruff check "$TARGET"; then
+    if [[ "$STAGED_ONLY" == "true" ]]; then
+        targets=("${STAGED_PY[@]}")
+    else
+        targets=("$TARGET")
+    fi
+
+    if ! ruff check "${targets[@]}"; then
         ok=1
     fi
 
-    if ! black --check "$TARGET"; then
+    if ! black --check "${targets[@]}"; then
         ok=1
     fi
 
@@ -98,8 +124,13 @@ EOF
 
 if [[ "$MODE" == "fix" ]]; then
     echo "[lint-gate] applying safe fixes"
-    ruff check --fix "$TARGET" || true
-    black "$TARGET" || true
+    if [[ "$STAGED_ONLY" == "true" ]]; then
+        ruff check --fix "${STAGED_PY[@]}" || true
+        black "${STAGED_PY[@]}" || true
+    else
+        ruff check --fix "$TARGET" || true
+        black "$TARGET" || true
+    fi
 fi
 
 if run_checks; then

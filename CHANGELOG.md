@@ -11,6 +11,24 @@ This project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [1.6.9] — 2026-06-18
+
+DevOps GHA snippets, multi-arch Docker support, script enhancements.
+
+### Added
+- `07-devops/npm-lockfile-integrity` — CI workflow snippet (`npm ci` + audit + drift check)
+- `07-devops/npm-provenance-attestation` — CI workflow snippet (`npm audit signatures` + critical package provenance check)
+- `07-devops/docker-ghcr-publish` — multi-arch buildx guide (`linux/amd64,linux/arm64`) and
+  GHA workflow for automated GHCR publish on tag push
+- `07-devops/git-push-protocol-handler` — SSH agent start/add sequence with diagnosis table
+- `07-devops/portfolio-readme-generator` — per-language README skeletons (Python CLI, C# Windows tool, C++ BOF)
+- `07-devops/python-lint-gate` — `--staged` flag for staged-files-only mode; pytest F401
+  conftest handling notes (`per-file-ignores` and `# noqa: F401` patterns)
+- `07-devops/readme-version-pin` — `--pattern` flag on `pin_readme_version.sh` for
+  custom install line formats; `VERSION_TAG` placeholder substitution
+
+---
+
 ## [1.6.8] — 2026-06-18
 
 Add worked examples to 01-meta and 05-technical skills.
