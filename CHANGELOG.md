@@ -13,12 +13,16 @@ This project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [1.6.6] — 2026-06-16
 
-Project workflow guide + changelog tidy for recent release lineage.
+Project workflow guide, two new Python skills, and changelog tidy for recent release lineage.
 
 ### Added
 - `PROJECT-WORKFLOWS.md` — practical skill-stack playbooks for common project types
   (Node.js, Python, .NET, Terraform, security tooling, multi-repo operations)
 - `README.md` — Project Workflows section linking to the new guide
+- `05-technical/python-black-ruff-authoring` — authoring guide for writing Python
+  that passes Black and Ruff first pass; covers common violation patterns (F401, F841, E722, B904)
+- `07-devops/python-lint-gate` — unified Ruff + Black gate script with `--check`
+  and `--fix` modes; registered as MCP action tool
 
 ### Changed
 - `CHANGELOG.md` — backfilled release notes for v1.6.2 through v1.6.5
