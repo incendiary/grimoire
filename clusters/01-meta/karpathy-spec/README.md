@@ -79,4 +79,4 @@ Use karpathy-spec to break this into agile specs before we start.
 
 - [x] SKILL.md written and validated
 - [x] README.md written
-- [ ] Ship: copy to `~/.claude/skills/karpathy-spec/`
+- [x] Ship: copy to `~/.claude/skills/karpathy-spec/`

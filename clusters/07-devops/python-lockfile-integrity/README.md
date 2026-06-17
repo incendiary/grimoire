@@ -118,4 +118,4 @@ pip install --require-hashes -r requirements.txt && git diff --exit-code require
 - [x] README.md written
 - [x] Write `check-python-lockfile-integrity.sh` — toolchain detection, hash coverage, CI audit, PASS/FAIL summary
 - [ ] Test on 3 Python repos (pip-tools, poetry, uv variants)
-- [ ] Ship: copy to `~/.claude/skills/python-lockfile-integrity/`
+- [x] Ship: copy to `~/.claude/skills/python-lockfile-integrity/`
