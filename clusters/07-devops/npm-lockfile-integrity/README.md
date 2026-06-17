@@ -104,11 +104,51 @@ Enforce lockfile PR review discipline
 
 ---
 
+## CI integration
+
+Add to `.github/workflows/npm-lockfile-audit.yml` in any Node.js repo:
+
+```yaml
+name: npm lockfile integrity
+on:
+  push:
+    paths: ["package-lock.json", "package.json"]
+  pull_request:
+    paths: ["package-lock.json", "package.json"]
+
+jobs:
+  lockfile-integrity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install with integrity enforcement
+        run: npm ci
+
+      - name: Audit for known vulnerabilities
+        run: npm audit --audit-level=high
+
+      - name: Check lockfile is not dirty after install
+        run: git diff --exit-code package-lock.json
+```
+
+**What each step catches:**
+- `npm ci` — fails if `package-lock.json` is missing, has wrong version, or integrity hashes don't match
+- `npm audit --audit-level=high` — fails on high/critical CVEs
+- `git diff --exit-code` — fails if `npm ci` silently modified the lockfile (indicates lockfile was stale)
+
+---
+
 ## Roadmap
 
 - [x] SKILL.md written and validated
 - [x] README.md written
 - [x] Write `check-lockfile-integrity.sh` — lockfile version, integrity coverage, PASS/FAIL summary
-- [ ] Add GitHub Actions workflow snippet for lockfile drift gating
+- [x] Add GitHub Actions workflow snippet for lockfile drift gating
 - [ ] Test on 3 Node.js repos
-- [ ] Ship: copy to `~/.claude/skills/npm-lockfile-integrity/`
+- [x] Ship: copy to `~/.claude/skills/npm-lockfile-integrity/`

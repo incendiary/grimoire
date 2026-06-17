@@ -11,8 +11,36 @@
 set -euo pipefail
 
 DRY_RUN=false
-for arg in "$@"; do
-    [[ "$arg" == "--dry-run" ]] && DRY_RUN=true
+EXTRA_PATTERNS=()
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+    --dry-run)
+        DRY_RUN=true
+        shift
+        ;;
+    --pattern)
+        [[ $# -ge 2 ]] || { echo "ERROR: --pattern requires a sed expression" >&2; exit 1; }
+        EXTRA_PATTERNS+=("$2")
+        shift 2
+        ;;
+    -h | --help)
+        cat <<'EOF'
+Usage: bash pin_readme_version.sh [--dry-run] [--pattern <sed-expr>]
+
+  --dry-run           Show what would change; do not modify files
+  --pattern <expr>    Additional sed expression to apply (can repeat)
+                      The placeholder VERSION_TAG is replaced with the
+                      detected version before the pattern is applied.
+                      Example: --pattern 's|download/main/|download/VERSION_TAG/|g'
+EOF
+        exit 0
+        ;;
+    *)
+        echo "ERROR: Unknown argument: $1" >&2
+        exit 1
+        ;;
+    esac
 done
 
 echo "=== readme-version-pin ==="
@@ -101,6 +129,12 @@ for readme in "${READMES[@]}"; do
     SED_SCRIPT+="s|\(checkout\) main\b|\1 ${ESC_VER}|g;"
     SED_SCRIPT+="s|\(checkout\) master\b|\1 ${ESC_VER}|g;"
     SED_SCRIPT+="s|\(checkout\) v[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*\b|\1 ${ESC_VER}|g;"
+
+    # Append any user-supplied --pattern expressions, substituting VERSION_TAG placeholder
+    for extra in "${EXTRA_PATTERNS[@]+"${EXTRA_PATTERNS[@]}"}"; do
+        resolved="${extra//VERSION_TAG/${ESC_VER}}"
+        SED_SCRIPT+="${resolved};"
+    done
 
     BEFORE=$(cat "$readme")
     AFTER=$(sed "$SED_SCRIPT" "$readme")

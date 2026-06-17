@@ -47,6 +47,35 @@ Register the grimoire MCP server — this skill is exposed as tool `git_push_pro
 
 ---
 
+## SSH agent start sequence
+
+Use this when `ssh -T git@github.com` returns `Could not open a connection` or
+`Connection refused` — the agent is not running, not just missing the key.
+
+```bash
+# Start the agent and export the socket for the current shell
+eval "$(ssh-agent -s)"
+
+# Add your key (adjust path if yours differs)
+ssh-add ~/.ssh/id_ed25519        # Ed25519 key (preferred)
+# ssh-add ~/.ssh/id_rsa          # RSA fallback
+
+# Verify the key loaded
+ssh-add -l
+
+# Confirm GitHub accepts it
+ssh -T git@github.com            # expect: "Hi <user>! You've successfully authenticated..."
+```
+
+**Diagnosing which case you are in:**
+
+| `ssh -T git@github.com` output | Cause | Fix |
+|-------------------------------|-------|-----|
+| `Could not open a connection to your authentication agent` | Agent not running | `eval "$(ssh-agent -s)"` |
+| `Permission denied (publickey)` | Agent running but key not loaded | `ssh-add ~/.ssh/id_ed25519` |
+| `Hi <user>! You've successfully authenticated` | Agent running, key loaded, all good | Push directly |
+| Connection timeout | Firewall/network blocking port 22 | Fall back to HTTPS (see below) |
+
 ## Quick reference
 
 ```bash
@@ -62,6 +91,6 @@ git push origin <branch>                                 # push via HTTPS
 
 - [x] SKILL.md written and validated
 - [x] Write `check_push_protocol.sh`
-- [ ] Add SSH agent start/add sequence for when agent is simply not running
+- [x] Add SSH agent start/add sequence for when agent is simply not running
 - [ ] Test on a representative set of repos
 - [x] Ship: copy to `~/.claude/skills/git-push-protocol-handler/`

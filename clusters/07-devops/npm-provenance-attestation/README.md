@@ -104,11 +104,64 @@ bash check-provenance.sh --strict
 
 ---
 
+## CI integration
+
+Add to `.github/workflows/npm-provenance-gate.yml`:
+
+```yaml
+name: npm provenance attestation
+on:
+  push:
+    paths: ["package-lock.json", "package.json"]
+  pull_request:
+    paths: ["package-lock.json", "package.json"]
+
+jobs:
+  provenance-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Audit package signatures
+        run: npm audit signatures
+
+      - name: Check provenance for critical packages
+        if: hashFiles('.npm-critical-packages') != ''
+        run: |
+          while IFS= read -r pkg; do
+            [[ -z "$pkg" || "$pkg" == "#"* ]] && continue
+            echo "--- $pkg ---"
+            npm view "$pkg" dist.attestations --json 2>/dev/null || echo "No attestation data"
+          done < .npm-critical-packages
+```
+
+**`.npm-critical-packages`** (optional, one package per line):
+```
+# Packages to deep-check for provenance
+express
+jsonwebtoken
+axios
+```
+
+**What each step catches:**
+- `npm audit signatures` — fails on invalid/missing signatures; exit 0 with a summary for unsigned packages
+- Critical package check — logs provenance chain for packages you've flagged as high-risk dependencies
+
+---
+
 ## Roadmap
 
 - [x] SKILL.md written and validated
 - [x] README.md written
 - [x] Write `check-provenance.sh` — batch signature audit + critical package provenance check
-- [ ] Add GitHub Actions workflow snippet for provenance gating
+- [x] Add GitHub Actions workflow snippet for provenance gating
 - [ ] Test on 3 Node.js repos with mixed provenance coverage
-- [ ] Ship: copy to `~/.claude/skills/npm-provenance-attestation/`
+- [x] Ship: copy to `~/.claude/skills/npm-provenance-attestation/`
