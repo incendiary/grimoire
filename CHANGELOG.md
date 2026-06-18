@@ -11,6 +11,35 @@ This project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [1.6.14] — 2026-06-18
+
+Meta session skills worked examples; security log retention reference; DevOps skip
+patterns and provider version matrix.
+
+### Added
+- `01-meta/mid-task-checkin` — worked example: 10-step comms-cluster refactor session
+  with two check-in points (post-content and pre-merge), showing what the pause
+  prevented
+- `01-meta/test-before-asking` — concrete ask vs test examples grouped by session type
+  (Python/dependency, shell/file, refactor/code editing) plus a table of decisions
+  that still require asking
+- `03-incident/incident-ask-builder` — two worked examples: iOS signing compromise (P1)
+  and AWS credential compromise (P2), showing full evidence ask output grouped by owner
+  with urgency tiers and retention risk flags
+- `04-security/ios-signing-risk` — Apple Developer Portal log retention window table
+  (Activity, App Store Connect, TestFlight, ABM Audit, APNS, HSM); immediate-collection
+  targets checklist; what Apple does not provide
+- `07-devops/pre-commit-aware-commits` — gitleaks false-positive allowlist template for
+  `.gitleaks.toml` (path-scoped, commit SHA, stopword, regex allow types); inline
+  suppression pattern; guidance against `--no-verify`
+- `07-devops/terraform-checkov-skips` — common skip patterns with justifications for S3,
+  EC2/launch template, IAM, security groups, RDS, Lambda, CloudTrail
+- `07-devops/terraform-aws-syntax` — provider version matrix for known argument-type
+  changes (S3 v4 resource split, db_instance password v5, EKS network config, etc.);
+  lock file version constraint tip
+
+---
+
 ## [1.6.13] — 2026-06-18
 
 BOF fork-and-run guidance + Makefile template; EDR test loop AMSI/ETW/sleep mask sub-loops.

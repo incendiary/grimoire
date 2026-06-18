@@ -97,9 +97,57 @@ Task complete
 
 ---
 
+## Worked example — 10-step refactor session with two check-in points
+
+**Task:** "Refactor the comms cluster READMEs: add worked examples, style rule references,
+and tone-check annotations. Update CHANGELOG. Cut a release."
+
+**Plan (10 steps):**
+```
+Step 1  — Read all three comms cluster READMEs, map what's missing
+Step 2  — Add worked examples to executive-translate README
+Step 3  — Add before/after pairs to human-rewrite README
+Step 4  — Add tone-check annotated examples to tone-check README
+Step 5  — Verify all three render correctly (links, headings, code blocks)
+──── CHECK-IN POINT 1: end of content phase, start of release prep ────
+Step 6  — Bump VERSION to next patch
+Step 7  — Update CHANGELOG with what was added
+Step 8  — Pre-commit run, stage, commit
+Step 9  — Push branch and open PR
+──── CHECK-IN POINT 2: before squash merge (irreversible shared state) ────
+Step 10 — Merge, tag, push tag, wait for release workflow
+```
+
+**Check-in 1 — end of content, before release prep:**
+
+> "Pausing here — anything new you've added that I should factor in before continuing?"
+
+User: "Also tick the roadmap items in each README as you go."
+
+Claude: "Understood — roadmap items ticked in each file as I added content.
+Continuing to VERSION bump and CHANGELOG."
+
+*Without the check-in, the roadmap ticks would have been missed and required a
+follow-up commit.*
+
+**Check-in 2 — before squash merge:**
+
+> "About to merge PR #68 — anything to add before I proceed?"
+
+User: "No, go ahead."
+
+Claude: Merges, tags v1.6.7, pushes tag.
+
+**What the skill prevented:**
+- Running through all 10 steps on the original brief, then needing a fixup commit
+  for the missing roadmap ticks
+- Merging before the user had a chance to add any late context
+
+---
+
 ## Roadmap
 
 - [x] SKILL.md written and validated
 - [x] README.md written
 - [ ] Consider a heuristic for detecting user typing mid-task (if tooling permits)
-- [ ] Add worked example: long 10-step refactor session with two check-in points shown
+- [x] Add worked example: long 10-step refactor session with two check-in points shown
