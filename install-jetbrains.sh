@@ -56,6 +56,37 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
+resolve_node_bin() {
+    # Return absolute path to the first node binary that is version >=22.
+    # Search order: PATH node → Homebrew → nvm (descending) → Volta
+    local candidates=()
+
+    if command -v node >/dev/null 2>&1; then
+        candidates+=("$(command -v node)")
+    fi
+    candidates+=("/opt/homebrew/bin/node" "/usr/local/bin/node")
+
+    if [[ -d "${HOME}/.nvm/versions/node" ]]; then
+        # shellcheck disable=SC2012
+        while IFS= read -r d; do
+            candidates+=("${d}bin/node")
+        done < <(ls -1d "${HOME}/.nvm/versions/node"/v*/ 2>/dev/null | sort -rV)
+    fi
+    candidates+=("${HOME}/.volta/bin/node")
+
+    local candidate
+    for candidate in "${candidates[@]}"; do
+        [[ -x "${candidate}" ]] || continue
+        local ver
+        ver=$("${candidate}" --version 2>/dev/null | sed 's/v//' | cut -d. -f1)
+        if [[ -n "${ver}" && "${ver}" -ge 22 ]]; then
+            echo "${candidate}"
+            return 0
+        fi
+    done
+    return 1
+}
+
 backup_file() {
     local target="$1"
     local timestamp
@@ -119,19 +150,20 @@ echo "=== grimoire JetBrains MCP setup ==="
 echo ""
 
 echo "[1/3] Building MCP server..."
-if ! command -v node >/dev/null 2>&1; then
-    echo "ERROR: Node.js not found. Install Node 22+ first."
+if ! NODE_BIN="$(resolve_node_bin)"; then
+    echo "ERROR: Node.js 22+ not found. Install options:"
+    echo "  Homebrew:  brew install node"
+    echo "  nvm:       nvm install 22 && nvm use 22"
+    echo "  Volta:     volta install node@22"
     exit 1
 fi
-
-NODE_VERSION=$(node --version | sed 's/v//' | cut -d. -f1)
-if [[ "${NODE_VERSION}" -lt 22 ]]; then
-    echo "WARNING: Node ${NODE_VERSION} detected. Node 22+ recommended."
-fi
+NPM_BIN="$(dirname "${NODE_BIN}")/npm"
+echo "  Node: ${NODE_BIN} ($("${NODE_BIN}" --version))"
 
 cd "${MCP_SERVER_DIR}"
-npm ci --silent
-npm run build --silent
+# Prepend node's own bin directory so npm uses the resolved node, not the PATH default
+PATH="$(dirname "${NODE_BIN}"):${PATH}" "${NPM_BIN}" ci --silent
+PATH="$(dirname "${NODE_BIN}"):${PATH}" "${NPM_BIN}" run build --silent
 echo "  ✓ MCP server built"
 
 echo "[2/3] Resolving JetBrains MCP config path..."
@@ -147,18 +179,18 @@ echo "  Target: ${MCP_PATH}"
 
 echo "[3/3] Configuring MCP server entry..."
 
-MCP_CONFIG=$(node -e "
+MCP_CONFIG=$("${NODE_BIN}" -e "
 const config = {
   servers: {
     grimoire: {
-      command: 'node',
-      args: [process.argv[1]],
+      command: process.argv[1],
+      args: [process.argv[2]],
       type: 'stdio'
     }
   }
 };
 console.log(JSON.stringify(config, null, 2));
-" "${MCP_SERVER_DIR}/dist/server.js")
+" "${NODE_BIN}" "${MCP_SERVER_DIR}/dist/server.js")
 
 if [[ "${DRY_RUN}" == "true" ]]; then
     echo ""
@@ -174,11 +206,13 @@ mkdir -p "$(dirname "${MCP_PATH}")"
 merge_mcp_config() {
     local mcp_path="$1"
     local server_js_path="$2"
+    local node_bin="$3"
 
-    node -e "
+    "${NODE_BIN}" -e "
 const fs = require('fs');
 const mcpPath = process.argv[1];
 const serverJsPath = process.argv[2];
+const nodeBin = process.argv[3];
 
 let existing = {};
 try {
@@ -194,7 +228,7 @@ try {
 
 if (!existing.servers) existing.servers = {};
 existing.servers.grimoire = {
-  command: 'node',
+  command: nodeBin,
   args: [serverJsPath],
   type: 'stdio'
 };
@@ -202,18 +236,18 @@ if (!existing.inputs) existing.inputs = [];
 
 fs.writeFileSync(mcpPath, JSON.stringify(existing, null, 2) + '\n');
 console.log('  ✓ mcp.json updated — grimoire MCP server registered');
-" "${mcp_path}" "${server_js_path}"
+" "${mcp_path}" "${server_js_path}" "${node_bin}"
 }
 
 if [[ "${AUTO_APPLY}" == "true" ]]; then
     if [[ -f "${MCP_PATH}" ]]; then
         backup_file "${MCP_PATH}"
     fi
-    merge_mcp_config "${MCP_PATH}" "${MCP_SERVER_DIR}/dist/server.js"
+    merge_mcp_config "${MCP_PATH}" "${MCP_SERVER_DIR}/dist/server.js" "${NODE_BIN}"
 else
     echo ""
     echo "  Will register grimoire server in ${MCP_PATH}:"
-    echo "    command: node"
+    echo "    command: ${NODE_BIN}"
     echo "    args:    ${MCP_SERVER_DIR}/dist/server.js"
     echo ""
     printf "  Apply? [y/N] "

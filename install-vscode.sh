@@ -41,6 +41,37 @@ for arg in "$@"; do
     esac
 done
 
+resolve_node_bin() {
+    # Return absolute path to the first node binary that is version >=22.
+    # Search order: PATH node → Homebrew → nvm (descending) → Volta
+    local candidates=()
+
+    if command -v node >/dev/null 2>&1; then
+        candidates+=("$(command -v node)")
+    fi
+    candidates+=("/opt/homebrew/bin/node" "/usr/local/bin/node")
+
+    if [[ -d "${HOME}/.nvm/versions/node" ]]; then
+        # shellcheck disable=SC2012
+        while IFS= read -r d; do
+            candidates+=("${d}bin/node")
+        done < <(ls -1d "${HOME}/.nvm/versions/node"/v*/ 2>/dev/null | sort -rV)
+    fi
+    candidates+=("${HOME}/.volta/bin/node")
+
+    local candidate
+    for candidate in "${candidates[@]}"; do
+        [[ -x "${candidate}" ]] || continue
+        local ver
+        ver=$("${candidate}" --version 2>/dev/null | sed 's/v//' | cut -d. -f1)
+        if [[ -n "${ver}" && "${ver}" -ge 22 ]]; then
+            echo "${candidate}"
+            return 0
+        fi
+    done
+    return 1
+}
+
 # --- Timestamped backup helper ---
 # Creates a dated backup and prunes to keep only the last 5.
 backup_file() {
@@ -68,19 +99,20 @@ echo ""
 
 # --- Step 1: Build MCP server ---
 echo "[1/5] Building MCP server..."
-if ! command -v node &> /dev/null; then
-    echo "ERROR: Node.js not found. Install Node 22+ first."
+if ! NODE_BIN="$(resolve_node_bin)"; then
+    echo "ERROR: Node.js 22+ not found. Install options:"
+    echo "  Homebrew:  brew install node"
+    echo "  nvm:       nvm install 22 && nvm use 22"
+    echo "  Volta:     volta install node@22"
     exit 1
 fi
-
-NODE_VERSION=$(node --version | sed 's/v//' | cut -d. -f1)
-if [[ "${NODE_VERSION}" -lt 22 ]]; then
-    echo "WARNING: Node ${NODE_VERSION} detected. Node 22+ recommended."
-fi
+NPM_BIN="$(dirname "${NODE_BIN}")/npm"
+echo "  Node: ${NODE_BIN} ($("${NODE_BIN}" --version))"
 
 cd "${MCP_SERVER_DIR}"
-npm ci --silent
-npm run build --silent
+# Prepend node's own bin directory so npm uses the resolved node, not the PATH default
+PATH="$(dirname "${NODE_BIN}"):${PATH}" "${NPM_BIN}" ci --silent
+PATH="$(dirname "${NODE_BIN}"):${PATH}" "${NPM_BIN}" run build --silent
 echo "  ✓ MCP server built"
 
 # --- Step 2: Generate prompt files ---
@@ -125,18 +157,18 @@ fi
 echo "[4/5] Configuring MCP server (mcp.json)..."
 echo ""
 
-MCP_CONFIG=$(node -e "
+MCP_CONFIG=$("${NODE_BIN}" -e "
 const config = {
     servers: {
         grimoire: {
-            command: 'node',
-            args: [process.argv[1]],
+            command: process.argv[1],
+            args: [process.argv[2]],
             type: 'stdio'
         }
     }
 };
 console.log(JSON.stringify(config, null, '\t'));
-" "${MCP_SERVER_DIR}/dist/server.js")
+" "${NODE_BIN}" "${MCP_SERVER_DIR}/dist/server.js")
 
 if [[ -z "${VSCODE_USER_DIR}" ]]; then
     echo "  ⚠ Could not locate VS Code config directory."
@@ -161,10 +193,11 @@ else
         echo ""
     else
         write_mcp_config() {
-            node -e "
+            "${NODE_BIN}" -e "
 const fs = require('fs');
 const mcpPath = process.argv[1];
 const serverJsPath = process.argv[2];
+const nodeBin = process.argv[3];
 
 let existing = {};
 try {
@@ -179,7 +212,7 @@ try {
 
 if (!existing.servers) existing.servers = {};
 existing.servers.grimoire = {
-    command: 'node',
+    command: nodeBin,
     args: [serverJsPath],
     type: 'stdio'
 };
@@ -187,7 +220,7 @@ if (!existing.inputs) existing.inputs = [];
 
 fs.writeFileSync(mcpPath, JSON.stringify(existing, null, '\t') + '\n');
 console.log('  ✓ mcp.json updated — grimoire MCP server registered');
-" "${MCP_PATH}" "${MCP_SERVER_DIR}/dist/server.js"
+" "${MCP_PATH}" "${MCP_SERVER_DIR}/dist/server.js" "${NODE_BIN}"
         }
 
         if [[ "${AUTO_APPLY}" == "true" ]]; then
