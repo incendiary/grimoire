@@ -11,6 +11,22 @@ This project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [1.6.12] — 2026-06-18
+
+PE binary analysis reference additions and API hashing end-to-end example.
+
+### Added
+- `05-technical/pe-binary-analysis` — syscall hook detection byte-pattern reference
+  (x64 and x86 clean stub patterns, JMP hook detection, disk vs live comparison);
+  full import table walk worked example (INT walk, sentinel detection, ordinal-vs-name
+  branching); section table traversal worked example with RVA-to-file-offset helper
+- `08-offsec/api-hashing-conventions` — end-to-end worked example: x64 shellcode
+  resolving VirtualAlloc + CreateThread via DJB2, covering hash generation, constexpr
+  embedding, PEB walk, EAT walk with forwarded export check, and collision verification;
+  pairing note for shellcode-dev-conventions
+
+---
+
 ## [1.6.11] — 2026-06-18
 
 README lag ticks for installed skills.
