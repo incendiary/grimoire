@@ -11,6 +11,23 @@ This project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [1.6.15] — 2026-06-18
+
+Install scripts resolve full Node.js path at install time.
+
+### Fixed
+- `install-jetbrains.sh` + `install-vscode.sh`: resolve absolute path to node >=22
+  at install time and write it into mcp.json instead of bare `node`. Fixes silent
+  failures when JetBrains or VS Code launch without the user's shell PATH (nvm
+  aliases are not inherited by GUI apps). Search order: PATH → Homebrew
+  (`/opt/homebrew/bin/node`) → nvm versions descending → Volta. Prepends resolved
+  node's directory to PATH when invoking npm so npm itself uses the correct node.
+
+### Added
+- ROADMAP.md: new item tracking the fix (now ticked)
+
+---
+
 ## [1.6.14] — 2026-06-18
 
 Meta session skills worked examples; security log retention reference; DevOps skip

@@ -171,3 +171,4 @@ These are repo-level improvements not tied to individual skills:
 - [x] Add MCP server log rotation — prevent unbounded log growth (rotate at 10MB, keep 3)
 - [x] Add `install-jetbrains.sh` — JetBrains MCP support (bypasses corporate VS Code MCP policy). Includes path auto-detection, `--mcp-path` override, backup support, and dry-run/apply modes.
 - [x] Post-merge changelog tidy pass — sync `CHANGELOG.md` with latest merged PRs and release notes after each infrastructure batch.
+- [x] `install-jetbrains.sh` + `install-vscode.sh`: resolve full Node.js path at install time — write the absolute path to node >=22 into mcp.json rather than bare `node`, so the config works correctly when the IDE launches without the user's shell PATH (nvm aliases are not inherited by GUI apps).
