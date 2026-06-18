@@ -11,6 +11,22 @@ This project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [1.6.13] — 2026-06-18
+
+BOF fork-and-run guidance + Makefile template; EDR test loop AMSI/ETW/sleep mask sub-loops.
+
+### Added
+- `08-offsec/bof-dev-conventions` — fork-and-run vs inline OPSEC comparison table and
+  decision rules (including spawnto guidance); Makefile template for x64/x86 COFF builds
+  targeting both clang-cl (Windows) and mingw-w64 (Linux cross-compile)
+- `08-offsec/edr-test-loop` — AMSI bypass sub-loop (AmsiScanBuffer patch, delivery
+  method mapping, EDR patch-detection risk); ETW patching considerations (EtwEventWrite
+  patch approach, risk notes, detection signals, alternatives); memory-at-rest sleep mask
+  test sub-loop (at-rest confirmation, scanner triage table, mask integration steps,
+  jitter validation, crash-on-wake testing)
+
+---
+
 ## [1.6.12] — 2026-06-18
 
 PE binary analysis reference additions and API hashing end-to-end example.
