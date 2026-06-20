@@ -98,9 +98,115 @@ Commit
 
 ---
 
+## Common violations — before/after
+
+One pair per violation. Each "before" is code that triggers the rule; each "after"
+is the fix. All examples are minimal and self-contained.
+
+---
+
+**F401 — module imported but unused**
+
+```python
+# Before
+import os
+import json
+from pathlib import Path
+
+def read_config(path: str) -> dict:
+    with open(path) as f:
+        return json.load(f)
+```
+
+```python
+# After — remove the unused imports
+import json
+
+def read_config(path: str) -> dict:
+    with open(path) as f:
+        return json.load(f)
+```
+
+*If the import is needed at runtime but not at type-check time (e.g. a plugin loaded
+via `importlib`), use `# noqa: F401` with a comment explaining why.*
+
+---
+
+**F841 — local variable is assigned but never used**
+
+```python
+# Before
+def process(items: list[str]) -> int:
+    result = [item.strip() for item in items]  # assigned but never returned/used
+    return len(items)
+```
+
+```python
+# After — remove the unused assignment or use it
+def process(items: list[str]) -> int:
+    return len(items)
+```
+
+*Common cause: a variable computed during refactoring whose use was removed. Check
+before deleting — the computation may have a side effect you need to preserve.*
+
+---
+
+**E722 — bare `except` clause**
+
+```python
+# Before
+try:
+    data = fetch_remote()
+except:
+    data = None
+```
+
+```python
+# After — name the exceptions you expect
+try:
+    data = fetch_remote()
+except (ConnectionError, TimeoutError):
+    data = None
+```
+
+*If you genuinely need to catch everything (e.g. a top-level crash handler), use
+`except Exception` and log the error. Bare `except` also catches `KeyboardInterrupt`
+and `SystemExit`, which is almost never what you want.*
+
+---
+
+**B904 — `raise` inside `except` without `from`**
+
+```python
+# Before — loses the original traceback
+def load(path: str) -> dict:
+    try:
+        with open(path) as f:
+            return json.load(f)
+    except json.JSONDecodeError:
+        raise ValueError(f"Invalid JSON in {path}")
+```
+
+```python
+# After — chain the exception to preserve context
+def load(path: str) -> dict:
+    try:
+        with open(path) as f:
+            return json.load(f)
+    except json.JSONDecodeError as err:
+        raise ValueError(f"Invalid JSON in {path}") from err
+```
+
+*`from err` preserves the original exception as `__cause__`, making tracebacks
+far more useful in production. Ruff flags the missing `from` to prevent silent
+context loss.*
+
+---
+
 ## Roadmap
 
 - [x] SKILL.md written and validated
 - [x] README.md written
-- [ ] Add before/after examples for common Ruff violations (F401, F841, E722, B904)
+- [x] Add before/after examples for common Ruff violations (F401, F841, E722, B904)
 - [ ] Test on 3 Python repos with different Ruff profiles

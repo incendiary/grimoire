@@ -82,6 +82,43 @@ bash clusters/07-devops/python-lint-gate/lint-gate.sh --fix
 
 # Scope to a path
 bash clusters/07-devops/python-lint-gate/lint-gate.sh --check --target src/
+
+# Staged files only (pre-commit workflow)
+bash clusters/07-devops/python-lint-gate/lint-gate.sh --check --staged
+```
+
+## pytest import handling
+
+Ruff commonly flags `conftest.py` and `__init__.py` fixtures because their imports
+are used implicitly by pytest's fixture injection, not via explicit import statements.
+
+**Common false positive — F401 on conftest.py fixture:**
+
+```python
+# conftest.py
+from mypackage.db import database_session  # Ruff flags this as F401
+```
+
+pytest uses `database_session` as a fixture name — Ruff can't see that. Fix options:
+
+**Option 1 — per-file ignore in `pyproject.toml` (preferred):**
+```toml
+[tool.ruff.lint.per-file-ignores]
+"conftest.py" = ["F401"]
+"tests/__init__.py" = ["F401"]
+```
+
+**Option 2 — inline suppression (use when only one or two imports are affected):**
+```python
+from mypackage.db import database_session  # noqa: F401 — pytest fixture
+```
+
+**Pylint in the same repo:** if both Ruff and Pylint run, Pylint's `C0114`/`C0115`
+(missing docstrings) will flag test files Ruff ignores. Add to `.pylintrc` or
+`pyproject.toml`:
+```toml
+[tool.pylint."MESSAGES CONTROL"]
+disable = ["C0114", "C0115", "C0116"]  # suppress missing-docstring for tests
 ```
 
 ---
@@ -90,5 +127,5 @@ bash clusters/07-devops/python-lint-gate/lint-gate.sh --check --target src/
 
 - [x] SKILL.md written and validated
 - [x] Add gate script for check/fix modes
-- [ ] Add optional staged-files-only mode
-- [ ] Add pytest import handling hints for mixed Ruff/Pylint repos
+- [x] Add optional staged-files-only mode
+- [x] Add pytest import handling hints for mixed Ruff/Pylint repos

@@ -13,7 +13,7 @@ own — exists so you don't need to remember which layer to start with.
 Provides a routing table and default sequence for the three Karpathy layers:
 
 - **Layer 1 — `karpathy-spec`**: Define goals precisely before work starts
-- **Layer 2 — `karpathy-verify`**: Evaluate output quality with second opinion + external signal  
+- **Layer 2 — `karpathy-verify`**: Evaluate output quality with second opinion + external signal
 - **Layer 3 — `karpathy-environment`**: Build a durable, improving workspace
 
 ---
@@ -64,4 +64,4 @@ Not sure which to use     → /karpathy-framework
 
 - [x] SKILL.md written and validated
 - [x] README.md written
-- [ ] Ship: copy to `~/.claude/skills/karpathy-framework/`
+- [x] Ship: copy to `~/.claude/skills/karpathy-framework/`

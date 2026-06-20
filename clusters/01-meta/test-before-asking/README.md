@@ -82,9 +82,44 @@ Load test-before-asking. Try things before asking me to decide.
 
 ---
 
+## Concrete ask vs test examples — by session type
+
+### Python / dependency sessions
+
+| Situation | Without this skill (asks) | With this skill (tests) |
+|-----------|--------------------------|------------------------|
+| venv missing a package | "Should I use the existing venv or create a new one?" | Checks with `pip show scipy`; installs if missing; continues |
+| Two compatible libraries exist | "Would you like requests or httpx?" | Uses `requests` (already installed); reports choice |
+| Test fails with ImportError | "Do you want me to install the missing package?" | Installs it; re-runs the test; reports pass/fail |
+
+### Shell / file operation sessions
+
+| Situation | Without this skill (asks) | With this skill (tests) |
+|-----------|--------------------------|------------------------|
+| Output file already exists | "The file exists — should I overwrite it?" | Checks if the content is already correct; overwrites only if different |
+| Multiple Python versions on PATH | "Which Python should I use?" | Runs `python --version` and `python3 --version`; picks the higher one |
+| `.env` file absent | "Should I create the .env from the example?" | Copies `.env.example` → `.env`; notes it and continues |
+
+### Refactor / code editing sessions
+
+| Situation | Without this skill (asks) | With this skill (tests) |
+|-----------|--------------------------|------------------------|
+| Function name ambiguity | "Did you mean `process_data` or `process_raw_data`?" | Greps both; picks the one that matches context; reports |
+| Two code locations for the same fix | "Should I fix it in `utils.py` or `helpers.py`?" | Reads both; applies fix to the one with the actual usage |
+| Test suite is slow | "Do you want me to run all tests or just the affected module?" | Runs the affected module first; runs full suite if it passes |
+
+### Decisions that still require asking (not testable):
+
+- Commit message wording when content is ambiguous
+- Whether to squash-merge vs merge commit (team convention, not a test)
+- Naming a new function when no existing convention is clear
+- Whether to delete a file with no callers (might be intentionally unused)
+
+---
+
 ## Roadmap
 
 - [x] SKILL.md written and validated
-- [ ] Add concrete examples of ask vs test for common session types
+- [x] Add concrete examples of ask vs test for common session types
 - [ ] Test across 5 sessions to confirm the rule lands correctly
 - [x] Ship: copy to `~/.claude/skills/test-before-asking/`

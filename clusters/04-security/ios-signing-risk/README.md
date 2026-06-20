@@ -116,11 +116,41 @@ Revoking before step 4 breaks live deployments. This rule applies in all scenari
 
 ---
 
+## Apple Developer Portal — log retention windows
+
+These retention windows apply to the Apple-hosted audit surfaces. Evidence must be
+collected within these windows before it expires. Always confirm at the time of the
+incident — Apple has changed retention policies without public notice.
+
+| Log source | Approximate retention | Access path | Notes |
+|---|---|---|---|
+| **Certificates, Identifiers & Profiles — Activity** | ~90 days (observed; not formally documented) | developer.apple.com → Account → Activity tab | Lists certificate creation, revocation, profile changes, member invitations. Export CSV immediately — no bulk API. |
+| **App Store Connect — Activity log** | ~60 days (observed; not formally documented) | appstoreconnect.apple.com → Users and Access → Activity | Shows who uploaded a build, created a TestFlight group, invited a user. Exportable per-app. |
+| **TestFlight — Build history** | Retained until the build expires (90 days from upload, or until the app version is removed) | appstoreconnect.apple.com → TestFlight | Build metadata (uploader, upload timestamp, version) available while the build is active. Download build expiry date from the TestFlight console before investigating. |
+| **Apple Business Manager / Apple School Manager — Audit log** | ~30 days | business.apple.com → Settings → Audit | MDM enrollment events, managed Apple ID creation, role changes. 30-day window is short — treat as immediate-collection target. |
+| **APNS logs** | Not retained by Apple | N/A | Push notification delivery is not logged by Apple. Evidence must come from your own server logs or MDM audit trail. |
+| **App Store Review — communications** | Indefinite (in Resolution Center) | appstoreconnect.apple.com → Resolution Center | App review correspondence is retained. Not time-critical. |
+| **HSM access logs (third-party HSM, e.g. AWS CloudHSM, Thales)** | Depends on your HSM provider and retention policy | Provider console or SIEM integration | Typically 90 days in CloudWatch (AWS CloudHSM); extend before investigating. |
+
+**Immediate-collection targets (collect within the first hour of a signing incident):**
+1. Apple Developer Portal Activity tab → CSV export
+2. App Store Connect Activity → export for all affected apps
+3. TestFlight build upload metadata (uploader, timestamp, source IP if visible)
+4. Apple Business Manager Audit log → export (30-day window)
+5. Your CI/CD secret store — access log for the signing certificate/key secret
+
+**What Apple does NOT provide:**
+- Source IP for portal activity (activity log shows user identity, not IP)
+- Certificate private key access logs (Apple does not hold your private key)
+- Build binary content — you must retain the IPA from your own storage
+
+---
+
 ## Roadmap
 
 - [x] SKILL.md written and validated
 - [x] Write `verify-ipa.sh` (hash + codesign verification)
 - [x] Write `check-manifest.sh` (OTA manifest parse and verification)
-- [ ] Add Apple Developer Portal log retention window specifics
+- [x] Add Apple Developer Portal log retention window specifics
 - [ ] Test on a real IPA integrity scenario
 - [x] Ship: copy to `~/.claude/skills/ios-signing-risk/`

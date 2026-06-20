@@ -11,15 +11,170 @@ This project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [1.6.15] — 2026-06-18
+
+Install scripts resolve full Node.js path at install time.
+
+### Fixed
+- `install-jetbrains.sh` + `install-vscode.sh`: resolve absolute path to node >=22
+  at install time and write it into mcp.json instead of bare `node`. Fixes silent
+  failures when JetBrains or VS Code launch without the user's shell PATH (nvm
+  aliases are not inherited by GUI apps). Search order: PATH → Homebrew
+  (`/opt/homebrew/bin/node`) → nvm versions descending → Volta. Prepends resolved
+  node's directory to PATH when invoking npm so npm itself uses the correct node.
+
+### Added
+- ROADMAP.md: new item tracking the fix (now ticked)
+
+---
+
+## [1.6.14] — 2026-06-18
+
+Meta session skills worked examples; security log retention reference; DevOps skip
+patterns and provider version matrix.
+
+### Added
+- `01-meta/mid-task-checkin` — worked example: 10-step comms-cluster refactor session
+  with two check-in points (post-content and pre-merge), showing what the pause
+  prevented
+- `01-meta/test-before-asking` — concrete ask vs test examples grouped by session type
+  (Python/dependency, shell/file, refactor/code editing) plus a table of decisions
+  that still require asking
+- `03-incident/incident-ask-builder` — two worked examples: iOS signing compromise (P1)
+  and AWS credential compromise (P2), showing full evidence ask output grouped by owner
+  with urgency tiers and retention risk flags
+- `04-security/ios-signing-risk` — Apple Developer Portal log retention window table
+  (Activity, App Store Connect, TestFlight, ABM Audit, APNS, HSM); immediate-collection
+  targets checklist; what Apple does not provide
+- `07-devops/pre-commit-aware-commits` — gitleaks false-positive allowlist template for
+  `.gitleaks.toml` (path-scoped, commit SHA, stopword, regex allow types); inline
+  suppression pattern; guidance against `--no-verify`
+- `07-devops/terraform-checkov-skips` — common skip patterns with justifications for S3,
+  EC2/launch template, IAM, security groups, RDS, Lambda, CloudTrail
+- `07-devops/terraform-aws-syntax` — provider version matrix for known argument-type
+  changes (S3 v4 resource split, db_instance password v5, EKS network config, etc.);
+  lock file version constraint tip
+
+---
+
+## [1.6.13] — 2026-06-18
+
+BOF fork-and-run guidance + Makefile template; EDR test loop AMSI/ETW/sleep mask sub-loops.
+
+### Added
+- `08-offsec/bof-dev-conventions` — fork-and-run vs inline OPSEC comparison table and
+  decision rules (including spawnto guidance); Makefile template for x64/x86 COFF builds
+  targeting both clang-cl (Windows) and mingw-w64 (Linux cross-compile)
+- `08-offsec/edr-test-loop` — AMSI bypass sub-loop (AmsiScanBuffer patch, delivery
+  method mapping, EDR patch-detection risk); ETW patching considerations (EtwEventWrite
+  patch approach, risk notes, detection signals, alternatives); memory-at-rest sleep mask
+  test sub-loop (at-rest confirmation, scanner triage table, mask integration steps,
+  jitter validation, crash-on-wake testing)
+
+---
+
+## [1.6.12] — 2026-06-18
+
+PE binary analysis reference additions and API hashing end-to-end example.
+
+### Added
+- `05-technical/pe-binary-analysis` — syscall hook detection byte-pattern reference
+  (x64 and x86 clean stub patterns, JMP hook detection, disk vs live comparison);
+  full import table walk worked example (INT walk, sentinel detection, ordinal-vs-name
+  branching); section table traversal worked example with RVA-to-file-offset helper
+- `08-offsec/api-hashing-conventions` — end-to-end worked example: x64 shellcode
+  resolving VirtualAlloc + CreateThread via DJB2, covering hash generation, constexpr
+  embedding, PEB walk, EAT walk with forwarded export check, and collision verification;
+  pairing note for shellcode-dev-conventions
+
+---
+
+## [1.6.11] — 2026-06-18
+
+README lag ticks for installed skills.
+
+### Changed
+- `01-meta/karpathy-environment`, `karpathy-framework`, `karpathy-spec`, `karpathy-verify`
+  — tick Ship roadmap items (all four installed via `install-all.sh --update`)
+- `07-devops/python-lockfile-integrity` — tick Ship roadmap item (installed)
+
+---
+
+## [1.6.10] — 2026-06-18
+
+Offsec taxonomy expansion and C2 integration checklist additions.
+
+### Added
+- `08-offsec/process-injection-taxonomy` — two new technique table rows (thread pool
+  TpAllocWork, kernel-mode driver-based); Cobalt Strike delivery decision matrix
+  (BOF vs post-ex DLL vs fork-and-run); link to `edr-test-loop` in validation step
+- `08-offsec/c2-integration-checklist` — expanded Havoc demon module checklist
+  (RegisterCommand, task dispatcher, sleep mask interaction, beacon vs demon comms
+  model differences); DNS listener OPSEC checklist (TTL, NS delegation, SOA, canary
+  domain split, wildcard record); post-engagement cleanup checklist (implant termination,
+  artifact removal, infrastructure teardown, IOC handoff)
+
+---
+
+## [1.6.9] — 2026-06-18
+
+DevOps GHA snippets, multi-arch Docker support, script enhancements.
+
+### Added
+- `07-devops/npm-lockfile-integrity` — CI workflow snippet (`npm ci` + audit + drift check)
+- `07-devops/npm-provenance-attestation` — CI workflow snippet (`npm audit signatures` + critical package provenance check)
+- `07-devops/docker-ghcr-publish` — multi-arch buildx guide (`linux/amd64,linux/arm64`) and
+  GHA workflow for automated GHCR publish on tag push
+- `07-devops/git-push-protocol-handler` — SSH agent start/add sequence with diagnosis table
+- `07-devops/portfolio-readme-generator` — per-language README skeletons (Python CLI, C# Windows tool, C++ BOF)
+- `07-devops/python-lint-gate` — `--staged` flag for staged-files-only mode; pytest F401
+  conftest handling notes (`per-file-ignores` and `# noqa: F401` patterns)
+- `07-devops/readme-version-pin` — `--pattern` flag on `pin_readme_version.sh` for
+  custom install line formats; `VERSION_TAG` placeholder substitution
+
+---
+
+## [1.6.8] — 2026-06-18
+
+Add worked examples to 01-meta and 05-technical skills.
+
+### Added
+- `01-meta/task-decomposer` — worked example: comms cluster decomposed into 3 chunks
+  with run-book, per-chunk scope, verifiable done criteria, and reasoning notes
+- `01-meta/task-handoff` — worked example: mid-session handoff document from a real
+  grimoire documentation task, including decisions made, remaining work, and fresh-session
+  load prompt
+- `05-technical/python-black-ruff-authoring` — before/after examples for F401 (unused
+  import), F841 (unused variable), E722 (bare except), and B904 (raise without from)
+
+---
+
+## [1.6.7] — 2026-06-18
+
+Add worked examples to the 02-comms cluster skills.
+
+### Added
+- `02-comms/executive-translate` — 3 worked examples: finding → CISO brief,
+  incident → board summary, risk → C-suite ask; covers CISO, C-suite, and board tiers
+- `02-comms/human-rewrite` — before/after pair for each of the 9 style rules
+- `02-comms/tone-check` — PASS, FLAG, and borderline example for each of the 4 axes
+  (blame, authority, vagueness, softness) with full annotation block output
+
+---
+
 ## [1.6.6] — 2026-06-16
 
-Project workflow guide + changelog tidy for recent release lineage.
+Project workflow guide, two new Python skills, and changelog tidy for recent release lineage.
 
 ### Added
 
 - `PROJECT-WORKFLOWS.md` — practical skill-stack playbooks for common project types
   (Node.js, Python, .NET, Terraform, security tooling, multi-repo operations)
 - `README.md` — Project Workflows section linking to the new guide
+- `05-technical/python-black-ruff-authoring` — authoring guide for writing Python
+  that passes Black and Ruff first pass; covers common violation patterns (F401, F841, E722, B904)
+- `07-devops/python-lint-gate` — unified Ruff + Black gate script with `--check`
+  and `--fix` modes; registered as MCP action tool
 
 ### Changed
 
