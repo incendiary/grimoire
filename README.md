@@ -160,6 +160,7 @@ bash install-all.sh (or install-vscode.sh)
 ## Project Workflows
 
 **New to grimoire?** See [PROJECT-WORKFLOWS.md](PROJECT-WORKFLOWS.md) for skill stacks for common project types:
+
 - Node.js libraries and services
 - Python CLI tools
 - .NET / C# libraries
@@ -212,6 +213,7 @@ Seven public clusters + two private (via submodule). See [clusters/README.md](cl
 | 01-meta | `karpathy-framework` | ✅ |
 | 01-meta | `karpathy-spec` | ✅ |
 | 01-meta | `karpathy-verify` | ✅ |
+| 01-meta | `skill-keyword-lookup` | ✅ |
 | 02-comms | `tone-check` | ✅ |
 | 02-comms | `human-rewrite` | ✅ |
 | 02-comms | `executive-translate` | ✅ |

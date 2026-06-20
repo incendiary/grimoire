@@ -91,6 +91,11 @@
             "description": "Query roadmap totals, open clusters, and infrastructure status"
         },
         {
+            "name": "skill-keyword-lookup",
+            "skill": "clusters/01-meta/skill-keyword-lookup/SKILL.md",
+            "description": "Find relevant skills by keyword intent and rank likely matches"
+        },
+        {
             "name": "roadmap-driver",
             "skill": "clusters/01-meta/roadmap-driver/SKILL.md",
             "description": "Select next implementation-ready roadmap task and execution chain"

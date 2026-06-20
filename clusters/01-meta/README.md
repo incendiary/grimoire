@@ -98,6 +98,13 @@ MCP-friendly roadmap query utility for `ROADMAP.md`. Returns open/complete total
 top clusters by outstanding items, and unresolved infrastructure actions.
 → [Full documentation](grimoire-roadmap-status/README.md)
 
+### [skill-keyword-lookup](skill-keyword-lookup/) ✅ complete
+
+Keyword-to-skill lookup utility for grimoire. Ranks matching skills from plain-language
+queries (intent keywords) so you can find the right skill even when you do not remember
+its exact name.
+→ [Full documentation](skill-keyword-lookup/README.md)
+
 ### [task-decomposer](task-decomposer/) ✅ complete
 
 Proactively breaks large tasks into self-contained chunks before context limits become an
@@ -190,6 +197,16 @@ skill-vetter              → repo health, script audit, prompt injection check
 [PASS / FLAG / REJECT decision]
 ```
 
+### Workflow 7: Finding the right skill by intent
+
+**Trigger:** "Which skill covers this?" / concept known but skill name forgotten
+
+```
+skill-keyword-lookup      → rank likely matching skills from keywords
+        ↓
+[pick top match]          → invoke selected skill directly
+```
+
 ---
 
 ## Individual skill trigger reference
@@ -209,3 +226,4 @@ skill-vetter              → repo health, script audit, prompt injection check
 | `cwd-verification` | Starting a session; about to run bulk file operations; path might be wrong |
 | `verify-code-version` | After a pull; before debugging unexpected output; code might be stale |
 | `test-before-asking` | About to ask the user a clarifying question; check if you should just try first |
+| `skill-keyword-lookup` | You know the workflow concept but not the skill name; need ranked skill matches |
