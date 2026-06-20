@@ -78,6 +78,10 @@ Items marked "Ship: copy to ~/.claude/skills/..." are legacy — the install pat
 - **ui-ux-product-audit**: Add worked example: full SaaS UI audit with implemented top-3 fixes
 - **ui-ux-product-audit**: Add stack-specific checklist variants (React+Tailwind, Vue, Svelte)
 - **ui-ux-product-audit**: Test on 3 real frontend repos and capture recurring anti-patterns
+- **codebase-holistic-review**: Add worked example: Python web service review (before/after findings)
+- **codebase-holistic-review**: Add worked example: Node.js monorepo review
+- **codebase-holistic-review**: Test on 3 real repos and capture recurring finding patterns
+- **codebase-holistic-review**: Add language-specific risk pattern tables (Python, TypeScript, C#, Go)
 
 ### 07-devops
 
