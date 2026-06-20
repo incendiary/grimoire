@@ -16,11 +16,13 @@ This project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 Project workflow guide + changelog tidy for recent release lineage.
 
 ### Added
+
 - `PROJECT-WORKFLOWS.md` — practical skill-stack playbooks for common project types
   (Node.js, Python, .NET, Terraform, security tooling, multi-repo operations)
 - `README.md` — Project Workflows section linking to the new guide
 
 ### Changed
+
 - `CHANGELOG.md` — backfilled release notes for v1.6.2 through v1.6.5
 - `ROADMAP.md` — marked post-merge changelog tidy task complete in the
   infrastructure checklist
@@ -32,6 +34,7 @@ Project workflow guide + changelog tidy for recent release lineage.
 Add `branch-surface-resolve` skill for surfacing and resolving scattered branches.
 
 ### Added
+
 - `07-devops/branch-surface-resolve` — audit local/remote branches, categorize by state
   (READY/LOCAL-ONLY/HAS-PR/CONFLICT/STALE), optionally resolve via PR creation.
   Includes `--resolve` and `--prune-stale` modes for branch cleanup workflows.
@@ -46,6 +49,7 @@ Add `branch-surface-resolve` skill for surfacing and resolving scattered branche
 Add `devops-practices` and `devops-practices-updater` skills for grimoire maintenance.
 
 ### Added
+
 - `07-devops/devops-practices` — enforcement suite for devops standards:
   version file sync, clone refs, test baseline, README quality gates
 - `07-devops/devops-practices-updater` — audit grimoire against standards
@@ -54,6 +58,7 @@ Add `devops-practices` and `devops-practices-updater` skills for grimoire mainte
 - `mcp-server/registry.json` — registered both skills as action tools
 
 ### Changed
+
 - `ROADMAP.md` — added post-merge changelog tidy task to infrastructure section
 
 ---
@@ -63,6 +68,7 @@ Add `devops-practices` and `devops-practices-updater` skills for grimoire mainte
 Infrastructure roadmap execution batch: MCP logging, install modes, uninstall scripts.
 
 ### Added
+
 - `mcp-server/src/` — structured logging with Pino, health check endpoint,
   log rotation via pino-roll. Writes to `mcp-server/logs/` with cleanup on startup
 - `install-all.sh` — `--update` mode (safely update existing installs),
@@ -73,6 +79,7 @@ Infrastructure roadmap execution batch: MCP logging, install modes, uninstall sc
 - Timestamped backups for `settings.json` (keep last 5 versions) during install-vscode
 
 ### Fixed
+
 - `install-vscode.sh` — now uses macOS `$HOME/Library/Application Support/Code/User/mcp.json`
   for MCP config (VS Code 1.100+ standard), not settings.json
 
@@ -83,11 +90,13 @@ Infrastructure roadmap execution batch: MCP logging, install modes, uninstall sc
 Fix MCP server compatibility with SDK 1.29.0 (Zod schema requirement).
 
 ### Fixed
+
 - `mcp-server/src/index.ts` — replaced raw JSON Schema objects in `server.tool()`
   calls with Zod schemas. SDK 1.29.0+ no longer accepts JSON objects; this fixes
   "expected a Zod schema or ToolAnnotations" crash on startup
 
 ### Changed
+
 - `mcp-server/package.json` — `@modelcontextprotocol/sdk` now at 1.29.0 (was 1.28.2)
 
 ---
@@ -97,11 +106,13 @@ Fix MCP server compatibility with SDK 1.29.0 (Zod schema requirement).
 Fix MCP server registration to use VS Code's dedicated mcp.json file.
 
 ### Fixed
+
 - `install-vscode.sh` now writes MCP server config to `mcp.json` instead of
   the legacy `settings.json` location (VS Code 1.100+ uses a dedicated file)
 - Removes stale `"mcp"` key from `settings.json` during migration
 
 ### Added
+
 - `.github/workflows/release-on-tag.yml` — auto-creates GitHub Release on tag push
 - `scripts/release-backfill.sh` — reconciliation script for tag↔release drift
 - Version-tag drift warning in `validate.yml` (annotation only, not a hard fail)
@@ -114,6 +125,7 @@ Fix MCP server registration to use VS Code's dedicated mcp.json file.
 README standardisation across all public clusters + global roadmap.
 
 ### Added
+
 - `ROADMAP.md` — auto-generated overview of 95 open items across 50 skills
 - `scripts/roadmap-collect.sh` — generates roadmap from skill README checkboxes (supports `--json`)
 - Multi-platform Installation section in all 50 public skill READMEs:
@@ -123,11 +135,13 @@ README standardisation across all public clusters + global roadmap.
 - `> **Type:** action|instructional` metadata field added to all SKILL.md files
 
 ### Changed
+
 - `validate.yml` readme-quality job now enforces standard on all public clusters
   (previously scoped to 01-meta only)
 - Stale path references (`~/Claude/Skills/...`) replaced with relative paths
 
 ### Fixed
+
 - 15 SKILL.md files in clusters 02-05 and 08-offsec were missing `Type:` metadata
 
 ---
@@ -137,6 +151,7 @@ README standardisation across all public clusters + global roadmap.
 Public/private cluster split via git submodule.
 
 ### Added
+
 - `clusters-private/` git submodule pointing to `incendiary/grimoire-private`
 - `scripts/init-private-submodule.sh` — skeleton generator for colleagues to create
   their own private submodule with the correct structure
@@ -144,6 +159,7 @@ Public/private cluster split via git submodule.
   detect-secrets, dependabot, CI validation)
 
 ### Changed
+
 - Moved `06-study` and `09-odpc` clusters to `grimoire-private` (personal content)
 - `install-all.sh`: scans `clusters-private/clusters/` if submodule is initialised
 - `build.sh`: generates prompt files from private clusters if present
@@ -161,6 +177,7 @@ Public/private cluster split via git submodule.
 Install script, documentation, and version alignment.
 
 ### Changed
+
 - `install-vscode.sh`: auto-detects VS Code `settings.json` (macOS, Linux, Windows),
   deep-merges `chat.promptFilesLocations` and `mcp.servers.grimoire` using `node -e`.
   Supports `--apply` (non-interactive), `--dry-run`, and interactive confirmation.
@@ -173,6 +190,7 @@ Install script, documentation, and version alignment.
   of truth: `VERSION` file).
 
 ### Fixed
+
 - `CHANGELOG.md`: back-filled entries for v1.1.0–v1.4.1 (previously undocumented).
 
 ---
@@ -182,11 +200,13 @@ Install script, documentation, and version alignment.
 Dependency upgrades and identity sanitisation.
 
 ### Changed
+
 - Bumped all npm dependencies to latest: `@modelcontextprotocol/sdk` 1.29.0,
   `vitest` 4.1.8, `typescript` 6.0.3, `eslint` 10.4.1, `tsx` 4.22.4.
 - Resolved all npm audit vulnerabilities (esbuild transitive via vitest).
 
 ### Security
+
 - Rewrote git history with `git-filter-repo` to remove corporate email from
   author/committer fields across all commits.
 
@@ -197,6 +217,7 @@ Dependency upgrades and identity sanitisation.
 Multi-platform delivery: VS Code prompt files + MCP server.
 
 ### Added
+
 - `mcp-server/` — TypeScript MCP server exposing action skills as callable tools.
   Uses `@modelcontextprotocol/sdk`, stdio transport, reads `registry.json` at startup.
 - `mcp-server/registry.json` — declares 16 action skills (3 from 01-meta, 13 from 07-devops).
@@ -209,6 +230,7 @@ Multi-platform delivery: VS Code prompt files + MCP server.
 - `Type:` field added to all skills (`instructional` or `action`).
 
 ### Changed
+
 - `validate.yml`: added `registry-sync` job for bidirectional SKILL.md ↔ registry validation.
 - `CLAUDE.md`: documented multi-platform delivery architecture.
 
@@ -219,6 +241,7 @@ Multi-platform delivery: VS Code prompt files + MCP server.
 Final Cat 5 delivery: c2-preflight.sh.
 
 ### Added
+
 - `08-offsec/c2-integration-checklist`: `c2-preflight.sh` script
 
 ---
@@ -226,6 +249,7 @@ Final Cat 5 delivery: c2-preflight.sh.
 ## [1.3.1] — 2026-06-07
 
 ### Added
+
 - `07-devops/npm-lockfile-integrity` — content-hash dependency verification skill
 
 ---
@@ -233,6 +257,7 @@ Final Cat 5 delivery: c2-preflight.sh.
 ## [1.3.2] — 2026-06-07
 
 ### Added
+
 - `07-devops/npm-provenance-attestation` — Sigstore build transparency verification skill
 
 ---
@@ -240,6 +265,7 @@ Final Cat 5 delivery: c2-preflight.sh.
 ## [1.3.3] — 2026-06-08
 
 ### Added
+
 - `07-devops/python-lockfile-integrity` — content-hash enforcement for
   pip, poetry, pipenv, and uv lockfiles
 
@@ -248,6 +274,7 @@ Final Cat 5 delivery: c2-preflight.sh.
 ## [1.3.4] — 2026-06-09
 
 ### Added
+
 - `01-meta/karpathy-spec` — spec generation skill
 - `01-meta/karpathy-verify` — implementation verification skill
 - `01-meta/karpathy-environment` — environment/context gathering skill
@@ -260,6 +287,7 @@ Final Cat 5 delivery: c2-preflight.sh.
 Offsec scripts, ODPC C1–C5, devops utilities. Roadmap sync across 30 READMEs.
 
 ### Added
+
 - `08-offsec/shellcode-dev-conventions`: `null-byte-audit.sh`, `size-report.sh`
 - `08-offsec/api-hashing-conventions`: `hash-api.py`, `collision-check.py`
 - `08-offsec/bof-dev-conventions`: BOF build and validate scripts
@@ -272,6 +300,7 @@ Offsec scripts, ODPC C1–C5, devops utilities. Roadmap sync across 30 READMEs.
 - `07-devops`: utility scripts for four skills
 
 ### Changed
+
 - Roadmap-sync: ticked Ship items across 30 skill READMEs
 
 ---
@@ -279,6 +308,7 @@ Offsec scripts, ODPC C1–C5, devops utilities. Roadmap sync across 30 READMEs.
 ## [1.2.1] — 2026-06-04
 
 ### Added
+
 - `05-technical/test-bootstrap` skill
 
 ---
@@ -286,6 +316,7 @@ Offsec scripts, ODPC C1–C5, devops utilities. Roadmap sync across 30 READMEs.
 ## [1.2.2] — 2026-06-04
 
 ### Added
+
 - `06-study/yt-curator` skill
 
 ---
@@ -293,6 +324,7 @@ Offsec scripts, ODPC C1–C5, devops utilities. Roadmap sync across 30 READMEs.
 ## [1.2.3] — 2026-06-04
 
 ### Fixed
+
 - `yt-curator`: aligned auth with existing `youtube_cli.py` token model
 
 ---
@@ -300,6 +332,7 @@ Offsec scripts, ODPC C1–C5, devops utilities. Roadmap sync across 30 READMEs.
 ## [1.2.4] — 2026-06-04
 
 ### Changed
+
 - Consolidated `youtube_cli.py` into `yt-curator` — full YouTube CLI skill
 
 ---
@@ -307,6 +340,7 @@ Offsec scripts, ODPC C1–C5, devops utilities. Roadmap sync across 30 READMEs.
 ## [1.2.5] — 2026-06-05
 
 ### Added
+
 - `01-meta/task-decomposer` skill
 - `01-meta/task-handoff` skill
 
@@ -315,6 +349,7 @@ Offsec scripts, ODPC C1–C5, devops utilities. Roadmap sync across 30 READMEs.
 ## [1.2.6] — 2026-06-05
 
 ### Added
+
 - Cat 5 D1: meta utility scripts
 
 ---
@@ -322,6 +357,7 @@ Offsec scripts, ODPC C1–C5, devops utilities. Roadmap sync across 30 READMEs.
 ## [1.2.7] — 2026-06-05
 
 ### Added
+
 - Cat 5 D2: incident and risk templates
 
 ---
@@ -329,6 +365,7 @@ Offsec scripts, ODPC C1–C5, devops utilities. Roadmap sync across 30 READMEs.
 ## [1.2.8] — 2026-06-05
 
 ### Added
+
 - Cat 5 D3: iOS signing scripts
 
 ---
@@ -336,6 +373,7 @@ Offsec scripts, ODPC C1–C5, devops utilities. Roadmap sync across 30 READMEs.
 ## [1.2.9] — 2026-06-05
 
 ### Added
+
 - Cat 5 D4: `source-material-triage` file-classifier
 
 ---
@@ -343,6 +381,7 @@ Offsec scripts, ODPC C1–C5, devops utilities. Roadmap sync across 30 READMEs.
 ## [1.2.10] — 2026-06-05
 
 ### Added
+
 - `07-devops/readme-version-pin` skill
 
 ---
@@ -350,6 +389,7 @@ Offsec scripts, ODPC C1–C5, devops utilities. Roadmap sync across 30 READMEs.
 ## [1.2.11] — 2026-06-05
 
 ### Added
+
 - `07-devops/docker-ghcr-publish` skill
 
 ---
@@ -357,9 +397,11 @@ Offsec scripts, ODPC C1–C5, devops utilities. Roadmap sync across 30 READMEs.
 ## [1.2.12] — 2026-06-06
 
 ### Added
+
 - Cat 5 D5: devops remaining scripts and config templates
 
 ### Changed
+
 - `validate.yml`: added `workflow_dispatch` trigger
 
 ---
@@ -367,11 +409,13 @@ Offsec scripts, ODPC C1–C5, devops utilities. Roadmap sync across 30 READMEs.
 ## [1.1.0] — 2026-06-02
 
 ### Added
+
 - `09-odpc` cluster — White Knight Labs ODPC chapter-mapped skills (7 skills:
   odpc-lab-setup, pe-resource-shellcode, syscall-techniques, call-stack-spoofing,
   dotnet-offensive, etw-evasion, caro-kann-injection)
 
 ### Changed
+
 - Updated invocation example in main README to use `repo-compass`
 
 ---
@@ -382,6 +426,7 @@ Full roadmap delivery. All promoted skills built out and verified.
 Repo migrated from `loadout` to `grimoire`; employer references removed from working tree and history.
 
 ### Added
+
 - `07-devops/repo-compass` — new skill: session-start orientation combining GitHub platform
   state with README roadmap cross-check; prevents "all clean" false reports
 - `07-devops/repo-publication-prep`: `find-large-files.sh`, `audit_history.sh`, `detect-language.sh`;
@@ -400,6 +445,7 @@ Repo migrated from `loadout` to `grimoire`; employer references removed from wor
 - `01-meta/github-authored-repos`: `list-authored.sh`; fork-detection one-liner; CLAUDE.md sync guidance
 
 ### Changed
+
 - Repo renamed `loadout` → `grimoire`
 - All employer/platform references removed (working tree and history wiped)
 - Skills Index updated: all `📋 promoted` entries promoted to `✅ complete`
@@ -413,6 +459,7 @@ validation pipeline. All skills built out prior to this version are captured bel
 as pre-release history.
 
 ### Added
+
 - `VERSION` file (semver baseline)
 - `CHANGELOG.md` (this file)
 - `.github/workflows/validate.yml` — shellcheck on all `.sh` files + skill structure
@@ -426,6 +473,7 @@ The following work was completed before versioning was introduced. Recorded here
 reference; no version numbers are associated with these changes.
 
 ### Skills built out (complete)
+
 - `01-meta`: `session-skill-extractor`, `skill-vetter`, `test-before-asking`,
   `cwd-verification`, `verify-code-version`, `mid-task-checkin`
 - `02-comms`: `tone-check`, `human-rewrite`, `executive-translate`
@@ -442,6 +490,7 @@ reference; no version numbers are associated with these changes.
   `c2-integration-checklist`
 
 ### Skills promoted (extracted, pending build-out)
+
 - `01-meta`: `github-authored-repos`
 - `07-devops`: `repo-publication-prep`, `github-history-wipe`, `repo-security-bootstrap`,
   `python-ci-template`, `dotnet-ci-template`

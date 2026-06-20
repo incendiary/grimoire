@@ -16,6 +16,7 @@ common remaining violations.
 - Fails fast when dependencies are missing
 
 This pairs well with:
+
 - `python-black-ruff-authoring` for writing-time patterns
 - `python-ci-lint-precheck` for pylint-aware lint workflows
 - `format-before-commit` for formatting discipline
@@ -25,6 +26,7 @@ This pairs well with:
 ## When to use it
 
 Use this skill when:
+
 - You are about to commit Python code
 - CI keeps failing on Black/Ruff
 - You want one gate command for local validation
@@ -42,6 +44,7 @@ cp -r clusters/07-devops/python-lint-gate ~/.claude/skills/
 ### VS Code (prompt file)
 
 After running `bash build.sh`, reference in Copilot Chat:
+
 ```
 #python-lint-gate
 ```
@@ -56,6 +59,7 @@ after installation.
 ## Invocation
 
 **Explicit:**
+
 ```bash
 /python-lint-gate
 Target: .

@@ -62,18 +62,18 @@ Confirm you're in the right directory before bulk operations.
 
 ### Development
 
-4. **format-before-commit** — Auto-format + review hook changes before staging
-5. **python-ci-lint-precheck** *or equivalent* — Lint before committing (ESLint for JS)
+1. **format-before-commit** — Auto-format + review hook changes before staging
+2. **python-ci-lint-precheck** *or equivalent* — Lint before committing (ESLint for JS)
 
 ### Pre-release
 
-6. **npm-lockfile-integrity** — Audit `package-lock.json` for integrity coverage
-7. **github-release-workflow** — Version bump → PR → CI → merge → tag → release
-8. **docker-ghcr-publish** (optional) — Build and push images to GHCR
+1. **npm-lockfile-integrity** — Audit `package-lock.json` for integrity coverage
+2. **github-release-workflow** — Version bump → PR → CI → merge → tag → release
+3. **docker-ghcr-publish** (optional) — Build and push images to GHCR
 
 ### Post-release
 
-9. **karpathy-verify** — Test the release against the original spec criteria
+1. **karpathy-verify** — Test the release against the original spec criteria
 
 ---
 
@@ -89,19 +89,19 @@ Confirm you're in the right directory before bulk operations.
 
 ### Development
 
-4. **python-black-ruff-authoring** — Write code in a style likely to pass Black + Ruff first pass
-5. **python-lint-gate** — One-command Ruff + Black gate (`--check` or `--fix`)
-6. **python-ci-lint-precheck** — Ruff + pylint before each commit
-7. **format-before-commit** — Black + ruff auto-format with review
+1. **python-black-ruff-authoring** — Write code in a style likely to pass Black + Ruff first pass
+2. **python-lint-gate** — One-command Ruff + Black gate (`--check` or `--fix`)
+3. **python-ci-lint-precheck** — Ruff + pylint before each commit
+4. **format-before-commit** — Black + ruff auto-format with review
 
 ### Release prep
 
-8. **python-ci-template** — Generate standardised CI (ruff, black, pytest, coverage matrix 3.9–3.12)
-9. **github-release-workflow** — Version bump → PR → CI → merge → tag → release
+1. **python-ci-template** — Generate standardised CI (ruff, black, pytest, coverage matrix 3.9–3.12)
+2. **github-release-workflow** — Version bump → PR → CI → merge → tag → release
 
 ### Post-release
 
-10. **karpathy-verify** — Verify release against spec
+1. **karpathy-verify** — Verify release against spec
 
 ---
 
@@ -117,15 +117,15 @@ Confirm you're in the right directory before bulk operations.
 
 ### Development
 
-4. **dotnet-ci-template** — Generate standardised CI (build matrix Debug/Release, `dotnet format --verify-no-changes`, xUnit/NUnit coverage)
+1. **dotnet-ci-template** — Generate standardised CI (build matrix Debug/Release, `dotnet format --verify-no-changes`, xUnit/NUnit coverage)
 
 ### Release prep
 
-5. **github-release-workflow** — Version bump → PR → CI → merge → tag → release
+1. **github-release-workflow** — Version bump → PR → CI → merge → tag → release
 
 ### Post-release
 
-6. **karpathy-verify** — Verify release against spec
+1. **karpathy-verify** — Verify release against spec
 
 ---
 
@@ -141,17 +141,17 @@ Confirm you're in the right directory before bulk operations.
 
 ### Development
 
-4. **terraform-version-compat** — Before adding/upgrading modules, check provider constraints
-5. **terraform-aws-syntax** — Apply known AWS syntax patterns (VPN, spot, Cognito edge cases)
-6. **terraform-checkov-skips** — Enforce justifications on every security skip
+1. **terraform-version-compat** — Before adding/upgrading modules, check provider constraints
+2. **terraform-aws-syntax** — Apply known AWS syntax patterns (VPN, spot, Cognito edge cases)
+3. **terraform-checkov-skips** — Enforce justifications on every security skip
 
 ### Security
 
-7. **repo-security-bootstrap** — Deploy `.gitleaks.toml` + `secret-scan.yml` workflow
+1. **repo-security-bootstrap** — Deploy `.gitleaks.toml` + `secret-scan.yml` workflow
 
 ### Release prep
 
-8. **github-release-workflow** — Version bump → PR → CI → merge → tag → release
+1. **github-release-workflow** — Version bump → PR → CI → merge → tag → release
 
 ---
 
@@ -167,13 +167,13 @@ Confirm you're in the right directory before bulk operations.
 
 ### Development
 
-4. **[08-offsec specific skill]** — Load the relevant offsec convention (shellcode, BOF, EDR iteration, etc.)
-5. **format-before-commit** — Code review before staging
+1. **[08-offsec specific skill]** — Load the relevant offsec convention (shellcode, BOF, EDR iteration, etc.)
+2. **format-before-commit** — Code review before staging
 
 ### Pre-release
 
-6. **portfolio-readme-generator** — Write portfolio-quality README with authorised-use disclaimer
-7. **github-release-workflow** — Version bump → PR → CI → merge → tag → release
+1. **portfolio-readme-generator** — Write portfolio-quality README with authorised-use disclaimer
+2. **github-release-workflow** — Version bump → PR → CI → merge → tag → release
 
 ---
 
@@ -188,13 +188,13 @@ Confirm you're in the right directory before bulk operations.
 
 ### Vetting
 
-3. **skill-vetter** — Safety audit (repo health, script calls, prompt injection)
+1. **skill-vetter** — Safety audit (repo health, script calls, prompt injection)
 
 ### Integration
 
-4. Update grimoire cluster README with skill entry
-5. Add to `registry.json` if action-type
-6. **github-release-workflow** — Create PR → CI → merge → tag → release
+1. Update grimoire cluster README with skill entry
+2. Add to `registry.json` if action-type
+3. **github-release-workflow** — Create PR → CI → merge → tag → release
 
 ---
 
@@ -209,12 +209,12 @@ Confirm you're in the right directory before bulk operations.
 
 ### Bulk task
 
-3. Apply the operation (e.g., `repo-security-bootstrap` on 16 repos, or `python-ci-template` on 12 repos)
+1. Apply the operation (e.g., `repo-security-bootstrap` on 16 repos, or `python-ci-template` on 12 repos)
 
 ### Cleanup
 
-4. **roadmap-sync** — Tick completed items in each repo's README
-5. **github-release-workflow** — Batch version bumps across all repos
+1. **roadmap-sync** — Tick completed items in each repo's README
+2. **github-release-workflow** — Batch version bumps across all repos
 
 ---
 
@@ -231,7 +231,7 @@ Confirm you're in the right directory before bulk operations.
 
 ### Next steps
 
-2. If you need the roadmap broken down into executable chunks:
+1. If you need the roadmap broken down into executable chunks:
    - **roadmap-driver** → selects next implementation-ready item and chains to:
      - `repo-compass` (full state)
      - `task-decomposer` (break into chunks)
@@ -267,7 +267,7 @@ task-handoff      →  package state for a fresh session to continue
 
 ### Before accepting AI output
 
-2. **test-before-asking** — Try the reasonable interpretation rather than clarifying
+1. **test-before-asking** — Try the reasonable interpretation rather than clarifying
    - Defined decision threshold: try first, ask only for destructive/expensive/preference-dependent actions
    - Indexed by action type
 
@@ -302,12 +302,14 @@ github-authored-repos  →  (multi-repo only) "Scope to authored repos"
 Once installed (via `bash install-all.sh` or `bash install-vscode.sh`), invoke a skill:
 
 **Explicit:** Reference by name
+
 ```
 /karpathy-spec
 Build a CLI tool that converts Markdown to Word documents, with embedded images.
 ```
 
 **Implicit:** Describe your task, Claude recognises the trigger
+
 ```
 I'm starting a Python project. What should I build first?
 ```
@@ -319,6 +321,7 @@ Skill names follow the folder names: `[cluster]/[skill-name]/` → invoke as `#s
 ## Roadmap items
 
 Many grimoire skills have open roadmap items. See [ROADMAP.md](ROADMAP.md) for:
+
 - Worked examples (e.g., "full SaaS UI audit with top-3 fixes implemented")
 - Stack-specific variants (e.g., "React+Tailwind vs Vue vs Svelte checklists")
 - Real-world validation from live sessions

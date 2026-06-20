@@ -26,6 +26,7 @@ implements assertions, and wires test execution into CI.
 → [Full documentation](test-bootstrap/README.md)
 
 ### [ui-ux-product-audit](ui-ux-product-audit/) ✅ complete
+
 Production-grade UI/UX audit and implementation loop for frontend applications.
 Evaluates product experience from code (hierarchy, consistency, responsiveness,
 accessibility, states, design system quality), ranks findings by severity, and requires
@@ -40,6 +41,15 @@ rework. Focuses on writing-time patterns (formatter-stable structure, clean impo
 scoped suppressions) so code is lint/format-compatible by default before pre-commit
 checks run.
 → [Full documentation](python-black-ruff-authoring/README.md)
+
+### [codebase-holistic-review](codebase-holistic-review/) ✅ complete
+
+Structured, predictive review across 8 phases: architecture map, risk inventory,
+failure prediction, test coverage gaps, dependency audit, CI/CD gap analysis, findings
+document, and action roadmap. Produces a `REVIEW.md` with action items written in
+enough detail for a lesser-capable agent to execute them independently. Chains to
+`roadmap-sync` to extract items to a dedicated file.
+→ [Full documentation](codebase-holistic-review/README.md)
 
 ---
 
@@ -70,6 +80,22 @@ python-ci-template / dotnet-ci-template / workflow update
        → ensure CI enforces test execution
 ```
 
+### Workflow 3: Holistic codebase review
+
+**Trigger:** "Review this codebase" / "What will break as this scales?" / "Audit before a release"
+
+```
+karpathy-spec             → (large repos) define what "healthy" looks like first
+        ↓
+codebase-holistic-review  → 8-phase review: architecture, risks, failures, tests, deps, CI
+        ↓
+[REVIEW.md + action roadmap committed]
+        ↓
+roadmap-sync              → move items to ROADMAP.md if >15 items
+        ↓
+task-decomposer           → (optional) chunk items for multi-session execution
+```
+
 ---
 
 ## Individual skill trigger reference
@@ -79,6 +105,7 @@ python-ci-template / dotnet-ci-template / workflow update
 | `pe-binary-analysis` | Working on PE internals, imports/exports, RVA math, or syscall hook checks |
 | `test-bootstrap` | Repo lacks tests or a changed module/class needs baseline coverage and CI wiring |
 | `python-black-ruff-authoring` | Writing/refactoring Python code in repos that use black/ruff and you want fewer lint-fix follow-up commits |
+| `codebase-holistic-review` | Auditing a codebase holistically; predicting future failure modes; producing a detailed action roadmap before scaling or releasing |
 
 ---
 

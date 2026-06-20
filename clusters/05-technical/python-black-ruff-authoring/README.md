@@ -11,12 +11,14 @@ of relying on post-hoc cleanup.
 ## What this skill does
 
 This skill sets writing-time conventions that reduce lint churn:
+
 - formatter-stable structure (parenthesized wrapping, trailing commas)
 - Ruff-friendly patterns (clean imports, explicit unused vars, scoped exceptions)
 - narrow suppression policy (line/function-level only, with rationale)
 - short local check loop before commits
 
 It complements `format-before-commit` and `python-ci-lint-precheck`:
+
 - this skill guides **how to write**
 - those skills enforce **how to validate before push**
 
@@ -25,6 +27,7 @@ It complements `format-before-commit` and `python-ci-lint-precheck`:
 ## When to use it
 
 Load this at the start of Python implementation sessions when:
+
 - you are generating or refactoring Python code
 - the repo uses `black`, `ruff`, or both
 - you want fewer formatter/linter follow-up commits
@@ -42,6 +45,7 @@ cp -r clusters/05-technical/python-black-ruff-authoring ~/.claude/skills/
 ### VS Code (prompt file)
 
 After running `bash build.sh`, reference in Copilot Chat:
+
 ```
 #python-black-ruff-authoring
 ```
@@ -56,12 +60,14 @@ Use it as prompt context in chat sessions.
 ## Invocation
 
 **Explicit:**
+
 ```
 /python-black-ruff-authoring
 Repo uses black + ruff. Generate module code in compatible style.
 ```
 
 **Implicit:**
+
 ```
 Write this Python module so it is likely to pass standard black/ruff checks.
 ```
