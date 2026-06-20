@@ -4,6 +4,8 @@ set -euo pipefail
 
 MODE="check"
 TARGET="."
+RUFF_BIN="ruff"
+BLACK_BIN="black"
 
 usage() {
     cat <<'EOF'
@@ -60,8 +62,24 @@ require_cmd() {
     fi
 }
 
-require_cmd ruff
-require_cmd black
+resolve_tool_bins() {
+    # Prefer PATH, but fall back to repo-local virtualenv binaries.
+    if ! command -v ruff >/dev/null 2>&1 && [[ -x ".venv/bin/ruff" ]]; then
+        RUFF_BIN=".venv/bin/ruff"
+    fi
+    if ! command -v black >/dev/null 2>&1 && [[ -x ".venv/bin/black" ]]; then
+        BLACK_BIN=".venv/bin/black"
+    fi
+
+    if [[ "$RUFF_BIN" == "ruff" ]]; then
+        require_cmd ruff
+    fi
+    if [[ "$BLACK_BIN" == "black" ]]; then
+        require_cmd black
+    fi
+}
+
+resolve_tool_bins
 
 if [[ ! -e "$TARGET" ]]; then
     echo "ERROR: Target not found: $TARGET" >&2
@@ -73,11 +91,11 @@ echo "[lint-gate] target=$TARGET mode=$MODE"
 run_checks() {
     local ok=0
 
-    if ! ruff check "$TARGET"; then
+    if ! "$RUFF_BIN" check "$TARGET"; then
         ok=1
     fi
 
-    if ! black --check "$TARGET"; then
+    if ! "$BLACK_BIN" --check "$TARGET"; then
         ok=1
     fi
 
@@ -98,8 +116,8 @@ EOF
 
 if [[ "$MODE" == "fix" ]]; then
     echo "[lint-gate] applying safe fixes"
-    ruff check --fix "$TARGET" || true
-    black "$TARGET" || true
+    "$RUFF_BIN" check --fix "$TARGET" || true
+    "$BLACK_BIN" "$TARGET" || true
 fi
 
 if run_checks; then
