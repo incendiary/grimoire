@@ -67,6 +67,42 @@ Task: [paste plan, description, or bullet list of work]
 
 ---
 
+## How to execute the chunks with agents
+
+Once the task package exists, treat each chunk as a separate sub-agent assignment.
+
+### Pattern to follow
+
+1. Read `00-runbook.md` first to understand ordering, shared context, and the overall done criteria.
+2. Give one chunk file to one agent or one fresh Claude session.
+3. Tell the agent to read only the chunk file plus the context files listed inside it.
+4. Instruct the agent to stay inside the chunk boundary:
+   - do not expand scope
+   - do not re-plan the whole task
+   - do not edit files outside the chunk’s file list unless the chunk explicitly says so
+5. Ask the agent to return the exact return signal from the chunk file when done.
+6. Mark the run-book chunk complete, then move to the next chunk.
+7. If a chunk grows unexpectedly, stop and re-run `task-decomposer` on the remaining work.
+
+### Prompt template for a sub-agent
+
+```text
+You are working chunk 02 of 08 for [task name].
+Read `00-runbook.md` and `02-<chunk-name>.md` first.
+Follow the chunk file exactly.
+Only edit the files listed there.
+Do not broaden scope or redesign the task.
+Return the exact commit message and return signal when done.
+```
+
+### When to use `task-handoff` instead
+
+If you are already midway through a chunk and the context window is getting tight,
+use `task-handoff` to package the current session state. Use `task-decomposer`
+up front, and `task-handoff` reactively.
+
+---
+
 ## Worked example
 
 **Task:** Add worked examples to all three 02-comms skills (executive-translate,
@@ -148,4 +184,5 @@ Done: section renders correctly, two roadmap items ticked.
 - [x] README.md written
 - [x] Ship: copy to `~/.claude/skills/task-decomposer/`
 - [x] Add example: grimoire Cat 5 decomposed into 6 chunks (worked example)
+- [ ] Add example: subagent execution guide for running chunks one-by-one
 - [ ] Add `--resume` mode: reads existing run-book, skips completed chunks

@@ -39,6 +39,7 @@ Items marked "Ship: copy to ~/.claude/skills/..." are legacy — the install pat
 - **session-skill-extractor**: Confidence scoring improvements
 - **skill-vetter**: Test on 3 real third-party skills (requires real sessions)
 - **task-decomposer**: Add example: grimoire Cat 5 decomposed into 6 chunks (worked example)
+- **task-decomposer**: Add example: subagent execution guide for running chunks one-by-one
 - **task-decomposer**: Add `--resume` mode: reads existing run-book, skips completed chunks
 - **task-handoff**: Add worked example: mid-session handoff from a real grimoire Cat 5 chunk
 - **task-handoff**: Add `--auto` mode: triggered automatically when context exceeds a threshold
