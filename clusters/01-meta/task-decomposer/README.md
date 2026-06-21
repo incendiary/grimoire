@@ -95,6 +95,24 @@ Do not broaden scope or redesign the task.
 Return the exact commit message and return signal when done.
 ```
 
+### Reusable prompt (auto-detect next chunk)
+
+Use this for every agent/session without manual updates:
+
+```text
+You are working on a decomposed task.
+Read .claude/tasks/[task-name]/00-runbook.md first.
+Identify the first chunk that is not yet marked complete in the run-book.
+Read that chunk file (e.g., .claude/tasks/[task-name]/02-chunk-name.md).
+Follow the chunk file exactly. Only edit the files it lists.
+Do not broaden scope or redesign the task.
+Return the exact commit message and return signal from the chunk file.
+When done, report back so the run-book can be updated.
+```
+
+Change only `[task-name]` once, then reuse the same prompt text for every chunk.
+The agent finds the next unfinished chunk itself.
+
 ### When to use `task-handoff` instead
 
 If you are already midway through a chunk and the context window is getting tight,
