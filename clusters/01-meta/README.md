@@ -207,6 +207,24 @@ skill-keyword-lookup      → rank likely matching skills from keywords
 [pick top match]          → invoke selected skill directly
 ```
 
+### Workflow 8: Roadmap-driven chunking
+
+**Trigger:** "Review the roadmap" / "Split the next task for subagents" / "Move README roadmap items into a dedicated file"
+
+```
+roadmap-driver            → select the next implementation-ready roadmap item
+        ↓
+task-decomposer           → break that item into self-contained chunks with clear done criteria
+        ↓
+roadmap-sync              → move completed README roadmap items into ROADMAP.md or PROJECT-ROADMAP.md
+        ↓
+[subagents / fresh sessions] → execute each chunk independently
+```
+
+Use this when you want a roadmap item turned into lesser-agent-friendly work
+packages. `roadmap-driver` chooses the item, `task-decomposer` writes the chunk files,
+and `roadmap-sync` keeps the README roadmap from becoming the long-term source of truth.
+
 ---
 
 ## Individual skill trigger reference
