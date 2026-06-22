@@ -124,67 +124,42 @@ process_repo() {
         return
     fi
 
-    # Process each open PR
-    while IFS= read -r pr_num; do
+    # Process each open PR (fetch all at once, not individually)
+    while IFS=$'\t' read -r pr_num author title; do
         check_rate_limit
 
-        # Get PR details
-        local pr_data
-        pr_data=$(gh pr view -R "${repo}" "${pr_num}" --json \
-            number,title,author,isDraft,state,statusCheckRollup,hasConflicts \
-            -q '.' 2>/dev/null || echo '{}')
-
-        local author
-        author=$(echo "${pr_data}" | jq -r '.author.login // "unknown"' 2>/dev/null || echo "unknown")
-        local title
-        title=$(echo "${pr_data}" | jq -r '.title // ""' 2>/dev/null || echo "")
-        local has_conflicts
-        has_conflicts=$(echo "${pr_data}" | jq -r '.hasConflicts // false' 2>/dev/null || echo "false")
-        local ci_status
-        ci_status=$(echo "${pr_data}" | jq -r '.statusCheckRollup[0].state // "unknown"' 2>/dev/null || echo "unknown")
-
-        # Skip drafts
-        if echo "${pr_data}" | jq -e '.isDraft' > /dev/null 2>&1; then
-            echo "  [#${pr_num}] ${title:0:50}... (draft, skipped)"
-            continue
-        fi
+        # Skip empty lines
+        [[ -z "${pr_num}" ]] && continue
 
         # Handle dependabot PRs
         if [[ "${author}" == "dependabot" ]] || [[ "${author}" == "dependabot[bot]" ]]; then
             echo -n "  [#${pr_num}] ${title:0:50}... "
 
-            if [[ "${has_conflicts}" == "true" ]]; then
-                echo "⚠️  (conflict — review needed)"
-                ((flagged++))
-            elif [[ "${ci_status}" != "SUCCESS" ]]; then
-                echo "✗ (CI failed — investigate)"
-                ((flagged++))
+            # Try to merge; gh will report if it fails (conflicts, CI, etc)
+            if gh pr merge -R "${repo}" "${pr_num}" --squash --delete-branch --auto 2>/dev/null; then
+                echo "✓ (merged)"
+                ((auto_merged++))
             else
-                # Auto-merge simple dependabot PR
-                echo "✓ (auto-merging)"
-                if gh pr merge -R "${repo}" "${pr_num}" --squash --delete-branch --auto 2>/dev/null; then
-                    ((auto_merged++))
-                else
-                    echo "    → Merge queued or requires approval"
-                fi
+                # Merge failed; likely due to conflict, CI, or protection
+                echo "⚠️  (needs review)"
+                ((flagged++))
             fi
         else
             echo "  [#${pr_num}] ${title:0:50}... (review needed)"
         fi
-    done < <(gh pr list -R "${repo}" -s open --json number -q '.[].number')
+    done < <(gh pr list -R "${repo}" -s open --json number,author,title -q '.[] | [.number, .author.login, .title] | @tsv')
 
     # Check recent CI runs
     echo ""
     echo "  Recent CI runs (last 3):"
-    local run_count=0
-    while IFS= read -r run_id status; do
-        if [[ ${run_count} -ge 3 ]]; then break; fi
+    gh run list -R "${repo}" --limit 3 --json databaseId,conclusion \
+        -q '.[] | select(.databaseId != null) | "\(.databaseId)\t\(.conclusion // "in_progress")"' 2>/dev/null | \
+    while IFS=$'\t' read -r run_id status; do
         local icon="✓"
         [[ "${status}" == "failure" ]] && icon="✗"
         [[ "${status}" == "in_progress" ]] && icon="⏳"
         echo "    ${icon} Run #${run_id}: ${status}"
-        ((run_count++))
-    done < <(gh run list -R "${repo}" --json databaseId,conclusion --jq '.[] | [.databaseId, .conclusion // "in_progress"]' -q 2>/dev/null | tr '\t' ' ' || echo "")
+    done
 
     echo "  Summary: ${auto_merged} auto-merged, ${flagged} flagged for review"
 }
