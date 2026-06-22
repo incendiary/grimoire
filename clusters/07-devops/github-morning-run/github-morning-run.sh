@@ -94,7 +94,8 @@ get_repos() {
 check_rate_limit() {
     local remaining
     remaining=$(gh api rate-limit --jq '.rate.remaining' 2>/dev/null || echo "unknown")
-    if [[ "${remaining}" != "unknown" ]] && [[ "${remaining}" -lt 100 ]]; then
+    # Only check if remaining is a number (not error JSON)
+    if [[ "${remaining}" =~ ^[0-9]+$ ]] && [[ "${remaining}" -lt 100 ]]; then
         echo "⚠️  GitHub API rate limit low (${remaining} remaining). Pausing..."
         sleep 10
     fi
