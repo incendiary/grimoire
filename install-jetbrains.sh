@@ -256,7 +256,7 @@ else
         if [[ -f "${MCP_PATH}" ]]; then
             backup_file "${MCP_PATH}"
         fi
-        merge_mcp_config "${MCP_PATH}" "${MCP_SERVER_DIR}/dist/server.js"
+        merge_mcp_config "${MCP_PATH}" "${MCP_SERVER_DIR}/dist/server.js" "${NODE_BIN}"
     else
         echo "  Skipped."
         echo ""
