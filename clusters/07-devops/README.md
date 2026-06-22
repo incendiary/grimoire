@@ -33,6 +33,13 @@ JSON, user-confirm, wipe, force push, recreate releases. Extracted after this ex
 procedure was repeated verbatim 16 times in a single session.
 → [Full documentation](github-history-wipe/README.md)
 
+### [github-morning-run](github-morning-run/) ✅ complete
+
+Routine GitHub repository maintenance. Audits open PRs, auto-merges simple dependabot
+updates when CI passes, checks GitHub Actions status, and flags complex issues for review.
+Supports single repo, multiple repos, or full portfolio audit. Scope is confirmed on invocation.
+→ [Full documentation](github-morning-run/README.md)
+
 ### [repo-security-bootstrap](repo-security-bootstrap/) 📋 promoted
 
 Deploys standard secret-scanning infrastructure — a custom `.gitleaks.toml` with
@@ -343,6 +350,7 @@ repo-compass                  → verify final clean repo state
 | `format-before-commit` | About to commit Python code; need to run formatters first |
 | `pre-commit-aware-commits` | Repo has pre-commit hooks; need to verify they haven't silently modified staged files |
 | `portfolio-readme-generator` | Repo needs a portfolio-quality README; publishing or updating docs |
+| `github-morning-run` | Daily/weekly repo hygiene; checking PRs, auto-merging dependabots, checking CI status |
 | `github-release-workflow` | Cutting a version: branch → PR → CI → merge → tag → release |
 | `git-push-protocol-handler` | SSH push just failed; need HTTPS fallback without breaking remote config |
 | `roadmap-sync` | Code changes completed; README roadmap needs ticking; pre-release state check |
