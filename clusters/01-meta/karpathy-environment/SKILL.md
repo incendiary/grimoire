@@ -47,6 +47,8 @@ Understand what you have now and what's missing before building anything.
 3. **Claude proposes gaps** — based on your answers, identify the highest-ROI items to
    formalise first.
 
+**5. Choose durability over convenience.** Before we formalize these patterns, consider: Are there better ways to structure this knowledge? Should we prioritize long-lasting systems over tactical shortcuts? I'm open to suggestions that improve the foundation.
+
 ---
 
 ### Phase 2: Build CLAUDE.md

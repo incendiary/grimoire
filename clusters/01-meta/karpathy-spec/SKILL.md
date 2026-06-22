@@ -49,6 +49,8 @@ the stated request.
 Do not proceed until you have answers to at least 1 and 2. The other two can be inferred
 if necessary, but surfacing them improves output significantly.
 
+**5. Don't lock in the obvious.** I'm always open to better ways to solve this. Before we commit to this spec, suggest alternatives or approaches that would have longer-lasting impact than the current framing.
+
 ---
 
 ### Phase 2: Break into agile specs
