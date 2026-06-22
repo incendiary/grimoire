@@ -71,12 +71,15 @@ get_repos() {
                 echo "ERROR: No origin remote found"
                 exit 1
             fi
-            # Extract owner/repo from URL
-            origin="${origin##*/}"
-            origin="${origin%.git}"
+            # Extract owner/repo from URL (handle both SSH and HTTPS)
+            # ssh://git@github.com/owner/repo.git or https://github.com/owner/repo.git
+            local repo_name
+            repo_name="${origin##*/}"
+            repo_name="${repo_name%.git}"
             local owner
-            owner=$(git config --get remote.origin.url | grep -oP '(?<=github.com[:/])[^/]+' || echo "unknown")
-            echo "${owner}/${origin}"
+            owner=$(echo "${origin}" | sed -n 's/.*github\.com[:/]\([^/]*\).*/\1/p')
+            [[ -z "${owner}" ]] && owner="unknown"
+            echo "${owner}/${repo_name}"
             ;;
         all)
             # List repos from incendiary (requires gh auth)
