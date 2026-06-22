@@ -134,8 +134,8 @@ process_repo() {
         # Skip empty lines
         [[ -z "${pr_num}" ]] && continue
 
-        # Handle dependabot PRs
-        if [[ "${author}" == "dependabot" ]] || [[ "${author}" == "dependabot[bot]" ]]; then
+        # Handle dependabot PRs (author may be "dependabot", "app/dependabot", or "dependabot[bot]")
+        if [[ "${author}" == *"dependabot"* ]]; then
             echo -n "  [#${pr_num}] ${title:0:50}... "
 
             # Try to merge; gh will report if it fails (conflicts, CI, etc)
