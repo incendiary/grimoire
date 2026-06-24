@@ -183,3 +183,21 @@ Add `.claude/tasks/` to `.gitignore` if needed.
   when context pressure is already high
 - `project-delivery-workflow` — higher-level delivery planning across PRs
 - `mid-task-checkin` — periodic check-ins during execution of a single chunk
+
+## Roadmap
+
+- [ ] **Conditional Serena integration for code tasks** — when decomposing code-based tasks, 
+  automatically invoke Serena MCP's `activate_project()` and `get_symbols_overview()` to 
+  understand code structure before decomposing. This produces more precise chunks ("refactor 
+  method X in class Y") vs. vague ones ("refactor the module"). Saves ~60-90% tokens vs. 
+  manual file reading. Non-code tasks (docs, DevOps, etc.) skip Serena and decompose as normal.
+  
+  **Implementation notes for agent:**
+  - Check task description for code/programming keywords to determine if Serena applies
+  - If code task: load Serena tools via `ToolSearch("serena")`, call `activate_project()`, 
+    then `get_symbols_overview()` on key files to understand structure
+  - Use structure insights to inform chunk boundaries (e.g., separate chunks per class 
+    or module, not arbitrary line counts)
+  - Document code structure findings in each chunk's "Files to read" and "Background" sections
+  - Add a new "Code structure notes" section to task files when Serena was used
+  - Only implement for Python, TypeScript/JavaScript, C# initially; extend to Go/Rust later
