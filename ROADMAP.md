@@ -177,3 +177,16 @@ These are repo-level improvements not tied to individual skills:
 - [x] Add `install-jetbrains.sh` — JetBrains MCP support (bypasses corporate VS Code MCP policy). Includes path auto-detection, `--mcp-path` override, backup support, and dry-run/apply modes.
 - [x] Post-merge changelog tidy pass — sync `CHANGELOG.md` with latest merged PRs and release notes after each infrastructure batch.
 - [x] `install-jetbrains.sh` + `install-vscode.sh`: resolve full Node.js path at install time — write the absolute path to node >=22 into mcp.json rather than bare `node`, so the config works correctly when the IDE launches without the user's shell PATH (nvm aliases are not inherited by GUI apps).
+
+### mlx-agent-server integration
+
+> Integration with `mlx-agent-server` (`~/Projects/mlx-agent-server`): a local MLX
+> inference server + agent runtime for authorized offensive work on Apple Silicon. Its
+> roadmap items G.1/G.2 make it an **MCP client** of Grimoire's stdio server so a local
+> (uncensored) model can call Grimoire's offsec + devops action-skills as tools. These
+> items are Grimoire's side of that contract. Action once `mlx-agent-server` reaches an
+> operational state (its v0.3.0 agent runtime).
+
+- [ ] **Verify action-skills are externally consumable via MCP**: audit `mcp-server/registry.json` so every 07-devops and 08-offsec action-skill exposes a clear description + input schema usable by an external MCP client (not just Claude Code). Priority skills for the consumer: `git-push-protocol-handler`, `project-delivery-workflow`, `github-release-workflow`, `bof-dev-conventions`, `shellcode-dev-conventions`, `process-injection-taxonomy`.
+- [ ] **Document the external-MCP-client contract**: short doc on how a non-Claude client (e.g. `mlx-agent-server`) launches the stdio server, lists tools, and calls them; note the consumer namespaces skills as `grimoire.<skill>`. Cross-reference `mlx-agent-server` ROADMAP items G.1/G.2 (raw URL: `https://github.com/incendiary/mlx-agent-server/blob/main/ROADMAP.md`).
+- [ ] **Local-model backend option (opsec)**: for Grimoire flows that invoke an LLM, allow targeting a local MLX backend (`mlx-agent-server`, OpenAI-compatible at `http://127.0.0.1:8080/v1`) instead of cloud, so offensive-skill reasoning stays on-box. Investigate which skills/scripts call models and add a configurable `base_url`/model.
