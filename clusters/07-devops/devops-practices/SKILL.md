@@ -123,6 +123,41 @@ test_clone_refs_pinned() {
 
 ---
 
+### 6. Documentation & roadmap management
+
+**Standard:** Roadmap is broken out to a dedicated file; README links to it. Both stay in sync.
+
+| Rule | Detail |
+|------|--------|
+| ROADMAP.md at repo root | Single source of truth for detailed roadmap; one item per line with checkbox |
+| README has roadmap link | Brief overview in README with link to full ROADMAP.md, not duplication |
+| Roadmap uses checkbox format | `- [ ]` uncompleted, `- [x]` completed; sortable and machine-parseable |
+| Sync after PR merge or release | When work completes, update both README and ROADMAP.md in same commit |
+| Archive completed roadmap sections | Completed items move to "Shipped" section at bottom of ROADMAP.md, not deleted |
+| No stale items | Roadmap reflects current direction; remove items that are no longer planned |
+
+**File structure example:**
+```
+ROADMAP.md (root)
+├─ ## Features (upcoming)
+│  ├─ - [ ] Feature X (Priority: HIGH)
+│  └─ - [ ] Feature Y
+├─ ## In Progress
+│  └─ - [ ] Feature Z (tracked in PR #123)
+└─ ## Shipped (v1.0 - v1.3)
+   ├─ - [x] Feature A
+   └─ - [x] Feature B
+
+README.md
+└─ ## Roadmap
+   Brief summary + "See [full roadmap](ROADMAP.md)"
+```
+
+**Enforcement:** No automated script; managed via `roadmap-sync` skill on each PR merge.
+**Existing skills:** `roadmap-sync` (keep README and ROADMAP.md in sync after changes)
+
+---
+
 ### 10. Code quality / formatting
 
 **Standard:** Every repo has a formatter and linter configured; both gate CI.
@@ -180,6 +215,7 @@ When a practice needs more than enforcement — it needs *implementation* — ro
 |------|----------------|
 | Cut a release with proper tagging | `github-release-workflow` |
 | Pin README install refs to version | `readme-version-pin` |
+| Sync roadmap after PR merge or release | `roadmap-sync` |
 | Full delivery loop (branch → PR → release) | `project-delivery-workflow` |
 | Bootstrap test framework in a new repo | `test-bootstrap` (05-technical) |
 | Set up pre-commit hooks | `pre-commit-aware-commits` |
