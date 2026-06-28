@@ -1,0 +1,60 @@
+name: DevOps Practices Check
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+
+jobs:
+  devops-check:
+    name: DevOps Compliance
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for git tag detection
+
+      - name: Check version sync
+        id: version-sync
+        run: |
+          bash ./clusters/07-devops/devops-practices/check-version-sync.sh . || EXIT_CODE=$?
+          exit ${EXIT_CODE:-0}
+
+      - name: Check clone-ref pinning
+        id: clone-refs
+        run: |
+          bash ./clusters/07-devops/devops-practices/check-clone-refs.sh . || EXIT_CODE=$?
+          exit ${EXIT_CODE:-0}
+
+      - name: Check test baseline
+        id: test-baseline
+        run: |
+          bash ./clusters/07-devops/devops-practices/check-test-baseline.sh . || EXIT_CODE=$?
+          exit ${EXIT_CODE:-0}
+
+      - name: Report results
+        if: always()
+        run: |
+          echo "## DevOps Practices Check Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ steps.version-sync.outcome }}" = "success" ]; then
+            echo "✅ Version sync: PASS" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ Version sync: FAIL" >> $GITHUB_STEP_SUMMARY
+          fi
+          if [ "${{ steps.clone-refs.outcome }}" = "success" ]; then
+            echo "✅ Clone-ref pinning: PASS" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ Clone-ref pinning: FAIL" >> $GITHUB_STEP_SUMMARY
+          fi
+          if [ "${{ steps.test-baseline.outcome }}" = "success" ]; then
+            echo "✅ Test baseline: PASS" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ Test baseline: FAIL" >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "See skill: [\`devops-practices\`](https://github.com/incendiary/grimoire/tree/main/clusters/07-devops/devops-practices)" >> $GITHUB_STEP_SUMMARY
