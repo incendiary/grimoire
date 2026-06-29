@@ -21,8 +21,11 @@ echo ""
 echo "This tool helps you choose the right model tier (Haiku, Sonnet, Opus)"
 echo "based on task characteristics, not just capability."
 echo ""
-read -p "Brief task description: " task_desc
-read -p "Specification detail (exact/ambiguous): " spec_detail
+read -rp "Brief task description: " task_desc
+read -rp "Specification detail (exact/ambiguous): " spec_detail
+echo ""
+echo "Task: $task_desc"
+echo "Spec clarity: $spec_detail"
 echo ""
 
 # Section 1: Verifiability
@@ -30,7 +33,7 @@ echo -e "${BLUE}Section 1: Verifiability - Can a machine prove it's done right?$
 echo ""
 
 # Test suite
-read -p "Does this task have an automated test suite? (y/n): " has_tests
+read -rp "Does this task have an automated test suite? (y/n): " has_tests
 if [[ "$has_tests" =~ ^[Yy]$ ]]; then
   ((verifiability_score += 2))
   echo -e "${GREEN}✓ Tests can catch obvious errors${NC}"
@@ -39,7 +42,7 @@ else
 fi
 
 # Type checker
-read -p "Type checker or compiler? (y/n): " has_types
+read -rp "Type checker or compiler? (y/n): " has_types
 if [[ "$has_types" =~ ^[Yy]$ ]]; then
   ((verifiability_score += 2))
   echo -e "${GREEN}✓ Type system enforces correctness${NC}"
@@ -48,7 +51,7 @@ else
 fi
 
 # Linter
-read -p "Linter or code style enforcement? (y/n): " has_lint
+read -rp "Linter or code style enforcement? (y/n): " has_lint
 if [[ "$has_lint" =~ ^[Yy]$ ]]; then
   ((verifiability_score += 1))
   echo -e "${GREEN}✓ Linter catches style/common errors${NC}"
@@ -71,7 +74,7 @@ echo -e "${BLUE}Section 2: Can it be 'wrong but green'?${NC}"
 echo "(Passes the gate but is subtly incorrect)"
 echo ""
 
-read -p "Risk of subtle correctness issues (e.g., algorithm, logic)? (y/n): " subtle_risk
+read -rp "Risk of subtle correctness issues (e.g., algorithm, logic)? (y/n): " subtle_risk
 if [[ "$subtle_risk" =~ ^[Yy]$ ]]; then
   echo -e "${RED}⚠ Model must act as safety net; weak model risky${NC}"
   ((verifiability_score -= 1))
@@ -79,7 +82,7 @@ else
   echo -e "${GREEN}✓ Correctness is straightforward${NC}"
 fi
 
-read -p "Risk of test quality issues (weakened assertions, missed cases)? (y/n): " test_quality_risk
+read -rp "Risk of test quality issues (weakened assertions, missed cases)? (y/n): " test_quality_risk
 if [[ "$test_quality_risk" =~ ^[Yy]$ ]]; then
   echo -e "${RED}⚠ Tests could pass despite bugs; model strength matters${NC}"
   ((verifiability_score -= 1))
@@ -87,7 +90,7 @@ else
   echo -e "${GREEN}✓ Test quality is stable${NC}"
 fi
 
-read -p "Risk of documentation accuracy issues? (y/n): " doc_risk
+read -rp "Risk of documentation accuracy issues? (y/n): " doc_risk
 if [[ "$doc_risk" =~ ^[Yy]$ ]]; then
   echo -e "${YELLOW}~ Docs can't be gate-checked; inspect needed${NC}"
 fi
@@ -98,7 +101,7 @@ echo ""
 echo -e "${BLUE}Section 3: Blast Radius - How expensive is a mistake?${NC}"
 echo ""
 
-read -p "Additive change (new code, no deletions)? (y/n): " additive
+read -rp "Additive change (new code, no deletions)? (y/n): " additive
 if [[ "$additive" =~ ^[Yy]$ ]]; then
   ((blast_radius_score += 0))
   echo -e "${GREEN}✓ Easy to review and revert${NC}"
@@ -106,7 +109,7 @@ else
   echo -e "${YELLOW}~ Changes existing code${NC}"
 fi
 
-read -p "Single file or tightly scoped? (y/n): " tight_scope
+read -rp "Single file or tightly scoped? (y/n): " tight_scope
 if [[ "$tight_scope" =~ ^[Yy]$ ]]; then
   ((blast_radius_score += 0))
   echo -e "${GREEN}✓ Limited ripple effect${NC}"
@@ -115,7 +118,7 @@ else
   ((blast_radius_score += 2))
 fi
 
-read -p "Breaking change or public interface change? (y/n): " breaking_change
+read -rp "Breaking change or public interface change? (y/n): " breaking_change
 if [[ "$breaking_change" =~ ^[Yy]$ ]]; then
   echo -e "${RED}✗ Large blast radius; dependencies break${NC}"
   ((blast_radius_score += 3))
@@ -123,7 +126,7 @@ else
   echo -e "${GREEN}✓ Backward compatible${NC}"
 fi
 
-read -p "Deletes or moves significant code? (y/n): " deletes_code
+read -rp "Deletes or moves significant code? (y/n): " deletes_code
 if [[ "$deletes_code" =~ ^[Yy]$ ]]; then
   echo -e "${RED}✗ Destructive change; hard to fix${NC}"
   ((blast_radius_score += 2))
