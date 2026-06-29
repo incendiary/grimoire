@@ -84,6 +84,13 @@ faster over time: CLAUDE.md, structured knowledge base, custom skills roadmap, a
 Compounds — each session setup is faster than the last.
 → [Full documentation](karpathy-environment/README.md)
 
+### [model-selection-framework](model-selection-framework/) ✅ complete
+
+Cost-benefit framework for choosing LLM model tier (Haiku, Sonnet, Opus) based on task
+characteristics—verifiability and blast radius—not just capability. Prevents false savings and
+overspending. Includes interactive decision tool (`model-select.sh`).
+→ [Full documentation](model-selection-framework/README.md)
+
 ### [roadmap-driver](roadmap-driver/) ✅ complete
 
 Selects the next implementation-ready roadmap item from `ROADMAP.md` and outputs a
@@ -133,6 +140,8 @@ karpathy-framework        → route to the right layer (usually spec first)
 karpathy-spec             → break the vague request into precise agile specs
         ↓
 task-decomposer           → (if multi-session) split into independent chunks
+        ↓
+model-selection-framework → (for each chunk) pick model tier based on verifiability & blast radius
         ↓
 [do the work]
         ↓
@@ -216,6 +225,8 @@ roadmap-driver            → select the next implementation-ready roadmap item
         ↓
 task-decomposer           → break that item into self-contained chunks with clear done criteria
         ↓
+model-selection-framework → (for each chunk) assign model tier based on task characteristics
+        ↓
 roadmap-sync              → move completed README roadmap items into ROADMAP.md or PROJECT-ROADMAP.md
         ↓
 [subagents / fresh sessions] → execute each chunk independently
@@ -235,6 +246,7 @@ and `roadmap-sync` keeps the README roadmap from becoming the long-term source o
 | `karpathy-spec` | Task is vague, large, or multi-step; need to define "done" before starting |
 | `karpathy-verify` | Output exists; need to evaluate quality before accepting; want a second opinion |
 | `karpathy-environment` | Session felt repetitive; patterns emerged worth capturing; setting up CLAUDE.md |
+| `model-selection-framework` | Choosing model tier for a task; avoiding false savings on high-risk work; assigning models to chunks |
 | `task-decomposer` | Task will span multiple sessions; need independent chunks before starting |
 | `task-handoff` | Context pressure building mid-task; need to hand off cleanly to a fresh session |
 | `mid-task-checkin` | Long multi-step task in progress; natural phase boundary reached; 3+ steps planned |
