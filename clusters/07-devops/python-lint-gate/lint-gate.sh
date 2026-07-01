@@ -121,7 +121,7 @@ run_checks() {
         ok=1
     fi
 
-    if ! "$BLACK_BIN" --check "${targets[@]}";
+    if ! "$BLACK_BIN" --check "${targets[@]}"; then
         ok=1
     fi
 

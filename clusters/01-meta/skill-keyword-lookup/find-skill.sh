@@ -111,7 +111,7 @@ for dir in "${skill_dirs[@]}"; do
     done
 
     if [[ $score -gt 0 ]]; then
-        rel_dir="${dir#$ROOT/}"
+        rel_dir="${dir#"$ROOT"/}"
         results+=("$score|$cluster_name|$skill_name|$rel_dir|$(printf '%s,' "${matched_terms[@]}" | sed 's/,$//')")
     fi
 done

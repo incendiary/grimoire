@@ -140,8 +140,8 @@ Iterates through all authored repos, applies same logic.
 
 ### Scheduled via cron
 ```bash
-# Daily at 8 AM
-0 8 * * * cd /path/to/grimoire && bash clusters/07-devops/github-morning-run/github-morning-run.sh --all >> /tmp/github-morning.log 2>&1
+# Daily at 8 AM (adjust path to your grimoire location)
+0 8 * * * cd ~/projects/grimoire && bash clusters/07-devops/github-morning-run/github-morning-run.sh --all >> /tmp/github-morning.log 2>&1
 ```
 
 ## Gotchas

@@ -181,8 +181,6 @@ main() {
     repos=$(get_repos)
 
     local total_repos=0
-    local total_auto_merged=0
-    local total_flagged=0
 
     while IFS= read -r repo; do
         [[ -z "${repo}" ]] && continue
