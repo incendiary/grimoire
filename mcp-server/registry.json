@@ -41,6 +41,11 @@
             "description": "Rewrite git history to remove sensitive content"
         },
         {
+            "name": "github-morning-run",
+            "skill": "clusters/07-devops/github-morning-run/SKILL.md",
+            "description": "Audit repos, auto-merge dependabot PRs, check CI status"
+        },
+        {
             "name": "pre-commit-aware-commits",
             "skill": "clusters/07-devops/pre-commit-aware-commits/SKILL.md",
             "description": "Run pre-commit hooks and handle failures before commit"

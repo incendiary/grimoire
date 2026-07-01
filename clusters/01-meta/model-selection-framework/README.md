@@ -1,6 +1,58 @@
 # model-selection-framework
 
-Cost-benefit framework for choosing LLM model tier (Haiku, Sonnet, Opus) based on task characteristics, not just capability.
+> **Cluster:** 01-meta | **Status:** complete | **Added:** 2026-06-29
+
+Cost-benefit framework for choosing LLM model tier (Haiku, Sonnet, Opus) based on task characteristics—verifiability and blast radius—not just capability. Prevents false savings on high-risk work.
+
+---
+
+## What this skill does
+
+Guides model tier selection through a cost-benefit equation: `total cost = run cost + P(rework) × (cost to detect error + cost to fix it)`. Helps agents avoid both false savings (cheap model on risky task) and overspending (expensive model on mechanical work). Includes interactive decision tool with color-coded scoring and real-world examples.
+
+---
+
+## When to use it
+
+- "Which model should I use for this task?"
+- Choosing a model tier before delegating work to an agent
+- Deciding between Haiku, Sonnet, or Opus for a specific task
+- Evaluating cost-benefit when task characteristics vary (verifiability, blast radius)
+- Assigning model tiers to chunks during multi-session work
+
+---
+
+## Installation
+
+### Claude Code
+
+```bash
+cp -r clusters/01-meta/model-selection-framework ~/.claude/skills/
+```
+
+### VS Code (prompt file)
+
+After running `bash build.sh`, reference in Copilot Chat:
+```
+#model-selection-framework
+```
+
+---
+
+## Invocation
+
+**Explicit:**
+```
+/model-selection-framework
+<task description and characteristics>
+```
+
+**Implicit** — ask about model selection and Claude recognises the trigger:
+```
+Should I use Haiku or Opus for this refactor?
+```
+
+---
 
 ## Quick Start
 

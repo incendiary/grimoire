@@ -1,6 +1,60 @@
 # github-morning-run
 
-Routine GitHub repository maintenance. Audits open PRs, auto-merges simple dependabot updates when CI passes, checks action status, and flags complex issues for review.
+> **Cluster:** 07-devops | **Status:** complete | **Added:** 2022-06-22
+
+Routine GitHub repository maintenance for one or more authored repos. Audits open PRs, auto-merges simple dependabot updates when CI passes, checks GitHub Actions status, and flags complex issues for human review.
+
+---
+
+## What this skill does
+
+Automates daily repo hygiene across portfolio: identifies dependabot PRs safe for auto-merge (CI passes + no conflicts + single dependency), merges them with squash commits, reports CI status across all recent runs, and flags PRs needing human judgment. Rate-limit aware. Designed for daily or weekly runs.
+
+---
+
+## When to use it
+
+- "Check my GitHub repos" / "morning run" — routine portfolio maintenance
+- "GitHub status" — audit open PRs and CI across all authored repos
+- "Any open PRs?" — quick check on current repo
+- Scheduled runs (e.g., daily via cron) for hands-off maintenance
+
+---
+
+## Installation
+
+### Claude Code
+
+```bash
+cp -r clusters/07-devops/github-morning-run ~/.claude/skills/
+```
+
+### VS Code (prompt file)
+
+After running `bash build.sh`, reference in Copilot Chat:
+```
+#github-morning-run
+```
+
+### VS Code / MCP client (action skill)
+
+Available as a tool via MCP after running `bash install-vscode.sh`. Callable automatically when relevant.
+
+---
+
+## Invocation
+
+**Explicit:**
+```
+/github-morning-run
+```
+
+**Implicit** — ask about repo status and Claude recognises the trigger:
+```
+Check if there are any open PRs we can merge
+```
+
+---
 
 ## Quick start
 
