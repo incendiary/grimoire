@@ -119,6 +119,40 @@ Common examples:
 - **Any repo with .sh files**: shellcheck
 - **Custom validation**: Any shell command in your CI workflow
 
+## Requirements
+
+### Python Virtual Environments
+
+If your repository contains a Python virtual environment:
+```bash
+source venv/bin/activate        # or .venv/bin/activate
+bash pre-push-validation.sh
+```
+
+The script will **fail with a clear error** if a venv is detected but not activated. This prevents tools like flake8, black, and pytest from being "not found" due to wrong PATH.
+
+### Tool Availability (Fail-Closed Design)
+
+The skill uses **fail-closed design**: if your repository type is detected (Python, Go, Rust, etc.) and a required tool is missing from PATH, validation will **fail with a clear error** instead of silently skipping the check.
+
+Examples:
+
+**✅ Correct**:
+```bash
+$ bash pre-push-validation.sh
+⏳ flake8... ✅
+⏳ black... ✅
+```
+
+**❌ Fail-closed error** (tool missing):
+```bash
+$ bash pre-push-validation.sh
+❌ Python project detected but flake8 not in PATH
+   Install with: pip install flake8  (or activate venv first)
+```
+
+This prevents accidental "false passes" where validation skipped checks because tools weren't available.
+
 ## Usage
 
 ### Manual validation (before push)

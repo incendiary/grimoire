@@ -8,6 +8,50 @@ set -e
 REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
 cd "$REPO_ROOT"
 
+# Helper: check if tool exists
+# shellcheck disable=SC2329
+tool_exists() {
+  command -v "$1" >/dev/null 2>&1
+}
+
+# Helper: check if in skip list
+# shellcheck disable=SC2329
+should_skip() {
+  for skip in $SKIP_CHECKS; do
+    [ "$1" = "$skip" ] && return 0
+  done
+  return 1
+}
+
+# Detect project types early (needed for venv check below)
+detect_bash() { find . -name "*.sh" -not -path "./.git/*" 2>/dev/null | grep -q . ; }
+detect_node() { [ -f package.json ] || find . -maxdepth 2 -name package.json 2>/dev/null | grep -q . ; }
+detect_python() { [ -f pyproject.toml ] || [ -f requirements.txt ] || [ -f setup.py ] || find . -maxdepth 2 -name "pyproject.toml" 2>/dev/null | grep -q . ; }
+detect_go() { [ -f go.mod ] || find . -maxdepth 2 -name go.mod 2>/dev/null | grep -q . ; }
+detect_rust() { [ -f Cargo.toml ] || find . -maxdepth 2 -name Cargo.toml 2>/dev/null | grep -q . ; }
+detect_csharp() { find . -maxdepth 2 -name "*.csproj" 2>/dev/null | grep -q . ; }
+
+# Check for Python virtual environment if this is a Python project
+is_python_project=false
+detect_python && is_python_project=true
+
+if [ "$is_python_project" = "true" ]; then
+  if [ -f "venv/bin/activate" ] || [ -f ".venv/bin/activate" ]; then
+    if [ -z "$VIRTUAL_ENV" ]; then
+      echo "⚠️  WARNING: Python virtual environment detected but not activated"
+      venv_dir=""
+      if [ -d venv ]; then venv_dir=venv; elif [ -d .venv ]; then venv_dir=.venv; fi
+      if [ -n "$venv_dir" ]; then
+        echo "   Found: $venv_dir"
+        echo "   Activate with: source $venv_dir/bin/activate"
+      fi
+      echo "   Then re-run: bash $0 $(printf '%q ' "${@:---help}")"
+      echo ""
+      exit 1
+    fi
+  fi
+fi
+
 # Configuration
 STRICT_MODE=false
 DRY_RUN=false
@@ -142,13 +186,6 @@ run_check() {
   fi
 }
 
-# Detect project types
-detect_bash() { find . -name "*.sh" -not -path "./.git/*" 2>/dev/null | grep -q . ; }
-detect_node() { [ -f package.json ] || find . -maxdepth 2 -name package.json 2>/dev/null | grep -q . ; }
-detect_python() { [ -f pyproject.toml ] || [ -f requirements.txt ] || [ -f setup.py ] || find . -maxdepth 2 -name "pyproject.toml" 2>/dev/null | grep -q . ; }
-detect_go() { [ -f go.mod ] || find . -maxdepth 2 -name go.mod 2>/dev/null | grep -q . ; }
-detect_rust() { [ -f Cargo.toml ] || find . -maxdepth 2 -name Cargo.toml 2>/dev/null | grep -q . ; }
-detect_csharp() { find . -maxdepth 3 -name "*.csproj" -o -name "*.fsproj" 2>/dev/null | grep -q . ; }
 
 # Print banner and detect repo type
 echo ""
@@ -183,6 +220,10 @@ if [ -f ".github/workflows/validate.yml" ]; then
   # 5. No stale path references
   run_check "stale-paths" "Path reference validation" \
     "bash -c 'set -e; for readme in clusters/*/*/README.md; do [ ! -f \"\$readme\" ] && continue; grep -qE \"/path/to/grimoire|loadout/\" \"\$readme\" && { echo \"ERROR: stale path reference in \$readme\"; exit 1; }; done; echo \"No stale paths found\"'" || FAILED=1
+
+  # 6. Stale branches check (warns about feature branches significantly out of sync with main)
+  run_check "stale-branches" "Branch sync validation" \
+    "bash -c 'for branch in \$(git branch | grep feat/ | grep -v \"\\\\*\" | sed \"s/^[[:space:]]\\\\+//\"); do commits_ahead=\$(git log --oneline main..\$branch 2>/dev/null | wc -l); if [ \"\$commits_ahead\" -gt 0 ]; then echo \"⚠️  \$branch: \$commits_ahead commit(s) ahead of main\"; fi; done; echo \"Branch sync check complete\"'" || FAILED=1
   
   if [ $FAILED -ne 0 ]; then
     echo ""
@@ -235,48 +276,72 @@ else
   
   # Python checks
   if echo "$detected" | grep -q python; then
-    if tool_exists python3; then
-      tool_exists flake8 && run_check "flake8" "Python linting" "flake8 . 2>&1" || true
-      tool_exists black && run_check "black" "Python formatting" "black --check . 2>&1" || true
-      
-      if [ "$STRICT_MODE" = "true" ]; then
-        tool_exists pytest && run_check "pytest" "Python tests" "pytest . 2>&1" || true
+    if ! tool_exists python3; then
+      echo -e "${RED}❌ Python project detected but python3 not found in PATH${NC}"
+      exit 1
+    fi
+    
+    # Fail closed: required tools must be available
+    if ! tool_exists flake8; then
+      echo -e "${RED}❌ Python project detected but flake8 not in PATH${NC}"
+      echo "   Install with: pip install flake8  (or activate venv first)"
+      exit 1
+    fi
+    
+    run_check "flake8" "Python linting" "flake8 . 2>&1" || return 1
+    
+    if tool_exists black; then
+      run_check "black" "Python formatting" "black --check . 2>&1" || return 1
+    fi
+    
+    if [ "$STRICT_MODE" = "true" ]; then
+      if tool_exists pytest; then
+        run_check "pytest" "Python tests" "pytest . 2>&1" || return 1
       fi
     fi
   fi
   
   # Go checks
   if echo "$detected" | grep -q go; then
-    if tool_exists go; then
-      run_check "gofmt" "Go formatting" "gofmt -l . 2>&1" || true
-      run_check "govet" "Go analysis" "go vet ./..." || true
-      
-      if [ "$STRICT_MODE" = "true" ]; then
-        run_check "gotest" "Go tests" "go test ./..." || true
-      fi
+    if ! tool_exists go; then
+      echo -e "${RED}❌ Go project detected but go not found in PATH${NC}"
+      exit 1
+    fi
+    
+    run_check "gofmt" "Go formatting" "gofmt -l . 2>&1" || return 1
+    run_check "govet" "Go analysis" "go vet ./..." || return 1
+    
+    if [ "$STRICT_MODE" = "true" ]; then
+      run_check "gotest" "Go tests" "go test ./..." || return 1
     fi
   fi
   
   # Rust checks
   if echo "$detected" | grep -q rust; then
-    if tool_exists cargo; then
-      run_check "cargo-fmt" "Rust formatting" "cargo fmt --check 2>&1" || true
-      run_check "cargo-clippy" "Rust linting" "cargo clippy --all-targets 2>&1" || true
-      
-      if [ "$STRICT_MODE" = "true" ]; then
-        run_check "cargo-test" "Rust tests" "cargo test 2>&1" || true
-      fi
+    if ! tool_exists cargo; then
+      echo -e "${RED}❌ Rust project detected but cargo not found in PATH${NC}"
+      exit 1
+    fi
+    
+    run_check "cargo-fmt" "Rust formatting" "cargo fmt --check 2>&1" || return 1
+    run_check "cargo-clippy" "Rust linting" "cargo clippy --all-targets 2>&1" || return 1
+    
+    if [ "$STRICT_MODE" = "true" ]; then
+      run_check "cargo-test" "Rust tests" "cargo test 2>&1" || return 1
     fi
   fi
   
   # C# checks
   if echo "$detected" | grep -q c#; then
-    if tool_exists dotnet; then
-      run_check "dotnet-format" "C# formatting" "dotnet format --verify-no-changes 2>&1" || true
-      
-      if [ "$STRICT_MODE" = "true" ]; then
-        run_check "dotnet-test" "C# tests" "dotnet test 2>&1" || true
-      fi
+    if ! tool_exists dotnet; then
+      echo -e "${RED}❌ C# project detected but dotnet not found in PATH${NC}"
+      exit 1
+    fi
+    
+    run_check "dotnet-format" "C# formatting" "dotnet format --verify-no-changes 2>&1" || return 1
+    
+    if [ "$STRICT_MODE" = "true" ]; then
+      run_check "dotnet-test" "C# tests" "dotnet test 2>&1" || return 1
     fi
   fi
 fi
