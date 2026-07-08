@@ -4,11 +4,12 @@ set -euo pipefail
 # install-vscode.sh — Set up grimoire for VS Code (MCP server + prompt files)
 #
 # What it does:
-#   1. Builds the MCP server (npm ci + tsc)
-#   2. Generates prompt files (build.sh)
-#   3. Detects VS Code config directory
-#   4. Writes MCP config to mcp.json (VS Code 1.100+ dedicated file)
-#   5. Merges prompt file path into settings.json
+#   1. Checks if MCP is supported in VS Code
+#   2. Builds the MCP server (npm ci + tsc) — if supported
+#   3. Generates prompt files (build.sh)
+#   4. Detects VS Code config directory
+#   5. Writes MCP config to mcp.json — if supported (VS Code 1.100+ dedicated file)
+#   6. Merges prompt file path into settings.json
 #
 # Usage:
 #   bash install-vscode.sh            # interactive — prompts before editing settings
@@ -21,25 +22,59 @@ MCP_SERVER_DIR="${SCRIPT_DIR}/mcp-server"
 # --- Parse flags ---
 AUTO_APPLY=false
 DRY_RUN=false
+PROMPT_FILES_ONLY=false
 for arg in "$@"; do
     case "${arg}" in
         --apply)   AUTO_APPLY=true ;;
         --dry-run) DRY_RUN=true ;;
+        --prompt-files-only) PROMPT_FILES_ONLY=true ;;
         --help|-h)
-            echo "Usage: bash install-vscode.sh [--apply|--dry-run]"
+            echo "Usage: bash install-vscode.sh [options]"
             echo ""
-            echo "  --apply    Edit VS Code config files without prompting"
-            echo "  --dry-run  Show what would be merged, don't write anything"
+            echo "Options:"
+            echo "  --apply             Edit VS Code config files without prompting"
+            echo "  --dry-run           Show what would be merged, don't write anything"
+            echo "  --prompt-files-only Skip MCP setup, install prompt files only"
             echo ""
             exit 0
             ;;
         *)
             echo "Unknown flag: ${arg}"
-            echo "Usage: bash install-vscode.sh [--apply|--dry-run]"
+            echo "Usage: bash install-vscode.sh [--apply|--dry-run|--prompt-files-only]"
             exit 1
             ;;
     esac
 done
+
+detect_mcp_support() {
+    # Check if VS Code has MCP enabled in User settings
+    # Look for mcp.access setting; if it's "none", MCP is disabled
+    local settings_path=""
+    case "$(uname -s)" in
+        Darwin)
+            settings_path="${HOME}/Library/Application Support/Code/User/settings.json"
+            ;;
+        Linux)
+            settings_path="${HOME}/.config/Code/User/settings.json"
+            ;;
+        MINGW*|MSYS*|CYGWIN*)
+            if [[ -n "${APPDATA:-}" ]]; then
+                settings_path="${APPDATA}/Code/User/settings.json"
+            fi
+            ;;
+    esac
+
+    if [[ -z "${settings_path}" || ! -f "${settings_path}" ]]; then
+        return 0  # assume supported if we can't check
+    fi
+
+    # Check for mcp.access setting; if it's "none", MCP is disabled
+    if grep -q '"mcp.access".*"none"' "${settings_path}" 2>/dev/null; then
+        return 1  # MCP not supported
+    fi
+
+    return 0  # MCP supported
+}
 
 resolve_node_bin() {
     # Return absolute path to the first node binary that is version >=22.
@@ -97,25 +132,71 @@ backup_file() {
 echo "=== grimoire VS Code setup ==="
 echo ""
 
-# --- Step 1: Build MCP server ---
-echo "[1/5] Building MCP server..."
-if ! NODE_BIN="$(resolve_node_bin)"; then
-    echo "ERROR: Node.js 22+ not found. Install options:"
-    echo "  Homebrew:  brew install node"
-    echo "  nvm:       nvm install 22 && nvm use 22"
-    echo "  Volta:     volta install node@22"
-    exit 1
+# --- Pre-flight: Check MCP support ---
+if [[ "${PROMPT_FILES_ONLY}" != "true" ]]; then
+    if ! detect_mcp_support; then
+        echo "⚠ WARNING: MCP is disabled in your VS Code settings (mcp.access = 'none')"
+        echo ""
+        echo "This usually means your organization restricts MCP. The MCP server won't start,"
+        echo "and attempting to register it can break VS Code tool execution."
+        echo ""
+        echo "Two installation paths:"
+        echo ""
+        echo "  1. RECOMMENDED: Install prompt files only (no MCP)"
+        echo "     • Skills available as #skill-name in Copilot Chat"
+        echo "     • No MCP server, no org policy conflicts"
+        echo "     • Run: bash install-vscode.sh --prompt-files-only"
+        echo ""
+        echo "  2. Continue with full setup (including MCP registration)"
+        echo "     • Requires MCP to be enabled"
+        echo "     • MCP will fail to start and may break tools"
+        echo "     • Run: bash install-vscode.sh --prompt-files-only=false"
+        echo ""
+
+        if [[ "${AUTO_APPLY}" == "true" ]]; then
+            echo "ERROR: --apply flag used but MCP is disabled. Use --prompt-files-only instead."
+            exit 1
+        fi
+
+        printf "Continue with prompt files only? [Y/n] "
+        read -r response
+        if [[ ! "${response}" =~ ^[Nn]$ ]]; then
+            PROMPT_FILES_ONLY=true
+            echo ""
+            echo "Proceeding with prompt files only."
+            echo ""
+        fi
+    fi
 fi
-NPM_BIN="$(dirname "${NODE_BIN}")/npm"
-echo "  Node: ${NODE_BIN} ($("${NODE_BIN}" --version))"
 
-cd "${MCP_SERVER_DIR}"
-# Prepend node's own bin directory so npm uses the resolved node, not the PATH default
-PATH="$(dirname "${NODE_BIN}"):${PATH}" "${NPM_BIN}" ci --silent
-PATH="$(dirname "${NODE_BIN}"):${PATH}" "${NPM_BIN}" run build --silent
-echo "  ✓ MCP server built"
+# --- Step 1: Build MCP server (if not prompt-files-only) ---
+if [[ "${PROMPT_FILES_ONLY}" != "true" ]]; then
+    echo "[1/5] Building MCP server..."
+    if ! NODE_BIN="$(resolve_node_bin)"; then
+        echo "ERROR: Node.js 22+ not found. Install options:"
+        echo "  Homebrew:  brew install node"
+        echo "  nvm:       nvm install 22 && nvm use 22"
+        echo "  Volta:     volta install node@22"
+        exit 1
+    fi
+    NPM_BIN="$(dirname "${NODE_BIN}")/npm"
+    echo "  Node: ${NODE_BIN} ($("${NODE_BIN}" --version))"
 
-# --- Step 2: Generate prompt files ---
+    cd "${MCP_SERVER_DIR}"
+    # Prepend node's own bin directory so npm uses the resolved node, not the PATH default
+    PATH="$(dirname "${NODE_BIN}"):${PATH}" "${NPM_BIN}" ci --silent
+    PATH="$(dirname "${NODE_BIN}"):${PATH}" "${NPM_BIN}" run build --silent
+    echo "  ✓ MCP server built"
+
+    STEP_OFFSET=0
+else
+    echo "[1/3] Setup (prompt files only)"
+    STEP_OFFSET=2
+    NODE_BIN="node"  # fallback for prompt file generation
+fi
+
+
+# --- Step 2/1: Generate prompt files ---
 echo "[2/5] Generating prompt files..."
 cd "${SCRIPT_DIR}"
 bash build.sh --clean
@@ -153,11 +234,12 @@ if [[ -n "${VSCODE_USER_DIR}" ]]; then
     MCP_PATH="${VSCODE_USER_DIR}/mcp.json"
 fi
 
-# --- Step 4: Write MCP config to mcp.json ---
-echo "[4/5] Configuring MCP server (mcp.json)..."
-echo ""
+# --- Step 4: Write MCP config to mcp.json (skip if prompt-files-only) ---
+if [[ "${PROMPT_FILES_ONLY}" != "true" ]]; then
+    echo "[4/5] Configuring MCP server (mcp.json)..."
+    echo ""
 
-MCP_CONFIG=$("${NODE_BIN}" -e "
+    MCP_CONFIG=$("${NODE_BIN}" -e "
 const config = {
     servers: {
         grimoire: {
@@ -170,30 +252,30 @@ const config = {
 console.log(JSON.stringify(config, null, '\t'));
 " "${NODE_BIN}" "${MCP_SERVER_DIR}/dist/server.js")
 
-if [[ -z "${VSCODE_USER_DIR}" ]]; then
-    echo "  ⚠ Could not locate VS Code config directory."
-    echo ""
-    echo "  Create mcp.json manually in your VS Code User directory:"
-    echo ""
-    echo "${MCP_CONFIG}"
-    echo ""
-    echo "  Common locations:"
-    echo "    macOS:   ~/Library/Application Support/Code/User/mcp.json"
-    echo "    Linux:   ~/.config/Code/User/mcp.json"
-    echo "    Windows: %APPDATA%\\Code\\User\\mcp.json"
-    echo ""
-else
-    echo "  Target: ${MCP_PATH}"
-
-    if [[ "${DRY_RUN}" == "true" ]]; then
+    if [[ -z "${VSCODE_USER_DIR}" ]]; then
+        echo "  ⚠ Could not locate VS Code config directory."
         echo ""
-        echo "  [dry-run] Would write to mcp.json:"
+        echo "  Create mcp.json manually in your VS Code User directory:"
         echo ""
         echo "${MCP_CONFIG}"
         echo ""
+        echo "  Common locations:"
+        echo "    macOS:   ~/Library/Application Support/Code/User/mcp.json"
+        echo "    Linux:   ~/.config/Code/User/mcp.json"
+        echo "    Windows: %APPDATA%\\Code\\User\\mcp.json"
+        echo ""
     else
-        write_mcp_config() {
-            "${NODE_BIN}" -e "
+        echo "  Target: ${MCP_PATH}"
+
+        if [[ "${DRY_RUN}" == "true" ]]; then
+            echo ""
+            echo "  [dry-run] Would write to mcp.json:"
+            echo ""
+            echo "${MCP_CONFIG}"
+            echo ""
+        else
+            write_mcp_config() {
+                "${NODE_BIN}" -e "
 const fs = require('fs');
 const mcpPath = process.argv[1];
 const serverJsPath = process.argv[2];
@@ -221,29 +303,35 @@ if (!existing.inputs) existing.inputs = [];
 fs.writeFileSync(mcpPath, JSON.stringify(existing, null, '\t') + '\n');
 console.log('  ✓ mcp.json updated — grimoire MCP server registered');
 " "${MCP_PATH}" "${MCP_SERVER_DIR}/dist/server.js" "${NODE_BIN}"
-        }
+            }
 
-        if [[ "${AUTO_APPLY}" == "true" ]]; then
-            write_mcp_config
-        else
-            echo ""
-            echo "  Will register grimoire server in: ${MCP_PATH}"
-            echo "    command: node"
-            echo "    args:    ${MCP_SERVER_DIR}/dist/server.js"
-            echo ""
-            printf "  Apply? [y/N] "
-            read -r response
-            if [[ "${response}" =~ ^[Yy]$ ]]; then
+            if [[ "${AUTO_APPLY}" == "true" ]]; then
                 write_mcp_config
             else
-                echo "  Skipped. Create mcp.json manually:"
                 echo ""
-                echo "${MCP_CONFIG}"
+                echo "  Will register grimoire server in: ${MCP_PATH}"
+                echo "    command: node"
+                echo "    args:    ${MCP_SERVER_DIR}/dist/server.js"
                 echo ""
+                printf "  Apply? [y/N] "
+                read -r response
+                if [[ "${response}" =~ ^[Yy]$ ]]; then
+                    write_mcp_config
+                else
+                    echo "  Skipped. Create mcp.json manually:"
+                    echo ""
+                    echo "${MCP_CONFIG}"
+                    echo ""
+                fi
             fi
         fi
     fi
+else
+    echo "[3/3] Skipping MCP configuration (prompt files only)"
+    echo ""
 fi
+
+
 
 # --- Step 5: Merge prompt file path into settings.json ---
 echo "[5/5] Configuring prompt files (settings.json)..."
@@ -356,9 +444,21 @@ fi
 echo ""
 echo "=== Setup complete ==="
 echo ""
-echo "Usage:"
-echo "  Prompt files: type #skill-name in Copilot Chat"
-echo "  MCP tools:    available automatically when grimoire server is connected"
+if [[ "${PROMPT_FILES_ONLY}" == "true" ]]; then
+    echo "Installation mode: Prompt files only (no MCP)"
+    echo ""
+    echo "Usage:"
+    echo "  • Type #skill-name in Copilot Chat to reference grimoire skills"
+    echo "  • Skills are available across all VS Code sessions"
+    echo "  • No MCP server — fully compliant with org policies"
+else
+    echo "Installation mode: Full setup (MCP + Prompt files)"
+    echo ""
+    echo "Usage:"
+    echo "  • Prompt files: type #skill-name in Copilot Chat"
+    echo "  • MCP tools:    available automatically when grimoire server is connected"
+fi
 echo ""
 echo "After pulling updates, re-run:"
 echo "  bash ${SCRIPT_DIR}/install-vscode.sh"
+
