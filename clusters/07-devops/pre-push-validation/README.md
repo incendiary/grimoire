@@ -158,13 +158,13 @@ This prevents accidental "false passes" where validation skipped checks because 
 ### Manual validation (before push)
 
 ```bash
-cd /path/to/repo
+cd your-repo-root
 bash pre-push-validation.sh
 ```
 
 Sample output:
 ```
-=== Pre-Push Validation for /path/to/repo ===
+=== Pre-Push Validation for your-repo-root ===
 
 Detected: Node.js repository (via .github/workflows/validate.yml)
 
@@ -186,7 +186,7 @@ PASS: all checks completed successfully
 ### Install automatic pre-push hook
 
 ```bash
-cd /path/to/repo
+cd your-repo-root
 bash pre-push-validation.sh --install-hook
 ```
 

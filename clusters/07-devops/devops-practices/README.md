@@ -95,10 +95,10 @@ All green → repo is compliant
 ### Periodic audit (existing repo)
 
 ```bash
-cd /path/to/repo
-bash path/to/devops-practices/check-version-sync.sh
-bash path/to/devops-practices/check-clone-refs.sh
-bash path/to/devops-practices/check-test-baseline.sh
+cd your-repo-root
+bash clusters/07-devops/devops-practices/check-version-sync.sh
+bash clusters/07-devops/devops-practices/check-clone-refs.sh
+bash clusters/07-devops/devops-practices/check-test-baseline.sh
 ```
 
 ## Related skills
