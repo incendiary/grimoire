@@ -56,6 +56,7 @@ fi
 STRICT_MODE=false
 DRY_RUN=false
 INSTALL_HOOK=false
+NO_HOOK_PROMPT=false
 SKIP_CHECKS=""
 
 # Tracking
@@ -90,12 +91,40 @@ while [[ $# -gt 0 ]]; do
       INSTALL_HOOK=true
       shift
       ;;
+    --no-hook-prompt)
+      NO_HOOK_PROMPT=true
+      shift
+      ;;
     *)
       echo "Unknown option: $1"
       exit 1
       ;;
   esac
 done
+
+# Prompt user to install hook if not already installed and not suppressed
+HOOK_FILE=".git/hooks/pre-push"
+if [ ! -f "$HOOK_FILE" ] && [ "$NO_HOOK_PROMPT" != "true" ] && [ "$DRY_RUN" != "true" ]; then
+  echo -e "${BLUE}═══════════════════════════════════════${NC}"
+  echo -e "${BLUE}Pre-push Validation Hook Setup${NC}"
+  echo -e "${BLUE}═══════════════════════════════════════${NC}"
+  echo ""
+  echo "Would you like to install a pre-push hook to automatically"
+  echo "run these checks before every push to GitHub?"
+  echo ""
+  echo "This will:"
+  echo "  ✓ Auto-run linting, formatting, and tests before push"
+  echo "  ✓ Prevent common CI failures before they hit GitHub"
+  echo "  ✓ Can be bypassed with: git push --no-verify"
+  echo "  ✓ Can be disabled: chmod -x .git/hooks/pre-push"
+  echo ""
+  read -rp "Install pre-push hook? (y/n) " -n 1 reply
+  echo ""
+  if [[ "$reply" =~ ^[Yy]$ ]]; then
+    INSTALL_HOOK=true
+  fi
+  echo ""
+fi
 
 # Handle hook installation early and exit
 if [ "$INSTALL_HOOK" = "true" ]; then
