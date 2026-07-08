@@ -187,11 +187,8 @@ if [[ "${PROMPT_FILES_ONLY}" != "true" ]]; then
     PATH="$(dirname "${NODE_BIN}"):${PATH}" "${NPM_BIN}" ci --silent
     PATH="$(dirname "${NODE_BIN}"):${PATH}" "${NPM_BIN}" run build --silent
     echo "  ✓ MCP server built"
-
-    STEP_OFFSET=0
 else
     echo "[1/3] Setup (prompt files only)"
-    STEP_OFFSET=2
     NODE_BIN="node"  # fallback for prompt file generation
 fi
 
