@@ -41,6 +41,11 @@
             "description": "Rewrite git history to remove sensitive content"
         },
         {
+            "name": "github-actions-locally",
+            "skill": "clusters/07-devops/github-actions-locally/SKILL.md",
+            "description": "Run GitHub Actions workflows locally before pushing"
+        },
+        {
             "name": "github-morning-run",
             "skill": "clusters/07-devops/github-morning-run/SKILL.md",
             "description": "Audit repos, auto-merge dependabot PRs, check CI status"
