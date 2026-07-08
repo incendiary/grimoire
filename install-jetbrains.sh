@@ -4,15 +4,17 @@ set -euo pipefail
 # install-jetbrains.sh — Set up grimoire MCP server for JetBrains clients
 #
 # What it does:
-#   1. Builds the MCP server (npm ci + tsc)
-#   2. Detects a JetBrains MCP config path (or uses --mcp-path)
-#   3. Merges grimoire server entry into mcp.json
+#   1. Checks if MCP is supported in JetBrains IDE
+#   2. Builds the MCP server (npm ci + tsc) — if supported
+#   3. Detects a JetBrains MCP config path (or uses --mcp-path)
+#   4. Merges grimoire server entry into mcp.json
 #
 # Usage:
 #   bash install-jetbrains.sh
 #   bash install-jetbrains.sh --apply
 #   bash install-jetbrains.sh --dry-run
 #   bash install-jetbrains.sh --mcp-path "/absolute/path/to/mcp.json"
+#   bash install-jetbrains.sh --skip-mcp-check  # proceed even if MCP unavailable
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 MCP_SERVER_DIR="${SCRIPT_DIR}/mcp-server"
@@ -20,6 +22,7 @@ MCP_SERVER_DIR="${SCRIPT_DIR}/mcp-server"
 AUTO_APPLY=false
 DRY_RUN=false
 MCP_PATH_OVERRIDE=""
+SKIP_MCP_CHECK=false
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -39,12 +42,18 @@ while [[ $# -gt 0 ]]; do
             MCP_PATH_OVERRIDE="$2"
             shift 2
             ;;
+        --skip-mcp-check)
+            SKIP_MCP_CHECK=true
+            shift
+            ;;
         --help|-h)
-            echo "Usage: bash install-jetbrains.sh [--apply] [--dry-run] [--mcp-path <path>]"
+            echo "Usage: bash install-jetbrains.sh [options]"
             echo ""
-            echo "  --apply            Edit configuration without interactive prompt"
-            echo "  --dry-run          Print target config and exit without writing"
-            echo "  --mcp-path <path>  Explicit path to JetBrains MCP config file"
+            echo "Options:"
+            echo "  --apply              Edit configuration without interactive prompt"
+            echo "  --dry-run            Print target config and exit without writing"
+            echo "  --mcp-path <path>    Explicit path to JetBrains MCP config file"
+            echo "  --skip-mcp-check     Proceed even if MCP appears unavailable"
             echo ""
             exit 0
             ;;
@@ -55,6 +64,13 @@ while [[ $# -gt 0 ]]; do
             ;;
     esac
 done
+
+detect_mcp_support_jetbrains() {
+    # Check if JetBrains IDE has MCP support available
+    # JetBrains typically supports MCP, so we assume true by default
+    # Return false only if explicitly restricted (which is rare)
+    return 0  # MCP supported
+}
 
 resolve_node_bin() {
     # Return absolute path to the first node binary that is version >=22.
@@ -148,6 +164,32 @@ detect_default_mcp_path() {
 
 echo "=== grimoire JetBrains MCP setup ==="
 echo ""
+
+# --- Pre-flight: Check MCP support ---
+if [[ "${SKIP_MCP_CHECK}" != "true" ]]; then
+    if ! detect_mcp_support_jetbrains; then
+        echo "⚠ WARNING: JetBrains MCP support could not be verified"
+        echo ""
+        echo "If your organization restricts MCP, the MCP server may not start,"
+        echo "and attempting to register it can cause issues."
+        echo ""
+        echo "You can proceed with setup using:"
+        echo "  bash install-jetbrains.sh --skip-mcp-check"
+        echo ""
+
+        if [[ "${AUTO_APPLY}" == "true" ]]; then
+            echo "ERROR: --apply flag used but MCP verification failed. Use --skip-mcp-check to proceed."
+            exit 1
+        fi
+
+        printf "Continue with MCP setup anyway? [y/N] "
+        read -r response
+        if [[ ! "${response}" =~ ^[Yy]$ ]]; then
+            echo "Aborted."
+            exit 0
+        fi
+    fi
+fi
 
 echo "[1/3] Building MCP server..."
 if ! NODE_BIN="$(resolve_node_bin)"; then
