@@ -40,6 +40,13 @@ updates when CI passes, checks GitHub Actions status, and flags complex issues f
 Supports single repo, multiple repos, or full portfolio audit. Scope is confirmed on invocation.
 → [Full documentation](github-morning-run/README.md)
 
+### [github-actions-locally](github-actions-locally/) ✅ complete
+
+Shift-left CI validation: discover and run linting and test jobs from `.github/workflows/`
+locally before pushing. Auto-fixes issues (black, ruff, prettier, eslint) and reports
+results without blocking. Catch CI failures fast, locally, not after pushing to Actions.
+→ [Full documentation](github-actions-locally/README.md)
+
 ### [repo-security-bootstrap](repo-security-bootstrap/) 📋 promoted
 
 Deploys standard secret-scanning infrastructure — a custom `.gitleaks.toml` with
