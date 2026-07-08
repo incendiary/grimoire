@@ -109,6 +109,11 @@
             "name": "branch-surface-resolve",
             "skill": "clusters/07-devops/branch-surface-resolve/SKILL.md",
             "description": "Audit all branches, categorise by state, and resolve via PRs or surface conflicts"
+        },
+        {
+            "name": "pre-push-validation",
+            "skill": "clusters/07-devops/pre-push-validation/SKILL.md",
+            "description": "Run all local checks before pushing to GitHub using spec-driven validation"
         }
     ]
 }

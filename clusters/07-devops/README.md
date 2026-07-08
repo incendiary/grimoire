@@ -96,6 +96,14 @@ hook dry-run before staging, re-review of hook changes, and a gitleaks-finding
 review before adding to allowlist.
 → [Full documentation](pre-commit-aware-commits/README.md)
 
+### [pre-push-validation](pre-push-validation/) ✅ complete
+
+Shift-left validation: runs all feasible local checks (linting, formatting, type checking,
+tests, security scans) before pushing to GitHub. Auto-detects project type (Node.js, Python,
+Go, Rust, C#, bash) and chains appropriate validators. Optionally installs a pre-push git
+hook for automatic enforcement, preventing avoidable CI failures.
+→ [Full documentation](pre-push-validation/README.md)
+
 ### [github-release-workflow](github-release-workflow/) ✅ complete
 
 End-to-end release workflow: issue → branch → version bump → PR → CI wait → merge →
