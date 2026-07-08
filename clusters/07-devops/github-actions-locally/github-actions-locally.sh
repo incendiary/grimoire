@@ -50,7 +50,7 @@ while [[ $# -gt 0 ]]; do
             shift 2
             ;;
         --job)
-            JOB_PATTERN="$2"
+            # Job pattern filtering (reserved for future expansion)
             shift 2
             ;;
         *)
@@ -86,7 +86,7 @@ extract_run_commands() {
 
     # Simple regex-based extraction (looking for 'run:' lines after the job)
     awk -v job="$job_name" '
-        /^[[:space:]]*'$job':/ { in_job=1; next }
+        /^[[:space:]]*'"$job_name"':/ { in_job=1; next }
         in_job && /^[[:space:]]*[a-zA-Z_]/ && !/^[[:space:]]*-/ { in_job=0 }
         in_job && /run:/ {
             getline
@@ -119,6 +119,7 @@ discover_jobs() {
         echo "  $(basename "$workflow_file"):"
 
         # Extract job names (simple regex for jobs: section)
+        # shellcheck disable=SC2030,SC2031
         grep -E "^[[:space:]]*[a-zA-Z_][a-zA-Z0-9_-]*:" "$workflow_file" | \
         sed 's/[^a-zA-Z0-9_-]//g' | while read -r job_name; do
             [[ -z "$job_name" ]] && continue

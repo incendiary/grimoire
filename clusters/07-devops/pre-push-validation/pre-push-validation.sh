@@ -164,22 +164,6 @@ HOOK_SCRIPT
   exit 0
 fi
 
-# Helper: check if tool exists
-tool_exists() {
-  command -v "$1" >/dev/null 2>&1
-}
-
-# Helper: check if in skip list
-should_skip() {
-  local check="$1"
-  for skip in $SKIP_CHECKS; do
-    if [ "$check" = "$skip" ]; then
-      return 0
-    fi
-  done
-  return 1
-}
-
 # Helper: run a check
 run_check() {
   local name="$1"
