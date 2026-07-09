@@ -5,6 +5,9 @@ on:
     branches: [main]
   pull_request:
   workflow_dispatch:
+  schedule:
+    # Weekly, catches env/tool drift even with no code changes.
+    - cron: "0 6 * * 1"
 
 jobs:
   shellcheck:
