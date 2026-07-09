@@ -7,6 +7,13 @@
 ## Description
 Run GitHub Actions workflow jobs locally before pushing. Discovers every `.github/workflows/*.yml` with a real YAML parser, extracts each job's `run:` steps, executes them, and reports **only what actually ran** — auto-fixing failures where a known fixer exists (black, ruff) and re-running to confirm. Enables "shift left" CI validation without blocking anything (exit code is always 0; the report is the signal).
 
+> **Self-installs as a `pre-commit` hook — informational only, never blocks.** After a run
+> with no hook present, it installs one automatically (asks first if there's an interactive
+> terminal; installs without asking otherwise, since this tool always exits 0 — it can never
+> block a commit). Deliberately a **different** hook slot than `pre-push-validation`'s
+> blocking `pre-push` hook — the two compose rather than conflict. Uninstall any time with
+> `rm .git/hooks/pre-commit`.
+
 Invoke when: "run CI locally", "test before pushing", "check linting locally", "shift left testing", "preview what CI will do".
 
 ## Context needed
@@ -27,6 +34,7 @@ Invoke when: "run CI locally", "test before pushing", "check linting locally", "
 4. **Execute.** Every runnable step is actually run; judged by **exit code**, exactly as CI does. A `command not found`-class failure (exit 127, or a missing `pyenv` shim) is reported as a distinct **toolchain issue**, not a code failure.
 5. **Auto-fix.** On failure, if the command mentions `black` or `ruff` **and a project venv was activated**, run the corresponding fixer and re-run the original command once to confirm. Skipped (with a message) if no venv was found.
 6. **Report.** Only counts steps that were actually executed. If nothing was runnable, the summary says so explicitly (`0 steps executed`) — it never claims a pass for work it didn't do.
+7. **Offer/install the hook.** If `.git/hooks/pre-commit` doesn't exist yet: prompt to install when there's a terminal to prompt on, otherwise install it automatically without asking (safe, since it never blocks). Skipped entirely once a `pre-commit` hook already exists.
 
 Exit code is always **0** — this tool never blocks a push. For a fail-closed pre-push gate, use `pre-push-validation` instead.
 
@@ -50,6 +58,9 @@ bash github-actions-locally.sh --dry-run
 
 # List discovered steps (run + skipped) and exit — same output as --dry-run
 bash github-actions-locally.sh --list
+
+# Install the pre-commit hook directly, without running anything first
+bash github-actions-locally.sh --install-hook
 ```
 
 ## Example output
@@ -88,7 +99,7 @@ Manual attention needed: 1 job(s)
 
 ## Integration with other skills
 
-- **pre-push-validation:** fail-closed equivalent — use that as a git hook to block bad pushes; use this one for exploratory "what would CI say about my current changes" runs.
+- **pre-push-validation:** fail-closed equivalent, installed as the `pre-push` hook to actually block bad pushes. This skill installs as `pre-commit` instead — different hook slot, so both can be active on the same repo at once: `pre-commit` surfaces issues on every commit (informational), `pre-push` blocks the push itself if CI's real checks fail.
 - **format-before-commit:** narrower, Python-only formatting check; this skill's auto-fix covers the same ground plus arbitrary `run:` steps.
 - **github-morning-run:** use after pushing to catch what CI found on the morning audit.
 
@@ -102,6 +113,7 @@ Manual attention needed: 1 job(s)
 - [x] Auto-fix logic for black/ruff, with re-run confirmation
 - [x] venv/.venv activation before running anything; auto-fix disabled without one
 - [x] Distinct "toolchain issue" reporting (command not found, broken shims)
+- [x] Self-installs a non-blocking pre-commit hook (prompts if interactive, auto-installs otherwise — never conflicts with pre-push-validation's pre-push hook)
 - [ ] Auto-fix for prettier/eslint (JS/TS projects)
 - [ ] Job dependency graph (`needs:`) and matrix expansion awareness
 - [ ] Caching of discovered jobs (skip re-parsing on each run)

@@ -4,6 +4,13 @@
 
 Run GitHub Actions workflow jobs locally before pushing. Discovers every `.github/workflows/*.yml` with a real YAML parser, executes each job's `run:` steps, auto-fixes what it can (black, ruff), and reports **only what actually ran** — never a fake pass for work it skipped.
 
+> **Self-installs a `pre-commit` hook — informational only, never blocks.** After a run with
+> no hook present, it installs one automatically: asks first if there's a terminal to ask on,
+> installs without asking otherwise (safe, since this tool always exits 0). Deliberately a
+> different hook slot than `pre-push-validation`'s blocking `pre-push` hook — install both and
+> they compose: `pre-commit` surfaces issues per-commit, `pre-push` actually blocks a bad push.
+> Uninstall any time with `rm .git/hooks/pre-commit`.
+
 ---
 
 ## What this skill does
@@ -68,6 +75,9 @@ bash github-actions-locally.sh --dry-run
 
 # Same discovery output as --dry-run, explicit alias
 bash github-actions-locally.sh --list
+
+# Install the pre-commit hook directly, without running anything first
+bash github-actions-locally.sh --install-hook
 ```
 
 ## Example (run against grimoire's own workflows)
@@ -119,7 +129,7 @@ On failure, if the failing command mentions `black` or `ruff` **and a project `v
 
 ## Integration with other skills
 
-- **pre-push-validation** — the fail-closed counterpart. Use that as an installed git hook to actually block bad pushes; use this skill for exploratory "what does CI currently say" runs that never block anything.
+- **pre-push-validation** — the fail-closed counterpart, installed as the blocking `pre-push` hook. This skill installs as `pre-commit` (different slot), so both compose: `pre-commit` surfaces issues on every commit without blocking, `pre-push` actually blocks a bad push.
 - **format-before-commit** — narrower, Python-only formatting check.
 - **github-morning-run** — use after pushing, to catch what CI found on the morning audit.
 
@@ -134,6 +144,7 @@ On failure, if the failing command mentions `black` or `ruff` **and a project `v
 - [x] Auto-fix for black/ruff with re-run confirmation
 - [x] Activate the target repo's own venv/.venv before running anything; disable auto-fix without one
 - [x] Distinct "toolchain issue" reporting for command-not-found / broken shim failures
+- [x] Self-installs a non-blocking pre-commit hook — prompts if interactive, auto-installs otherwise
 - [ ] Auto-fix for prettier/eslint (JS/TS projects)
 - [ ] Job dependency graph (`needs:`) and matrix expansion awareness
 - [ ] Caching of discovered jobs (skip re-parsing on each run)

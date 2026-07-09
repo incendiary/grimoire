@@ -30,6 +30,8 @@ declare -a SKIPPED_JOBS=()
 RAN_ANY=false
 VENV_ACTIVE=false
 
+INSTALL_HOOK_ONLY=false
+
 # Parse arguments
 while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -38,11 +40,54 @@ while [[ $# -gt 0 ]]; do
         --lint) JOB_TYPE="lint"; shift ;;
         --test) JOB_TYPE="test"; shift ;;
         --workflow) WORKFLOW_FILTER="$2"; shift 2 ;;
+        --install-hook) INSTALL_HOOK_ONLY=true; shift ;;
         *) REPO_ROOT="$1"; shift ;;
     esac
 done
 
 cd "$REPO_ROOT" || exit 1
+
+# Absolute path to this script, so the installed hook works from any repo layout.
+SCRIPT_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/$(basename "${BASH_SOURCE[0]}")"
+
+# Installs a pre-commit hook (never pre-push — pre-push-validation already
+# owns that slot, and a single hook file can't serve two independent
+# installers). Safe to auto-install without asking: this tool always exits 0,
+# so the hook can never block a commit, only surface information.
+install_hook() {
+    local hook_file=".git/hooks/pre-commit"
+    mkdir -p "$(dirname "$hook_file")"
+    cat > "$hook_file" <<HOOK
+#!/bin/bash
+# Installed by github-actions-locally. Informational only — never blocks
+# (the underlying script always exits 0).
+cd "\$(git rev-parse --show-toplevel)" || exit 0
+bash "$SCRIPT_PATH"
+exit 0
+HOOK
+    chmod +x "$hook_file"
+    echo -e "${GREEN}✓ pre-commit hook installed${NC} → $hook_file"
+    echo "   Informational only — never blocks a commit."
+    echo "   Uninstall: rm $hook_file"
+}
+
+# Offer or auto-install the hook, once, if nothing is already there.
+# Interactive (TTY): ask. Non-interactive (e.g. invoked by an agent, or as
+# a hook itself): install without asking, since it's always non-blocking —
+# unlike pre-push-validation's blocking hook, there's no downside to silently
+# adding this one, only to silently skipping it and staying uncovered.
+maybe_install_hook() {
+    [[ -f ".git/hooks/pre-commit" ]] && return 0
+    if [[ -t 0 ]]; then
+        echo -e "${BLUE}Install pre-commit hook to run this automatically (informational, never blocks)?${NC}"
+        read -rp "Install? (y/n) " -n 1 reply
+        echo ""
+        [[ "$reply" =~ ^[Yy]$ ]] && install_hook
+    else
+        echo -e "${YELLOW}No pre-commit hook found — installing one automatically (non-interactive; this tool never blocks, so it's safe to add without asking).${NC}"
+        install_hook
+    fi
+}
 
 # Activate the target repo's own venv/.venv if present — never rely on
 # whatever's on the caller's global PATH. A tool resolved from a different
@@ -272,6 +317,11 @@ generate_report() {
 }
 
 main() {
+    if [[ "$INSTALL_HOOK_ONLY" == true ]]; then
+        install_hook
+        return 0
+    fi
+
     echo -e "${BLUE}=== GitHub Actions — Local Run ===${NC}"
     echo ""
 
@@ -354,6 +404,7 @@ main() {
 
     if [[ ${#RUNNABLE[@]} -eq 0 ]]; then
         generate_report
+        maybe_install_hook
         exit 0
     fi
 
@@ -366,6 +417,7 @@ main() {
     done
 
     generate_report
+    maybe_install_hook
 }
 
 main "$@"
