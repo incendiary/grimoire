@@ -1,13 +1,18 @@
 #!/bin/bash
 # pre-push-validation — fail-closed, workflow-aware validation
-# Parses .github/workflows/validate.yml and runs those checks locally
-# Works for ANY repo with a validate.yml workflow
-# Fail-closed: missing tools, install failures, or ambiguous output = BLOCK
+# Discovers .github/workflows/*.yml, extracts each job's `run:` steps, and runs
+# them locally before a push. Steps that can only run in CI (GitHub Actions
+# contexts, secrets, release creation, OS package installs) are skipped
+# explicitly — never silently. Works for ANY repo. Fail-closed: any non-zero
+# exit (including a missing tool) blocks the push.
 
 set -u
 
 REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
 cd "$REPO_ROOT" || exit 1
+
+# Absolute path to this script, so the installed git hook can call it from any repo.
+SCRIPT_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/$(basename "${BASH_SOURCE[0]}")"
 
 # Colors
 RED='\033[0;31m'
@@ -19,179 +24,121 @@ NC='\033[0m'
 # Tracking
 CHECKS_PASSED=0
 CHECKS_FAILED=0
+CHECKS_SKIPPED=0
 FAILED_CHECKS=""
 
-# Setup Python environment
+# Setup Python environment (activate a venv if the repo has one)
 setup_python_env() {
     if [ -d "venv" ] && [ -f "venv/bin/activate" ]; then
+        # shellcheck disable=SC1091
         source venv/bin/activate >/dev/null 2>&1
         echo -e "${GREEN}✓ Activated venv${NC}"
     elif [ -d ".venv" ] && [ -f ".venv/bin/activate" ]; then
+        # shellcheck disable=SC1091
         source .venv/bin/activate >/dev/null 2>&1
         echo -e "${GREEN}✓ Activated .venv${NC}"
     fi
 }
 
-# Parse validate.yml and extract job run commands
-parse_workflow() {
-    local workflow_file=".github/workflows/validate.yml"
-    local tmpfile="/tmp/validate_checks_$$.txt"
-
-    if [ ! -f "$workflow_file" ]; then
-        return 1
-    fi
-
-    # Use Python to parse YAML and write to temp file
-    python3 << EOF
-import yaml
+# Discover all workflow files and extract their run steps.
+# Emits one line per step:  STATUS|B64NAME|B64CMD|B64REASON
+#   STATUS = RUN  (runnable locally)  |  SKIP (CI-only)
+# Fields are base64-encoded so newlines/pipes in commands survive intact.
+parse_workflows() {
+    python3 - "$1" <<'PYEOF'
 import base64
+import glob
+import os
+import re
+import shlex
+import sys
 
 try:
-    with open('$workflow_file') as f:
-        workflow = yaml.safe_load(f)
+    import yaml
+except ImportError:
+    sys.exit(3)  # signal: PyYAML missing
 
-    if 'jobs' not in workflow:
-        exit(0)
+tmpfile = sys.argv[1]
 
-    with open('$tmpfile', 'w') as out:
-        for job_name, job_config in workflow['jobs'].items():
-            if not isinstance(job_config, dict) or 'steps' not in job_config:
+def workdir(doc, job, step):
+    # Effective working-directory: step > job defaults > workflow defaults.
+    for scope in (step, job, doc):
+        if isinstance(scope, dict):
+            wd = scope.get('working-directory')
+            if not wd:
+                run = (scope.get('defaults') or {}).get('run') or {}
+                wd = run.get('working-directory')
+            if wd:
+                return str(wd)
+    return None
+
+# Patterns that mean a step cannot meaningfully run outside CI.
+CI_ONLY = [
+    (re.compile(r'\$\{\{'),               'uses a GitHub Actions ${{ }} context'),
+    (re.compile(r'\bsecrets\.'),          'references secrets.'),
+    (re.compile(r'\bgh\s+release\b'),     'creates/edits a GitHub release'),
+    (re.compile(r'GITHUB_OUTPUT|GITHUB_ENV|GITHUB_STEP_SUMMARY'),
+                                          'writes a CI-only GITHUB_* file'),
+    (re.compile(r'\bsudo\b|\bapt-get\b|\bapt\s+install\b|\byum\s+install\b|\bapk\s+add\b'),
+                                          'OS package/setup step — provisioned locally instead'),
+]
+
+def classify(cmd):
+    for pat, reason in CI_ONLY:
+        if pat.search(cmd):
+            return 'SKIP', reason
+    return 'RUN', ''
+
+def b64(s):
+    return base64.b64encode(s.encode()).decode()
+
+files = sorted(set(glob.glob('.github/workflows/*.yml') +
+                   glob.glob('.github/workflows/*.yaml')))
+
+with open(tmpfile, 'w') as out:
+    for wf in files:
+        try:
+            with open(wf) as f:
+                doc = yaml.safe_load(f)
+        except Exception:
+            continue
+        if not isinstance(doc, dict) or 'jobs' not in doc:
+            continue
+        wf_name = os.path.basename(wf)
+        for job_name, job in doc['jobs'].items():
+            if not isinstance(job, dict) or 'steps' not in job:
                 continue
-
-            for step in job_config['steps']:
+            for step in job['steps']:
                 if not isinstance(step, dict) or 'run' not in step:
-                    continue
-
-                name = step.get('name', f'step-{job_name}')
-                run_cmd = step['run'].strip()
-                # Encode command as base64 to preserve all characters/newlines safely
-                encoded = base64.b64encode(run_cmd.encode()).decode()
-                out.write(f'{name}|{encoded}\n')
-
-except Exception as e:
-    pass
-EOF
-
-    cat "$tmpfile" 2>/dev/null || return 1
-    rm -f "$tmpfile"
+                    continue  # `uses:` actions have no run: — naturally excluded
+                label = step.get('name') or job_name
+                display = f'{wf_name} › {label}'
+                cmd = str(step['run']).strip()
+                status, reason = classify(cmd)
+                wd = workdir(doc, job, step)
+                if wd and wd != '.':
+                    cmd = f'cd {shlex.quote(wd)} || exit 1\n{cmd}'
+                out.write(f'{status}|{b64(display)}|{b64(cmd)}|{b64(reason)}\n')
+PYEOF
 }
 
-# Fail-closed: ensure tool exists, install if needed
-ensure_tool() {
-    local tool="$1"
-    local install_cmd="$2"
-
-    if command -v "$tool" >/dev/null 2>&1; then
-        return 0
-    fi
-
-    echo -e "${YELLOW}Installing $tool...${NC}"
-    if eval "$install_cmd" >/dev/null 2>&1; then
-        if command -v "$tool" >/dev/null 2>&1; then
-            echo -e "${GREEN}✓ $tool installed${NC}"
-            return 0
-        fi
-    fi
-
-    echo -e "${RED}✗ FAILED to install $tool${NC}"
-    echo -e "${RED}   Install: $install_cmd${NC}"
-    return 1
-}
-
-# Map command to tool and install command
-get_tool_and_install_cmd() {
-    local cmd="$1"
-
-    # Multi-line bash scripts or complex commands
-    if echo "$cmd" | grep -qE "^#!|^set -|^\$\(|^[A-Z_]+=|for |if |while "; then
-        echo "bash|||which bash >/dev/null || exit 1"
-        return 0
-    fi
-
-    # Shellcheck
-    if echo "$cmd" | grep -q "shellcheck"; then
-        echo "shellcheck|||apt-get install -y shellcheck 2>/dev/null || brew install shellcheck 2>/dev/null || exit 1"
-        return 0
-    fi
-
-    # Python (pytest, black, flake8, ruff, etc)
-    if echo "$cmd" | grep -qE "python|pytest|black|flake8|ruff"; then
-        echo "python3|||which python3 >/dev/null || exit 1"
-        return 0
-    fi
-
-    # Node (npm, eslint, prettier)
-    if echo "$cmd" | grep -qE "npm|node|eslint|prettier"; then
-        echo "npm|||which npm >/dev/null || exit 1"
-        return 0
-    fi
-
-    # Go
-    if echo "$cmd" | grep -qE "go |go\$|gofmt|govet"; then
-        echo "go|||which go >/dev/null || exit 1"
-        return 0
-    fi
-
-    # Rust
-    if echo "$cmd" | grep -qE "cargo|rustfmt|clippy"; then
-        echo "cargo|||which cargo >/dev/null || exit 1"
-        return 0
-    fi
-
-    # Bash/shell keywords
-    if echo "$cmd" | grep -qE "bash|sh\$"; then
-        echo "bash|||which bash >/dev/null || exit 1"
-        return 0
-    fi
-
-    # Default: assume tool name is first word
-    local tool=$(echo "$cmd" | awk '{print $1}')
-    echo "$tool|||which $tool >/dev/null || exit 1"
-}
-
-# Fail-closed: run check and verify output
+# Fail-closed: run a check and trust its exit code — exactly as CI does.
+# A missing tool surfaces as command-not-found (non-zero exit) and blocks the
+# push with its output shown; no guessing which tool a command "needs".
 run_check() {
     local name="$1"
-    local cmd_encoded="$2"
+    local cmd="$2"
 
     echo -n "Checking $name... "
 
-    # Decode base64-encoded command
-    local cmd
-    cmd=$(echo "$cmd_encoded" | base64 -d 2>/dev/null) || {
-        echo -e "${RED}✗ FAIL${NC}"
-        echo "Failed to decode command"
-        CHECKS_FAILED=$((CHECKS_FAILED + 1))
-        FAILED_CHECKS="${FAILED_CHECKS}\n  - $name: command decode failed"
-        return 1
-    }
-
-    # Get tool and install command
-    local tool_info
-    tool_info=$(get_tool_and_install_cmd "$cmd")
-    local tool=$(echo "$tool_info" | cut -d'|' -f1)
-    local install_cmd=$(echo "$tool_info" | cut -d'|' -f3)
-
-    # Fail-closed: ensure tool available
-    if ! ensure_tool "$tool" "$install_cmd"; then
-        echo -e "${RED}✗ FAIL${NC}"
-        CHECKS_FAILED=$((CHECKS_FAILED + 1))
-        FAILED_CHECKS="${FAILED_CHECKS}\n  - $name: tool '$tool' not available"
-        return 1
-    fi
-
-    # Run the check
-    local output
-    local exit_code=0
+    local output exit_code=0
     output=$(eval "$cmd" 2>&1) || exit_code=$?
 
-    # Fail-closed: verify output indicates success
-    if [ -z "$output" ] || echo "$output" | grep -qiE "ERROR|FAIL|failed"; then
-        echo -e "${RED}✗ FAIL${NC}"
-        echo "Output:"
-        echo "$output" | head -15
+    if [ "$exit_code" -ne 0 ]; then
+        echo -e "${RED}✗ FAIL${NC} (exit $exit_code)"
+        echo "$output" | head -20
         CHECKS_FAILED=$((CHECKS_FAILED + 1))
-        FAILED_CHECKS="${FAILED_CHECKS}\n  - $name"
+        FAILED_CHECKS="${FAILED_CHECKS}\n  - $name (exit $exit_code)"
         return 1
     fi
 
@@ -200,45 +147,94 @@ run_check() {
     return 0
 }
 
-# Main validation flow
-main() {
-    echo -e "${BLUE}=== Pre-Push Validation ===${NC}"
-    echo ""
+install_hook() {
+    local hook_file=".git/hooks/pre-push"
+    mkdir -p "$(dirname "$hook_file")"
 
-    if [ ! -f ".github/workflows/validate.yml" ]; then
-        echo -e "${YELLOW}⚠ No .github/workflows/validate.yml found${NC}"
-        echo "Skipping validation"
+    cat > "$hook_file" <<HOOK
+#!/bin/bash
+# Installed by pre-push-validation. Runs local CI checks before every push.
+set -e
+cd "\$(git rev-parse --show-toplevel)"
+bash "$SCRIPT_PATH"
+HOOK
+
+    chmod +x "$hook_file"
+    echo -e "${GREEN}✓ Pre-push hook installed${NC} → $hook_file"
+    echo "   Bypass once: git push --no-verify"
+    echo "   Uninstall:   rm .git/hooks/pre-push"
+}
+
+main() {
+    # Non-interactive hook install (for scripted setup): install and exit.
+    if [ "${1:-}" = "--install-hook" ]; then
+        install_hook
         return 0
     fi
 
-    echo -e "${BLUE}Reading: .github/workflows/validate.yml${NC}"
+    echo -e "${BLUE}=== Pre-Push Validation ===${NC}"
     echo ""
+
+    shopt -s nullglob
+    local wf_files=(.github/workflows/*.yml .github/workflows/*.yaml)
+    shopt -u nullglob
+    if [ ${#wf_files[@]} -eq 0 ]; then
+        echo -e "${YELLOW}⚠ No .github/workflows/*.yml found — nothing to validate${NC}"
+        return 0
+    fi
+
+    if ! command -v python3 >/dev/null 2>&1; then
+        echo -e "${RED}✗ python3 not found — cannot parse workflows${NC}"
+        echo "   Install python3 (and PyYAML) to run pre-push validation."
+        return 1
+    fi
 
     setup_python_env
     echo ""
 
-    # Parse workflow and run each check
-    local job_count=0
-    while IFS='|' read -r name cmd; do
-        [ -z "$name" ] && continue
-        [ -z "$cmd" ] && continue
+    local tmpfile
+    tmpfile=$(mktemp "${TMPDIR:-/tmp}/ppv_checks.XXXXXX")
+    # shellcheck disable=SC2064
+    trap "rm -f '$tmpfile'" RETURN
 
+    parse_workflows "$tmpfile"
+    local parse_rc=$?
+    if [ "$parse_rc" -eq 3 ]; then
+        echo -e "${RED}✗ PyYAML not installed — cannot parse workflows${NC}"
+        echo "   Install: pip install pyyaml   (or activate a venv that has it)"
+        return 1
+    fi
+
+    local step_count=0
+    local status b64name b64cmd b64reason name cmd reason
+    while IFS='|' read -r status b64name b64cmd b64reason; do
+        [ -z "$status" ] && continue
+        name=$(echo "$b64name" | base64 -d 2>/dev/null)
+        step_count=$((step_count + 1))
+
+        if [ "$status" = "SKIP" ]; then
+            reason=$(echo "$b64reason" | base64 -d 2>/dev/null)
+            echo -e "${YELLOW}Skipped — CI-only:${NC} $name ($reason)"
+            CHECKS_SKIPPED=$((CHECKS_SKIPPED + 1))
+            continue
+        fi
+
+        cmd=$(echo "$b64cmd" | base64 -d 2>/dev/null)
         run_check "$name" "$cmd"
-        job_count=$((job_count + 1))
-    done < <(parse_workflow)
+    done < "$tmpfile"
 
-    if [ $job_count -eq 0 ]; then
-        echo -e "${YELLOW}⚠ No checks found in workflow${NC}"
+    if [ "$step_count" -eq 0 ]; then
+        echo -e "${YELLOW}⚠ No run steps found in any workflow${NC}"
         return 0
     fi
 
     echo ""
     echo -e "${BLUE}=== Results ===${NC}"
-    echo "Passed: $CHECKS_PASSED"
-    echo "Failed: $CHECKS_FAILED"
+    echo "Passed:  $CHECKS_PASSED"
+    echo "Failed:  $CHECKS_FAILED"
+    echo "Skipped: $CHECKS_SKIPPED (CI-only)"
 
-    # Fail-closed: if any check failed, abort
-    if [ $CHECKS_FAILED -gt 0 ]; then
+    if [ "$CHECKS_FAILED" -gt 0 ]; then
         echo ""
         echo -e "${RED}VALIDATION FAILED — push blocked${NC}"
         echo -e "${RED}Issues:${NC}"
@@ -246,40 +242,21 @@ main() {
         return 1
     fi
 
-    echo -e "${GREEN}✓ All checks passed${NC}"
+    echo -e "${GREEN}✓ All runnable checks passed${NC}"
     echo ""
 
-    # Ask to install hook (only if not already installed)
+    # Offer the hook only in an interactive terminal. When invoked *as* the git
+    # hook there is no TTY — never prompt, never install silently.
     if [ ! -f ".git/hooks/pre-push" ]; then
-        echo -e "${BLUE}Install pre-push hook?${NC}"
-        echo "This will auto-run these checks before every push."
-        echo ""
-        read -rp "Install hook? (y/n) " -n 1 reply
-        echo ""
-
-        if [[ "$reply" =~ ^[Yy]$ ]]; then
-            install_hook
+        if [ -t 0 ]; then
+            read -rp "Install pre-push hook to run this automatically? (y/n) " -n 1 reply
+            echo ""
+            [[ "$reply" =~ ^[Yy]$ ]] && install_hook
         fi
     else
         echo -e "${GREEN}✓ Pre-push hook already installed${NC}"
     fi
-}
-
-install_hook() {
-    local hook_file=".git/hooks/pre-push"
-    mkdir -p "$(dirname "$hook_file")"
-
-    cat > "$hook_file" << 'HOOK'
-#!/bin/bash
-set -e
-cd "$(git rev-parse --show-toplevel)"
-bash clusters/07-devops/pre-push-validation/pre-push-validation.sh
-HOOK
-
-    chmod +x "$hook_file"
-    echo -e "${GREEN}✓ Pre-push hook installed${NC}"
-    echo "   Bypass: git push --no-verify"
-    echo "   Uninstall: rm .git/hooks/pre-push"
+    return 0
 }
 
 main "$@"

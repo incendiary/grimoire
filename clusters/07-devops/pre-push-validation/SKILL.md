@@ -6,68 +6,71 @@
 
 ## Description
 
-Shift-left validation: runs all feasible local checks **before** push to GitHub, preventing avoidable CI failures.
+Shift-left validation: runs your repo's own CI checks **locally before you push**, so you
+fail in seconds instead of waiting minutes for GitHub Actions.
 
-**Repo-aware architecture**: The script automatically detects `.github/workflows/validate.yml` and runs the exact same checks that GitHub Actions would run — locally, in seconds, before you push.
+**Workflow-driven, repo-agnostic.** The script reads the repository's actual CI definitions —
+every `.github/workflows/*.yml` — parses them with PyYAML, and runs each job's `run:` steps
+locally. There is no hardcoded repo logic and no tech-stack guessing: what CI runs is what
+runs locally. If CI changes, local validation changes with it automatically.
 
-- **For repos with CI workflows**: Parses `.github/workflows/validate.yml` and executes those exact checks locally
-- **For generic repos**: Auto-detects tech stack (Node.js, Python, Go, Rust, C#, bash) and runs appropriate linters, formatters, and type checkers
-- **For any repo**: Fast feedback loop — fail locally in 30s instead of waiting 10m for CI
+**Steps that can't run locally are skipped explicitly, never silently:**
+- `${{ ... }}` GitHub Actions expression contexts
+- steps referencing `secrets.`
+- `gh release` creation/edits
+- steps writing `$GITHUB_OUTPUT` / `$GITHUB_ENV` / `$GITHUB_STEP_SUMMARY`
+- OS package installs (`sudo`, `apt-get`, `yum install`, `apk add`) — provisioned differently locally
 
-Optionally installs a `pre-push` git hook for automatic enforcement on every push.
+Each skipped step prints `Skipped — CI-only: <name> (<reason>)`.
 
-Invoke when: "validate before push", "run CI checks locally", "install push hook", "check everything before pushing".
+**Fail-closed.** Every runnable step is judged by its **exit code**, exactly as CI does. Any
+non-zero exit — including a missing tool surfacing as command-not-found — blocks the push and
+prints the step's output. No output-string heuristics.
+
+Invoke when: "validate before push", "run CI checks locally", "install pre-push hook",
+"check everything before pushing".
 
 ## Context needed
 
-- Current repository root (auto-detected via `git rev-parse --show-toplevel`)
-- `.github/workflows/validate.yml` (automatically detected if present)
-- Desired strictness: `--strict` for full test + security suite, or default for fast checks only
+- Repository root (auto-detected via `git rev-parse --show-toplevel`)
+- One or more `.github/workflows/*.yml` files (nothing to do without them)
+- `python3` with `PyYAML` available (fails closed with an install hint if missing)
 
-## Features
+## Behaviour
 
-- **Workflow-aware validation**: Detects and runs checks from `.github/workflows/validate.yml` if present
-- **Tech-stack auto-detection**: Scans for package.json, pyproject.toml, Cargo.toml, go.mod, *.csproj, *.sh files
-- **Progressive validation**: Stops at first failure (fast feedback)
-- **Detailed reporting**: Lists all checks run, pass/fail status, and failure details
-- **Optional enforcement**: Git hook prevents push if validation fails
-- **Customizable**: `--skip-check <name>`, `--strict`, `--dry-run` modes
-- **Multi-language support**: Node.js (npm), Python (pytest/black/flake8), Go (gofmt/go vet), Rust (cargo), C#/.NET, bash (shellcheck)
+1. Discover all `.github/workflows/*.yml` / `*.yaml`.
+2. If a `venv/` or `.venv/` exists, activate it (so Python tools are on PATH).
+3. Parse every workflow; for each job step with a `run:`:
+   - honour the effective `working-directory` (step → job `defaults.run` → workflow `defaults.run`)
+   - classify as **RUN** or **SKIP (CI-only)**
+4. Run each RUN step; PASS on exit 0, FAIL (with output) on non-zero.
+5. Print a summary: `Passed / Failed / Skipped`.
+6. If anything failed, exit non-zero — **push blocked**.
+7. If all passed and no pre-push hook is installed **and** stdin is a TTY, offer to install one.
+   When invoked *as* the git hook (no TTY), it never prompts — it just validates.
 
-## Example invocation
+## Usage
 
 ```bash
-# See what would run (dry-run)
-bash pre-push-validation.sh --dry-run
-
-# Actually run all checks
+# Validate the current repo against its own CI workflows
 bash pre-push-validation.sh
 
-# Install automatic pre-push hook
+# Install the pre-push git hook non-interactively (for scripted setup)
 bash pre-push-validation.sh --install-hook
-
-# Run with full test suite
-bash pre-push-validation.sh --strict
-
-# Skip a specific check
-bash pre-push-validation.sh --skip-check eslint
-```
-bash pre-push-validation.sh --install-hook
-
-# Strict mode (includes full test suite + security)
-bash pre-push-validation.sh --strict
-
-# Skip a specific check
-bash pre-push-validation.sh --skip-check format
 ```
 
-## Implementation notes
+Installed hook behaviour:
+- runs this script before every `git push`
+- bypass once with `git push --no-verify`
+- uninstall with `rm .git/hooks/pre-push`
 
-The script:
-1. Detects project type by scanning for language-specific config files
-2. Builds a checklist of applicable validations (lint, format, type, test, security)
-3. Runs each check in sequence, collecting pass/fail + error output
-4. Reports results with exit code 0 (all pass) or 1 (first failure)
-5. Optionally registers itself as `.git/hooks/pre-push` for automatic enforcement
+The hook calls the script by its absolute path, so it works regardless of where the repo lives.
 
-The `pre-push` hook template is included for git integration.
+## Requirements & limits
+
+- **Faithful to CI, including CI's blind spots.** Local tooling can differ from CI (e.g. a newer
+  local `shellcheck` flags more than CI's pinned version; local `node_modules`/`.venv` can widen a
+  `find` in a CI command). The script runs CI's commands verbatim rather than second-guessing them.
+- **`npm ci` / dependency steps run as written** — they are validation, not CI-only, so a stale
+  local lockfile legitimately fails the check.
+- Requires `python3` + `PyYAML`; fails closed if absent.

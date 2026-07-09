@@ -1,274 +1,104 @@
 # pre-push-validation
 
-Run your CI's validation checks **locally before pushing**, preventing avoidable GitHub Actions failures.
+Run your repository's **own CI checks locally, before pushing** — fail in seconds instead of
+waiting minutes for GitHub Actions to reject the push.
 
-## Architecture: Workflow-Aware Validation
+## How it works
 
-The script automatically detects your repository's CI configuration and runs the exact same checks locally:
+The script is **workflow-driven and repo-agnostic**. It does not know or care what project it
+is in:
 
-1. **Check for `.github/workflows/validate.yml`** (or similar CI config)
-2. **Extract and execute those exact checks** — before pushing
-3. **Fall back to tech-stack detection** — if no CI workflows are found
+1. Discovers every `.github/workflows/*.yml` / `*.yaml`.
+2. Parses them with `python3` + PyYAML and extracts each job step's `run:` command.
+3. Honours each step's effective `working-directory` (step → job `defaults.run` → workflow
+   `defaults.run`).
+4. Runs each runnable step locally and judges it by **exit code** — exactly as CI does.
+5. Blocks the push (exit 1) if any step fails.
 
-**Why this matters**: Fail in 30 seconds locally, not after 10 minutes waiting for CI.
+There is no hardcoded per-repo logic and no tech-stack guessing. **What CI runs is what runs
+locally.** When the CI workflow changes, local validation follows automatically.
 
-### Example: How it works on grimoire
+### CI-only steps are skipped explicitly
 
-Grimoire's `validate.yml` includes:
-- Shellcheck on all .sh files
-- Skill structure validation (SKILL.md + README.md required)
-- MCP registry sync check
-- README quality checks (multi-platform install docs)
-- Stale path reference detection
+Steps that cannot meaningfully run outside GitHub Actions are skipped with a printed reason —
+never a silent pass:
 
-When you run `pre-push-validation.sh` in grimoire, it automatically runs all 5 checks locally before allowing your push.
+| Skipped when the command… | Reason shown |
+|---|---|
+| contains `${{ ... }}` | uses a GitHub Actions context |
+| references `secrets.` | references secrets. |
+| runs `gh release` | creates/edits a GitHub release |
+| writes `$GITHUB_OUTPUT` / `$GITHUB_ENV` / `$GITHUB_STEP_SUMMARY` | writes a CI-only GITHUB_* file |
+| runs `sudo` / `apt-get` / `yum install` / `apk add` | OS package/setup step — provisioned locally instead |
 
-### Example: How it works on other repos
+### Fail-closed
 
-For a typical Node.js + Python project without explicit CI workflows defined:
-- Auto-detects package.json → runs eslint, prettier, npm test (via `--strict`)
-- Auto-detects pyproject.toml → runs black, flake8, pytest (via `--strict`)
-- Auto-detects *.sh files → runs shellcheck on all scripts
+Judgement is by exit code only — no output-string matching. A missing tool surfaces as
+command-not-found (non-zero exit) and blocks the push with its output shown. If `python3` or
+PyYAML is missing, the script fails closed with an install hint rather than passing silently.
 
-The skill adapts to whatever your repository contains.
+## Example (run against grimoire's 5 workflows)
+
+```
+=== Pre-Push Validation ===
+
+Checking ci-mcp.yml › build... ✓ PASS            # ran in mcp-server/ (working-directory)
+Checking validate.yml › Lint all shell scripts... ✓ PASS
+Checking validate.yml › No stale path references... ✓ PASS
+Skipped — CI-only: release-on-tag.yml › Create GitHub Release (creates/edits a GitHub release)
+Skipped — CI-only: validate.yml › Install shellcheck (OS package/setup step — provisioned locally instead)
+
+=== Results ===
+Passed:  10
+Failed:  0
+Skipped: 6 (CI-only)
+✓ All runnable checks passed
+```
+
+## Requirements
+
+- `python3` with `PyYAML`. Fails closed if absent.
+- Runs a repo's CI commands **verbatim**, so it inherits their behaviour — including any
+  local/CI drift (a newer local `shellcheck` may flag more than CI's pinned one; a stale local
+  `package-lock.json` legitimately fails `npm ci`). This is faithful mirroring, not a bug.
 
 ## Installation
 
 ### Claude Code
 
-Copy to your Claude Code skills directory:
+```bash
+bash install-all.sh            # first install
+bash install-all.sh --update   # update an existing copy (backs up the old one)
+```
+
+Then run in any repo:
 
 ```bash
-cp -r clusters/07-devops/pre-push-validation ~/.claude/skills/pre-push-validation
+bash ~/.claude/skills/pre-push-validation/pre-push-validation.sh
 ```
 
-Then invoke with:
-```
-bash ~/.claude/skills/pre-push-validation/pre-push-validation.sh [options]
-```
+### VS Code (Copilot Chat, prompt file)
 
-### VS Code / Copilot Chat
+After `bash build.sh`, reference it as `#pre-push-validation` in Copilot Chat, or run the
+script directly as above.
 
-The skill is available as a prompt file via grimoire's prompt file system:
+### MCP (VS Code / JetBrains)
 
-1. Add to VS Code settings: `"chat.promptFilesLocations": ["<grimoire-path>/prompts"]`
-2. Access skill as: `#pre-push-validation` in Chat
-3. Or run manually: `bash clusters/07-devops/pre-push-validation/pre-push-validation.sh [options]`
+Registered as the `pre-push-validation` action tool in grimoire's MCP server
+(`mcp-server/registry.json`). Build with `cd mcp-server && npm ci && npm run build`, then invoke
+the `pre-push-validation` tool from your MCP client.
 
-### MCP (grimoire only)
+## The pre-push hook (opt-in)
 
-Available as a callable MCP action in grimoire's MCP server:
-
-- Install MCP: `bash install-vscode.sh` (auto-detects support)
-- Invoke via Copilot Chat: use `#pre-push-validation` tool
-- Or call directly: `bash clusters/07-devops/pre-push-validation/pre-push-validation.sh [options]`
-
-## Architecture: Repo-Aware Validation
-
-The script uses a **repo-aware architecture**:
-
-1. **Check for `.github/workflows/validate.yml`** — If found, this is the source of truth for what CI validates
-2. **Extract and run those exact checks locally** — Before push, run the same commands that GitHub Actions would run
-3. **Fall back to generic detection** — If no CI workflows exist, auto-detect tech stack and run appropriate checks
-
-**Key benefit**: Your local validation mirrors your CI validation. Fail locally in 30s, not on GitHub in 10 minutes.
-
-For grimoire specifically, this runs:
-- Shellcheck on all .sh files (with grimoire exclusions)
-- Skill directory structure validation (every skill must have SKILL.md + README.md)
-- MCP registry sync check (Type:action skills must be registered)
-- README quality check (multiplatform installation docs required)
-- Stale path reference check
-
-## Problem
-
-Current workflow:
-```
-local commit → git push → GitHub Actions triggers → 10m CI job → failure email
-```
-
-Better workflow:
-```
-local commit → validate locally (30s) → git push → GitHub Actions triggers → fast CI (3m, no lint/format/type failure)
-```
-
-## Solution
-
-`pre-push-validation.sh` runs **every feasible check** that your CI would run — locally:
-
-- **Linting** (eslint, pylint, golint, clippy, rustfmt style)
-- **Formatting** (prettier, black, gofmt, rustfmt, dotnet format)
-- **Type checking** (tsc, mypy, go vet, cargo check)
-- **Testing** (npm test, pytest, go test, cargo test) — optional via `--strict`
-- **Security** (npm audit, bandit, cargo audit) — optional via `--strict`
-- **Shell scripts** (shellcheck on all .sh files)
-- **Custom repo validation** — extracted from your `.github/workflows/validate.yml`
-
-**Optional git hook**: Automatically blocks pushes that fail validation.
-
-## Supported Workflows
-
-The skill currently supports validation workflows that execute shell commands. It parses your CI workflow file and runs those same commands locally.
-
-Common examples:
-- **Node.js projects**: eslint, prettier, TypeScript, npm test, npm audit
-- **Python projects**: black, flake8, mypy, pytest, bandit
-- **Go projects**: gofmt, go vet, go test
-- **Rust projects**: cargo fmt, cargo clippy, cargo test, cargo audit
-- **C# projects**: dotnet format, dotnet test
-- **Any repo with .sh files**: shellcheck
-- **Custom validation**: Any shell command in your CI workflow
-
-## Requirements
-
-### Python Virtual Environments
-
-If your repository contains a Python virtual environment:
-```bash
-source venv/bin/activate        # or .venv/bin/activate
-bash pre-push-validation.sh
-```
-
-The script will **fail with a clear error** if a venv is detected but not activated. This prevents tools like flake8, black, and pytest from being "not found" due to wrong PATH.
-
-### Tool Availability (Fail-Closed Design)
-
-The skill uses **fail-closed design**: if your repository type is detected (Python, Go, Rust, etc.) and a required tool is missing from PATH, validation will **fail with a clear error** instead of silently skipping the check.
-
-Examples:
-
-**✅ Correct**:
-```bash
-$ bash pre-push-validation.sh
-⏳ flake8... ✅
-⏳ black... ✅
-```
-
-**❌ Fail-closed error** (tool missing):
-```bash
-$ bash pre-push-validation.sh
-❌ Python project detected but flake8 not in PATH
-   Install with: pip install flake8  (or activate venv first)
-```
-
-This prevents accidental "false passes" where validation skipped checks because tools weren't available.
-
-## Usage
-
-### Manual validation (before push)
+After a successful run in an interactive terminal, the script offers to install a `pre-push`
+git hook. You can also install it non-interactively:
 
 ```bash
-cd your-repo-root
-bash pre-push-validation.sh
-```
-
-Sample output:
-```
-=== Pre-Push Validation for your-repo-root ===
-
-Detected: Node.js repository (via .github/workflows/validate.yml)
-
-=== Running CI checks ===
-
-⏳ shellcheck... ✅
-⏳ eslint... ✅
-⏳ prettier... ✅
-
-=== Results ===
-
-Passed:  3
-Skipped: 0
-Failed:  0
-
-PASS: all checks completed successfully
-```
-
-### Install automatic pre-push hook
-
-```bash
-cd your-repo-root
 bash pre-push-validation.sh --install-hook
 ```
 
-Now every `git push` will validate first. To bypass (emergency only):
-
-```bash
-git push --no-verify
-```
-
-### Strict mode (full test + security suite)
-
-```bash
-bash pre-push-validation.sh --strict
-```
-
-Runs everything: linting, formatting, type checking, **full test suite**, and security scans.
-
-### Skip specific checks
-
-```bash
-bash pre-push-validation.sh --skip-check eslint
-```
-
-### Dry-run mode
-
-```bash
-bash pre-push-validation.sh --dry-run
-```
-
-Shows what would be validated without running checks.
-
-## Supported stacks
-
-| Language   | Detection         | Lint              | Format           | Type Check       | Test      |
-|------------|-------------------|-------------------|------------------|------------------|-----------|
-| Node.js    | package.json      | eslint            | prettier         | tsc              | npm test  |
-| Python     | pyproject.toml    | pylint / flake8   | black            | mypy             | pytest    |
-| Go         | go.mod            | golint            | gofmt            | go vet           | go test   |
-| Rust       | Cargo.toml        | cargo clippy      | cargo fmt        | cargo check      | cargo test|
-| C#/.NET    | *.csproj          | dotnet analyzers  | dotnet format    | implicit (build) | dotnet test |
-| Bash       | *.sh              | shellcheck        | —                | —                | —         |
-
-## How the pre-push hook works
-
-The `--install-hook` option creates `.git/hooks/pre-push` that automatically runs validation before each push:
-
-```bash
-#!/bin/bash
-# Pre-push validation hook — runs local checks before push
-set -e
-cd "$(git rev-parse --show-toplevel)"
-
-# Find the validation script (works for any repo layout)
-SCRIPT_PATH=""
-if [ -f "clusters/07-devops/pre-push-validation/pre-push-validation.sh" ]; then
-  SCRIPT_PATH="clusters/07-devops/pre-push-validation/pre-push-validation.sh"
-elif [ -f "scripts/pre-push-validation.sh" ]; then
-  SCRIPT_PATH="scripts/pre-push-validation.sh"
-fi
-
-if [ -z "$SCRIPT_PATH" ]; then
-  echo "⚠️  pre-push-validation.sh not found"
-  exit 0
-fi
-
-bash "$SCRIPT_PATH"
-```
-
-To disable: `chmod -x .git/hooks/pre-push` or `git push --no-verify`.
-
-## Behavior on different repository types
-
-**Repository with `.github/workflows/validate.yml`:**
-- Automatically parses the workflow file
-- Runs the exact same checks that GitHub Actions would run
-- Example: grimoire runs shellcheck, skill structure checks, registry sync
-
-**Generic repository (no CI workflows):**
-- Auto-detects tech stack (Node.js, Python, Go, etc.)
-- Runs appropriate linters and formatters for each detected language
-- Minimal but effective validation
-
-**Repository without any checks:**
-- If no CI workflows and no recognized files, gracefully exits
-- No false positives or errors
+The hook:
+- runs the validation before every `git push`
+- calls the script by absolute path, so it works from any repo layout
+- **never prompts when run as the hook** (no TTY) — it just validates and blocks on failure
+- bypass once with `git push --no-verify`; uninstall with `rm .git/hooks/pre-push`
