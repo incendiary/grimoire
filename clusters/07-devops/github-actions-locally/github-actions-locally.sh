@@ -28,6 +28,7 @@ declare -a FAILED_JOBS=()
 declare -a FIXED_JOBS=()
 declare -a SKIPPED_JOBS=()
 RAN_ANY=false
+VENV_ACTIVE=false
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
@@ -42,6 +43,28 @@ while [[ $# -gt 0 ]]; do
 done
 
 cd "$REPO_ROOT" || exit 1
+
+# Activate the target repo's own venv/.venv if present — never rely on
+# whatever's on the caller's global PATH. A tool resolved from a different
+# environment than CI's pinned install can silently diverge in behavior
+# (e.g. Black's formatting rules changed between major versions) and, worse,
+# auto-fix will then "correct" files to a style CI doesn't actually want.
+setup_python_env() {
+    if [[ -f "venv/bin/activate" ]]; then
+        # shellcheck disable=SC1091
+        source venv/bin/activate >/dev/null 2>&1
+        VENV_ACTIVE=true
+        echo -e "${GREEN}✓ Activated venv${NC} ($(command -v python3))"
+    elif [[ -f ".venv/bin/activate" ]]; then
+        # shellcheck disable=SC1091
+        source .venv/bin/activate >/dev/null 2>&1
+        VENV_ACTIVE=true
+        echo -e "${GREEN}✓ Activated .venv${NC} ($(command -v python3))"
+    else
+        echo -e "${YELLOW}⚠ No venv/.venv found — using PATH tools as-is.${NC}"
+        echo -e "${YELLOW}  Auto-fix (black/ruff) will be skipped: their version may not match CI's pinned one.${NC}"
+    fi
+}
 
 # Helper: classify a job by name (heuristic — used only for --lint/--test
 # filtering and report grouping, never to decide whether something ran).
@@ -137,13 +160,23 @@ with open(tmpfile, 'w') as out:
 PYEOF
 }
 
-# Attempt auto-fixes for common tools, then re-run to confirm.
+# Attempt auto-fixes for common tools, then re-run to confirm. Refuses to run
+# unless a project venv was activated — auto-fixing with whatever black/ruff
+# happens to be on the caller's global PATH can silently apply a different
+# formatting style than the one CI's pinned version wants, corrupting files
+# that were actually correct. Reporting the failure and stopping is safer
+# than "fixing" it with the wrong tool.
 attempt_fix() {
     local job_name="$1"
     local command="$2"
 
+    if [[ "$VENV_ACTIVE" != true ]]; then
+        echo -e "  ${YELLOW}Skipping auto-fix: no project venv active, won't risk the wrong tool version.${NC}"
+        return 1
+    fi
+
     if [[ "$command" =~ black ]]; then
-        echo "  Attempting auto-fix with black..."
+        echo "  Attempting auto-fix with black ($(command -v black))..."
         if black . >/dev/null 2>&1 && eval "$command" >/dev/null 2>&1; then
             echo -e "  ${GREEN}✓ Black auto-fixed files${NC}"
             FIXED_JOBS+=("$job_name (black)")
@@ -151,7 +184,7 @@ attempt_fix() {
             return 0
         fi
     elif [[ "$command" =~ ruff ]]; then
-        echo "  Attempting auto-fix with ruff..."
+        echo "  Attempting auto-fix with ruff ($(command -v ruff))..."
         if ruff check --fix . >/dev/null 2>&1 && eval "$command" >/dev/null 2>&1; then
             echo -e "  ${GREEN}✓ Ruff auto-fixed issues${NC}"
             FIXED_JOBS+=("$job_name (ruff)")
@@ -178,6 +211,16 @@ run_job() {
         echo -e "${GREEN}✓ PASS${NC}"
         PASSED_JOBS+=("$job_name")
         return 0
+    fi
+
+    # Distinguish a broken local toolchain (missing shim, command not found)
+    # from an actual lint/test failure — the fix is different (install the
+    # tool), and it shouldn't be reported or auto-fixed as if code is wrong.
+    if [[ $exit_code -eq 127 ]] || echo "$output" | grep -qiE "command not found|No such file or directory.*pyenv|pyenv: .*No such file"; then
+        echo -e "${RED}✗ TOOLCHAIN ISSUE${NC} (not a code failure — a required tool is missing or misconfigured)"
+        echo "$output" | head -10
+        FAILED_JOBS+=("$job_name (toolchain)")
+        return 1
     fi
 
     echo -e "${RED}✗ FAIL${NC} (exit $exit_code)"
@@ -244,6 +287,9 @@ main() {
         echo -e "${RED}✗ python3 not found — cannot parse workflows${NC}"
         exit 1
     fi
+
+    setup_python_env
+    echo ""
 
     TMPFILE=$(mktemp "${TMPDIR:-/tmp}/gal_jobs.XXXXXX")
     trap 'rm -f "$TMPFILE"' EXIT

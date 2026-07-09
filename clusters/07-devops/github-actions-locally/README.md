@@ -8,7 +8,7 @@ Run GitHub Actions workflow jobs locally before pushing. Discovers every `.githu
 
 ## What this skill does
 
-Parses every workflow file with `python3` + PyYAML (not a line-grep), extracts each job's `run:` steps, and executes them locally — honouring `working-directory` the same way GitHub Actions does. Steps that can only run in CI (GitHub Actions `${{ }}` contexts, `secrets.`, `gh release`, `$GITHUB_OUTPUT`/`$GITHUB_ENV`/`$GITHUB_STEP_SUMMARY`, OS package installs) are **skipped with a printed reason**, never silently treated as passing.
+Activates the repo's own `venv`/`.venv` first — never the caller's global PATH — so lint/format tools resolve to the same install CI actually uses, not whatever happens to be on `$PATH`. Parses every workflow file with `python3` + PyYAML (not a line-grep), extracts each job's `run:` steps, and executes them locally — honouring `working-directory` the same way GitHub Actions does. Steps that can only run in CI (GitHub Actions `${{ }}` contexts, `secrets.`, `gh release`, `$GITHUB_OUTPUT`/`$GITHUB_ENV`/`$GITHUB_STEP_SUMMARY`, OS package installs) are **skipped with a printed reason**, never silently treated as passing.
 
 Every executed step is judged by its **exit code**, exactly as CI does. Always exits 0 itself — this tool never blocks anything; the printed report is the signal. For a fail-closed pre-push gate, use the `pre-push-validation` skill instead.
 
@@ -104,14 +104,14 @@ If nothing runnable is found (e.g. every step is CI-only, or no workflows exist)
 
 ## Auto-fix
 
-On failure, if the failing command mentions `black` or `ruff`, the corresponding fixer runs (`black .` / `ruff check --fix .`) and the original command is re-run once to confirm. Any other failure is reported only — fix it manually and re-run.
+On failure, if the failing command mentions `black` or `ruff` **and a project `venv`/`.venv` was activated**, the corresponding fixer runs (`black .` / `ruff check --fix .`) and the original command is re-run once to confirm. Any other failure — or any failure when no venv was found — is reported only, never auto-fixed: running `black`/`ruff` from an arbitrary global install can silently apply a different formatting style than CI's pinned version wants, so this refuses rather than guesses.
 
 ---
 
 ## Limitations
 
-- **Auto-fix covers black/ruff only** — no prettier/eslint auto-fix yet (see Roadmap).
-- **Local tool versions can differ from CI's pinned versions.** This runs your local toolchain, not a copy of CI's exact environment — a passing local run doesn't guarantee an identical CI result if versions have drifted, and vice versa.
+- **Auto-fix covers black/ruff only, and only inside an activated venv** — no prettier/eslint auto-fix yet (see Roadmap), and no auto-fix at all if the repo has no `venv`/`.venv`.
+- **A venv doesn't guarantee an exact version match with CI** — only that it's not the caller's unrelated global PATH. If a stale venv hasn't been reinstalled since CI's pin last bumped, results can still diverge; compare `<tool> --version` against the workflow's install step if a result looks wrong.
 - **CI-only steps are skipped, not simulated.** Verify those in CI, not here.
 - **No job dependency graph.** `needs:` ordering and matrix (`strategy.matrix`) expansion aren't modelled — steps run in file order, not GitHub Actions' scheduling order.
 
@@ -132,6 +132,8 @@ On failure, if the failing command mentions `black` or `ruff`, the corresponding
 - [x] Real execution of discovered `run:` steps, judged by exit code
 - [x] CI-only step detection (contexts, secrets, releases, OS package installs)
 - [x] Auto-fix for black/ruff with re-run confirmation
+- [x] Activate the target repo's own venv/.venv before running anything; disable auto-fix without one
+- [x] Distinct "toolchain issue" reporting for command-not-found / broken shim failures
 - [ ] Auto-fix for prettier/eslint (JS/TS projects)
 - [ ] Job dependency graph (`needs:`) and matrix expansion awareness
 - [ ] Caching of discovered jobs (skip re-parsing on each run)
