@@ -1,9 +1,12 @@
 #!/bin/bash
-# github-actions-locally.sh — Run GitHub Actions locally before pushing
-# Discovers linting and test jobs from .github/workflows/, runs them locally,
-# auto-fixes issues where possible, and reports results.
+# github-actions-locally.sh — Run GitHub Actions workflow jobs locally.
+# Discovers .github/workflows/*.yml with a real YAML parser, extracts each
+# job's `run:` steps, executes them, and reports only what actually ran.
+# Auto-fixes failures where a known fixer exists (black, ruff), re-running to
+# confirm. Exits 0 regardless of pass/fail — the report is the signal, not
+# the exit code (unlike pre-push-validation, this does not block anything).
 
-set -e
+set -u
 
 # Color codes
 GREEN='\033[0;32m'
@@ -13,300 +16,308 @@ BLUE='\033[0;34m'
 NC='\033[0m'
 
 # Default configuration
-REPO_ROOT="${1:-.}"
+REPO_ROOT="."
 DRY_RUN=false
 LIST_ONLY=false
 JOB_TYPE="all"  # all, lint, test
 WORKFLOW_FILTER=""
 
 # Results tracking
-declare -a LINT_JOBS=()
-declare -a TEST_JOBS=()
 declare -a PASSED_JOBS=()
 declare -a FAILED_JOBS=()
 declare -a FIXED_JOBS=()
+declare -a SKIPPED_JOBS=()
+RAN_ANY=false
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
     case "$1" in
-        --dry-run)
-            DRY_RUN=true
-            shift
-            ;;
-        --list)
-            LIST_ONLY=true
-            shift
-            ;;
-        --lint)
-            JOB_TYPE="lint"
-            shift
-            ;;
-        --test)
-            JOB_TYPE="test"
-            shift
-            ;;
-        --workflow)
-            WORKFLOW_FILTER="$2"
-            shift 2
-            ;;
-        --job)
-            # Job pattern filtering (reserved for future expansion)
-            shift 2
-            ;;
-        *)
-            REPO_ROOT="$1"
-            shift
-            ;;
+        --dry-run) DRY_RUN=true; shift ;;
+        --list) LIST_ONLY=true; shift ;;
+        --lint) JOB_TYPE="lint"; shift ;;
+        --test) JOB_TYPE="test"; shift ;;
+        --workflow) WORKFLOW_FILTER="$2"; shift 2 ;;
+        *) REPO_ROOT="$1"; shift ;;
     esac
 done
 
 cd "$REPO_ROOT" || exit 1
 
-# Helper: Check if job name matches lint/test keywords
-is_lint_job() {
+# Helper: classify a job by name (heuristic — used only for --lint/--test
+# filtering and report grouping, never to decide whether something ran).
+classify_job() {
     local job_name="$1"
     if [[ "$job_name" =~ (lint|ruff|black|shellcheck|prettier|eslint|format|style) ]]; then
-        return 0
+        echo "lint"
+    elif [[ "$job_name" =~ (test|pytest|jest|vitest|build|spec) ]]; then
+        echo "test"
+    else
+        echo "other"
     fi
-    return 1
 }
 
-is_test_job() {
-    local job_name="$1"
-    if [[ "$job_name" =~ (test|pytest|jest|vitest|build|spec) ]]; then
-        return 0
-    fi
-    return 1
-}
-
-# Helper: Extract run commands from workflow YAML
-# Not yet wired into main() — part of the pending job-execution path (see the
-# TODO in main()). Suppress "unreachable/uncalled" until it is invoked.
-# shellcheck disable=SC2317,SC2329
-extract_run_commands() {
-    local workflow_file="$1"
-    local job_name="$2"
-
-    # Simple regex-based extraction (looking for 'run:' lines after the job)
-    awk -v job="$job_name" '
-        /^[[:space:]]*'"$job_name"':/ { in_job=1; next }
-        in_job && /^[[:space:]]*[a-zA-Z_]/ && !/^[[:space:]]*-/ { in_job=0 }
-        in_job && /run:/ {
-            getline
-            while (/^[[:space:]]+/) {
-                print $0
-                getline
-            }
-        }
-    ' "$workflow_file"
-}
-
-# Discover all jobs in workflows
+# Real YAML parser: discover every job's `run:` steps under every
+# .github/workflows/*.yml, honoring working-directory (step > job
+# defaults.run > workflow defaults.run), exactly as pre-push-validation.sh
+# does. Emits one line per step to $1:
+#   STATUS|B64(WORKFLOW)|B64(JOB)|B64(STEPNAME)|B64(CMD)|B64(REASON)
+# STATUS = RUN | SKIP (CI-only: ${{ }} contexts, secrets., gh release,
+# GITHUB_* files, or OS package installs — never run locally).
 discover_jobs() {
-    echo -e "${BLUE}=== Discovering Jobs ===${NC}"
+    local tmpfile="$1"
+    local wf_filter="$2"
+    python3 - "$tmpfile" "$wf_filter" <<'PYEOF'
+import base64, glob, os, re, shlex, sys
 
-    if [[ ! -d ".github/workflows" ]]; then
-        echo "No .github/workflows/ directory found"
-        return 1
-    fi
+try:
+    import yaml
+except ImportError:
+    sys.exit(3)
 
-    local workflow_files=(.github/workflows/*.yml .github/workflows/*.yaml)
+tmpfile, wf_filter = sys.argv[1], sys.argv[2]
 
-    for workflow_file in "${workflow_files[@]}"; do
-        [[ -f "$workflow_file" ]] || continue
+CI_ONLY = [
+    (re.compile(r'\$\{\{'),               'uses a GitHub Actions ${{ }} context'),
+    (re.compile(r'\bsecrets\.'),          'references secrets.'),
+    (re.compile(r'\bgh\s+release\b'),     'creates/edits a GitHub release'),
+    (re.compile(r'GITHUB_OUTPUT|GITHUB_ENV|GITHUB_STEP_SUMMARY'),
+                                          'writes a CI-only GITHUB_* file'),
+    (re.compile(r'\bsudo\b|\bapt-get\b|\bapt\s+install\b|\byum\s+install\b|\bapk\s+add\b'),
+                                          'OS package/setup step'),
+]
 
-        if [[ -n "$WORKFLOW_FILTER" && "$workflow_file" != *"$WORKFLOW_FILTER"* ]]; then
+def classify(cmd):
+    for pat, reason in CI_ONLY:
+        if pat.search(cmd):
+            return 'SKIP', reason
+    return 'RUN', ''
+
+def workdir(doc, job, step):
+    for scope in (step, job, doc):
+        if isinstance(scope, dict):
+            wd = scope.get('working-directory')
+            if not wd:
+                run = (scope.get('defaults') or {}).get('run') or {}
+                wd = run.get('working-directory')
+            if wd:
+                return str(wd)
+    return None
+
+def b64(s):
+    return base64.b64encode(s.encode()).decode()
+
+files = sorted(set(glob.glob('.github/workflows/*.yml') +
+                   glob.glob('.github/workflows/*.yaml')))
+if wf_filter:
+    files = [f for f in files if wf_filter in f]
+
+with open(tmpfile, 'w') as out:
+    for wf in files:
+        try:
+            with open(wf) as f:
+                doc = yaml.safe_load(f)
+        except Exception:
             continue
+        if not isinstance(doc, dict) or 'jobs' not in doc:
+            continue
+        wf_name = os.path.basename(wf)
+        for job_name, job in doc['jobs'].items():
+            if not isinstance(job, dict) or 'steps' not in job:
+                continue
+            for step in job['steps']:
+                if not isinstance(step, dict) or 'run' not in step:
+                    continue
+                step_name = step.get('name') or job_name
+                cmd = str(step['run']).strip()
+                status, reason = classify(cmd)
+                wd = workdir(doc, job, step)
+                if wd and wd != '.':
+                    cmd = f'cd {shlex.quote(wd)} || exit 1\n{cmd}'
+                out.write(f'{status}|{b64(wf_name)}|{b64(job_name)}|{b64(step_name)}|{b64(cmd)}|{b64(reason)}\n')
+PYEOF
+}
+
+# Attempt auto-fixes for common tools, then re-run to confirm.
+attempt_fix() {
+    local job_name="$1"
+    local command="$2"
+
+    if [[ "$command" =~ black ]]; then
+        echo "  Attempting auto-fix with black..."
+        if black . >/dev/null 2>&1 && eval "$command" >/dev/null 2>&1; then
+            echo -e "  ${GREEN}✓ Black auto-fixed files${NC}"
+            FIXED_JOBS+=("$job_name (black)")
+            PASSED_JOBS+=("$job_name")
+            return 0
         fi
-
-        echo "  $(basename "$workflow_file"):"
-
-        # Extract job names (simple regex for jobs: section).
-        # Feed the loop via process substitution, not a pipe, so LINT_JOBS/
-        # TEST_JOBS are modified in this shell rather than a lost subshell.
-        while read -r job_name; do
-            [[ -z "$job_name" ]] && continue
-
-            if is_lint_job "$job_name"; then
-                LINT_JOBS+=("$job_name")
-                echo "    ✓ $job_name (linting)"
-            elif is_test_job "$job_name"; then
-                TEST_JOBS+=("$job_name")
-                echo "    ✓ $job_name (test)"
-            fi
-        done < <(grep -E "^[[:space:]]*[a-zA-Z_][a-zA-Z0-9_-]*:" "$workflow_file" \
-                 | sed 's/[^a-zA-Z0-9_-]//g')
-    done
-
-    echo ""
+    elif [[ "$command" =~ ruff ]]; then
+        echo "  Attempting auto-fix with ruff..."
+        if ruff check --fix . >/dev/null 2>&1 && eval "$command" >/dev/null 2>&1; then
+            echo -e "  ${GREEN}✓ Ruff auto-fixed issues${NC}"
+            FIXED_JOBS+=("$job_name (ruff)")
+            PASSED_JOBS+=("$job_name")
+            return 0
+        fi
+    fi
+    return 1
 }
 
-# List discovered jobs
-list_jobs() {
-    echo -e "${BLUE}=== Discovered Jobs ===${NC}"
-    echo ""
-
-    if [[ ${#LINT_JOBS[@]} -gt 0 ]]; then
-        echo "LINTING:"
-        for job in "${LINT_JOBS[@]}"; do
-            echo "  - $job"
-        done
-        echo ""
-    fi
-
-    if [[ ${#TEST_JOBS[@]} -gt 0 ]]; then
-        echo "TESTS:"
-        for job in "${TEST_JOBS[@]}"; do
-            echo "  - $job"
-        done
-        echo ""
-    fi
-
-    local total=$((${#LINT_JOBS[@]} + ${#TEST_JOBS[@]}))
-    echo "Total: $total jobs (${#LINT_JOBS[@]} lint, ${#TEST_JOBS[@]} test)"
-}
-
-# Run a command and capture output
-# Not yet wired into main() — part of the pending job-execution path (see the
-# TODO in main()). Suppress "unreachable/uncalled" until it is invoked.
-# shellcheck disable=SC2317,SC2329
+# Run one step and record the outcome. Trusts the exit code — no output
+# heuristics.
 run_job() {
     local job_name="$1"
     local command="$2"
 
     echo -e "${BLUE}Running: $job_name...${NC}"
+    RAN_ANY=true
 
-    # Execute command and capture output
-    local output
-    local exit_code
+    local output exit_code=0
     output=$(eval "$command" 2>&1) || exit_code=$?
 
     if [[ $exit_code -eq 0 ]]; then
         echo -e "${GREEN}✓ PASS${NC}"
         PASSED_JOBS+=("$job_name")
         return 0
-    else
-        echo -e "${RED}✗ FAIL${NC}"
-        echo "Output:"
-        echo "$output" | head -20
-        [[ ${#output} -gt 100 ]] && echo "... (truncated)"
-        FAILED_JOBS+=("$job_name")
+    fi
 
-        # Attempt auto-fix based on tool
-        attempt_fix "$job_name" "$command" "$output"
+    echo -e "${RED}✗ FAIL${NC} (exit $exit_code)"
+    echo "$output" | head -20
+    FAILED_JOBS+=("$job_name")
+
+    if attempt_fix "$job_name" "$command"; then
+        # attempt_fix already recorded success; undo the failure record.
+        FAILED_JOBS=("${FAILED_JOBS[@]/$job_name}")
     fi
 }
 
-# Attempt auto-fixes for common tools
-# Called only by run_job, which is not yet wired into main() (see the TODO
-# there). Suppress "unreachable/uncalled" until that path is invoked.
-# shellcheck disable=SC2317,SC2329
-attempt_fix() {
-    local job_name="$1"
-    local command="$2"
-    local output="$3"
-
-    if [[ "$command" =~ black ]]; then
-        echo "  Attempting auto-fix with black..."
-        if black . >/dev/null 2>&1; then
-            echo -e "  ${GREEN}✓ Black auto-fixed files${NC}"
-            FIXED_JOBS+=("$job_name (black)")
-            # Re-run to confirm
-            if eval "$command" >/dev/null 2>&1; then
-                PASSED_JOBS+=("$job_name")
-                FAILED_JOBS=("${FAILED_JOBS[@]/$job_name}")
-            fi
-        fi
-    elif [[ "$command" =~ ruff ]]; then
-        echo "  Attempting auto-fix with ruff..."
-        if ruff check --fix . >/dev/null 2>&1; then
-            echo -e "  ${GREEN}✓ Ruff auto-fixed issues${NC}"
-            FIXED_JOBS+=("$job_name (ruff)")
-            # Re-run to confirm
-            if eval "$command" >/dev/null 2>&1; then
-                PASSED_JOBS+=("$job_name")
-                FAILED_JOBS=("${FAILED_JOBS[@]/$job_name}")
-            fi
-        fi
-    fi
-}
-
-# Generate summary report
 generate_report() {
     echo ""
     echo -e "${BLUE}=== Summary ===${NC}"
 
-    local total=$((${#LINT_JOBS[@]} + ${#TEST_JOBS[@]}))
+    if [[ "$RAN_ANY" != true ]]; then
+        echo -e "${YELLOW}0 steps executed — nothing runnable was discovered.${NC}"
+        echo ""
+        return
+    fi
+
     local passed=${#PASSED_JOBS[@]}
     local failed=${#FAILED_JOBS[@]}
     local fixed=${#FIXED_JOBS[@]}
+    local skipped=${#SKIPPED_JOBS[@]}
 
-    echo "Jobs: $total total, $passed passed, $failed failed"
+    echo "Ran: $((passed + failed)) executed, $passed passed, $failed failed, $skipped skipped (CI-only)"
 
     if [[ $fixed -gt 0 ]]; then
         echo -e "${YELLOW}Auto-fixed: $fixed job(s)${NC}"
-        for job in "${FIXED_JOBS[@]}"; do
-            echo "  - $job"
-        done
+        for job in "${FIXED_JOBS[@]}"; do echo "  - $job"; done
     fi
 
     if [[ $failed -gt 0 ]]; then
         echo -e "${RED}Manual attention needed: $failed job(s)${NC}"
         for job in "${FAILED_JOBS[@]}"; do
+            [[ -z "$job" ]] && continue
             echo "  - $job"
         done
     fi
 
     if [[ $failed -eq 0 ]]; then
-        echo -e "${GREEN}✅ All jobs passed. Ready to push.${NC}"
+        echo -e "${GREEN}✅ All executed steps passed.${NC} ($skipped CI-only step(s) skipped — verify those in CI)"
     else
         echo -e "${YELLOW}⚠️  $failed issue(s) require manual review.${NC}"
     fi
-
     echo ""
 }
 
-# Main flow
 main() {
     echo -e "${BLUE}=== GitHub Actions — Local Run ===${NC}"
     echo ""
 
-    discover_jobs
-
-    if [[ "$LIST_ONLY" == true ]]; then
-        list_jobs
+    shopt -s nullglob
+    local wf_files=(.github/workflows/*.yml .github/workflows/*.yaml)
+    shopt -u nullglob
+    if [[ ${#wf_files[@]} -eq 0 ]]; then
+        echo "No .github/workflows/ files found"
         exit 0
     fi
 
-    if [[ "$DRY_RUN" == true ]]; then
-        list_jobs
-        echo -e "${YELLOW}Dry-run: not executing jobs${NC}"
+    if ! command -v python3 >/dev/null 2>&1; then
+        echo -e "${RED}✗ python3 not found — cannot parse workflows${NC}"
+        exit 1
+    fi
+
+    TMPFILE=$(mktemp "${TMPDIR:-/tmp}/gal_jobs.XXXXXX")
+    trap 'rm -f "$TMPFILE"' EXIT
+
+    discover_jobs "$TMPFILE" "$WORKFLOW_FILTER"
+    local parse_rc=$?
+    if [[ $parse_rc -eq 3 ]]; then
+        echo -e "${RED}✗ PyYAML not installed — cannot parse workflows${NC}"
+        echo "   Install: pip install pyyaml"
+        exit 1
+    fi
+
+    if [[ ! -s "$TMPFILE" ]]; then
+        echo "No run: steps found in any workflow"
         exit 0
     fi
 
-    # Select jobs based on filter
-    local jobs_to_run=()
-    if [[ "$JOB_TYPE" == "all" || "$JOB_TYPE" == "lint" ]]; then
-        jobs_to_run+=("${LINT_JOBS[@]}")
-    fi
-    if [[ "$JOB_TYPE" == "all" || "$JOB_TYPE" == "test" ]]; then
-        jobs_to_run+=("${TEST_JOBS[@]}")
-    fi
+    # Build a printable job list, applying --lint/--test filtering by job name.
+    declare -a DISPLAY_LINES=()
+    declare -a RUNNABLE=()  # index-parallel: "status|job|step|cmd"
+    while IFS='|' read -r status b64wf b64job b64step b64cmd b64reason; do
+        [[ -z "$status" ]] && continue
+        local job step wf class
+        job=$(echo "$b64job" | base64 -d)
+        step=$(echo "$b64step" | base64 -d)
+        wf=$(echo "$b64wf" | base64 -d)
+        class=$(classify_job "$job")
 
-    if [[ ${#jobs_to_run[@]} -eq 0 ]]; then
-        echo "No jobs to run"
-        exit 0
-    fi
+        if [[ "$JOB_TYPE" != "all" && "$JOB_TYPE" != "$class" ]]; then
+            continue
+        fi
 
-    echo "Running ${#jobs_to_run[@]} job(s)..."
+        if [[ "$status" == "SKIP" ]]; then
+            local reason
+            reason=$(echo "$b64reason" | base64 -d)
+            DISPLAY_LINES+=("SKIP|$wf › $job › $step|$reason")
+            SKIPPED_JOBS+=("$wf › $job › $step")
+            continue
+        fi
+
+        DISPLAY_LINES+=("RUN|$wf › $job › $step|")
+        RUNNABLE+=("$wf › $job › $step|$b64cmd")
+    done < "$TMPFILE"
+
+    echo -e "${BLUE}=== Discovered ===${NC}"
+    for line in "${DISPLAY_LINES[@]}"; do
+        IFS='|' read -r st name reason <<< "$line"
+        if [[ "$st" == "SKIP" ]]; then
+            echo -e "  ${YELLOW}skip${NC}  $name  ($reason)"
+        else
+            echo -e "  ${GREEN}run${NC}   $name"
+        fi
+    done
+    echo ""
+    echo "Runnable: ${#RUNNABLE[@]}   Skipped (CI-only): ${#SKIPPED_JOBS[@]}"
     echo ""
 
-    # TODO: Extract actual commands from workflows and run them
-    # For now, show placeholder
-    echo -e "${YELLOW}Note: Full job execution implementation coming soon${NC}"
-    echo "Discovered: ${#LINT_JOBS[@]} linting jobs, ${#TEST_JOBS[@]} test jobs"
+    if [[ "$LIST_ONLY" == true || "$DRY_RUN" == true ]]; then
+        [[ "$DRY_RUN" == true ]] && echo -e "${YELLOW}Dry-run: not executing${NC}"
+        exit 0
+    fi
 
-    list_jobs
+    if [[ ${#RUNNABLE[@]} -eq 0 ]]; then
+        generate_report
+        exit 0
+    fi
+
+    for entry in "${RUNNABLE[@]}"; do
+        local name b64cmd cmd
+        name="${entry%%|*}"
+        b64cmd="${entry#*|}"
+        cmd=$(echo "$b64cmd" | base64 -d)
+        run_job "$name" "$cmd"
+    done
 
     generate_report
 }

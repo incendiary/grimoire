@@ -5,176 +5,100 @@
 > **Type:** action
 
 ## Description
-Run GitHub Actions workflows locally before pushing. Discovers and executes linting and test jobs from `.github/workflows/*.yml`, auto-fixes fixable issues (black, ruff, etc.), and reports results without blocking merges. Enables "shift left" CI validation — catch failures locally, not in Actions.
+Run GitHub Actions workflow jobs locally before pushing. Discovers every `.github/workflows/*.yml` with a real YAML parser, extracts each job's `run:` steps, executes them, and reports **only what actually ran** — auto-fixing failures where a known fixer exists (black, ruff) and re-running to confirm. Enables "shift left" CI validation without blocking anything (exit code is always 0; the report is the signal).
 
 Invoke when: "run CI locally", "test before pushing", "check linting locally", "shift left testing", "preview what CI will do".
 
 ## Context needed
-- `.github/workflows/` directory with workflow files
-- Local tooling installed for discovered jobs (python, node, etc.)
-- Repository root (or explicit path via `--repo` flag)
+- `.github/workflows/*.yml` (nothing to do without at least one)
+- `python3` with PyYAML (fails closed with an install hint if missing)
+- Local tooling for whatever the discovered `run:` steps invoke (python, node, etc.)
 
 ---
 
-## The Real Problem
+## How it works
 
-CI failures are caught too late:
-1. Developer pushes code
-2. GitHub Actions runs (2-5 min wait)
-3. Linting or test fails
-4. Developer fixes locally and re-pushes
-5. Repeat
+1. **Discover.** Parse every `.github/workflows/*.yml`/`*.yaml` with `python3` + PyYAML. For each job's steps with a `run:` key, honour the effective `working-directory` (step → job `defaults.run` → workflow `defaults.run`), same as `pre-push-validation`.
+2. **Classify.**
+   - **CI-only → skipped, never run**, with a printed reason: steps using `${{ }}` contexts, `secrets.`, `gh release`, `$GITHUB_OUTPUT`/`$GITHUB_ENV`/`$GITHUB_STEP_SUMMARY`, or OS package installs (`sudo`/`apt-get`/`yum install`/`apk add`).
+   - Everything else is **runnable**.
+   - Each job is also heuristically tagged `lint` / `test` / `other` by name (for `--lint`/`--test` filtering only — this tagging never affects pass/fail truth).
+3. **Execute.** Every runnable step is actually run; judged by **exit code**, exactly as CI does.
+4. **Auto-fix.** On failure, if the command mentions `black` or `ruff`, run the corresponding `--fix`/auto-format tool and re-run the original command once to confirm.
+5. **Report.** Only counts steps that were actually executed. If nothing was runnable, the summary says so explicitly (`0 steps executed`) — it never claims a pass for work it didn't do.
 
-**Cost:** ~5-15 minutes per failed CI run × how many times it fails before being fixed = hours of wasted time.
-
-**Solution:** Run the same validations locally before pushing. Fail fast. Auto-fix what's fixable. See exactly what CI will complain about.
-
----
-
-## How It Works
-
-### 1. Discover Jobs
-- Parse `.github/workflows/*.yml` for all jobs
-- Filter to **linting jobs** (identified by keywords: lint, ruff, black, shellcheck, prettier, eslint, etc.)
-- Filter to **test jobs** (identified by keywords: test, pytest, jest, go test, vitest, etc.)
-- Output discovered jobs with their commands
-
-### 2. Run Locally
-For each discovered job:
-- Extract the shell commands (`run:` sections)
-- Detect language/tool (Python, JavaScript, Shell, Go, etc.)
-- Run the command in the repo root
-- Capture stdout, stderr, exit code
-
-### 3. Auto-Fix
-If a job failed and fixable:
-- **Python**: `black --fix`, `ruff check --fix`
-- **JavaScript**: `prettier --write`, `eslint --fix`
-- **Shell**: (no auto-fix for shellcheck; report only)
-- **Other**: Report failure; user fixes manually
-
-After auto-fixing, **re-run the job** to confirm it passes.
-
-### 4. Report
-Output summary:
-```
-=== GitHub Actions — Local Run ===
-Discovered jobs: 8
-  Linting: 5
-  Tests: 3
-
-=== Results ===
-✓ validate/shellcheck — PASS
-✓ validate/skill-structure — PASS
-✓ validate/registry-sync — PASS
-✗ validate/README-quality — FAIL (path references; manual review needed)
-✓ ci-mcp/build — PASS
-✓ ci-mcp/lint — PASS (auto-fixed with ruff)
-✓ ci-mcp/test — PASS
-✓ devops-check/version-sync — PASS
-
-⚠️  1 issue requires manual attention:
-  - validate/README-quality: stale path found in docs/README.md
-
-✅ 7/8 jobs passed. Ready to push.
-```
-
-Exit **0 (allow)** even if jobs failed — the report is the signal, not the exit code.
-
----
+Exit code is always **0** — this tool never blocks a push. For a fail-closed pre-push gate, use `pre-push-validation` instead.
 
 ## Usage
 
-### Basic: Discover and run all jobs
 ```bash
-github-actions-locally
+# Discover and run every runnable step in every workflow
+bash github-actions-locally.sh
+
+# Only steps from jobs whose name looks lint-related
+bash github-actions-locally.sh --lint
+
+# Only steps from jobs whose name looks test-related
+bash github-actions-locally.sh --test
+
+# Restrict to one workflow file (substring match)
+bash github-actions-locally.sh --workflow validate.yml
+
+# Show what would run, without executing anything
+bash github-actions-locally.sh --dry-run
+
+# List discovered steps (run + skipped) and exit — same output as --dry-run
+bash github-actions-locally.sh --list
 ```
 
-### Run only linting jobs
-```bash
-github-actions-locally --lint
+## Example output
+
+```
+=== GitHub Actions — Local Run ===
+
+=== Discovered ===
+  run   validate.yml › shellcheck › Lint all shell scripts
+  skip  validate.yml › shellcheck › Install shellcheck  (OS package/setup step)
+  run   ci-mcp.yml › build › build
+
+Runnable: 2   Skipped (CI-only): 1
+
+Running: validate.yml › shellcheck › Lint all shell scripts...
+✓ PASS
+Running: ci-mcp.yml › build › build...
+✗ FAIL (exit 1)
+npm error ...
+
+=== Summary ===
+Ran: 2 executed, 1 passed, 1 failed, 1 skipped (CI-only)
+Manual attention needed: 1 job(s)
+  - ci-mcp.yml › build › build
+⚠️  1 issue(s) require manual review.
 ```
 
-### Run only test jobs
-```bash
-github-actions-locally --test
-```
+## Limitations
 
-### Run specific workflow
-```bash
-github-actions-locally --workflow validate.yml
-```
-
-### Run specific job pattern
-```bash
-github-actions-locally --job "*shellcheck*"
-```
-
-### Dry-run (discover only, don't execute)
-```bash
-github-actions-locally --dry-run
-```
-
-### Show which jobs would run and exit
-```bash
-github-actions-locally --list
-```
+- **No auto-fix beyond black/ruff.** Other failures are reported only; fix manually.
+- **Local tool versions can differ from CI's pinned versions**, which can produce results CI wouldn't (or vice versa) — this tool runs your local toolchain, not CI's exact environment.
+- **CI-only steps are skipped, not simulated.** Anything gated on GitHub context, secrets, or OS package installs won't be verified locally; check those in CI.
+- **Job/step names, not real job IDs**, are used for display and `--lint`/`--test` classification — a heuristic, not the job's actual GitHub Actions execution graph (dependencies between jobs, matrix expansion, etc. are not modelled).
 
 ---
 
-## Implementation Strategy
+## Integration with other skills
 
-### Phase 1: Job Discovery
-- Use `yq` or inline bash/Python to parse YAML
-- Extract job names, run steps, shell language
-- Build a structured job list (name, commands, language)
-
-### Phase 2: Local Execution
-- For each job, execute its `run:` commands
-- Detect tool (black, ruff, pytest, etc.)
-- Capture output and exit code
-
-### Phase 3: Auto-Fix
-- Parse failures for fixable patterns
-- Run auto-fix tools (ruff --fix, black --fix, etc.)
-- Re-run job to verify fix
-
-### Phase 4: Reporting
-- Aggregate results (pass/fail/fixed)
-- Highlight issues needing manual attention
-- Output structured summary
-- Exit 0 (always allow)
-
----
-
-## Limitations & Gotchas
-
-- **Docker-based jobs:** Only runs if `docker` is available locally; skips otherwise (reports "not available")
-- **External services:** Jobs requiring databases, APIs, external services are skipped with a note
-- **OS-specific commands:** `run-on: ubuntu-latest` jobs may have Linux-specific commands; macOS/Windows users get a warning
-- **Secrets:** Workflow secrets are not available locally; jobs using them are skipped with a note
-- **Expensive jobs:** Some jobs (e.g., full test suites on large repos) may take a while; show progress
-- **Tool versions:** Local tool versions may differ from GitHub Actions versions; report if mismatch detected
-
----
-
-## Integration with Other Skills
-
-- **pre-commit-aware-commits:** Run this before committing to catch issues early
-- **format-before-commit:** Use this skill to find and fix formatting issues automatically
-- **github-morning-run:** Use after pushing to catch what CI found on the morning audit
-- **roadmap-driver:** Use before working on a roadmap item to ensure local environment is valid
+- **pre-push-validation:** fail-closed equivalent — use that as a git hook to block bad pushes; use this one for exploratory "what would CI say about my current changes" runs.
+- **format-before-commit:** narrower, Python-only formatting check; this skill's auto-fix covers the same ground plus arbitrary `run:` steps.
+- **github-morning-run:** use after pushing to catch what CI found on the morning audit.
 
 ---
 
 ## Roadmap
 
 - [x] SKILL.md written
-- [ ] github-actions-locally.sh script (core implementation)
-- [ ] YAML parsing for job discovery (yq-based or Python)
-- [ ] Auto-fix logic for common tools (black, ruff, prettier, eslint)
-- [ ] Docker job detection and skip reporting
-- [ ] Tool version detection and warnings
-- [ ] Integration with pre-commit hooks
+- [x] github-actions-locally.sh script (real YAML parsing + execution)
+- [x] YAML parsing for job discovery (PyYAML-based, `jobs.*.steps[].run` only)
+- [x] Auto-fix logic for black/ruff, with re-run confirmation
+- [ ] Auto-fix for prettier/eslint (JS/TS projects)
+- [ ] Job dependency graph (`needs:`) and matrix expansion awareness
 - [ ] Caching of discovered jobs (skip re-parsing on each run)
-- [ ] Parallel job execution (run lint + test in parallel, not sequentially)
