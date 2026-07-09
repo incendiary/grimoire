@@ -45,14 +45,22 @@ Invoke when: releasing a new version of a repo. Trigger phrases: "cut a release"
    git checkout main && git pull
    ```
 
-5. **Tag and create the GitHub release:**
+5. **Tag and push. Check first whether `.github/workflows/release-on-tag.yml` exists —
+   if it does, the tag push *is* the release step; do not also run `gh release create`
+   manually, or you will collide with the workflow (whichever runs second gets
+   `HTTP 422: Release.tag_name already exists`).**
    ```bash
+   test -f .github/workflows/release-on-tag.yml && echo "workflow will create the release"
+
    git tag vX.Y.Z
    git push origin vX.Y.Z
-   gh release create vX.Y.Z --title "vX.Y.Z" --notes "$(cat CHANGELOG.md | head -50)"
+
+   # Only if release-on-tag.yml does NOT exist in this repo:
+   # gh release create vX.Y.Z --title "vX.Y.Z" --notes "$(cat CHANGELOG.md | head -50)"
    ```
 
 6. **Verify the release page** on GitHub and confirm the tag points to the correct commit.
+   If `release-on-tag.yml` ran, check it succeeded: `gh run list --workflow release-on-tag.yml --limit 1`.
 
 ## Gotchas
 - SSH push can fail if the key agent is not loaded. Check with `ssh -T git@github.com`
@@ -62,6 +70,10 @@ Invoke when: releasing a new version of a repo. Trigger phrases: "cut a release"
   pull, not to the release branch head.
 - If the repo uses protected branches, the PR must pass status checks before merge.
   Never use `--admin` to bypass branch protection.
+- **Never run both the manual `gh release create` step and `release-on-tag.yml` on the
+  same tag.** Pick exactly one release-creation path per repo. If both exist, use the
+  idempotent workflow template below (it checks for an existing release first) so a
+  stray manual run doesn't turn every release into a guaranteed-red Actions run.
 
 ## Suggested scripts
 - `release.sh` — parameterised script that runs the full flow from version bump to
@@ -72,7 +84,11 @@ Invoke when: releasing a new version of a repo. Trigger phrases: "cut a release"
 ## CI enforcement: release-on-tag workflow
 
 Add this workflow to any repo to guarantee every `v*` tag gets a GitHub Release.
-Prevents tag↔release drift regardless of who pushes the tag.
+Prevents tag↔release drift regardless of who pushes the tag. **Idempotent by
+design** — it checks for an existing release before creating one, so it is safe
+even if someone also runs `gh release create` manually for the same tag (step 5
+above still says: don't do both on purpose, but this stops it being a guaranteed
+failure if it happens anyway).
 
 ```yaml
 # .github/workflows/release-on-tag.yml
@@ -95,8 +111,21 @@ jobs:
           TAG="${GITHUB_REF#refs/tags/}"
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
           echo "version=${TAG#v}" >> "$GITHUB_OUTPUT"
+      - name: Check for existing release
+        id: existing
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="${{ steps.version.outputs.tag }}"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+            echo "Release $TAG already exists — skipping creation (idempotent)"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
       - name: Extract release notes from CHANGELOG
         id: notes
+        if: steps.existing.outputs.exists == 'false'
         run: |
           VERSION="${{ steps.version.outputs.version }}"
           NOTES=""
@@ -113,6 +142,7 @@ jobs:
             printf '%s\n' "$NOTES" > /tmp/release-notes.md
           fi
       - name: Create release
+        if: steps.existing.outputs.exists == 'false'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |

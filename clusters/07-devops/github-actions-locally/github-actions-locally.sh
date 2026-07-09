@@ -80,6 +80,9 @@ is_test_job() {
 }
 
 # Helper: Extract run commands from workflow YAML
+# Not yet wired into main() — part of the pending job-execution path (see the
+# TODO in main()). Suppress "unreachable/uncalled" until it is invoked.
+# shellcheck disable=SC2317,SC2329
 extract_run_commands() {
     local workflow_file="$1"
     local job_name="$2"
@@ -118,10 +121,10 @@ discover_jobs() {
 
         echo "  $(basename "$workflow_file"):"
 
-        # Extract job names (simple regex for jobs: section)
-        # shellcheck disable=SC2030,SC2031
-        grep -E "^[[:space:]]*[a-zA-Z_][a-zA-Z0-9_-]*:" "$workflow_file" | \
-        sed 's/[^a-zA-Z0-9_-]//g' | while read -r job_name; do
+        # Extract job names (simple regex for jobs: section).
+        # Feed the loop via process substitution, not a pipe, so LINT_JOBS/
+        # TEST_JOBS are modified in this shell rather than a lost subshell.
+        while read -r job_name; do
             [[ -z "$job_name" ]] && continue
 
             if is_lint_job "$job_name"; then
@@ -131,7 +134,8 @@ discover_jobs() {
                 TEST_JOBS+=("$job_name")
                 echo "    ✓ $job_name (test)"
             fi
-        done
+        done < <(grep -E "^[[:space:]]*[a-zA-Z_][a-zA-Z0-9_-]*:" "$workflow_file" \
+                 | sed 's/[^a-zA-Z0-9_-]//g')
     done
 
     echo ""
@@ -163,6 +167,9 @@ list_jobs() {
 }
 
 # Run a command and capture output
+# Not yet wired into main() — part of the pending job-execution path (see the
+# TODO in main()). Suppress "unreachable/uncalled" until it is invoked.
+# shellcheck disable=SC2317,SC2329
 run_job() {
     local job_name="$1"
     local command="$2"
@@ -191,6 +198,9 @@ run_job() {
 }
 
 # Attempt auto-fixes for common tools
+# Called only by run_job, which is not yet wired into main() (see the TODO
+# there). Suppress "unreachable/uncalled" until that path is invoked.
+# shellcheck disable=SC2317,SC2329
 attempt_fix() {
     local job_name="$1"
     local command="$2"
