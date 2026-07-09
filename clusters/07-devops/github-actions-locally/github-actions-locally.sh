@@ -28,6 +28,9 @@ declare -a FAILED_JOBS=()
 declare -a FIXED_JOBS=()
 declare -a SKIPPED_JOBS=()
 RAN_ANY=false
+VENV_ACTIVE=false
+
+INSTALL_HOOK_ONLY=false
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
@@ -37,11 +40,76 @@ while [[ $# -gt 0 ]]; do
         --lint) JOB_TYPE="lint"; shift ;;
         --test) JOB_TYPE="test"; shift ;;
         --workflow) WORKFLOW_FILTER="$2"; shift 2 ;;
+        --install-hook) INSTALL_HOOK_ONLY=true; shift ;;
         *) REPO_ROOT="$1"; shift ;;
     esac
 done
 
 cd "$REPO_ROOT" || exit 1
+
+# Absolute path to this script, so the installed hook works from any repo layout.
+SCRIPT_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/$(basename "${BASH_SOURCE[0]}")"
+
+# Installs a pre-commit hook (never pre-push — pre-push-validation already
+# owns that slot, and a single hook file can't serve two independent
+# installers). Safe to auto-install without asking: this tool always exits 0,
+# so the hook can never block a commit, only surface information.
+install_hook() {
+    local hook_file=".git/hooks/pre-commit"
+    mkdir -p "$(dirname "$hook_file")"
+    cat > "$hook_file" <<HOOK
+#!/bin/bash
+# Installed by github-actions-locally. Informational only — never blocks
+# (the underlying script always exits 0).
+cd "\$(git rev-parse --show-toplevel)" || exit 0
+bash "$SCRIPT_PATH"
+exit 0
+HOOK
+    chmod +x "$hook_file"
+    echo -e "${GREEN}✓ pre-commit hook installed${NC} → $hook_file"
+    echo "   Informational only — never blocks a commit."
+    echo "   Uninstall: rm $hook_file"
+}
+
+# Offer or auto-install the hook, once, if nothing is already there.
+# Interactive (TTY): ask. Non-interactive (e.g. invoked by an agent, or as
+# a hook itself): install without asking, since it's always non-blocking —
+# unlike pre-push-validation's blocking hook, there's no downside to silently
+# adding this one, only to silently skipping it and staying uncovered.
+maybe_install_hook() {
+    [[ -f ".git/hooks/pre-commit" ]] && return 0
+    if [[ -t 0 ]]; then
+        echo -e "${BLUE}Install pre-commit hook to run this automatically (informational, never blocks)?${NC}"
+        read -rp "Install? (y/n) " -n 1 reply
+        echo ""
+        [[ "$reply" =~ ^[Yy]$ ]] && install_hook
+    else
+        echo -e "${YELLOW}No pre-commit hook found — installing one automatically (non-interactive; this tool never blocks, so it's safe to add without asking).${NC}"
+        install_hook
+    fi
+}
+
+# Activate the target repo's own venv/.venv if present — never rely on
+# whatever's on the caller's global PATH. A tool resolved from a different
+# environment than CI's pinned install can silently diverge in behavior
+# (e.g. Black's formatting rules changed between major versions) and, worse,
+# auto-fix will then "correct" files to a style CI doesn't actually want.
+setup_python_env() {
+    if [[ -f "venv/bin/activate" ]]; then
+        # shellcheck disable=SC1091
+        source venv/bin/activate >/dev/null 2>&1
+        VENV_ACTIVE=true
+        echo -e "${GREEN}✓ Activated venv${NC} ($(command -v python3))"
+    elif [[ -f ".venv/bin/activate" ]]; then
+        # shellcheck disable=SC1091
+        source .venv/bin/activate >/dev/null 2>&1
+        VENV_ACTIVE=true
+        echo -e "${GREEN}✓ Activated .venv${NC} ($(command -v python3))"
+    else
+        echo -e "${YELLOW}⚠ No venv/.venv found — using PATH tools as-is.${NC}"
+        echo -e "${YELLOW}  Auto-fix (black/ruff) will be skipped: their version may not match CI's pinned one.${NC}"
+    fi
+}
 
 # Helper: classify a job by name (heuristic — used only for --lint/--test
 # filtering and report grouping, never to decide whether something ran).
@@ -137,13 +205,23 @@ with open(tmpfile, 'w') as out:
 PYEOF
 }
 
-# Attempt auto-fixes for common tools, then re-run to confirm.
+# Attempt auto-fixes for common tools, then re-run to confirm. Refuses to run
+# unless a project venv was activated — auto-fixing with whatever black/ruff
+# happens to be on the caller's global PATH can silently apply a different
+# formatting style than the one CI's pinned version wants, corrupting files
+# that were actually correct. Reporting the failure and stopping is safer
+# than "fixing" it with the wrong tool.
 attempt_fix() {
     local job_name="$1"
     local command="$2"
 
+    if [[ "$VENV_ACTIVE" != true ]]; then
+        echo -e "  ${YELLOW}Skipping auto-fix: no project venv active, won't risk the wrong tool version.${NC}"
+        return 1
+    fi
+
     if [[ "$command" =~ black ]]; then
-        echo "  Attempting auto-fix with black..."
+        echo "  Attempting auto-fix with black ($(command -v black))..."
         if black . >/dev/null 2>&1 && eval "$command" >/dev/null 2>&1; then
             echo -e "  ${GREEN}✓ Black auto-fixed files${NC}"
             FIXED_JOBS+=("$job_name (black)")
@@ -151,7 +229,7 @@ attempt_fix() {
             return 0
         fi
     elif [[ "$command" =~ ruff ]]; then
-        echo "  Attempting auto-fix with ruff..."
+        echo "  Attempting auto-fix with ruff ($(command -v ruff))..."
         if ruff check --fix . >/dev/null 2>&1 && eval "$command" >/dev/null 2>&1; then
             echo -e "  ${GREEN}✓ Ruff auto-fixed issues${NC}"
             FIXED_JOBS+=("$job_name (ruff)")
@@ -178,6 +256,16 @@ run_job() {
         echo -e "${GREEN}✓ PASS${NC}"
         PASSED_JOBS+=("$job_name")
         return 0
+    fi
+
+    # Distinguish a broken local toolchain (missing shim, command not found)
+    # from an actual lint/test failure — the fix is different (install the
+    # tool), and it shouldn't be reported or auto-fixed as if code is wrong.
+    if [[ $exit_code -eq 127 ]] || echo "$output" | grep -qiE "command not found|No such file or directory.*pyenv|pyenv: .*No such file"; then
+        echo -e "${RED}✗ TOOLCHAIN ISSUE${NC} (not a code failure — a required tool is missing or misconfigured)"
+        echo "$output" | head -10
+        FAILED_JOBS+=("$job_name (toolchain)")
+        return 1
     fi
 
     echo -e "${RED}✗ FAIL${NC} (exit $exit_code)"
@@ -229,6 +317,11 @@ generate_report() {
 }
 
 main() {
+    if [[ "$INSTALL_HOOK_ONLY" == true ]]; then
+        install_hook
+        return 0
+    fi
+
     echo -e "${BLUE}=== GitHub Actions — Local Run ===${NC}"
     echo ""
 
@@ -244,6 +337,9 @@ main() {
         echo -e "${RED}✗ python3 not found — cannot parse workflows${NC}"
         exit 1
     fi
+
+    setup_python_env
+    echo ""
 
     TMPFILE=$(mktemp "${TMPDIR:-/tmp}/gal_jobs.XXXXXX")
     trap 'rm -f "$TMPFILE"' EXIT
@@ -308,6 +404,7 @@ main() {
 
     if [[ ${#RUNNABLE[@]} -eq 0 ]]; then
         generate_report
+        maybe_install_hook
         exit 0
     fi
 
@@ -320,6 +417,7 @@ main() {
     done
 
     generate_report
+    maybe_install_hook
 }
 
 main "$@"

@@ -4,11 +4,18 @@
 
 Run GitHub Actions workflow jobs locally before pushing. Discovers every `.github/workflows/*.yml` with a real YAML parser, executes each job's `run:` steps, auto-fixes what it can (black, ruff), and reports **only what actually ran** — never a fake pass for work it skipped.
 
+> **Self-installs a `pre-commit` hook — informational only, never blocks.** After a run with
+> no hook present, it installs one automatically: asks first if there's a terminal to ask on,
+> installs without asking otherwise (safe, since this tool always exits 0). Deliberately a
+> different hook slot than `pre-push-validation`'s blocking `pre-push` hook — install both and
+> they compose: `pre-commit` surfaces issues per-commit, `pre-push` actually blocks a bad push.
+> Uninstall any time with `rm .git/hooks/pre-commit`.
+
 ---
 
 ## What this skill does
 
-Parses every workflow file with `python3` + PyYAML (not a line-grep), extracts each job's `run:` steps, and executes them locally — honouring `working-directory` the same way GitHub Actions does. Steps that can only run in CI (GitHub Actions `${{ }}` contexts, `secrets.`, `gh release`, `$GITHUB_OUTPUT`/`$GITHUB_ENV`/`$GITHUB_STEP_SUMMARY`, OS package installs) are **skipped with a printed reason**, never silently treated as passing.
+Activates the repo's own `venv`/`.venv` first — never the caller's global PATH — so lint/format tools resolve to the same install CI actually uses, not whatever happens to be on `$PATH`. Parses every workflow file with `python3` + PyYAML (not a line-grep), extracts each job's `run:` steps, and executes them locally — honouring `working-directory` the same way GitHub Actions does. Steps that can only run in CI (GitHub Actions `${{ }}` contexts, `secrets.`, `gh release`, `$GITHUB_OUTPUT`/`$GITHUB_ENV`/`$GITHUB_STEP_SUMMARY`, OS package installs) are **skipped with a printed reason**, never silently treated as passing.
 
 Every executed step is judged by its **exit code**, exactly as CI does. Always exits 0 itself — this tool never blocks anything; the printed report is the signal. For a fail-closed pre-push gate, use the `pre-push-validation` skill instead.
 
@@ -68,6 +75,9 @@ bash github-actions-locally.sh --dry-run
 
 # Same discovery output as --dry-run, explicit alias
 bash github-actions-locally.sh --list
+
+# Install the pre-commit hook directly, without running anything first
+bash github-actions-locally.sh --install-hook
 ```
 
 ## Example (run against grimoire's own workflows)
@@ -104,14 +114,14 @@ If nothing runnable is found (e.g. every step is CI-only, or no workflows exist)
 
 ## Auto-fix
 
-On failure, if the failing command mentions `black` or `ruff`, the corresponding fixer runs (`black .` / `ruff check --fix .`) and the original command is re-run once to confirm. Any other failure is reported only — fix it manually and re-run.
+On failure, if the failing command mentions `black` or `ruff` **and a project `venv`/`.venv` was activated**, the corresponding fixer runs (`black .` / `ruff check --fix .`) and the original command is re-run once to confirm. Any other failure — or any failure when no venv was found — is reported only, never auto-fixed: running `black`/`ruff` from an arbitrary global install can silently apply a different formatting style than CI's pinned version wants, so this refuses rather than guesses.
 
 ---
 
 ## Limitations
 
-- **Auto-fix covers black/ruff only** — no prettier/eslint auto-fix yet (see Roadmap).
-- **Local tool versions can differ from CI's pinned versions.** This runs your local toolchain, not a copy of CI's exact environment — a passing local run doesn't guarantee an identical CI result if versions have drifted, and vice versa.
+- **Auto-fix covers black/ruff only, and only inside an activated venv** — no prettier/eslint auto-fix yet (see Roadmap), and no auto-fix at all if the repo has no `venv`/`.venv`.
+- **A venv doesn't guarantee an exact version match with CI** — only that it's not the caller's unrelated global PATH. If a stale venv hasn't been reinstalled since CI's pin last bumped, results can still diverge; compare `<tool> --version` against the workflow's install step if a result looks wrong.
 - **CI-only steps are skipped, not simulated.** Verify those in CI, not here.
 - **No job dependency graph.** `needs:` ordering and matrix (`strategy.matrix`) expansion aren't modelled — steps run in file order, not GitHub Actions' scheduling order.
 
@@ -119,7 +129,7 @@ On failure, if the failing command mentions `black` or `ruff`, the corresponding
 
 ## Integration with other skills
 
-- **pre-push-validation** — the fail-closed counterpart. Use that as an installed git hook to actually block bad pushes; use this skill for exploratory "what does CI currently say" runs that never block anything.
+- **pre-push-validation** — the fail-closed counterpart, installed as the blocking `pre-push` hook. This skill installs as `pre-commit` (different slot), so both compose: `pre-commit` surfaces issues on every commit without blocking, `pre-push` actually blocks a bad push.
 - **format-before-commit** — narrower, Python-only formatting check.
 - **github-morning-run** — use after pushing, to catch what CI found on the morning audit.
 
@@ -132,6 +142,9 @@ On failure, if the failing command mentions `black` or `ruff`, the corresponding
 - [x] Real execution of discovered `run:` steps, judged by exit code
 - [x] CI-only step detection (contexts, secrets, releases, OS package installs)
 - [x] Auto-fix for black/ruff with re-run confirmation
+- [x] Activate the target repo's own venv/.venv before running anything; disable auto-fix without one
+- [x] Distinct "toolchain issue" reporting for command-not-found / broken shim failures
+- [x] Self-installs a non-blocking pre-commit hook — prompts if interactive, auto-installs otherwise
 - [ ] Auto-fix for prettier/eslint (JS/TS projects)
 - [ ] Job dependency graph (`needs:`) and matrix expansion awareness
 - [ ] Caching of discovered jobs (skip re-parsing on each run)
