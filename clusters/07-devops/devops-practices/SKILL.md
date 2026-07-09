@@ -240,4 +240,4 @@ When a session reveals a new repeating practice:
 - [ ] Add CI workflow snippet that runs all three check scripts on PR
 - [ ] Add `--fix` mode to `check-clone-refs.sh` (auto-update refs to current VERSION)
 - [ ] Add GitHub Actions version-pinning check (not just docs, also workflow files)
-- [ ] Add scheduled CI template for periodic test execution
+- [x] Add scheduled CI template for periodic test execution — `validate.yml` now runs weekly (`schedule: cron`) in addition to push/PR
