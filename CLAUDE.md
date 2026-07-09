@@ -42,10 +42,14 @@ gh pr create ...
 gh pr merge <N> --squash --delete-branch
 git checkout main && git pull origin main
 git tag vX.Y.Z && git push origin vX.Y.Z
-gh release create vX.Y.Z ...
+# .github/workflows/release-on-tag.yml creates the GitHub Release automatically —
+# do NOT also run `gh release create` here, it will 422 on the now-existing tag.
 ```
 
-**Never skip the tag + release step.** VERSION file, git tag, and GitHub Release must all agree.
+**Never skip the tag step.** VERSION file, git tag, and GitHub Release must all agree — the
+tag push is what triggers `release-on-tag.yml` to create the release, so pushing the tag
+*is* the release step. If the workflow run fails to appear, check `gh run list --workflow
+release-on-tag.yml` before creating the release by hand.
 
 ---
 
