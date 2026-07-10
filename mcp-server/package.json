@@ -24,6 +24,6 @@
         "typescript-eslint": "8.62.1",
         "typescript": "6.0.3",
         "tsx": "4.22.5",
-        "vitest": "4.1.9"
+        "vitest": "4.1.10"
     }
 }
