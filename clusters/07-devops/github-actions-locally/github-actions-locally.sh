@@ -1,10 +1,20 @@
 #!/bin/bash
 # github-actions-locally.sh — Run GitHub Actions workflow jobs locally.
+#
 # Discovers .github/workflows/*.yml with a real YAML parser, extracts each
-# job's `run:` steps, executes them, and reports only what actually ran.
-# Auto-fixes failures where a known fixer exists (black, ruff), re-running to
-# confirm. Exits 0 regardless of pass/fail — the report is the signal, not
-# the exit code (unlike pre-push-validation, this does not block anything).
+# job's `run:` steps, executes them in file order (stopping a job at its
+# first failed step, as CI does), and reports only what actually ran.
+#
+# Core safety rule: this tool only *writes* (auto-fixes with black/ruff) when
+# it has *verified* its tool version matches what CI pins in the workflow.
+# Otherwise it reads and reports only — using a mismatched tool version and
+# then auto-fixing with it can corrupt correct files (CI's Black and yours can
+# format differently across versions). `--sync` builds CI's exact pinned
+# toolchain in an ephemeral venv (inside .git/, never your own venv) so
+# auto-fix becomes safe.
+#
+# Exits 0 regardless of pass/fail — the report is the signal, not the exit
+# code (unlike pre-push-validation, this never blocks anything).
 
 set -u
 
@@ -21,14 +31,147 @@ DRY_RUN=false
 LIST_ONLY=false
 JOB_TYPE="all"  # all, lint, test
 WORKFLOW_FILTER=""
+SYNC_REQUESTED=false  # --sync: build CI's pinned toolchain before running
+SYNC_ACTIVE=false     # set true once that ephemeral env is actually built
 
 # Results tracking
 declare -a PASSED_JOBS=()
 declare -a FAILED_JOBS=()
 declare -a FIXED_JOBS=()
 declare -a SKIPPED_JOBS=()
+declare -a SKIPPED_AFTER_FAILURE=()
+declare -a FAILED_JOB_KEYS=()  # bash 3.2 (macOS default) has no associative
+                               # arrays; linear-search this instead — job
+                               # counts are small enough that it's fine.
+declare -a PIN_TOOLS=()        # CI-pinned tool names, parsed from workflows'
+declare -a PIN_VERS=()         # own `pip install X==Y` / requirements files.
 RAN_ANY=false
-VENV_ACTIVE=false
+
+job_has_failed() {
+    local key="$1" k
+    # Guard against expanding an empty array under `set -u` — bash 3.2
+    # (macOS's stock /bin/bash) treats "${arr[@]}" on a never-populated
+    # array as an unbound-variable error, unlike bash 4+.
+    [[ ${#FAILED_JOB_KEYS[@]} -eq 0 ]] && return 1
+    for k in "${FAILED_JOB_KEYS[@]}"; do
+        [[ "$k" == "$key" ]] && return 0
+    done
+    return 1
+}
+
+# --- Tool version parity with CI -------------------------------------------
+# The core safety rule: this tool may only *write* (auto-fix) when it has
+# *verified* its tool version matches what CI pins. Otherwise it reads and
+# reports only. Everything below implements that check.
+
+# Version CI pins for a tool (parsed from the workflows), or "" if unpinned.
+pin_for_tool() {
+    local tool="$1" i
+    [[ ${#PIN_TOOLS[@]} -eq 0 ]] && { echo ""; return; }
+    for i in "${!PIN_TOOLS[@]}"; do
+        [[ "${PIN_TOOLS[$i]}" == "$tool" ]] && { echo "${PIN_VERS[$i]}"; return; }
+    done
+    echo ""
+}
+
+# Locally-resolved version of a tool (in the currently active env), or "".
+local_tool_version() {
+    local tool="$1" out
+    command -v "$tool" >/dev/null 2>&1 || { echo ""; return; }
+    out=$("$tool" --version 2>&1) || true
+    echo "$out" | grep -oE '[0-9]+\.[0-9]+(\.[0-9]+)?' | head -1
+}
+
+# Auto-fix is permitted only when the tool version is verified against CI's
+# pin — either because we synced CI's exact toolchain, or because the local
+# version already equals the pin. Unpinned-in-CI or not-installed => no.
+tool_can_autofix() {
+    local tool="$1" pin lv
+    [[ "$SYNC_ACTIVE" == true ]] && return 0
+    pin=$(pin_for_tool "$tool"); [[ -z "$pin" ]] && return 1
+    lv=$(local_tool_version "$tool"); [[ -z "$lv" ]] && return 1
+    [[ "$lv" == "$pin" ]]
+}
+
+# Does any runnable step actually invoke this tool? (So we only report on
+# tools the run will exercise.)
+runnable_mentions() {
+    local tool="$1" e b c
+    [[ ${#RUNNABLE[@]} -eq 0 ]] && return 1
+    for e in "${RUNNABLE[@]}"; do
+        b="${e##*|}"
+        c=$(echo "$b" | base64 -d 2>/dev/null)
+        [[ "$c" == *"$tool"* ]] && return 0
+    done
+    return 1
+}
+
+# Print one line of parity status for a fixable tool that the run will use.
+print_tool_status() {
+    local tool="$1" pin lv
+    runnable_mentions "$tool" || return 0
+    pin=$(pin_for_tool "$tool")
+    lv=$(local_tool_version "$tool")
+    if [[ "$SYNC_ACTIVE" == true && -n "$pin" ]]; then
+        echo -e "  ${GREEN}✓ $tool $pin${NC} — CI-matched (synced); auto-fix enabled"
+    elif [[ -z "$lv" ]]; then
+        echo -e "  ${YELLOW}• $tool not installed locally${NC} — its step will report a toolchain issue"
+    elif [[ -z "$pin" ]]; then
+        echo -e "  ${YELLOW}⚠ $tool $lv local; CI does not pin it${NC} — parity unverifiable, auto-fix disabled (report-only)"
+    elif [[ "$lv" == "$pin" ]]; then
+        echo -e "  ${GREEN}✓ $tool $lv${NC} matches CI pin — auto-fix enabled"
+    else
+        echo -e "  ${RED}⚠ $tool local $lv ≠ CI pin $pin${NC} — results may differ; auto-fix disabled (report-only). Re-run with ${BLUE}--sync${NC} to match CI."
+    fi
+}
+
+# Print the toolchain-vs-CI section, if the run uses any fixable tool.
+print_toolchain_section() {
+    runnable_mentions black || runnable_mentions ruff || return 0
+    echo -e "${BLUE}=== Toolchain vs CI ===${NC}"
+    print_tool_status black
+    print_tool_status ruff
+    echo ""
+}
+
+# --sync: build an ephemeral, CI-matched venv from the workflows' own pins.
+# Lives inside .git/ so it is never tracked, never in the work tree, and
+# never mutates the developer's own venv or global tools. Falls back to
+# report-only (returns non-zero) on any problem, never aborts the run.
+build_sync_env() {
+    if [[ ${#PIN_TOOLS[@]} -eq 0 ]]; then
+        echo -e "${YELLOW}--sync: no pinned versions found in any workflow — nothing to build; staying report-only.${NC}"
+        echo ""
+        return 1
+    fi
+    local git_dir venv_dir specs=() i
+    git_dir=$(git rev-parse --git-dir 2>/dev/null) || {
+        echo -e "${YELLOW}--sync: not inside a git repo — staying report-only.${NC}"; echo ""; return 1; }
+    venv_dir="$git_dir/gal-venv"
+
+    echo -e "${BLUE}=== --sync: building CI-matched environment ===${NC}"
+    echo "  location: $venv_dir (ephemeral, outside the work tree)"
+    if [[ ! -d "$venv_dir" ]]; then
+        if ! python3 -m venv "$venv_dir" >/dev/null 2>&1; then
+            echo -e "  ${RED}✗ could not create venv — staying report-only.${NC}"; echo ""; return 1
+        fi
+    fi
+    # shellcheck disable=SC1091
+    source "$venv_dir/bin/activate" 2>/dev/null || {
+        echo -e "  ${RED}✗ could not activate venv — staying report-only.${NC}"; echo ""; return 1; }
+
+    for i in "${!PIN_TOOLS[@]}"; do specs+=("${PIN_TOOLS[$i]}==${PIN_VERS[$i]}"); done
+    echo "  pip install ${specs[*]}"
+    if pip install --quiet --upgrade "${specs[@]}" >/dev/null 2>&1; then
+        SYNC_ACTIVE=true
+        echo -e "  ${GREEN}✓ CI-matched environment ready${NC} ($(command -v python3))"
+        echo ""
+        return 0
+    fi
+    echo -e "  ${RED}✗ pip install failed — staying report-only with existing tools.${NC}"
+    echo ""
+    return 1
+}
 
 INSTALL_HOOK_ONLY=false
 
@@ -40,6 +183,7 @@ while [[ $# -gt 0 ]]; do
         --lint) JOB_TYPE="lint"; shift ;;
         --test) JOB_TYPE="test"; shift ;;
         --workflow) WORKFLOW_FILTER="$2"; shift 2 ;;
+        --sync) SYNC_REQUESTED=true; shift ;;
         --install-hook) INSTALL_HOOK_ONLY=true; shift ;;
         *) REPO_ROOT="$1"; shift ;;
     esac
@@ -98,16 +242,13 @@ setup_python_env() {
     if [[ -f "venv/bin/activate" ]]; then
         # shellcheck disable=SC1091
         source venv/bin/activate >/dev/null 2>&1
-        VENV_ACTIVE=true
         echo -e "${GREEN}✓ Activated venv${NC} ($(command -v python3))"
     elif [[ -f ".venv/bin/activate" ]]; then
         # shellcheck disable=SC1091
         source .venv/bin/activate >/dev/null 2>&1
-        VENV_ACTIVE=true
         echo -e "${GREEN}✓ Activated .venv${NC} ($(command -v python3))"
     else
         echo -e "${YELLOW}⚠ No venv/.venv found — using PATH tools as-is.${NC}"
-        echo -e "${YELLOW}  Auto-fix (black/ruff) will be skipped: their version may not match CI's pinned one.${NC}"
     fi
 }
 
@@ -174,11 +315,38 @@ def workdir(doc, job, step):
 def b64(s):
     return base64.b64encode(s.encode()).decode()
 
+# Parse CI's pinned tool versions — the authoritative versions we must match
+# before we're allowed to auto-fix. Sources: inline `pip install X==Y` in a
+# run step, and requirements files it references via `-r <file>`.
+PIN_RE = re.compile(r'([A-Za-z0-9_.\-]+)==([0-9][A-Za-z0-9_.\-]*)')
+
+def extract_pins(cmd, wd, pins):
+    if 'install' not in cmd:
+        return
+    if 'pip' not in cmd and 'uv' not in cmd:
+        return
+    for m in PIN_RE.finditer(cmd):
+        pins.setdefault(m.group(1).lower(), m.group(2))
+    for m in re.finditer(r'-r\s+(\S+)', cmd):
+        rel = m.group(1)
+        for cand in ([os.path.join(wd, rel)] if wd else []) + [rel]:
+            try:
+                with open(cand) as rf:
+                    for line in rf:
+                        line = line.split('#', 1)[0].strip()
+                        rm = PIN_RE.match(line)
+                        if rm:
+                            pins.setdefault(rm.group(1).lower(), rm.group(2))
+                break
+            except OSError:
+                continue
+
 files = sorted(set(glob.glob('.github/workflows/*.yml') +
                    glob.glob('.github/workflows/*.yaml')))
 if wf_filter:
     files = [f for f in files if wf_filter in f]
 
+pins = {}
 with open(tmpfile, 'w') as out:
     for wf in files:
         try:
@@ -192,44 +360,56 @@ with open(tmpfile, 'w') as out:
         for job_name, job in doc['jobs'].items():
             if not isinstance(job, dict) or 'steps' not in job:
                 continue
+            run_step_idx = 0
             for step in job['steps']:
                 if not isinstance(step, dict) or 'run' not in step:
                     continue
-                step_name = step.get('name') or job_name
-                cmd = str(step['run']).strip()
-                status, reason = classify(cmd)
+                run_step_idx += 1
+                # Unnamed steps fall back to the job name, which collides
+                # when a job has multiple unnamed run: steps (e.g. npm ci /
+                # npx tsc / npm run lint all named "build") — number them so
+                # a failure can be pinned to the actual step that failed.
+                step_name = step.get('name') or f'{job_name} (step {run_step_idx})'
+                raw_cmd = str(step['run']).strip()
                 wd = workdir(doc, job, step)
+                extract_pins(raw_cmd, wd, pins)
+                status, reason = classify(raw_cmd)
+                cmd = raw_cmd
                 if wd and wd != '.':
                     cmd = f'cd {shlex.quote(wd)} || exit 1\n{cmd}'
                 out.write(f'{status}|{b64(wf_name)}|{b64(job_name)}|{b64(step_name)}|{b64(cmd)}|{b64(reason)}\n')
+    for name, ver in pins.items():
+        out.write(f'PIN|{b64(name)}|{b64(ver)}\n')
 PYEOF
 }
 
-# Attempt auto-fixes for common tools, then re-run to confirm. Refuses to run
-# unless a project venv was activated — auto-fixing with whatever black/ruff
-# happens to be on the caller's global PATH can silently apply a different
-# formatting style than the one CI's pinned version wants, corrupting files
-# that were actually correct. Reporting the failure and stopping is safer
-# than "fixing" it with the wrong tool.
+# Attempt auto-fixes for common tools, then re-run to confirm. The safety
+# gate is tool_can_autofix(): we only ever write to source files with a tool
+# whose version is *verified* against CI's pin (either synced, or the local
+# version already equals the pin). Auto-fixing with an unverified version can
+# silently apply a formatting style CI doesn't want and corrupt correct files.
 attempt_fix() {
-    local job_name="$1"
-    local command="$2"
+    local job_name="$1" command="$2" tool=""
+    [[ "$command" == *black* ]] && tool="black"
+    [[ "$command" == *ruff*  ]] && tool="ruff"
+    [[ -z "$tool" ]] && return 1   # nothing we know how to fix
 
-    if [[ "$VENV_ACTIVE" != true ]]; then
-        echo -e "  ${YELLOW}Skipping auto-fix: no project venv active, won't risk the wrong tool version.${NC}"
+    if ! tool_can_autofix "$tool"; then
+        echo -e "  ${YELLOW}Auto-fix skipped ($tool): version not verified against CI's pin — report-only.${NC}"
+        echo -e "  ${YELLOW}  Re-run with --sync to build CI's pinned toolchain and enable fixes.${NC}"
         return 1
     fi
 
-    if [[ "$command" =~ black ]]; then
-        echo "  Attempting auto-fix with black ($(command -v black))..."
+    if [[ "$tool" == "black" ]]; then
+        echo "  Attempting auto-fix with black ($(command -v black), CI-matched)..."
         if black . >/dev/null 2>&1 && eval "$command" >/dev/null 2>&1; then
             echo -e "  ${GREEN}✓ Black auto-fixed files${NC}"
             FIXED_JOBS+=("$job_name (black)")
             PASSED_JOBS+=("$job_name")
             return 0
         fi
-    elif [[ "$command" =~ ruff ]]; then
-        echo "  Attempting auto-fix with ruff ($(command -v ruff))..."
+    else
+        echo "  Attempting auto-fix with ruff ($(command -v ruff), CI-matched)..."
         if ruff check --fix . >/dev/null 2>&1 && eval "$command" >/dev/null 2>&1; then
             echo -e "  ${GREEN}✓ Ruff auto-fixed issues${NC}"
             FIXED_JOBS+=("$job_name (ruff)")
@@ -270,12 +450,20 @@ run_job() {
 
     echo -e "${RED}✗ FAIL${NC} (exit $exit_code)"
     echo "$output" | head -20
-    FAILED_JOBS+=("$job_name")
 
+    # Try auto-fix first; only record a hard failure if it doesn't resolve.
+    # (The old code added to FAILED_JOBS up front then blanked the slot on a
+    # successful fix, leaving an empty element that inflated the failed count.)
     if attempt_fix "$job_name" "$command"; then
-        # attempt_fix already recorded success; undo the failure record.
-        FAILED_JOBS=("${FAILED_JOBS[@]/$job_name}")
+        return 0
     fi
+
+    FAILED_JOBS+=("$job_name")
+    # bash quirk: `if cond; then body; fi` with a false condition and no else
+    # returns 0, not the condition's exit status — so this needs an explicit
+    # failure return, or callers checking run_job's exit code (the stop-on-
+    # first-failure logic in main()) would see a false "success".
+    return 1
 }
 
 generate_report() {
@@ -292,8 +480,9 @@ generate_report() {
     local failed=${#FAILED_JOBS[@]}
     local fixed=${#FIXED_JOBS[@]}
     local skipped=${#SKIPPED_JOBS[@]}
+    local skipped_after_failure=${#SKIPPED_AFTER_FAILURE[@]}
 
-    echo "Ran: $((passed + failed)) executed, $passed passed, $failed failed, $skipped skipped (CI-only)"
+    echo "Ran: $((passed + failed)) executed, $passed passed, $failed failed, $skipped skipped (CI-only), $skipped_after_failure skipped (job already failed)"
 
     if [[ $fixed -gt 0 ]]; then
         echo -e "${YELLOW}Auto-fixed: $fixed job(s)${NC}"
@@ -306,6 +495,11 @@ generate_report() {
             [[ -z "$job" ]] && continue
             echo "  - $job"
         done
+    fi
+
+    if [[ $skipped_after_failure -gt 0 ]]; then
+        echo -e "${YELLOW}Not run — job already failed at an earlier step: $skipped_after_failure step(s)${NC}"
+        for job in "${SKIPPED_AFTER_FAILURE[@]}"; do echo "  - $job"; done
     fi
 
     if [[ $failed -eq 0 ]]; then
@@ -359,14 +553,23 @@ main() {
 
     # Build a printable job list, applying --lint/--test filtering by job name.
     declare -a DISPLAY_LINES=()
-    declare -a RUNNABLE=()  # index-parallel: "status|job|step|cmd"
+    declare -a RUNNABLE=()  # index-parallel: "job_key|display_name|b64cmd"
     while IFS='|' read -r status b64wf b64job b64step b64cmd b64reason; do
         [[ -z "$status" ]] && continue
-        local job step wf class
+
+        # PIN lines carry CI's pinned tool versions: PIN|b64(tool)|b64(version).
+        if [[ "$status" == "PIN" ]]; then
+            PIN_TOOLS+=("$(echo "$b64wf" | base64 -d)")
+            PIN_VERS+=("$(echo "$b64job" | base64 -d)")
+            continue
+        fi
+
+        local job step wf class job_key
         job=$(echo "$b64job" | base64 -d)
         step=$(echo "$b64step" | base64 -d)
         wf=$(echo "$b64wf" | base64 -d)
         class=$(classify_job "$job")
+        job_key="${wf}::${job}"
 
         if [[ "$JOB_TYPE" != "all" && "$JOB_TYPE" != "$class" ]]; then
             continue
@@ -381,18 +584,20 @@ main() {
         fi
 
         DISPLAY_LINES+=("RUN|$wf › $job › $step|")
-        RUNNABLE+=("$wf › $job › $step|$b64cmd")
+        RUNNABLE+=("${job_key}|${wf} › ${job} › ${step}|${b64cmd}")
     done < "$TMPFILE"
 
     echo -e "${BLUE}=== Discovered ===${NC}"
-    for line in "${DISPLAY_LINES[@]}"; do
-        IFS='|' read -r st name reason <<< "$line"
-        if [[ "$st" == "SKIP" ]]; then
-            echo -e "  ${YELLOW}skip${NC}  $name  ($reason)"
-        else
-            echo -e "  ${GREEN}run${NC}   $name"
-        fi
-    done
+    if [[ ${#DISPLAY_LINES[@]} -gt 0 ]]; then
+        for line in "${DISPLAY_LINES[@]}"; do
+            IFS='|' read -r st name reason <<< "$line"
+            if [[ "$st" == "SKIP" ]]; then
+                echo -e "  ${YELLOW}skip${NC}  $name  ($reason)"
+            else
+                echo -e "  ${GREEN}run${NC}   $name"
+            fi
+        done
+    fi
     echo ""
     echo "Runnable: ${#RUNNABLE[@]}   Skipped (CI-only): ${#SKIPPED_JOBS[@]}"
     echo ""
@@ -408,12 +613,35 @@ main() {
         exit 0
     fi
 
+    # If asked, build CI's pinned toolchain first (upgrades mismatched tools
+    # to "faithful" so auto-fix becomes safe). Falls back to report-only on
+    # any failure. Then show, per fixable tool, whether we match CI.
+    if [[ "$SYNC_REQUESTED" == true ]]; then
+        build_sync_env || true
+    fi
+    print_toolchain_section
+
     for entry in "${RUNNABLE[@]}"; do
-        local name b64cmd cmd
-        name="${entry%%|*}"
-        b64cmd="${entry#*|}"
+        local job_key rest name b64cmd cmd
+        job_key="${entry%%|*}"
+        rest="${entry#*|}"
+        name="${rest%%|*}"
+        b64cmd="${rest#*|}"
+
+        # Real CI stops a job at its first failed step — later steps never
+        # run, so a stale local node_modules/venv/etc. can't make them look
+        # like they passed. Mirror that instead of running every step
+        # unconditionally regardless of an earlier failure in the same job.
+        if job_has_failed "$job_key"; then
+            echo -e "${YELLOW}Skipping: $name${NC} (earlier step in this job already failed)"
+            SKIPPED_AFTER_FAILURE+=("$name")
+            continue
+        fi
+
         cmd=$(echo "$b64cmd" | base64 -d)
-        run_job "$name" "$cmd"
+        if ! run_job "$name" "$cmd"; then
+            FAILED_JOB_KEYS+=("$job_key")
+        fi
     done
 
     generate_report

@@ -15,7 +15,9 @@ Run GitHub Actions workflow jobs locally before pushing. Discovers every `.githu
 
 ## What this skill does
 
-Activates the repo's own `venv`/`.venv` first — never the caller's global PATH — so lint/format tools resolve to the same install CI actually uses, not whatever happens to be on `$PATH`. Parses every workflow file with `python3` + PyYAML (not a line-grep), extracts each job's `run:` steps, and executes them locally — honouring `working-directory` the same way GitHub Actions does. Steps that can only run in CI (GitHub Actions `${{ }}` contexts, `secrets.`, `gh release`, `$GITHUB_OUTPUT`/`$GITHUB_ENV`/`$GITHUB_STEP_SUMMARY`, OS package installs) are **skipped with a printed reason**, never silently treated as passing.
+Parses every workflow file with `python3` + PyYAML (not a line-grep), extracts each job's `run:` steps, and executes them locally — honouring `working-directory` the same way GitHub Actions does, in file order, **stopping a job at its first failed step** just like CI (so stale local state can't make later steps look like they passed). Steps that can only run in CI (GitHub Actions `${{ }}` contexts, `secrets.`, `gh release`, `$GITHUB_OUTPUT`/`$GITHUB_ENV`/`$GITHUB_STEP_SUMMARY`, OS package installs) are **skipped with a printed reason**, never silently treated as passing.
+
+**The safety rule that makes it trustworthy:** it only ever *writes* to your files (auto-fix with black/ruff) when it has **verified its tool version matches what CI pins** in the workflow. It parses CI's pins (`pip install X==Y`, `-r requirements*.txt`), compares them to your locally-resolved versions, and if they don't match it reports the failure but **refuses to auto-fix** — because a mismatched formatter version can rewrite correct files to a style CI doesn't want. Pass `--sync` to build CI's exact pinned toolchain in an ephemeral venv (inside `.git/`, never touching your own env) and enable safe auto-fixing.
 
 Every executed step is judged by its **exit code**, exactly as CI does. Always exits 0 itself — this tool never blocks anything; the printed report is the signal. For a fail-closed pre-push gate, use the `pre-push-validation` skill instead.
 
@@ -76,6 +78,10 @@ bash github-actions-locally.sh --dry-run
 # Same discovery output as --dry-run, explicit alias
 bash github-actions-locally.sh --list
 
+# Build CI's exact pinned toolchain (ephemeral venv in .git/) and run against
+# it — makes mismatched black/ruff match CI, enabling safe auto-fix
+bash github-actions-locally.sh --sync
+
 # Install the pre-commit hook directly, without running anything first
 bash github-actions-locally.sh --install-hook
 ```
@@ -112,18 +118,25 @@ If nothing runnable is found (e.g. every step is CI-only, or no workflows exist)
 
 ---
 
-## Auto-fix
+## Auto-fix (version-gated)
 
-On failure, if the failing command mentions `black` or `ruff` **and a project `venv`/`.venv` was activated**, the corresponding fixer runs (`black .` / `ruff check --fix .`) and the original command is re-run once to confirm. Any other failure — or any failure when no venv was found — is reported only, never auto-fixed: running `black`/`ruff` from an arbitrary global install can silently apply a different formatting style than CI's pinned version wants, so this refuses rather than guesses.
+On a `black`/`ruff` failure, the fixer runs **only if the local tool version is verified to match CI's pin** — either because your venv already has the pinned version, or because you passed `--sync` to build one. On a mismatch (or CI leaving the tool unpinned), the failure is reported but **never auto-fixed**: a different formatter version can rewrite correct files to a style CI doesn't want, so the tool refuses rather than guesses. This is the guarantee that it can't corrupt your working tree with the wrong formatter.
+
+The report tells you exactly where you stand per tool, e.g.:
+```
+=== Toolchain vs CI ===
+  ⚠ black local 26.3.1 ≠ CI pin 24.4.2 — results may differ; auto-fix disabled (report-only). Re-run with --sync to match CI.
+```
 
 ---
 
 ## Limitations
 
-- **Auto-fix covers black/ruff only, and only inside an activated venv** — no prettier/eslint auto-fix yet (see Roadmap), and no auto-fix at all if the repo has no `venv`/`.venv`.
-- **A venv doesn't guarantee an exact version match with CI** — only that it's not the caller's unrelated global PATH. If a stale venv hasn't been reinstalled since CI's pin last bumped, results can still diverge; compare `<tool> --version` against the workflow's install step if a result looks wrong.
+- **Version parity is verified for black/ruff only.** Other tools (pytest, mypy, eslint…) run with whatever's on PATH/in the venv and aren't version-checked — but the tool never *writes* with them, so it's a reporting caveat, not a corruption risk.
+- **Pin detection covers `pip install X==Y` and `-r requirements*.txt`.** Pins expressed via `pyproject.toml`/`poetry.lock`/constraints files or baked into a container read as "CI unpinned" → report-only.
+- **Without a venv and without `--sync`, `pip install` steps run against your ambient Python** (they're real CI commands) and can touch your user/global site-packages. Use a project `venv`/`.venv` or `--sync` to keep installs contained.
 - **CI-only steps are skipped, not simulated.** Verify those in CI, not here.
-- **No job dependency graph.** `needs:` ordering and matrix (`strategy.matrix`) expansion aren't modelled — steps run in file order, not GitHub Actions' scheduling order.
+- **No cross-job graph.** `needs:` ordering and `strategy.matrix` aren't modelled; steps run in file order. Stop-on-failure is enforced within a job, not across dependent jobs.
 
 ---
 
@@ -142,10 +155,14 @@ On failure, if the failing command mentions `black` or `ruff` **and a project `v
 - [x] Real execution of discovered `run:` steps, judged by exit code
 - [x] CI-only step detection (contexts, secrets, releases, OS package installs)
 - [x] Auto-fix for black/ruff with re-run confirmation
-- [x] Activate the target repo's own venv/.venv before running anything; disable auto-fix without one
+- [x] Activate the target repo's own venv/.venv before running anything
 - [x] Distinct "toolchain issue" reporting for command-not-found / broken shim failures
 - [x] Self-installs a non-blocking pre-commit hook — prompts if interactive, auto-installs otherwise
+- [x] Stop a job at its first failed step (mirror CI); disambiguate unnamed steps
+- [x] Parse CI's pinned versions; gate auto-fix on verified version match
+- [x] `--sync`: build CI's exact pinned toolchain in an ephemeral `.git/` venv
 - [ ] Auto-fix for prettier/eslint (JS/TS projects)
+- [ ] Pin detection for pyproject.toml / poetry.lock / constraints files
 - [ ] Job dependency graph (`needs:`) and matrix expansion awareness
 - [ ] Caching of discovered jobs (skip re-parsing on each run)
 
