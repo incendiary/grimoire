@@ -1,15 +1,15 @@
-# github-actions-locally
+# local-ci
 
-> **Cluster:** 07-devops | **Status:** complete | **Updated:** 2026-07-09
+> **Cluster:** 07-devops | **Status:** complete | **Updated:** 2026-07-10 | **Formerly:** `github-actions-locally`
 
-Run GitHub Actions workflow jobs locally before pushing. Discovers every `.github/workflows/*.yml` with a real YAML parser, executes each job's `run:` steps, auto-fixes what it can (black, ruff), and reports **only what actually ran** — never a fake pass for work it skipped.
+Run your GitHub Actions workflows locally before pushing. Discovers every `.github/workflows/*.yml` with a real YAML parser, executes each job's `run:` steps, auto-fixes what it can (black, ruff), and reports **only what actually ran** — never a fake pass for work it skipped.
 
-> **Self-installs a `pre-commit` hook — informational only, never blocks.** After a run with
-> no hook present, it installs one automatically: asks first if there's a terminal to ask on,
-> installs without asking otherwise (safe, since this tool always exits 0). Deliberately a
-> different hook slot than `pre-push-validation`'s blocking `pre-push` hook — install both and
-> they compose: `pre-commit` surfaces issues per-commit, `pre-push` actually blocks a bad push.
-> Uninstall any time with `rm .git/hooks/pre-commit`.
+> **Two hook modes in one skill, and it never clobbers an existing hook.**
+> `--install-hook pre-commit` = fast lint, informational (never blocks a commit).
+> `--install-hook pre-push` = full workflow, fail-closed (`--gate`, blocks a red push) — also the
+> auto-install default on a normal run. A pre-existing hook in the slot (the pre-commit framework,
+> gitleaks, your own) is preserved as `.git/hooks/<slot>.local-ci-prev` and **still runs first** —
+> installs *complement*, they don't overwrite. Uninstall with `rm .git/hooks/<slot>`.
 
 ---
 
@@ -19,7 +19,7 @@ Parses every workflow file with `python3` + PyYAML (not a line-grep), extracts e
 
 **The safety rule that makes it trustworthy:** it only ever *writes* to your files (auto-fix with black/ruff) when it has **verified its tool version matches what CI pins** in the workflow. It parses CI's pins (`pip install X==Y`, `-r requirements*.txt`), compares them to your locally-resolved versions, and if they don't match it reports the failure but **refuses to auto-fix** — because a mismatched formatter version can rewrite correct files to a style CI doesn't want. Pass `--sync` to build CI's exact pinned toolchain in an ephemeral venv (inside `.git/`, never touching your own env) and enable safe auto-fixing.
 
-Every executed step is judged by its **exit code**, exactly as CI does. Always exits 0 itself — this tool never blocks anything; the printed report is the signal. For a fail-closed pre-push gate, use the `pre-push-validation` skill instead.
+Every executed step is judged by its **exit code**. A normal run always exits 0 (never breaks your shell); under `--gate` — what the installed `pre-push` hook runs — it exits non-zero on a genuine failure so the push is blocked.
 
 **Before:** Push → wait for CI → find a failure → fix → push again → repeat
 **After:** Run locally → see the same failures immediately → fix (or let it auto-fix black/ruff issues) → push
@@ -48,12 +48,12 @@ bash install-all.sh --update   # update an existing copy
 
 After running `bash build.sh`, reference in Copilot Chat:
 ```
-#github-actions-locally
+#local-ci
 ```
 
 ### MCP (VS Code / JetBrains)
 
-Registered as the `github-actions-locally` action tool in grimoire's MCP server (`mcp-server/registry.json`). Build with `cd mcp-server && npm ci && npm run build`, then invoke the `github-actions-locally` tool from your MCP client.
+Registered as the `local-ci` action tool in grimoire's MCP server (`mcp-server/registry.json`). Build with `cd mcp-server && npm ci && npm run build`, then invoke the `local-ci` tool from your MCP client.
 
 ---
 
@@ -61,29 +61,27 @@ Registered as the `github-actions-locally` action tool in grimoire's MCP server 
 
 ```bash
 # Discover and run every runnable step in every workflow
-bash github-actions-locally.sh
+bash local-ci.sh
 
-# Only steps from jobs whose name looks lint-related
-bash github-actions-locally.sh --lint
-
-# Only steps from jobs whose name looks test-related
-bash github-actions-locally.sh --test
+# Only steps from jobs whose name looks lint-related / test-related
+bash local-ci.sh --lint
+bash local-ci.sh --test
 
 # Restrict to one workflow file (substring match on filename)
-bash github-actions-locally.sh --workflow validate.yml
+bash local-ci.sh --workflow validate.yml
 
-# Show what would run, without executing anything
-bash github-actions-locally.sh --dry-run
-
-# Same discovery output as --dry-run, explicit alias
-bash github-actions-locally.sh --list
+# Show what would run, without executing anything (side-effect free)
+bash local-ci.sh --dry-run
+bash local-ci.sh --list
 
 # Build CI's exact pinned toolchain (ephemeral venv in .git/) and run against
 # it — makes mismatched black/ruff match CI, enabling safe auto-fix
-bash github-actions-locally.sh --sync
+bash local-ci.sh --sync
 
-# Install the pre-commit hook directly, without running anything first
-bash github-actions-locally.sh --install-hook
+# Install a hook directly — chains any existing hook, never clobbers:
+bash local-ci.sh --install-hook pre-commit   # fast lint, informational
+bash local-ci.sh --install-hook pre-push      # full CI, fail-closed gate
+bash local-ci.sh --install-hook               # defaults to pre-push
 ```
 
 ## Example (run against grimoire's own workflows)
@@ -130,6 +128,17 @@ The report tells you exactly where you stand per tool, e.g.:
 
 ---
 
+## Hooks — commit vs push, chained not clobbered
+
+| Slot | Install | Runs | Behaviour |
+|------|---------|------|-----------|
+| `pre-commit` | `--install-hook pre-commit` | fast **lint** subset | informational — never blocks a commit |
+| `pre-push` | `--install-hook pre-push` (auto-install default) | **full** workflow (`--gate`) | fail-closed — blocks a red push (`git push --no-verify` bypasses once) |
+
+If a slot already holds a hook this skill didn't write (the pre-commit framework, gitleaks, your own), it's moved to `.git/hooks/<slot>.local-ci-prev` and the installed wrapper **runs it first and honours its exit code** — so a chained secret-scanner keeps its blocking power. Installing our own hook again is idempotent. On a normal run with no local-ci hook anywhere, the **pre-push gate** is auto-installed (chaining anything present). This fixes the earlier trap where installing silently overwrote a framework's `pre-commit` hook and disabled secret scanning.
+
+---
+
 ## Limitations
 
 - **Version parity is verified for black/ruff only.** Other tools (pytest, mypy, eslint…) run with whatever's on PATH/in the venv and aren't version-checked — but the tool never *writes* with them, so it's a reporting caveat, not a corruption risk.
@@ -142,7 +151,7 @@ The report tells you exactly where you stand per tool, e.g.:
 
 ## Integration with other skills
 
-- **pre-push-validation** — the fail-closed counterpart, installed as the blocking `pre-push` hook. This skill installs as `pre-commit` (different slot), so both compose: `pre-commit` surfaces issues on every commit without blocking, `pre-push` actually blocks a bad push.
+- **pre-push-validation** — an older `validate.yml`-focused fail-closed pre-push gate. `local-ci` now covers the same ground more generally and installs its own fail-closed `pre-push` gate, so a repo using `local-ci` usually won't also need it. Both write `.git/hooks/pre-push` — pick one owner per repo.
 - **format-before-commit** — narrower, Python-only formatting check.
 - **github-morning-run** — use after pushing, to catch what CI found on the morning audit.
 
@@ -157,10 +166,12 @@ The report tells you exactly where you stand per tool, e.g.:
 - [x] Auto-fix for black/ruff with re-run confirmation
 - [x] Activate the target repo's own venv/.venv before running anything
 - [x] Distinct "toolchain issue" reporting for command-not-found / broken shim failures
-- [x] Self-installs a non-blocking pre-commit hook — prompts if interactive, auto-installs otherwise
 - [x] Stop a job at its first failed step (mirror CI); disambiguate unnamed steps
 - [x] Parse CI's pinned versions; gate auto-fix on verified version match
 - [x] `--sync`: build CI's exact pinned toolchain in an ephemeral `.git/` venv
+- [x] Two hook slots — fast `pre-commit` lint / fail-closed `pre-push` gate (`--gate`)
+- [x] Chaining hook installer — preserves any existing hook, never clobbers
+- [x] Renamed `github-actions-locally` → `local-ci`
 - [ ] Auto-fix for prettier/eslint (JS/TS projects)
 - [ ] Pin detection for pyproject.toml / poetry.lock / constraints files
 - [ ] Job dependency graph (`needs:`) and matrix expansion awareness
@@ -171,4 +182,4 @@ The report tells you exactly where you stand per tool, e.g.:
 ## References
 
 - [SKILL.md](SKILL.md) — full behaviour reference
-- `github-actions-locally.sh` — the script
+- `local-ci.sh` — the script

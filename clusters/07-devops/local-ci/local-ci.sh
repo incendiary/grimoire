@@ -1,20 +1,27 @@
 #!/bin/bash
-# github-actions-locally.sh — Run GitHub Actions workflow jobs locally.
+# local-ci.sh — Run your GitHub Actions workflows locally, before you push.
 #
 # Discovers .github/workflows/*.yml with a real YAML parser, extracts each
 # job's `run:` steps, executes them in file order (stopping a job at its
 # first failed step, as CI does), and reports only what actually ran.
 #
-# Core safety rule: this tool only *writes* (auto-fixes with black/ruff) when
+# Core safety rule (writing): only *writes* (auto-fixes with black/ruff) when
 # it has *verified* its tool version matches what CI pins in the workflow.
 # Otherwise it reads and reports only — using a mismatched tool version and
 # then auto-fixing with it can corrupt correct files (CI's Black and yours can
 # format differently across versions). `--sync` builds CI's exact pinned
-# toolchain in an ephemeral venv (inside .git/, never your own venv) so
-# auto-fix becomes safe.
+# toolchain in an ephemeral venv (inside .git/, never your own venv).
 #
-# Exits 0 regardless of pass/fail — the report is the signal, not the exit
-# code (unlike pre-push-validation, this never blocks anything).
+# Hooks (never clobber): can install itself into a git hook slot —
+#   --install-hook pre-commit  → fast lint subset, informational (never blocks)
+#   --install-hook pre-push    → full run, fail-closed (--gate; blocks a red push)
+# A pre-existing hook in the slot (e.g. the pre-commit framework / gitleaks) is
+# preserved as a sidecar and still runs first — installs COMPLEMENT, never
+# overwrite. A normal run auto-installs the pre-push gate if no local-ci hook
+# exists yet.
+#
+# Exit code: 0 by default (a normal run never breaks your shell). With --gate,
+# non-zero on a genuine check failure, so the pre-push hook blocks the push.
 
 set -u
 
@@ -33,6 +40,8 @@ JOB_TYPE="all"  # all, lint, test
 WORKFLOW_FILTER=""
 SYNC_REQUESTED=false  # --sync: build CI's pinned toolchain before running
 SYNC_ACTIVE=false     # set true once that ephemeral env is actually built
+GATE=false            # --gate: exit non-zero on real failures (for a blocking hook)
+HARD_FAILURES=0       # count of genuine check failures (excludes local toolchain gaps)
 
 # Results tracking
 declare -a PASSED_JOBS=()
@@ -174,6 +183,7 @@ build_sync_env() {
 }
 
 INSTALL_HOOK_ONLY=false
+INSTALL_HOOK_SLOT="pre-push"   # default slot for --install-hook / auto-install
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
@@ -184,7 +194,15 @@ while [[ $# -gt 0 ]]; do
         --test) JOB_TYPE="test"; shift ;;
         --workflow) WORKFLOW_FILTER="$2"; shift 2 ;;
         --sync) SYNC_REQUESTED=true; shift ;;
-        --install-hook) INSTALL_HOOK_ONLY=true; shift ;;
+        --gate) GATE=true; shift ;;
+        --install-hook)
+            INSTALL_HOOK_ONLY=true
+            # Optional slot argument: --install-hook pre-commit|pre-push
+            case "${2:-}" in
+                pre-commit|pre-push) INSTALL_HOOK_SLOT="$2"; shift 2 ;;
+                *) shift ;;
+            esac
+            ;;
         *) REPO_ROOT="$1"; shift ;;
     esac
 done
@@ -194,42 +212,93 @@ cd "$REPO_ROOT" || exit 1
 # Absolute path to this script, so the installed hook works from any repo layout.
 SCRIPT_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/$(basename "${BASH_SOURCE[0]}")"
 
-# Installs a pre-commit hook (never pre-push — pre-push-validation already
-# owns that slot, and a single hook file can't serve two independent
-# installers). Safe to auto-install without asking: this tool always exits 0,
-# so the hook can never block a commit, only surface information.
-install_hook() {
-    local hook_file=".git/hooks/pre-commit"
-    mkdir -p "$(dirname "$hook_file")"
-    cat > "$hook_file" <<HOOK
-#!/bin/bash
-# Installed by github-actions-locally. Informational only — never blocks
-# (the underlying script always exits 0).
-cd "\$(git rev-parse --show-toplevel)" || exit 0
-bash "$SCRIPT_PATH"
-exit 0
-HOOK
-    chmod +x "$hook_file"
-    echo -e "${GREEN}✓ pre-commit hook installed${NC} → $hook_file"
-    echo "   Informational only — never blocks a commit."
-    echo "   Uninstall: rm $hook_file"
+HOOK_MARKER="# managed-by: local-ci"
+
+# True if our hook is already installed in either slot.
+have_our_hook() {
+    grep -q "$HOOK_MARKER" .git/hooks/pre-commit 2>/dev/null && return 0
+    grep -q "$HOOK_MARKER" .git/hooks/pre-push   2>/dev/null && return 0
+    return 1
 }
 
-# Offer or auto-install the hook, once, if nothing is already there.
-# Interactive (TTY): ask. Non-interactive (e.g. invoked by an agent, or as
-# a hook itself): install without asking, since it's always non-blocking —
-# unlike pre-push-validation's blocking hook, there's no downside to silently
-# adding this one, only to silently skipping it and staying uncovered.
+# Write our wrapper into a slot, *complementing* whatever is already there —
+# never clobbering it. A pre-existing foreign hook (e.g. the pre-commit
+# framework / gitleaks) is preserved as a sidecar and still runs first; our
+# wrapper chains it. Our own hook is simply regenerated (idempotent).
+install_to_slot() {
+    local slot="$1" invocation="$2"
+    local hook=".git/hooks/$slot"
+    local sidecar=".git/hooks/${slot}.local-ci-prev"
+    mkdir -p ".git/hooks"
+
+    if [[ -e "$hook" ]] && ! grep -q "$HOOK_MARKER" "$hook" 2>/dev/null; then
+        # Foreign hook present — preserve it, never destroy it.
+        if [[ -e "$sidecar" ]]; then
+            echo -e "  ${YELLOW}note: a foreign $slot hook reappeared; keeping it as ${slot}.local-ci-prev (prior sidecar overwritten).${NC}"
+        fi
+        mv "$hook" "$sidecar"
+        chmod +x "$sidecar" 2>/dev/null || true
+        echo -e "  ${BLUE}chained existing $slot hook${NC} → ${slot}.local-ci-prev (still runs first)"
+    fi
+
+    # The wrapper always runs the sidecar first (if present) and honours its
+    # exit code, so a chained gitleaks/framework hook keeps its blocking power.
+    cat > "$hook" <<HOOK
+#!/bin/bash
+$HOOK_MARKER — do not remove this line; it marks the hook as ours.
+# Runs any pre-existing hook first (preserved as ${slot}.local-ci-prev),
+# then local-ci. Regenerate: bash "$SCRIPT_PATH" --install-hook $slot
+_lci_dir="\$(cd "\$(dirname "\$0")" && pwd)"
+_lci_prev="\$_lci_dir/${slot}.local-ci-prev"
+if [ -x "\$_lci_prev" ]; then
+  "\$_lci_prev" "\$@" || exit \$?
+fi
+cd "\$(git rev-parse --show-toplevel)" || exit 0
+$invocation
+HOOK
+    chmod +x "$hook"
+}
+
+# Install our hook into a slot with slot-appropriate behaviour:
+#   pre-commit → fast lint subset, informational (never blocks)
+#   pre-push   → full run, fail-closed (--gate: blocks a red push)
+install_hook() {
+    local slot="${1:-pre-push}"
+    case "$slot" in
+        pre-commit)
+            install_to_slot pre-commit \
+"bash \"$SCRIPT_PATH\" --lint || true
+exit 0"
+            echo -e "${GREEN}✓ pre-commit hook installed${NC} (fast lint, informational — never blocks)"
+            ;;
+        pre-push)
+            install_to_slot pre-push \
+"exec bash \"$SCRIPT_PATH\" --gate"
+            echo -e "${GREEN}✓ pre-push hook installed${NC} (full CI, fail-closed — blocks a red push; bypass once with 'git push --no-verify')"
+            ;;
+        *)
+            echo -e "${RED}unknown hook slot: $slot${NC} (use pre-commit or pre-push)"
+            return 1
+            ;;
+    esac
+    echo "   Uninstall: rm .git/hooks/$slot   (if it chained a prior hook, mv .git/hooks/${slot}.local-ci-prev back)"
+}
+
+# On a normal run with no local-ci hook anywhere, auto-install the pre-push
+# gate — the correct slot for "run CI before pushing", usually free (frameworks
+# live in pre-commit), and it *chains* rather than clobbers anything present.
+# Interactive: ask. Non-interactive: install (chaining keeps it safe).
 maybe_install_hook() {
-    [[ -f ".git/hooks/pre-commit" ]] && return 0
+    have_our_hook && return 0
     if [[ -t 0 ]]; then
-        echo -e "${BLUE}Install pre-commit hook to run this automatically (informational, never blocks)?${NC}"
+        echo -e "${BLUE}Install the pre-push CI gate (full run, fail-closed; chains any existing hook)?${NC}"
         read -rp "Install? (y/n) " -n 1 reply
         echo ""
-        [[ "$reply" =~ ^[Yy]$ ]] && install_hook
+        [[ "$reply" =~ ^[Yy]$ ]] && install_hook pre-push
+        echo -e "${YELLOW}Tip: also 'local-ci.sh --install-hook pre-commit' for a fast per-commit lint.${NC}"
     else
-        echo -e "${YELLOW}No pre-commit hook found — installing one automatically (non-interactive; this tool never blocks, so it's safe to add without asking).${NC}"
-        install_hook
+        echo -e "${YELLOW}No local-ci hook found — installing the pre-push CI gate (chains any existing hook, never clobbers).${NC}"
+        install_hook pre-push
     fi
 }
 
@@ -459,6 +528,7 @@ run_job() {
     fi
 
     FAILED_JOBS+=("$job_name")
+    HARD_FAILURES=$((HARD_FAILURES + 1))  # a genuine check failure — gates a push
     # bash quirk: `if cond; then body; fi` with a false condition and no else
     # returns 0, not the condition's exit status — so this needs an explicit
     # failure return, or callers checking run_job's exit code (the stop-on-
@@ -512,7 +582,7 @@ generate_report() {
 
 main() {
     if [[ "$INSTALL_HOOK_ONLY" == true ]]; then
-        install_hook
+        install_hook "$INSTALL_HOOK_SLOT"
         return 0
     fi
 
@@ -645,8 +715,18 @@ main() {
     done
 
     generate_report
-    maybe_install_hook
+    # Don't offer to install a hook when we ARE running as one (--gate).
+    [[ "$GATE" == true ]] || maybe_install_hook
 }
 
 main "$@"
+
+# Default: always exit 0 — a normal/informational run never breaks your shell.
+# With --gate (used by the fail-closed pre-push hook), exit non-zero on a
+# genuine check failure so the push is blocked. Local toolchain gaps (a tool
+# CI has that you don't) are NOT counted as hard failures — they shouldn't
+# block a push CI would pass; they're reported for you to install the tool.
+if [[ "$GATE" == true && "$HARD_FAILURES" -gt 0 ]]; then
+    exit 1
+fi
 exit 0
