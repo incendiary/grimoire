@@ -40,12 +40,13 @@ updates when CI passes, checks GitHub Actions status, and flags complex issues f
 Supports single repo, multiple repos, or full portfolio audit. Scope is confirmed on invocation.
 → [Full documentation](github-morning-run/README.md)
 
-### [github-actions-locally](github-actions-locally/) ✅ complete
+### [local-ci](local-ci/) ✅ complete
 
-Shift-left CI validation: discover and run linting and test jobs from `.github/workflows/`
-locally before pushing. Auto-fixes issues (black, ruff, prettier, eslint) and reports
-results without blocking. Catch CI failures fast, locally, not after pushing to Actions.
-→ [Full documentation](github-actions-locally/README.md)
+Run your GitHub Actions workflows locally before pushing: real YAML parsing, exit-code
+truth, stop-on-failure per job, and version-gated auto-fix (black/ruff) that only writes
+when it matches CI's pinned version. Installs as a fast informational `pre-commit` hook or a
+fail-closed `pre-push` gate — chaining any existing hook, never clobbering it.
+→ [Full documentation](local-ci/README.md)
 
 ### [repo-security-bootstrap](repo-security-bootstrap/) 📋 promoted
 
