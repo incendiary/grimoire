@@ -47,7 +47,7 @@ Most skills list their trigger phrases in the `SKILL.md` description. The skill'
 | 05 | [technical](05-technical/) | public | Coding conventions: test bootstrapping |
 | 06 | study | **private** | Study discipline: structured burst sessions, material triage, YouTube curation |
 | 07 | [devops](07-devops/) | public | Dev workflow: CI templates, repo publication prep, history wiping, secret scanning |
-| 08 | offsec | **private** | Offensive development: shellcode, BOFs, process injection, EDR iteration, C2 integration |
+| 08 | offsec | **private** | Offensive security tooling and technique documentation |
 | 09 | odpc | **private** | White Knight Labs ODPC: chapter-mapped implementation guides |
 
 > Clusters 06 and 09 live in [grimoire-private](https://github.com/incendiary/grimoire-private),
