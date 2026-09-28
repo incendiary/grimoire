@@ -24,6 +24,53 @@ Items marked "Ship: copy to ~/.claude/skills/..." are legacy — the install pat
 
 ---
 
+## Discoverability and consolidation programme (priority: top)
+
+Source: [REVIEW.md](REVIEW.md) (2026-09-29 holistic review). Each item there carries
+context, success criteria, files, effort, and a suggested model tier, so an agent can
+execute it cold. Work the phases in order; items inside a phase are independent unless
+noted. Success criterion for the programme: you can find the right skill by intent
+(measured by RA-5) and by prefix autocomplete (after RA-15).
+
+**Phase 1: make existing skills findable (no renames)**
+- [ ] RA-1: Frontmatter spec and CI check (Sonnet, S)
+- [ ] RA-2: Add frontmatter to all 57 skills (Sonnet, M), depends on RA-1
+- [ ] RA-3: Single-source descriptions for prompt files and MCP (Sonnet, S)
+- [ ] RA-4: Generate `SKILLS.md` catalogue, retire hand-kept README index (Haiku, S)
+- [ ] RA-5: Discoverability intent test, hit@3 gate at 80% (Sonnet, M)
+
+**Phase 2: evidence before pruning**
+- [ ] RA-6: Cross-machine usage telemetry (Claude Code hooks + MCP log) (Sonnet, M)
+
+**Phase 3: rules, not skills**
+- [ ] RA-7: Six always-on skills become rules for Claude Code and Copilot (Sonnet, M)
+
+**Phase 4: consolidation (merged skills created under new names)**
+- [ ] RA-8: `ci-local` = `local-ci` + `pre-push-validation` (Opus, M)
+- [ ] RA-9: `py-lint` = three Python lint skills (Sonnet, S)
+- [ ] RA-10: `deps-integrity` = npm/python lockfile + provenance (Sonnet, M)
+- [ ] RA-11: `tf-guardrails` = three terraform skills (Haiku, S)
+- [ ] RA-12: `ci-standards` = `devops-practices` + updater (Sonnet, S)
+- [ ] RA-13: `roadmap` = `roadmap-driver` + `grimoire-roadmap-status` (Sonnet, S)
+- [ ] RA-14: `orient` entry skill (Sonnet, M)
+
+**Phase 5: rename and pathway entries** (breaking change, `feat!:`)
+- [ ] RA-15: Execute the canonical rename map, with install-side cleanup (Sonnet + Opus review, L)
+- [ ] RA-16: Pathway sections in `orient`, `plan`, `release`, `publish` (Sonnet, S)
+- [ ] RA-17: Rewrite `PROJECT-WORKFLOWS.md` and cluster READMEs (Haiku, S)
+- [ ] RA-18: Cross-repo and global-config follow-up, owner approval required (Haiku, S)
+
+**Phase 6: hygiene** (independent; can run any time)
+- [ ] RA-19: `npm audit fix` in `mcp-server`, add Dependabot (Haiku, XS)
+- [ ] RA-20: Align TruffleHog versions, SHA-pin actions (Haiku, XS)
+- [ ] RA-21: bats tests for history-wipe and install scripts (Sonnet, M)
+- [ ] RA-22: Split "test on real X" validation items from actionable roadmap (Sonnet, S)
+- [ ] RA-23: Evidence-based prune, 60 days after RA-6 (Sonnet report, owner decides)
+
+Open owner decisions are listed at the end of `REVIEW.md`.
+
+---
+
 ## Open items by cluster
 
 <!-- ROADMAP-COLLECT:START (auto-generated — do not hand-edit; run check-roadmap-sync.sh --fix) -->
