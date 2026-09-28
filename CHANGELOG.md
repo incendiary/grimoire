@@ -11,6 +11,32 @@ This project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [1.7.1] — 2026-09-28
+
+`ROADMAP.md` drift-prevention: a new automated check keeps it in sync with the
+per-skill README `## Roadmap` sections going forward.
+
+### Added
+
+- `clusters/07-devops/devops-practices/check-roadmap-sync.sh` — diffs
+  `ROADMAP.md`'s generated block (delimited by `<!-- ROADMAP-COLLECT:START/END -->`)
+  against `scripts/roadmap-collect.sh`'s output. `--check` (gate, exit 1 on drift) /
+  `--fix` (regenerate in place). Grimoire-repo-specific, not portable like the other
+  three `check-*.sh` scripts.
+- Wired as a 4th step in `devops-check.yml` and as a local `pre-commit` auto-fix
+  hook (`.pre-commit-config.yaml`, triggered on any `clusters/*/*/README.md` change).
+
+### Fixed
+
+- `devops-check.yml`: its check steps lacked `continue-on-error: true`, so a
+  version-sync failure (expected on every version-bump PR) was silently skipping
+  clone-ref-pinning and test-baseline checks entirely for the rest of the job.
+  Added `continue-on-error: true` to all four steps plus a final "Fail if any
+  check failed" step, so every check now actually runs while the job's overall
+  pass/fail stays accurate.
+
+---
+
 ## [1.7.0] — 2026-09-28
 
 Offensive-security content extracted to its own private submodule.

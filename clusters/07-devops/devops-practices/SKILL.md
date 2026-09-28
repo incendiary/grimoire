@@ -205,6 +205,13 @@ for script in check-version-sync.sh check-clone-refs.sh check-test-baseline.sh; 
 done
 ```
 
+**grimoire-repo-specific (not portable):** `check-roadmap-sync.sh` — verifies
+`ROADMAP.md`'s generated block matches the source-of-truth `## Roadmap` sections in
+every skill's README, via `scripts/roadmap-collect.sh`. Depends on grimoire's own file
+layout and marker convention; won't work in an arbitrary downstream repo. Lives
+alongside the three portable scripts to reuse the same check-script convention and
+CI/pre-push wiring — `--check` (gate, exit 1 on drift) / `--fix` (auto-regenerate).
+
 ---
 
 ## Routing to existing skills

@@ -20,20 +20,30 @@ jobs:
 
       - name: Check version sync
         id: version-sync
+        continue-on-error: true
         run: |
           bash ./clusters/07-devops/devops-practices/check-version-sync.sh . || EXIT_CODE=$?
           exit ${EXIT_CODE:-0}
 
       - name: Check clone-ref pinning
         id: clone-refs
+        continue-on-error: true
         run: |
           bash ./clusters/07-devops/devops-practices/check-clone-refs.sh . || EXIT_CODE=$?
           exit ${EXIT_CODE:-0}
 
       - name: Check test baseline
         id: test-baseline
+        continue-on-error: true
         run: |
           bash ./clusters/07-devops/devops-practices/check-test-baseline.sh . || EXIT_CODE=$?
+          exit ${EXIT_CODE:-0}
+
+      - name: Check roadmap sync
+        id: roadmap-sync
+        continue-on-error: true
+        run: |
+          bash ./clusters/07-devops/devops-practices/check-roadmap-sync.sh . --check || EXIT_CODE=$?
           exit ${EXIT_CODE:-0}
 
       - name: Report results
@@ -56,5 +66,20 @@ jobs:
           else
             echo "❌ Test baseline: FAIL" >> $GITHUB_STEP_SUMMARY
           fi
+          if [ "${{ steps.roadmap-sync.outcome }}" = "success" ]; then
+            echo "✅ Roadmap sync: PASS" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ Roadmap sync: FAIL" >> $GITHUB_STEP_SUMMARY
+          fi
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "See skill: [\`devops-practices\`](https://github.com/incendiary/grimoire/tree/main/clusters/07-devops/devops-practices)" >> $GITHUB_STEP_SUMMARY
+
+      - name: Fail if any check failed
+        if: always()
+        run: |
+          if [ "${{ steps.version-sync.outcome }}" != "success" ] || \
+             [ "${{ steps.clone-refs.outcome }}" != "success" ] || \
+             [ "${{ steps.test-baseline.outcome }}" != "success" ] || \
+             [ "${{ steps.roadmap-sync.outcome }}" != "success" ]; then
+            exit 1
+          fi
