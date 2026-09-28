@@ -17,9 +17,27 @@ Examples:
   bash find-skill.sh --json devops roadmap
 
 Scoring:
-- Counts keyword hits in SKILL.md and README.md for each skill
+- Counts keyword hits in SKILL.md and README.md for each skill (a keyword's known
+  synonyms, e.g. "standards" -> "practices", are searched too)
 - Boosts score if keyword appears in skill directory name
 EOF
+}
+
+# Known synonym pairs for grimoire terminology, so a search for one term also
+# matches skills that only use the other. Bash 3.2 (macOS default) has no
+# associative arrays, hence the case statement instead of a lookup table.
+synonyms_for() {
+    case "$(printf '%s' "$1" | tr '[:upper:]' '[:lower:]')" in
+    standards) printf 'practices' ;;
+    practices) printf 'standards' ;;
+    ci) printf 'pipeline|workflow' ;;
+    pipeline) printf 'ci|workflow' ;;
+    workflow) printf 'ci|pipeline' ;;
+    lint) printf 'ruff|black|shellcheck' ;;
+    format | formatting) printf 'black|ruff' ;;
+    release) printf 'version|tag|changelog' ;;
+    *) printf '' ;;
+    esac
 }
 
 while [[ $# -gt 0 ]]; do
@@ -97,18 +115,25 @@ for dir in "${skill_dirs[@]}"; do
     for term in "${TERMS[@]}"; do
         term_hits=0
 
+        synonyms="$(synonyms_for "$term")"
+        if [[ -n "$synonyms" ]]; then
+            search_pattern="${term}|${synonyms}"
+        else
+            search_pattern="$term"
+        fi
+
         if [[ -f "$skill_file" ]]; then
-            hits="$( (grep -i -o -- "$term" "$skill_file" 2>/dev/null || true) | wc -l | tr -d ' ' )"
+            hits="$( (grep -i -o -E -- "$search_pattern" "$skill_file" 2>/dev/null || true) | wc -l | tr -d ' ' )"
             term_hits=$((term_hits + hits))
         fi
 
         if [[ -f "$readme_file" ]]; then
-            hits="$( (grep -i -o -- "$term" "$readme_file" 2>/dev/null || true) | wc -l | tr -d ' ' )"
+            hits="$( (grep -i -o -E -- "$search_pattern" "$readme_file" 2>/dev/null || true) | wc -l | tr -d ' ' )"
             term_hits=$((term_hits + hits))
         fi
 
-        # Boost if term appears in skill directory name.
-        if echo "$skill_name" | grep -qi -- "$term"; then
+        # Boost if term (or a synonym) appears in skill directory name.
+        if echo "$skill_name" | grep -qi -E -- "$search_pattern"; then
             term_hits=$((term_hits + 2))
         fi
 

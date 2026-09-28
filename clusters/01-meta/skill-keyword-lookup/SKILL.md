@@ -46,6 +46,9 @@ Trigger phrases: "find skill", "lookup skill", "which skill covers", "skill sear
 - This is keyword scoring, not semantic search. Better keywords improve results.
 - If a concept spans multiple skills, expect multiple high-scoring matches.
 - `--include-private` searches any mounted `clusters-*/clusters` submodule (e.g. `clusters-private/`, `clusters-offsec/`).
+- A small hardcoded synonym map (`synonyms_for()` in `find-skill.sh`) expands terms
+  like `standards`/`practices` and `ci`/`pipeline`/`workflow` both ways. It is not
+  exhaustive — unmapped terms search literally with no expansion.
 
 ## Suggested scripts
 - `find-skill.sh` (included) — rank skills by keyword matches in SKILL.md + README.md
