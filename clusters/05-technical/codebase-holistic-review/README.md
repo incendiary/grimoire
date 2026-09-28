@@ -120,4 +120,4 @@ who has never seen the repo.
 - [ ] Add worked example: Python web service holistic review (before/after findings)
 - [ ] Add worked example: Node.js monorepo review
 - [ ] Test on 3 real repos and capture recurring finding patterns
-- [ ] Add language-specific risk pattern tables (Python, TypeScript, C#, Go)
+- [x] Add language-specific risk pattern tables (Python, TypeScript, C#, Go)

@@ -84,6 +84,50 @@ Classify every identified risk into one of five categories. Score each 1–5 (5 
 | ... | | | | |
 ```
 
+Use the language-specific risk pattern tables below as a starting checklist for
+whichever language(s) the codebase uses — they are not exhaustive, but catch the
+patterns that recur most often across real reviews.
+
+#### Python
+
+| Category | Pattern to look for |
+|---|---|
+| Security | `eval`/`exec` on user input; `pickle.loads` on untrusted data; `subprocess` with `shell=True` and unsanitised input; `yaml.load` instead of `yaml.safe_load`; unvalidated Flask/Django request data used directly in queries or templates |
+| Scalability | Synchronous I/O inside `async def` handlers; N+1 ORM queries (`.objects.all()` then per-row lookups); loading a full table/queryset into memory instead of paginating or streaming; module-level mutable state shared across WSGI workers |
+| Reliability | Bare `except:` swallowing errors; `requests.get()`/`.post()` with no `timeout`; mutable default arguments (`def f(x=[])`); no retry/backoff around external API calls |
+| Maintainability | Functions/classes doing too much (no single responsibility); deep nesting; circular imports; `from module import *` |
+| Dependency | Unpinned `requirements.txt`; packages with no release in >18 months; native-extension deps with no prebuilt wheel for the target platform |
+
+#### TypeScript / JavaScript
+
+| Category | Pattern to look for |
+|---|---|
+| Security | `dangerouslySetInnerHTML` / `innerHTML` with unsanitised input; `eval`/`new Function()`; prototype pollution via unguarded `merge`/`extend`/`Object.assign`; JWTs stored in `localStorage` instead of an httpOnly cookie; missing CSRF protection on state-changing routes |
+| Scalability | Blocking/synchronous work on the Node event loop (`fs.readFileSync` in a request handler, heavy sync CPU work); unbounded in-memory caches/maps that grow with traffic; N+1 queries via an ORM (Prisma/TypeORM) with no `include`/eager-load; list endpoints with no pagination |
+| Reliability | Unhandled promise rejections; floating promises (async call with no `await`/`.catch`); `fetch`/`axios` calls with no timeout or abort signal; missing React error boundaries around risky subtrees |
+| Maintainability | Pervasive `any` defeating the type system; deeply nested `.then()` chains or callback pyramids; barrel files re-exporting the entire module surface; inconsistent module/package boundaries |
+| Dependency | Floating semver ranges (`^`, `~`) with no committed lockfile; deprecated/unmaintained packages; duplicate package versions bloating the lockfile and bundle |
+
+#### C#
+
+| Category | Pattern to look for |
+|---|---|
+| Security | SQL built by string concatenation instead of parameterised queries/EF; `XmlDocument`/`XmlReader` configured to resolve external entities (XXE); `BinaryFormatter` or other insecure deserialisation; controller actions missing `[Authorize]` |
+| Scalability | Blocking on async code with `.Result`/`.Wait()` (thread-pool starvation); unbounded `MemoryCache` with no eviction policy; N+1 via lazily-loaded EF Core navigation properties; large result sets materialised as `List<T>` instead of `IAsyncEnumerable<T>` |
+| Reliability | `catch (Exception)` that swallows without logging or rethrowing; no `CancellationToken` propagated through async call chains; `async void` methods (unobservable exceptions); no Polly (or equivalent) retry/circuit-breaker around outbound HTTP calls |
+| Maintainability | Sprawling `partial class` definitions; services with excessive constructor-injected dependencies; missing nullable-reference-type annotations; concrete-class coupling instead of interfaces |
+| Dependency | NuGet packages on a floating version instead of pinned; abandoned packages; conflicting transitive dependency versions |
+
+#### Go
+
+| Category | Pattern to look for |
+|---|---|
+| Security | Unsanitised input passed to `exec.Command`; hardcoded credentials in source; `InsecureSkipVerify: true` on TLS configs; HTTP handlers with no request context deadline |
+| Scalability | Unbounded goroutine spawning with no worker pool or semaphore (goroutine leaks); DB calls with no connection-pool limits; large in-memory maps with no eviction; N+1 via an ORM (e.g. GORM) with no `Preload` |
+| Reliability | Ignored error returns (`_ = err` or unchecked `err`); no `context.Context` cancellation propagated to downstream calls; panics in HTTP handlers with no `recover`; `http.Client` with no timeout set |
+| Maintainability | `init()` functions with non-trivial side effects; interface pollution (many single-method interfaces with no real abstraction value); import cycles; exported symbols with no doc comments |
+| Dependency | `go.mod` with no committed `go.sum`; modules with no maintenance activity; unpinned/indirect dependency drift |
+
 ---
 
 ### Phase 3: Predictive failure analysis
@@ -255,4 +299,4 @@ karpathy-verify           → verify the review is complete against the phase ch
 - [ ] Add worked example: Python web service holistic review (before/after findings)
 - [ ] Add worked example: Node.js monorepo review
 - [ ] Test on 3 real repos and capture recurring finding patterns
-- [ ] Add language-specific risk pattern tables (Python, TypeScript, C#, Go)
+- [x] Add language-specific risk pattern tables (Python, TypeScript, C#, Go)
