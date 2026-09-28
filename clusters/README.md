@@ -44,15 +44,16 @@ Most skills list their trigger phrases in the `SKILL.md` description. The skill'
 | 02 | [comms](02-comms/) | public | Written communication: tone review, style rewriting, executive translation |
 | 03 | [incident](03-incident/) | public | Security incident support: evidence collection, documentation, risk planning |
 | 04 | [security](04-security/) | public | Domain-specific security: iOS signing risk analysis |
-| 05 | [technical](05-technical/) | public | Coding conventions: PE binary parsing, test bootstrapping |
+| 05 | [technical](05-technical/) | public | Coding conventions: test bootstrapping |
 | 06 | study | **private** | Study discipline: structured burst sessions, material triage, YouTube curation |
 | 07 | [devops](07-devops/) | public | Dev workflow: CI templates, repo publication prep, history wiping, secret scanning |
-| 08 | [offsec](08-offsec/) | public | Offensive development: shellcode, BOFs, process injection, EDR iteration, C2 integration |
+| 08 | offsec | **private** | Offensive development: shellcode, BOFs, process injection, EDR iteration, C2 integration |
 | 09 | odpc | **private** | White Knight Labs ODPC: chapter-mapped implementation guides |
 
 > Clusters 06 and 09 live in [grimoire-private](https://github.com/incendiary/grimoire-private),
-> mounted at `clusters-private/` via git submodule. Run `git submodule init && git submodule update`
-> to pull them.
+> mounted at `clusters-private/` via git submodule. Cluster 08 lives in
+> [grimoire-offsec](https://github.com/incendiary/grimoire-offsec), mounted at `clusters-offsec/`.
+> Run `git submodule init && git submodule update` to pull them.
 
 ---
 

@@ -39,7 +39,7 @@ Trigger phrases: "find skill", "lookup skill", "which skill covers", "skill sear
 ## Gotchas
 - This is keyword scoring, not semantic search. Better keywords improve results.
 - If a concept spans multiple skills, expect multiple high-scoring matches.
-- `--include-private` requires `clusters-private/` submodule to be present.
+- `--include-private` searches any mounted `clusters-*/clusters` submodule (e.g. `clusters-private/`, `clusters-offsec/`).
 
 ## Suggested scripts
 - `find-skill.sh` (included) — rank skills by keyword matches in SKILL.md + README.md

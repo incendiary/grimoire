@@ -9,15 +9,6 @@ without repetition.
 
 ## Skills
 
-### [pe-binary-analysis](pe-binary-analysis/) ✅ complete
-
-Enforces manual PE structure parsing conventions: no WinAPI abstractions, no library
-wrappers, direct struct access only. Covers `ImageNtHeader`, `ImageRvaToVa`,
-and `ImageDirectoryEntryToData` replacements; RVA vs file offset annotation rules;
-x86/x64 Magic field checks; and syscall hook detection patterns. Load at the start of
-any PE parsing or binary introspection session.
-→ [Full documentation](pe-binary-analysis/README.md)
-
 ### [test-bootstrap](test-bootstrap/) ✅ complete
 
 Adds a unit test layer to projects with no tests, or fills coverage gaps in partially
@@ -55,19 +46,7 @@ enough detail for a lesser-capable agent to execute them independently. Chains t
 
 ## When to invoke — workflow guide
 
-### Workflow 1: PE parsing and binary introspection
-
-**Trigger:** "Parse this PE manually" / "Walk import table without helper APIs"
-
-```
-pe-binary-analysis         → enforce PE parsing and RVA/file-offset conventions
- ↓
-[implement/verify parser]  → direct struct access + annotation discipline
- ↓
-karpathy-verify            → validate correctness and edge-case handling
-```
-
-### Workflow 2: Test layer bootstrap
+### Workflow 1: Test layer bootstrap
 
 **Trigger:** "This project has no tests" / "Add coverage for this module"
 
@@ -80,7 +59,7 @@ python-ci-template / dotnet-ci-template / workflow update
        → ensure CI enforces test execution
 ```
 
-### Workflow 3: Holistic codebase review
+### Workflow 2: Holistic codebase review
 
 **Trigger:** "Review this codebase" / "What will break as this scales?" / "Audit before a release"
 
@@ -102,7 +81,6 @@ task-decomposer           → (optional) chunk items for multi-session execution
 
 | Skill | Invoke when... |
 |-------|----------------|
-| `pe-binary-analysis` | Working on PE internals, imports/exports, RVA math, or syscall hook checks |
 | `test-bootstrap` | Repo lacks tests or a changed module/class needs baseline coverage and CI wiring |
 | `python-black-ruff-authoring` | Writing/refactoring Python code in repos that use black/ruff and you want fewer lint-fix follow-up commits |
 | `codebase-holistic-review` | Auditing a codebase holistically; predicting future failure modes; producing a detailed action roadmap before scaling or releasing |

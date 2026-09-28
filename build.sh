@@ -13,7 +13,6 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROMPTS_DIR="${SCRIPT_DIR}/prompts"
 CLUSTERS_DIR="${SCRIPT_DIR}/clusters"
-PRIVATE_CLUSTERS_DIR="${SCRIPT_DIR}/clusters-private/clusters"
 
 # --- Clean mode ---
 if [[ "${1:-}" == "--clean" ]]; then
@@ -28,9 +27,10 @@ skipped=0
 
 # Collect SKILL.md from public clusters and private submodule (if present)
 SKILL_PATHS=("${CLUSTERS_DIR}"/*/SKILL.md "${CLUSTERS_DIR}"/*/*/SKILL.md)
-if [[ -d "${PRIVATE_CLUSTERS_DIR}" ]]; then
-    SKILL_PATHS+=("${PRIVATE_CLUSTERS_DIR}"/*/SKILL.md "${PRIVATE_CLUSTERS_DIR}"/*/*/SKILL.md)
-fi
+# Discover every private submodule cluster set (clusters-private, clusters-offsec, ...)
+for _priv_root in "${SCRIPT_DIR}"/clusters-*/clusters; do
+    [[ -d "${_priv_root}" ]] && SKILL_PATHS+=("${_priv_root}"/*/SKILL.md "${_priv_root}"/*/*/SKILL.md)
+done
 
 for skill_md in "${SKILL_PATHS[@]}"; do
     [[ -f "${skill_md}" ]] || continue

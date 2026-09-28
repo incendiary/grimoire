@@ -58,8 +58,10 @@ ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
 TERMS=("$@")
 
 search_roots=("$ROOT/clusters")
-if [[ "$INCLUDE_PRIVATE" == "true" && -d "$ROOT/clusters-private/clusters" ]]; then
-    search_roots+=("$ROOT/clusters-private/clusters")
+if [[ "$INCLUDE_PRIVATE" == "true" ]]; then
+    for _priv_root in "$ROOT"/clusters-*/clusters; do
+        [[ -d "$_priv_root" ]] && search_roots+=("$_priv_root")
+    done
 fi
 
 skill_dirs=()
