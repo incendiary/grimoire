@@ -34,6 +34,12 @@ Output dir: ~/tasks/grimoire-cat5
 Max chunks: 6
 ```
 
+Resume an existing decomposition instead of starting a new one:
+```
+/task-decomposer --resume
+Output dir: .claude/tasks/[task-name]
+```
+
 ## Workflow
 
 ### Step 1 — Understand the task
@@ -105,6 +111,9 @@ Commit message: `[conventional commit prefix]: [description]`
 Then output exactly: `CHUNK COMPLETE: [one-line summary of what landed]`
 ```
 
+After a chunk is done, update its own `> Status: pending` header to `> Status: done` —
+this is what `--resume` mode reads to skip finished chunks.
+
 ### Step 4 — Write a run-book
 
 After writing all chunk files, write `00-runbook.md` to the same directory:
@@ -146,6 +155,27 @@ Proceed?
 
 Only write files once confirmed.
 
+### Resume mode
+
+When invoked with `--resume [output dir]` instead of a task description:
+
+1. Read `00-runbook.md` in the output dir. If it does not exist, stop and tell the
+   user there is nothing to resume — fall back to a normal decomposition instead.
+2. For each chunk file in execution order, read its header line
+   `> Status: pending|in-progress|done`. Skip any chunk marked `done`.
+3. Report the resume point before doing anything else:
+   ```
+   Resuming [task-name]: N of M chunks done.
+   Next: 03-chunk-name.md — [one-line description]
+   ```
+4. Proceed with the first non-`done` chunk exactly as if it were the only chunk in
+   the task. Do not re-decompose or edit chunks already marked `done`.
+5. After a chunk completes (its return signal is emitted), update that chunk file's
+   `Status:` header to `done` before moving to the next one, so the next resume
+   (by this session or a fresh one) has an accurate picture.
+
+This only works if `Status:` headers are kept current — see the gotcha below.
+
 ## Task file location conventions
 
 | Context | Default location |
@@ -176,6 +206,9 @@ Add `.claude/tasks/` to `.gitignore` if needed.
   done and resume after interruptions without re-reading all the task files.
 - **Re-decompose if scope changes.** If a chunk expands unexpectedly mid-session,
   stop, re-run `/task-decomposer` on the remaining work, and update the run-book.
+- **`--resume` only sees what `Status:` headers say.** If a chunk's header is never
+  flipped to `done`, resume treats it as outstanding and redoes it. Update the header
+  as part of finishing the chunk, not as an afterthought.
 
 ## Related skills
 
