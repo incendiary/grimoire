@@ -18,3 +18,7 @@ logs/
 # Local tooling state
 .serena/
 __pycache__/
+
+# Disposable history-free review snapshots (see repo-publication-prep / holistic
+# review workflow) — never committed, recreated fresh each time from git archive
+OpusReview/
