@@ -182,6 +182,54 @@ These are repo-level improvements not tied to individual skills:
 > 6. Update `CLAUDE.md`'s "Delivery loop" section — the manual `bump VERSION` /
 >    `git tag vX.Y.Z && git push origin vX.Y.Z` steps go away entirely.
 
+### Roadmap sync check (local + CI)
+
+> **Context:** This `ROADMAP.md` file is meant to be a generated snapshot of the
+> `## Roadmap` sections in every skill's own `README.md` (the source of truth), produced
+> by `scripts/roadmap-collect.sh`. Nothing enforces that it's actually regenerated —
+> it drifted for over two months (last regenerated 2025-07-14) and was showing 7 items
+> as open that were already `[x]` in their skill READMEs, discovered and fixed
+> 2026-09-28. There's no mechanism today, local or in CI, that would catch this drift
+> again before it recurs.
+>
+> Do not confuse this with the existing `roadmap-sync` skill (`clusters/07-devops/`) —
+> that's a *generic, distributable* skill for maintaining a single README's roadmap
+> section in any downstream repo a user installs it into. This item is grimoire's own
+> internal problem: keeping one aggregated file in sync with dozens of per-skill
+> README sections. Don't reuse that skill's name or slot for this.
+>
+> **The fix belongs in the `devops-practices` skill's `check-*.sh` family**
+> (`clusters/07-devops/devops-practices/`: `check-version-sync.sh`,
+> `check-clone-refs.sh`, `check-test-baseline.sh`) — that's the established convention
+> for "does committed state match a derivable truth" checks, already wired into both
+> `devops-check.yml` (CI) and the local pre-push hook via `local-ci.sh`. Extending it
+> avoids adding a fifth place this class of check lives.
+>
+> **Scope for whoever picks this up** (moderate, well-bounded implementation work —
+> a capable general-purpose model can handle it; no deep judgment calls beyond the
+> design below, which is already settled):
+> 1. **Delimit the generated block** in `ROADMAP.md` with HTML comment markers
+>    (`<!-- ROADMAP-COLLECT:START -->` / `<!-- ROADMAP-COLLECT:END -->`) wrapping only
+>    the "Open items by cluster" section + summary line. Leave the Priority legend and
+>    this Infrastructure roadmap section (including the release-automation and
+>    mlx-agent-server subsections) outside the markers — that content is editorial,
+>    not mechanically derivable, and must not be touched by the tooling.
+> 2. **New `check-roadmap-sync.sh`** alongside the other three check scripts: reuses
+>    `scripts/roadmap-collect.sh`'s collection logic, diffs it against the delimited
+>    block.
+>    - `--check` (default): exit 1 and print a diff if stale — this is the gate.
+>    - `--fix`: rewrites the block in place — this is the auto-fixer.
+> 3. **Pre-commit hook (local, auto-fix):** if any staged file matches
+>    `clusters/*/*/README.md`, run `--fix` and re-stage `ROADMAP.md` — same pattern
+>    Black/Ruff already use in this repo's pre-commit slot.
+> 4. **Pre-push hook + `devops-check.yml` (fail-closed):** run `--check` — catches
+>    drift from edits made outside a normal commit flow (GitHub web UI edits,
+>    `--no-verify` commits, hook not installed on a fresh clone).
+> 5. Use **one script for all three callers** (pre-commit, pre-push, CI) — do not
+>    let the check logic diverge across them. `devops-check.yml`'s version-sync job and
+>    `validate.yml`'s `version-tag-sync` job already diverged this way (see the
+>    release-automation item above) — don't repeat that mistake here.
+
 ### mlx-agent-server integration
 
 > Integration with `mlx-agent-server` (`~/Projects/mlx-agent-server`): a local MLX
