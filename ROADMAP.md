@@ -36,7 +36,6 @@ Items marked "Ship: copy to ~/.claude/skills/..." are legacy — the install pat
   - **session-skill-extractor**: Multi-session aggregation (combine patterns across sessions)
   - **session-skill-extractor**: Per-project pattern weighting
   - **session-skill-extractor**: Confidence scoring improvements
-  - **skill-keyword-lookup**: Add synonym map (for example: "standards" -> "practices")
   - **skill-vetter**: Test on 3 real third-party skills (requires real sessions)
   - **task-handoff**: Add `--auto` mode: triggered automatically when context exceeds a threshold
   - **test-before-asking**: Test across 5 sessions to confirm the rule lands correctly

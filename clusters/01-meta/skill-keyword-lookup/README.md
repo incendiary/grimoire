@@ -11,6 +11,9 @@ A fast keyword-to-skill lookup utility. Use this when you know the behavior you 
 
 - Searches all skill folders under `clusters/` (and optional private clusters)
 - Scores each skill by keyword hits in `SKILL.md` and `README.md`
+- Expands a small set of known synonym pairs (e.g. `standards`/`practices`,
+  `ci`/`pipeline`/`workflow`, `lint`/`ruff`/`black`/`shellcheck`) so either term finds
+  the same skills
 - Boosts matches where keywords appear in the skill directory name
 - Returns ranked candidates with path + matched terms
 
@@ -91,5 +94,5 @@ Expected top matches:
 
 - [x] SKILL.md written and validated
 - [x] Add keyword lookup script
-- [ ] Add synonym map (for example: "standards" -> "practices")
+- [x] Add synonym map (for example: "standards" -> "practices")
 - [x] Add `--json` output mode for machine consumers
