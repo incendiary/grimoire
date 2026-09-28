@@ -53,6 +53,12 @@ After running `bash build.sh`, reference in Copilot Chat:
 Task: [paste plan, description, or bullet list of work]
 ```
 
+Resume a decomposition already in progress (skips chunks marked `done`):
+```
+/task-decomposer --resume
+Output dir: .claude/tasks/[task-name]
+```
+
 ---
 
 ## Output
@@ -202,5 +208,6 @@ Done: section renders correctly, two roadmap items ticked.
 - [x] README.md written
 - [x] Ship: copy to `~/.claude/skills/task-decomposer/`
 - [x] Add example: grimoire Cat 5 decomposed into 6 chunks (worked example)
-- [ ] Add example: subagent execution guide for running chunks one-by-one
-- [ ] Add `--resume` mode: reads existing run-book, skips completed chunks
+- [x] Add example: subagent execution guide for running chunks one-by-one (see "How
+      to execute the chunks with agents" above)
+- [x] Add `--resume` mode: reads existing run-book, skips completed chunks
