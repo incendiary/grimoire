@@ -136,56 +136,23 @@ These are repo-level improvements not tied to individual skills:
 - [x] Post-merge changelog tidy pass — sync `CHANGELOG.md` with latest merged PRs and release notes after each infrastructure batch.
 - [x] `install-jetbrains.sh` + `install-vscode.sh`: resolve full Node.js path at install time — write the absolute path to node >=22 into mcp.json rather than bare `node`, so the config works correctly when the IDE launches without the user's shell PATH (nvm aliases are not inherited by GUI apps).
 
-### Release automation (release-please migration)
-
-> **Context:** `main` branch protection (added 2026-09-28) requires 6 status checks
-> (README quality, Registry sync, Shellcheck, Skill structure, gitleaks, trufflehog) but
-> deliberately excludes `devops-check.yml`'s "DevOps Compliance" job, which runs
-> `check-version-sync.sh` and hard-fails (`exit 1`) whenever `VERSION` != latest git tag
-> != latest GitHub release. That's structurally unavoidable under the current delivery
-> loop (documented in `CLAUDE.md`): `VERSION` is bumped *inside* the feature PR, and the
-> tag/release are only created *after* merge (`git tag vX.Y.Z && git push origin vX.Y.Z`
-> triggers `release-on-tag.yml`). So every version-bumping PR necessarily shows this
-> check red for its entire lifetime — requiring it as a branch-protection gate would
-> permanently block every release PR from merging. This is not a bug in the check's
-> comparison logic (exact equality is the right invariant for `main` post-release); it's
-> a mismatch between a PR-time gate and a merge-then-tag-after workflow.
->
-> There's already a correctly-scoped, non-blocking version of this same check in
-> `validate.yml`'s `version-tag-sync` job — it only runs `on: push` to `main` (never on
-> PRs) and only emits `::warning::`, never `exit 1`. `devops-check.yml`'s job is the
-> newer, stricter, mis-scoped duplicate.
->
-> **The fix:** adopt a release-please-style flow (or `semantic-release`/`changesets`) so
-> feature PRs never touch `VERSION` at all. Merges to `main` accumulate normally; a bot
-> maintains a standing "chore(release): vX.Y.Z" PR (built from conventional-commit
-> messages) that's only merged when cutting a release, and merging *that* PR bumps
-> `VERSION`, creates the tag, and publishes the release as one atomic step. Once that's
-> live, ordinary feature PRs will trivially pass the version-sync check (they never touch
-> `VERSION`), so it can be safely promoted to a required branch-protection check —
-> excepting the release-please PR itself, which should stay exempted or reviewed by hand.
->
-> **Scope for whoever picks this up** (real engineering work, not mechanical — suggest a
-> capable model, not a lightweight one, given it touches release infra and CHANGELOG
-> format):
-> 1. Evaluate `release-please` (Google, GitHub Action, config-file driven, supports
->    arbitrary `release-type: simple` for a bare `VERSION` file) vs `changesets` (more
->    manual per-PR changeset files, common in JS monorepos — less natural fit here since
->    this repo isn't primarily an npm package) — recommend `release-please`.
-> 2. Wire up `.release-please-manifest.json` + `release-please-config.json` (or the
->    simpler single-package config) targeting the root `VERSION` file.
-> 3. Decide whether `CHANGELOG.md`'s existing hand-written style (see any entry above)
->    stays hand-written pre-release and release-please just appends, or whether it
->    switches to fully generated entries from conventional-commit messages — hand-written
->    entries have more narrative detail than typical auto-generated ones, worth discussing
->    with the user before deciding.
-> 4. Retire `devops-check.yml`'s `devops-check` job's hard-fail version-sync step (keep
->    clone-ref pinning and test-baseline checks — those aren't affected by this).
-> 5. Once merge PRs no longer touch `VERSION`, add `DevOps Compliance` (or whatever the
->    surviving check is renamed to) back into `main`'s required status checks via
->    `gh api --method PUT repos/incendiary/grimoire/branches/main/protection`.
-> 6. Update `CLAUDE.md`'s "Delivery loop" section — the manual `bump VERSION` /
->    `git tag vX.Y.Z && git push origin vX.Y.Z` steps go away entirely.
+- [x] **Release automation (release-please migration)** — feature PRs no longer touch
+  `VERSION` at all. `release-please-action` (`.github/workflows/release-please.yml`,
+  replacing the retired `release-on-tag.yml`) maintains a standing
+  "chore(release): vX.Y.Z" PR from conventional-commit messages; merging it bumps
+  `VERSION` (`release-please-config.json`, `version-file: VERSION`), tags, and creates
+  the GitHub Release atomically. `CHANGELOG.md` stays hand-written
+  (`skip-changelog: true`) per the decided approach. Auth via a `RELEASE_PLEASE_TOKEN`
+  repo secret (fine-grained PAT), not the default `GITHUB_TOKEN`, so the release PR
+  actually triggers `pull_request`-scoped CI. See `CLAUDE.md`'s "Releases" section for
+  the full flow.
+  **Deliberately not done:** promoting `devops-check.yml`'s version-sync check to a
+  required branch-protection check. It should now pass trivially on ordinary feature
+  PRs, but will still trip on the release-please PR itself (which does legitimately
+  bump `VERSION` ahead of the tag until it's merged) — branch protection can't exempt
+  one specific PR from a required check, so it stays excluded, same as before. This is
+  no longer a "recurs on every PR" problem though — it's now confined to the one PR
+  type that's expected to show it.
 
 - [x] **Roadmap sync check (local + CI)** — `ROADMAP.md`'s "Open items by cluster"
   section is now delimited (`<!-- ROADMAP-COLLECT:START/END -->`) and enforced by
