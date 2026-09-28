@@ -57,7 +57,7 @@ case "$DONE_COUNT" in
     ;;
 esac
 
-TODAY="$(date +%Y-%m-%d)"
+TODAY="$(date -u +%Y-%m-%d)"
 
 # Build the full replacement file: header stats updated, generated block
 # spliced in between the markers, everything else untouched.
