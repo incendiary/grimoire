@@ -49,8 +49,20 @@ Located at `~/.claude/skills/session-skill-extractor/config.json`
   "min_pattern_count": 2,
   "output_dir": "~/.claude/proposed-skills",
   "model": "claude-opus-4-5",
-  "max_session_tokens": 40000
+  "max_session_chars": 60000,
+  "sessions": 1,
+  "confidence_base": 0.25,
+  "confidence_weight_sessions": 0.15,
+  "confidence_weight_count": 0.05,
+  "min_confidence": 0.0
 }
+```
+
+For a manual multi-session sweep (aggregates the N most recent sessions and scores
+each pattern's `confidence` by how many sessions and projects it recurred in — the
+Stop hook itself always analyses just the one ending session):
+```bash
+python3 scripts/extract_patterns.py --sessions 5 | python3 scripts/generate_stubs.py
 ```
 
 ## Promotion workflow

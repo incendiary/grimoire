@@ -60,13 +60,30 @@ After running `bash build.sh`, reference in Copilot Chat:
 /session-skill-extractor
 ```
 
+**Manual, multi-session** — aggregate patterns across your N most recent sessions
+instead of just the latest one. Recurrence across sessions is a stronger signal than
+one session's pattern count, so aggregated results carry a computed `confidence` and
+`occurring_sessions`/`distinct_projects` count per pattern:
+```bash
+python3 scripts/extract_patterns.py --sessions 5 | python3 scripts/generate_stubs.py
+```
+
 ---
 
 ## Configuration
 
 Edit `config.json` in the skill directory:
 - `model`: which model to use for transcript analysis
-- `threshold`: minimum pattern repetition count to generate a stub
+- `min_pattern_count`: minimum pattern repetition count to generate a stub
+- `sessions`: default number of recent sessions to aggregate (the Stop hook always
+  passes an explicit `--session-file` and ignores this — it only affects manual runs)
+- `confidence_base`, `confidence_weight_sessions`, `confidence_weight_count`: weights
+  for the confidence heuristic (`base + weight_sessions × occurring_sessions +
+  weight_count × count`, capped at 1.0). This is a documented heuristic, not a
+  calibrated score — adjust the weights if it over- or under-confidences against your
+  own usage.
+- `min_confidence`: optional hard filter on top of `min_pattern_count` (default `0.0`,
+  i.e. no additional filtering)
 
 ---
 
@@ -77,7 +94,7 @@ Edit `config.json` in the skill directory:
 - [x] `install.sh` — wires the Stop hook
 - [x] `config.json` — model and threshold configuration
 - [x] `proposed-skills/` — output directory (gitignored)
-- [ ] Multi-session aggregation (combine patterns across sessions)
-- [ ] Per-project pattern weighting
-- [ ] Confidence scoring improvements
+- [x] Multi-session aggregation (combine patterns across sessions)
+- [x] Per-project pattern weighting
+- [x] Confidence scoring improvements
 - [x] `skill-vetter` integration — promotion workflow documented in SKILL.md
