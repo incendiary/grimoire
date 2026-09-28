@@ -30,3 +30,12 @@ repos:
     hooks:
       - id: detect-secrets
         args: ["--baseline", ".secrets.baseline"]
+
+  - repo: local
+    hooks:
+      - id: roadmap-sync
+        name: Regenerate ROADMAP.md from skill READMEs
+        entry: bash clusters/07-devops/devops-practices/check-roadmap-sync.sh . --fix
+        language: system
+        files: ^clusters/[^/]+/[^/]+/README\.md$
+        pass_filenames: false

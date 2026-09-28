@@ -72,6 +72,29 @@ $ bash check-test-baseline.sh
 2 baseline tests missing. Run devops-practices to install them.
 ```
 
+### check-roadmap-sync.sh
+
+> **Not portable like the three above.** This one is grimoire-repo-specific — it
+> depends on `scripts/roadmap-collect.sh` and grimoire's own `ROADMAP.md` marker
+> convention. It lives here to reuse the established check-script convention and
+> wiring (`devops-check.yml`, the local pre-push hook), not because it works in an
+> arbitrary downstream repo.
+
+Verifies `ROADMAP.md`'s generated block matches the `## Roadmap` sections of every
+skill's own README (the source of truth).
+
+```
+$ bash check-roadmap-sync.sh . --check
+✗ DRIFT DETECTED — ROADMAP.md does not match the per-skill README sources.
+...
+Run: bash clusters/07-devops/devops-practices/check-roadmap-sync.sh . --fix
+```
+
+```
+$ bash check-roadmap-sync.sh . --fix
+✓ ROADMAP.md regenerated (57 open, 222 completed).
+```
+
 ## Workflow
 
 ### Full setup (new repo)
