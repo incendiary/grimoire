@@ -7,7 +7,7 @@
 > `bash clusters/07-devops/devops-practices/check-roadmap-sync.sh . --fix`.
 
 **Last updated:** 2026-09-28
-**Open items:** 57 | **Completed:** 222
+**Open items:** 56 | **Completed:** 223
 
 ---
 
@@ -37,7 +37,6 @@ Items marked "Ship: copy to ~/.claude/skills/..." are legacy — the install pat
   - **session-skill-extractor**: Per-project pattern weighting
   - **session-skill-extractor**: Confidence scoring improvements
   - **skill-keyword-lookup**: Add synonym map (for example: "standards" -> "practices")
-  - **skill-keyword-lookup**: Add `--json` output mode for machine consumers
   - **skill-vetter**: Test on 3 real third-party skills (requires real sessions)
   - **task-decomposer**: Add example: subagent execution guide for running chunks one-by-one
   - **task-decomposer**: Add `--resume` mode: reads existing run-book, skips completed chunks
@@ -104,7 +103,7 @@ Items marked "Ship: copy to ~/.claude/skills/..." are legacy — the install pat
 
 ---
 
-**Summary:** 57 open items | 222 completed items
+**Summary:** 56 open items | 223 completed items
 <!-- ROADMAP-COLLECT:END -->
 
 > **08-offsec** roadmap items now live in the private `grimoire-offsec` submodule

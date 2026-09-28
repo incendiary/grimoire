@@ -61,6 +61,14 @@ keywords: devops roadmap readme sync
 bash clusters/01-meta/skill-keyword-lookup/find-skill.sh devops roadmap readme sync
 ```
 
+**Machine-readable (JSON):**
+
+```bash
+bash clusters/01-meta/skill-keyword-lookup/find-skill.sh --json devops roadmap readme sync
+```
+
+Outputs `{"query": "...", "results": [{"score", "cluster", "skill", "path", "matched"}, ...]}`.
+
 ---
 
 ## Example from your use case
@@ -84,4 +92,4 @@ Expected top matches:
 - [x] SKILL.md written and validated
 - [x] Add keyword lookup script
 - [ ] Add synonym map (for example: "standards" -> "practices")
-- [ ] Add `--json` output mode for machine consumers
+- [x] Add `--json` output mode for machine consumers
