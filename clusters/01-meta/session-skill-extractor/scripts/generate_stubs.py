@@ -22,7 +22,8 @@ STUB_TEMPLATE = """\
 
 > **Status:** PROPOSED — review before promoting to ~/.claude/skills/
 > **Generated:** {date}
-> **Source pattern:** {pattern_type} (detected {count}x in session)
+> **Source pattern:** {pattern_type} (detected {count}x{recurrence})
+> **Confidence:** {confidence}
 
 ## Description
 {purpose}
@@ -85,11 +86,23 @@ def write_stub(pattern: dict, output_dir: Path) -> Path:
             print(f"  SKIP: {stub_path} exists and appears manually edited.", file=sys.stderr)
             return stub_path
 
+    occurring_sessions = pattern.get("occurring_sessions")
+    if occurring_sessions and occurring_sessions > 1:
+        distinct_projects = pattern.get("distinct_projects", 1)
+        project_note = "1 project" if distinct_projects == 1 else f"{distinct_projects} projects"
+        recurrence = f", recurred across {occurring_sessions} sessions ({project_note})"
+    else:
+        recurrence = ""
+    confidence = pattern.get("confidence")
+    confidence_str = f"{confidence:.2f}" if isinstance(confidence, (int, float)) else "not scored"
+
     content = STUB_TEMPLATE.format(
         skill_name=skill_name,
         date=datetime.now().strftime("%Y-%m-%d"),
         pattern_type=pattern.get("type", "unknown"),
         count=pattern.get("count", "?"),
+        recurrence=recurrence,
+        confidence=confidence_str,
         purpose=pattern.get("proposed_skill_purpose", "<!-- TODO: describe what this skill prevents -->"),
         context_items=format_list(pattern.get("context_needed", [])),
         gotchas=format_list(pattern.get("gotchas", ["None identified yet — add as you encounter them"])),

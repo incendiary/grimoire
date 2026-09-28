@@ -2,14 +2,18 @@
 """
 extract_patterns.py
 
-Reads a Claude Code session JSONL, condenses it, then calls the claude CLI
-to detect repeated patterns worth extracting as skills. Pipes structured JSON
+Reads one or more Claude Code session JSONLs, condenses each, then calls the
+claude CLI to detect repeated patterns worth extracting as skills. When more
+than one session is analysed, patterns are aggregated across sessions:
+recurrence across sessions (and concentration within a single project) is a
+stronger signal than any one session's pattern count. Pipes structured JSON
 to stdout for generate_stubs.py to consume.
 
 Usage:
     python3 extract_patterns.py
     python3 extract_patterns.py --project-dir ~/.claude/projects/<hash>
     python3 extract_patterns.py --session-file <path-to.jsonl>
+    python3 extract_patterns.py --sessions 5
     python3 extract_patterns.py | python3 generate_stubs.py
 """
 
@@ -19,6 +23,7 @@ import os
 import shutil
 import subprocess
 import sys
+from collections import Counter
 from pathlib import Path
 
 # -------------------------------------------------------------------
@@ -31,6 +36,18 @@ DEFAULT_CONFIG = {
     "model": "claude-opus-4-5",
     "tool_result_trim": 500,
     "max_session_chars": 60000,
+    # Multi-session aggregation (manual runs only — the Stop hook always
+    # passes a single --session-file and ignores this).
+    "sessions": 1,
+    # Confidence heuristic: base + (per-session weight * sessions the
+    # pattern recurred in) + (per-count weight * total count), capped at
+    # 1.0. This is a documented heuristic, not a calibrated/validated
+    # score — tune the weights in config.json if it over- or
+    # under-confidences against your own usage.
+    "confidence_base": 0.25,
+    "confidence_weight_sessions": 0.15,
+    "confidence_weight_count": 0.05,
+    "min_confidence": 0.0,
 }
 
 DETECTION_PROMPT = """You are analysing a Claude Code session transcript to identify repeated patterns
@@ -83,16 +100,20 @@ For each pattern found, return a JSON object in this exact schema. Output only v
 # -------------------------------------------------------------------
 
 def find_latest_session(projects_base: Path) -> Path | None:
+    sessions = find_latest_sessions(projects_base, 1)
+    return sessions[0] if sessions else None
+
+
+def find_latest_sessions(projects_base: Path, n: int) -> list[Path]:
+    """Most recent N session files (by mtime) across all projects under projects_base."""
     candidates = []
     for project_dir in projects_base.iterdir():
         if not project_dir.is_dir():
             continue
         for f in project_dir.glob("*.jsonl"):
             candidates.append((f.stat().st_mtime, f))
-    if not candidates:
-        return None
     candidates.sort(reverse=True)
-    return candidates[0][1]
+    return [f for _, f in candidates[:n]]
 
 
 def load_session(session_file: Path) -> list[dict]:
@@ -224,17 +245,132 @@ def detect_patterns(transcript: str, model: str) -> dict:
 
 
 # -------------------------------------------------------------------
+# Per-session processing
+# -------------------------------------------------------------------
+
+def process_session(session_file: Path, config: dict) -> dict | None:
+    """Run detection on one session file. Returns None if the session is too short to analyse."""
+    entries = load_session(session_file)
+    turns = extract_turns(entries, tool_result_trim=config["tool_result_trim"])
+
+    if len(turns) < config["min_turns"]:
+        print(
+            f"  SKIP: {session_file} too short ({len(turns)} turns, minimum {config['min_turns']}).",
+            file=sys.stderr
+        )
+        return None
+
+    print(f"  Analysing {session_file} ({len(turns)} turns)...", file=sys.stderr)
+
+    transcript = condense_transcript(turns, max_chars=config["max_session_chars"])
+    return detect_patterns(transcript, config["model"])
+
+
+# -------------------------------------------------------------------
+# Multi-session aggregation
+# -------------------------------------------------------------------
+
+def _merge_unique(*lists: list[str]) -> list[str]:
+    seen = []
+    for lst in lists:
+        for item in lst:
+            if item not in seen:
+                seen.append(item)
+    return seen
+
+
+def aggregate_patterns(results: list[dict], config: dict) -> dict:
+    """
+    Merge per-session detection results into one. Always applied, even for a
+    single session, so every code path (including the Stop hook's normal
+    single-session run) produces the same schema: patterns gain
+    occurring_sessions, distinct_projects, project_concentration and
+    confidence fields on top of the original per-session fields.
+    """
+    patterns_by_name: dict[str, dict] = {}
+    low_confidence: list[dict] = []
+    total_turns = 0
+    project_counter: Counter[str] = Counter()
+    themes: list[str] = []
+
+    for result in results:
+        stats = result.get("session_stats", {})
+        total_turns += stats.get("turns", 0) or 0
+        project = stats.get("dominant_project") or "unknown"
+        project_counter[project] += 1
+        for theme in stats.get("session_themes", []):
+            if theme not in themes:
+                themes.append(theme)
+
+        for p in result.get("patterns", []):
+            key = p.get("proposed_skill_name") or p.get("summary", "unnamed-pattern")
+            acc = patterns_by_name.get(key)
+            if acc is None:
+                acc = {
+                    **p,
+                    "count": 0,
+                    "occurring_sessions": 0,
+                    "_project_counter": Counter(),
+                }
+                patterns_by_name[key] = acc
+
+            acc["count"] += p.get("count", 0)
+            acc["occurring_sessions"] += 1
+            acc["_project_counter"][project] += 1
+            acc["evidence"] = _merge_unique(acc.get("evidence", []), p.get("evidence", []))
+            acc["context_needed"] = _merge_unique(acc.get("context_needed", []), p.get("context_needed", []))
+            acc["suggested_scripts"] = _merge_unique(acc.get("suggested_scripts", []), p.get("suggested_scripts", []))
+            acc["gotchas"] = _merge_unique(acc.get("gotchas", []), p.get("gotchas", []))
+
+        for lc in result.get("low_confidence", []):
+            if lc.get("summary") not in [x.get("summary") for x in low_confidence]:
+                low_confidence.append(lc)
+
+    patterns = []
+    for acc in patterns_by_name.values():
+        proj_counter = acc.pop("_project_counter")
+        distinct_projects = len(proj_counter)
+        most_common_count = proj_counter.most_common(1)[0][1] if proj_counter else 0
+        acc["distinct_projects"] = distinct_projects
+        acc["project_concentration"] = (
+            round(most_common_count / acc["occurring_sessions"], 2)
+            if acc["occurring_sessions"] else 0.0
+        )
+        acc["confidence"] = round(min(
+            1.0,
+            config["confidence_base"]
+            + config["confidence_weight_sessions"] * acc["occurring_sessions"]
+            + config["confidence_weight_count"] * acc["count"],
+        ), 2)
+        patterns.append(acc)
+
+    # Strongest recurrence first: more sessions, then higher count.
+    patterns.sort(key=lambda p: (p["occurring_sessions"], p["count"]), reverse=True)
+
+    return {
+        "patterns": patterns,
+        "low_confidence": low_confidence,
+        "session_stats": {
+            "sessions_analyzed": len(results),
+            "turns": total_turns,
+            "dominant_project": project_counter.most_common(1)[0][0] if project_counter else "unknown",
+            "session_themes": themes,
+        },
+    }
+
+
+# -------------------------------------------------------------------
 # Main
 # -------------------------------------------------------------------
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Extract skill patterns from a Claude Code session using the claude CLI"
+        description="Extract skill patterns from one or more Claude Code sessions using the claude CLI"
     )
     parser.add_argument("--project-dir", type=Path,
                         help="Path to a specific project dir (~/.claude/projects/<hash>)")
     parser.add_argument("--session-file", type=Path,
-                        help="Path to a specific JSONL session file")
+                        help="Path to a specific JSONL session file (always single-session, ignores --sessions)")
     parser.add_argument("--projects-base", type=Path,
                         default=Path.home() / ".claude" / "projects",
                         help="Base directory for all projects (default: ~/.claude/projects)")
@@ -242,6 +378,9 @@ def main():
                         default=Path.home() / ".claude" / "skills" / "session-skill-extractor" / "config.json")
     parser.add_argument("--min-turns", type=int,
                         help="Override min_turns from config")
+    parser.add_argument("--sessions", type=int,
+                        help="Analyse and aggregate the N most recent sessions instead of just one "
+                             "(ignored if --session-file is given)")
     args = parser.parse_args()
 
     # Load config
@@ -251,50 +390,48 @@ def main():
             config.update(json.load(f))
     if args.min_turns:
         config["min_turns"] = args.min_turns
+    if args.sessions:
+        config["sessions"] = args.sessions
 
-    # Resolve session file
-    session_file = None
+    # Resolve session file(s)
     if args.session_file:
-        session_file = args.session_file
+        session_files = [args.session_file]
     elif args.project_dir:
-        files = sorted(
+        session_files = sorted(
             args.project_dir.glob("*.jsonl"),
             key=lambda f: f.stat().st_mtime,
             reverse=True
-        )
-        if files:
-            session_file = files[0]
+        )[:config["sessions"]]
     else:
-        session_file = find_latest_session(args.projects_base)
+        session_files = find_latest_sessions(args.projects_base, config["sessions"])
 
-    if not session_file or not session_file.exists():
+    session_files = [f for f in session_files if f.exists()]
+    if not session_files:
         print("ERROR: No session file found.", file=sys.stderr)
         sys.exit(1)
 
-    print(f"Analysing session: {session_file}", file=sys.stderr)
+    print(f"Analysing {len(session_files)} session(s)...", file=sys.stderr)
 
-    entries = load_session(session_file)
-    turns = extract_turns(entries, tool_result_trim=config["tool_result_trim"])
+    results = []
+    for session_file in session_files:
+        result = process_session(session_file, config)
+        if result is not None:
+            results.append(result)
 
-    if len(turns) < config["min_turns"]:
-        print(
-            f"Session too short ({len(turns)} turns, minimum {config['min_turns']}). Skipping.",
-            file=sys.stderr
-        )
+    if not results:
+        print("No sessions had enough turns to analyse. Nothing to report.", file=sys.stderr)
         sys.exit(0)
 
-    print(f"Extracted {len(turns)} turns. Calling claude CLI...", file=sys.stderr)
+    aggregated = aggregate_patterns(results, config)
 
-    transcript = condense_transcript(turns, max_chars=config["max_session_chars"])
-    result = detect_patterns(transcript, config["model"])
-
-    # Filter by min_pattern_count
-    result["patterns"] = [
-        p for p in result.get("patterns", [])
+    # Filter by min_pattern_count and min_confidence
+    aggregated["patterns"] = [
+        p for p in aggregated["patterns"]
         if p.get("count", 0) >= config["min_pattern_count"]
+        and p.get("confidence", 1.0) >= config["min_confidence"]
     ]
 
-    print(json.dumps(result, indent=2))
+    print(json.dumps(aggregated, indent=2))
 
 
 if __name__ == "__main__":
