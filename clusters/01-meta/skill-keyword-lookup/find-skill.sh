@@ -4,15 +4,17 @@ set -euo pipefail
 
 LIMIT=10
 INCLUDE_PRIVATE=false
+JSON_OUTPUT=false
 
 usage() {
     cat <<'EOF'
-Usage: bash find-skill.sh [--limit N] [--include-private] <keywords...>
+Usage: bash find-skill.sh [--limit N] [--include-private] [--json] <keywords...>
 
 Examples:
   bash find-skill.sh devops standard roadmap readme
   bash find-skill.sh --limit 5 lint black ruff
   bash find-skill.sh --include-private odpc syscall
+  bash find-skill.sh --json devops roadmap
 
 Scoring:
 - Counts keyword hits in SKILL.md and README.md for each skill
@@ -32,6 +34,10 @@ while [[ $# -gt 0 ]]; do
         ;;
     --include-private)
         INCLUDE_PRIVATE=true
+        shift
+        ;;
+    --json)
+        JSON_OUTPUT=true
         shift
         ;;
     -h|--help)
@@ -118,8 +124,40 @@ for dir in "${skill_dirs[@]}"; do
     fi
 done
 
+if [[ "$JSON_OUTPUT" == "true" ]]; then
+    command -v jq >/dev/null 2>&1 || {
+        echo "ERROR: --json requires jq" >&2
+        exit 2
+    }
+fi
+
 if [[ ${#results[@]} -eq 0 ]]; then
-    echo "No matching skills found for: ${TERMS[*]}"
+    if [[ "$JSON_OUTPUT" == "true" ]]; then
+        jq -n --arg query "${TERMS[*]}" '{query: $query, results: []}'
+    else
+        echo "No matching skills found for: ${TERMS[*]}"
+    fi
+    exit 0
+fi
+
+sorted_results="$(printf '%s\n' "${results[@]}" | sort -t'|' -k1,1nr -k2,2 -k3,3 | head -n "$LIMIT")"
+
+if [[ "$JSON_OUTPUT" == "true" ]]; then
+    json_items=()
+    while IFS='|' read -r score cluster skill path matched; do
+        IFS=',' read -ra matched_arr <<<"$matched"
+        item="$(jq -n \
+            --argjson score "$score" \
+            --arg cluster "$cluster" \
+            --arg skill "$skill" \
+            --arg path "$path" \
+            --args '{score: $score, cluster: $cluster, skill: $skill, path: $path, matched: $ARGS.positional}' \
+            "${matched_arr[@]}")"
+        json_items+=("$item")
+    done <<<"$sorted_results"
+
+    printf '%s\n' "${json_items[@]}" \
+        | jq -n --arg query "${TERMS[*]}" '{query: $query, results: [inputs]}'
     exit 0
 fi
 
@@ -127,9 +165,7 @@ echo "=== skill keyword lookup ==="
 echo "Query: ${TERMS[*]}"
 echo ""
 
-printf '%s\n' "${results[@]}" \
-    | sort -t'|' -k1,1nr -k2,2 -k3,3 \
-    | head -n "$LIMIT" \
+printf '%s\n' "$sorted_results" \
     | awk -F'|' '{
         printf "- [%s] %s/%s\n", $1, $2, $3
         printf "  path: %s\n", $4

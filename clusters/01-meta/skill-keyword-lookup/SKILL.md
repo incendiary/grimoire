@@ -16,6 +16,7 @@ Trigger phrases: "find skill", "lookup skill", "which skill covers", "skill sear
 - Keywords describing intent (for example: `devops`, `roadmap`, `readme`, `sync`)
 - Whether private clusters should be included (`--include-private`)
 - Optional result cap (`--limit`)
+- Optional machine-readable output (`--json`)
 
 ## What to do
 
@@ -34,7 +35,12 @@ Trigger phrases: "find skill", "lookup skill", "which skill covers", "skill sear
    bash clusters/01-meta/skill-keyword-lookup/find-skill.sh --include-private odpc syscall
    ```
 
-4. Pick the top matching skill(s) and invoke by name.
+4. Get machine-readable output for downstream tooling:
+   ```bash
+   bash clusters/01-meta/skill-keyword-lookup/find-skill.sh --json devops roadmap
+   ```
+
+5. Pick the top matching skill(s) and invoke by name.
 
 ## Gotchas
 - This is keyword scoring, not semantic search. Better keywords improve results.
