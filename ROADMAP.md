@@ -6,7 +6,7 @@
 > run `bash scripts/roadmap-collect.sh` (or `--json` for machine-readable output) and
 > `bash clusters/07-devops/devops-practices/check-roadmap-sync.sh . --fix`.
 
-**Last updated:** 2026-09-28
+**Last updated:** 2026-09-29
 **Open items:** 49 | **Completed:** 230
 
 ---
