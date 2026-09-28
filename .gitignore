@@ -14,3 +14,7 @@ prompts/
 # Working directories
 tmp/
 logs/
+
+# Local tooling state
+.serena/
+__pycache__/
