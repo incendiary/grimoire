@@ -45,7 +45,7 @@ PyYAML is missing, the script fails closed with an install hint rather than pass
 Checking ci-mcp.yml › build... ✓ PASS            # ran in mcp-server/ (working-directory)
 Checking validate.yml › Lint all shell scripts... ✓ PASS
 Checking validate.yml › No stale path references... ✓ PASS
-Skipped — CI-only: release-on-tag.yml › Create GitHub Release (creates/edits a GitHub release)
+Skipped — CI-only: devops-check.yml › Report results (uses a GitHub Actions ${{ }} context)
 Skipped — CI-only: validate.yml › Install shellcheck (OS package/setup step — provisioned locally instead)
 
 === Results ===

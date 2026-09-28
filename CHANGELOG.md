@@ -9,6 +9,32 @@ This project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+Release automation migrated to `release-please`; retired the manual VERSION-bump/tag
+workflow.
+
+### Added
+
+- `release-please-config.json` + `.release-please-manifest.json` — `release-type: simple`
+  targeting the root `VERSION` file, `skip-changelog: true` (this file stays
+  hand-written).
+- `.github/workflows/release-please.yml` — maintains a standing release PR from
+  conventional-commit messages on `main`; merging it bumps `VERSION`, tags, and creates
+  the GitHub Release atomically. Authenticated via the `RELEASE_PLEASE_TOKEN` repo
+  secret (fine-grained PAT), not the default `GITHUB_TOKEN`, so the release PR still
+  triggers `pull_request`-scoped CI under branch protection.
+
+### Removed
+
+- `.github/workflows/release-on-tag.yml` — superseded by `release-please-action`, which
+  now owns tag + release creation directly.
+
+### Changed
+
+- `CLAUDE.md`: "Delivery loop" no longer includes manual `VERSION` bump or
+  `git tag`/`gh release create` steps; added a "Releases" section documenting the new
+  flow. Removed the now-obsolete "VERSION conflict resolution (squash merges)" section
+  — feature branches never touch `VERSION`, so it can no longer conflict.
+
 ---
 
 ## [1.7.1] — 2026-09-28

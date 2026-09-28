@@ -22,8 +22,11 @@ CI workflows:
 - `validate.yml` — shellcheck, skill structure, registry sync
 - `ci-mcp.yml` — TypeScript build, lint, test (path-filtered to `mcp-server/`)
 - `secret-scan.yml` — gitleaks + TruffleHog
+- `devops-check.yml` — version sync, clone-ref pinning, test baseline, roadmap sync
+- `release-please.yml` — see "Releases" below
 
-VERSION file: semver. Patch bump per PR, minor bump when a cluster's delivery batch completes.
+VERSION file: semver, managed entirely by `release-please` (see "Releases"). Feature PRs
+never touch it — don't hand-edit `VERSION`, `CHANGELOG.md`, or create tags yourself.
 
 ---
 
@@ -34,22 +37,51 @@ git checkout -b feat/<name> main
 # write files
 chmod +x any .sh files
 # tick README roadmap items
-# bump VERSION (patch or minor)
 git add <specific files> && git commit -m "feat: ..."
 git push -u origin feat/<name>
 gh pr create ...
 # wait for CI (see CI section below)
 gh pr merge <N> --squash --delete-branch
-git checkout main && git pull origin main
-git tag vX.Y.Z && git push origin vX.Y.Z
-# .github/workflows/release-on-tag.yml creates the GitHub Release automatically —
-# do NOT also run `gh release create` here, it will 422 on the now-existing tag.
 ```
 
-**Never skip the tag step.** VERSION file, git tag, and GitHub Release must all agree — the
-tag push is what triggers `release-on-tag.yml` to create the release, so pushing the tag
-*is* the release step. If the workflow run fails to appear, check `gh run list --workflow
-release-on-tag.yml` before creating the release by hand.
+No VERSION bump, no manual tag, no `gh release create` — that's all handled by
+`release-please` once this lands on `main` (see "Releases" below). Just merge and move on.
+
+---
+
+## Releases (release-please)
+
+`release-please-action` (`.github/workflows/release-please.yml`, triggered on every push
+to `main`) watches commits since the last release. It maintains a standing
+"chore(release): vX.Y.Z" PR — reopened/updated after every merge to `main` — that bumps
+`VERSION` (via `release-please-config.json`'s `version-file`), determined from
+[Conventional Commits](https://www.conventionalcommits.org/) prefixes on the squashed
+commit messages since the last release:
+- `feat:` → minor bump
+- `fix:` → patch bump
+- `feat!:` / `fix!:` / a `BREAKING CHANGE:` footer → major bump
+- `docs:`, `chore:`, `ci:` → no bump (still land on `main`, just don't trigger a release)
+
+**To cut a release:** merge that standing release PR (title `chore(release): vX.Y.Z`) like
+any other PR. Merging it is what creates the git tag and the GitHub Release, in the same
+workflow run — nothing further to do. Don't accumulate unreleased work indefinitely; merge
+the release PR whenever you're ready to ship what's queued.
+
+**`CHANGELOG.md` stays hand-written** (`skip-changelog: true` in
+`release-please-config.json`) — release-please does not touch it. Add your own entry to
+`CHANGELOG.md` in the same PR as the change, same as before; release-please only owns
+`VERSION` + the tag + the GitHub Release.
+
+**Auth:** uses the `RELEASE_PLEASE_TOKEN` repo secret (a fine-grained PAT), not the default
+`GITHUB_TOKEN` — required so the release PR actually triggers `pull_request`-scoped CI
+(`validate.yml`, `devops-check.yml`); GitHub's default token can't cascade-trigger other
+workflows. If that secret expires or is revoked, the release PR will exist but sit with no
+CI checks ever reporting, which will block it under branch protection.
+
+`devops-check.yml`'s version-sync check is deliberately **not** in `main`'s required status
+checks, even though release PRs should now trip it only on the release-please PR itself
+(ordinary feature PRs never touch `VERSION`). Requiring it would block merging that exact
+PR. It still runs and reports — expect it red on the release PR, green everywhere else.
 
 ---
 
@@ -92,22 +124,6 @@ Always run CI before merging — shellcheck is stricter than local review.
 
 ---
 
-## VERSION conflict resolution (squash merges)
-
-Feature branches that diverge from main often conflict on `VERSION`.
-Resolution: **always keep the branch's version** (it owns the bump).
-
-```bash
-git merge origin/main --no-commit --no-ff
-# resolve VERSION conflict: keep branch value
-printf 'X.Y.Z\n' > VERSION
-git add VERSION
-git commit -m "chore: merge main and resolve VERSION conflict"
-git push origin <branch>
-```
-
----
-
 ## Branch hygiene
 
 - **Never rebase a feature branch onto main** after it has been pushed and a PR is open.
@@ -132,9 +148,8 @@ git diff origin/main HEAD -- <shared-file>
 ```
 
 If the file has a regression (content in main that's missing from the branch), add a
-fixup commit to the branch before the PR. Common culprits:
+fixup commit to the branch before the PR. Common culprit:
 - `clusters/07-devops/README.md` — new skill entries added by intervening PRs
-- `VERSION` — always conflicts; resolve as described above
 
 ---
 
@@ -143,7 +158,7 @@ fixup commit to the branch before the PR. Common culprits:
 - `feat:` — new skill file or script
 - `fix:` — bug fix in an existing script (including ShellCheck fixes)
 - `docs:` — README updates, roadmap ticks
-- `chore:` — VERSION bump, merge commits, housekeeping
+- `chore:` — merge commits, housekeeping (never hand-bump VERSION — see "Releases")
 - `ci:` — changes to `.github/workflows/`
 
 Always append:
