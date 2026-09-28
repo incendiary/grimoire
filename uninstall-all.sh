@@ -12,7 +12,6 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 SKILLS_DIR="${HOME}/.claude/skills"
 CLUSTERS_DIR="${SCRIPT_DIR}/clusters"
-PRIVATE_CLUSTERS_DIR="${SCRIPT_DIR}/clusters-private/clusters"
 
 AUTO_APPLY=false
 DRY_RUN=false
@@ -62,9 +61,10 @@ declare -a managed_skills
 declare -a removable
 
 cluster_roots=("${CLUSTERS_DIR}")
-if [[ -d "${PRIVATE_CLUSTERS_DIR}" ]]; then
-    cluster_roots+=("${PRIVATE_CLUSTERS_DIR}")
-fi
+# Discover every private submodule cluster set (clusters-private, clusters-offsec, ...)
+for _priv_root in "${SCRIPT_DIR}"/clusters-*/clusters; do
+    [[ -d "${_priv_root}" ]] && cluster_roots+=("${_priv_root}")
+done
 
 for cluster_root in "${cluster_roots[@]}"; do
     for skill_path in "${cluster_root}"/*/*; do

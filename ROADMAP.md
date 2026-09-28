@@ -72,10 +72,6 @@ Items marked "Ship: copy to ~/.claude/skills/..." are legacy — the install pat
 
 ### 05-technical
 
-- **pe-binary-analysis**: Add syscall hook detection byte-pattern reference (clean stub patterns for common syscalls)
-- **pe-binary-analysis**: Add worked example: full import table walk without WinAPI
-- **pe-binary-analysis**: Add worked example: section table traversal with RVA/file-offset conversion
-- **pe-binary-analysis**: Test on 2 real PE parsing sessions
 - **ui-ux-product-audit**: Add worked example: full SaaS UI audit with implemented top-3 fixes
 - **ui-ux-product-audit**: Add stack-specific checklist variants (React+Tailwind, Vue, Svelte)
 - **ui-ux-product-audit**: Test on 3 real frontend repos and capture recurring anti-patterns
@@ -134,24 +130,8 @@ Items marked "Ship: copy to ~/.claude/skills/..." are legacy — the install pat
 - **terraform-checkov-skips**: Add common skip patterns and their justifications
 - **terraform-version-compat**: Add known-good version matrix for frequently used module combinations
 
-### 08-offsec
-
-- **api-hashing-conventions**: Add worked end-to-end example pairing with `shellcode-dev-conventions`
-- **bof-dev-conventions**: Add Havoc demon module API comparison
-- **bof-dev-conventions**: Add fork-and-run vs inline guidance with OPSEC notes
-- **bof-dev-conventions**: Add Makefile template
-- **c2-integration-checklist**: Add Havoc-specific demon module integration details
-- **c2-integration-checklist**: Add DNS listener OPSEC checklist (TTL, NS delegation, authoritative zone config)
-- **c2-integration-checklist**: Add post-engagement cleanup checklist (artifact removal, implant termination confirmation)
-- **edr-test-loop**: Add AMSI bypass sub-loop
-- **edr-test-loop**: Add ETW patching considerations and risk notes
-- **edr-test-loop**: Add memory-at-rest (sleep mask) test sub-loop
-- **process-injection-taxonomy**: Add Cobalt Strike-specific guidance (BOF vs post-ex DLL vs fork-and-run)
-- **process-injection-taxonomy**: Add table row for thread pool injection (TpAllocWork)
-- **process-injection-taxonomy**: Add table row for kernel-mode techniques (driver-based)
-- **process-injection-taxonomy**: Link edr-test-loop workflow for validation phase
-- **shellcode-dev-conventions**: Add x86 `fs:[0x30]` PEB walk variant with concrete offsets
-- **shellcode-dev-conventions**: Add worked example: minimal `MessageBoxA` shellcode (x64) end-to-end
+> **08-offsec** roadmap items now live in the private `grimoire-offsec` submodule
+> (`clusters-offsec/`) alongside the skills they track.
 
 ---
 

@@ -39,7 +39,6 @@ fi
 SKILLS_DIR="${HOME}/.claude/skills"
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 CLUSTERS_DIR="${SCRIPT_DIR}/clusters"
-PRIVATE_CLUSTERS_DIR="${SCRIPT_DIR}/clusters-private/clusters"
 BACKUP_ROOT="${SKILLS_DIR}/.backups"
 
 mkdir -p "${SKILLS_DIR}"
@@ -79,9 +78,10 @@ backup_skill_dir() {
 
 # Collect all cluster paths (public + private submodule if present)
 CLUSTER_PATHS=("${CLUSTERS_DIR}")
-if [[ -d "${PRIVATE_CLUSTERS_DIR}" ]]; then
-    CLUSTER_PATHS+=("${PRIVATE_CLUSTERS_DIR}")
-fi
+# Discover every private submodule cluster set (clusters-private, clusters-offsec, ...)
+for _priv_root in "${SCRIPT_DIR}"/clusters-*/clusters; do
+    [[ -d "${_priv_root}" ]] && CLUSTER_PATHS+=("${_priv_root}")
+done
 
 for cluster_root in "${CLUSTER_PATHS[@]}"; do
 for skill_path in "${cluster_root}"/*/*; do

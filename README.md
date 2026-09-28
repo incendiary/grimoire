@@ -183,14 +183,15 @@ Seven public clusters + two private (via submodule). See [clusters/README.md](cl
 | 02 | [comms](clusters/02-comms/) | public | Tone review, style rewriting, executive translation |
 | 03 | [incident](clusters/03-incident/) | public | Evidence collection, incident docs, risk action plans |
 | 04 | [security](clusters/04-security/) | public | iOS signing risk analysis |
-| 05 | [technical](clusters/05-technical/) | public | PE binary parsing, test bootstrapping |
+| 05 | [technical](clusters/05-technical/) | public | Test bootstrapping |
 | 06 | study | **private** | Burst study sessions, material triage, YouTube curation |
 | 07 | [devops](clusters/07-devops/) | public | CI templates, repo publication, history wiping, secrets |
-| 08 | [offsec](clusters/08-offsec/) | public | Shellcode, BOFs, process injection, EDR, C2 |
+| 08 | offsec | **private** | Shellcode, BOFs, process injection, EDR, C2 |
 | 09 | odpc | **private** | WKL ODPC: syscalls, ETW evasion, call-stack spoofing |
 
-> **Private clusters** live in a separate repo ([grimoire-private](https://github.com/incendiary/grimoire-private))
-> mounted as a git submodule at `clusters-private/`. See [Private submodule](#private-submodule) below.
+> **Private clusters** live in separate repos ([grimoire-private](https://github.com/incendiary/grimoire-private),
+> [grimoire-offsec](https://github.com/incendiary/grimoire-offsec)) mounted as git submodules at
+> `clusters-private/` and `clusters-offsec/`. See [Private submodule](#private-submodule) below.
 
 ---
 
@@ -221,7 +222,6 @@ Seven public clusters + two private (via submodule). See [clusters/README.md](cl
 | 03-incident | `incident-appendix` | ✅ |
 | 03-incident | `risk-to-action` | ✅ |
 | 04-security | `ios-signing-risk` | ✅ |
-| 05-technical | `pe-binary-analysis` | ✅ |
 | 05-technical | `test-bootstrap` | ✅ |
 | 05-technical | `python-black-ruff-authoring` | ✅ |
 | 05-technical | `codebase-holistic-review` | ✅ |
@@ -249,30 +249,26 @@ Seven public clusters + two private (via submodule). See [clusters/README.md](cl
 | 07-devops | `npm-provenance-attestation` | ✅ |
 | 07-devops | `python-lockfile-integrity` | ✅ |
 | 07-devops | `readme-version-pin` | ✅ |
-| 08-offsec | `shellcode-dev-conventions` | ✅ |
-| 08-offsec | `api-hashing-conventions` | ✅ |
-| 08-offsec | `process-injection-taxonomy` | ✅ |
-| 08-offsec | `edr-test-loop` | ✅ |
-| 08-offsec | `bof-dev-conventions` | ✅ |
-| 08-offsec | `c2-integration-checklist` | ✅ |
+| 08-offsec | *(private submodule)* | — |
 | 09-odpc | *(private submodule)* | — |
 
 ---
 
 ## Private submodule
 
-Personal or team-specific clusters that don't belong in the shared repo live in a
-separate private repository, mounted as a git submodule at `clusters-private/`.
+Personal, team-specific, or offensive-security clusters that don't belong in the shared
+public repo live in separate private repositories, each mounted as a git submodule under
+`clusters-<name>/` (e.g. `clusters-private/`, `clusters-offsec/`).
 
-### Using the existing private submodule
+### Using the existing private submodules
 
 ```bash
 git submodule init && git submodule update
 ```
 
 Or clone with `--recurse-submodules`. The install scripts (`install-all.sh`,
-`build.sh`, `install-vscode.sh`) automatically detect and include skills from
-`clusters-private/clusters/` when the submodule is initialised.
+`build.sh`, `install-vscode.sh`) automatically detect and include skills from any
+mounted `clusters-*/clusters/` submodule.
 
 ### Creating your own private submodule
 

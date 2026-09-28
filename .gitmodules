@@ -1,3 +1,6 @@
 [submodule "clusters-private"]
 	path = clusters-private
 	url = https://github.com/incendiary/grimoire-private.git
+[submodule "clusters-offsec"]
+	path = clusters-offsec
+	url = https://github.com/incendiary/grimoire-offsec.git

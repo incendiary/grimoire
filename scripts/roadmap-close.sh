@@ -51,20 +51,23 @@ for cluster_dir in "$REPO_ROOT"/clusters/*/; do
     done
 done
 
-# Also check private clusters
-if [[ -z "$README_PATH" || ! -f "$README_PATH" ]] && [[ -d "$REPO_ROOT/clusters-private/clusters" ]]; then
-    for cluster_dir in "$REPO_ROOT"/clusters-private/clusters/*/; do
-        for candidate_file in README.md SKILL.md; do
-            candidate="${cluster_dir}${SKILL_NAME}/${candidate_file}"
-            if [[ -f "$candidate" ]]; then
-                if grep -q '^\- \[ \]' "$candidate" 2>/dev/null; then
-                    README_PATH="$candidate"
-                    break 2
+# Also check private submodule clusters (clusters-private, clusters-offsec, ...)
+if [[ -z "$README_PATH" || ! -f "$README_PATH" ]]; then
+    for _priv_root in "$REPO_ROOT"/clusters-*/clusters; do
+        [[ -d "$_priv_root" ]] || continue
+        for cluster_dir in "$_priv_root"/*/; do
+            for candidate_file in README.md SKILL.md; do
+                candidate="${cluster_dir}${SKILL_NAME}/${candidate_file}"
+                if [[ -f "$candidate" ]]; then
+                    if grep -q '^\- \[ \]' "$candidate" 2>/dev/null; then
+                        README_PATH="$candidate"
+                        break 3
+                    fi
+                    if [[ -z "$README_PATH" && "$candidate_file" == "README.md" ]]; then
+                        README_PATH="$candidate"
+                    fi
                 fi
-                if [[ -z "$README_PATH" && "$candidate_file" == "README.md" ]]; then
-                    README_PATH="$candidate"
-                fi
-            fi
+            done
         done
     done
 fi

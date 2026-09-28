@@ -11,6 +11,31 @@ This project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [1.7.0] — 2026-09-28
+
+Offensive-security content extracted to its own private submodule.
+
+### Added
+
+- `clusters-offsec/` git submodule pointing to `incendiary/grimoire-offsec`
+  (7 skills, consolidated under `08-offsec/`, including `pe-binary-analysis`)
+
+### Changed
+
+- Moved `08-offsec` and `05-technical/pe-binary-analysis` to `grimoire-offsec`
+- `install-all.sh`, `uninstall-all.sh`, `build.sh`: discover any mounted
+  `clusters-*/clusters` submodule instead of hardcoding `clusters-private/`
+- `scripts/roadmap-close.sh`, `scripts/skill-dependency-graph.sh`,
+  `clusters/01-meta/skill-keyword-lookup/find-skill.sh`: same generalisation
+- `validate.yml`: shellcheck exclusion generalised from `clusters-private/*` to
+  `clusters-*/*`
+- `README.md`, `clusters/README.md`, `clusters/05-technical/README.md`,
+  `ROADMAP.md`: updated to reflect cluster 08 and `pe-binary-analysis` living in
+  the private `clusters-offsec/` submodule
+- `VERSION`: 1.6.36 → 1.7.0
+
+---
+
 ## [1.6.15] — 2026-06-18
 
 Install scripts resolve full Node.js path at install time.

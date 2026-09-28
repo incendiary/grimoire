@@ -18,7 +18,7 @@ jobs:
       - name: Install shellcheck
         run: sudo apt-get install -y shellcheck
       - name: Lint all shell scripts
-        run: find . -name "*.sh" -not -path "./.git/*" -not -path "./clusters-private/*" -exec shellcheck {} +
+        run: find . -name "*.sh" -not -path "./.git/*" -not -path "./clusters-*/*" -exec shellcheck {} +
 
   structure:
     name: Skill structure

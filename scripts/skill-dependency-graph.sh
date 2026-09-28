@@ -21,9 +21,9 @@ fi
 # Collect all known skill names (public + private if mounted)
 declare -a skill_dirs
 skill_dirs=("${REPO_ROOT}/clusters")
-if [[ -d "${REPO_ROOT}/clusters-private/clusters" ]]; then
-    skill_dirs+=("${REPO_ROOT}/clusters-private/clusters")
-fi
+for _priv_root in "${REPO_ROOT}"/clusters-*/clusters; do
+    [[ -d "${_priv_root}" ]] && skill_dirs+=("${_priv_root}")
+done
 
 TMP_SKILLS="$(mktemp)"
 TMP_EDGES="$(mktemp)"
