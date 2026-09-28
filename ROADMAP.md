@@ -7,7 +7,7 @@
 > `bash clusters/07-devops/devops-practices/check-roadmap-sync.sh . --fix`.
 
 **Last updated:** 2026-09-28
-**Open items:** 53 | **Completed:** 226
+**Open items:** 52 | **Completed:** 227
 
 ---
 
@@ -99,7 +99,7 @@ Items marked "Ship: copy to ~/.claude/skills/..." are legacy — the install pat
 
 ---
 
-**Summary:** 53 open items | 226 completed items
+**Summary:** 52 open items | 227 completed items
 <!-- ROADMAP-COLLECT:END -->
 
 > **08-offsec** roadmap items now live in the private `grimoire-offsec` submodule
