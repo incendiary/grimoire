@@ -47,8 +47,6 @@ gh pr merge <N> --squash --delete-branch
 No VERSION bump, no manual tag, no `gh release create` — that's all handled by
 `release-please` once this lands on `main` (see "Releases" below). Just merge and move on.
 
-After opening a PR, run `/ponytail:ponytail-review` on its diff and report the findings; never apply them without asking.
-
 ---
 
 ## Releases (release-please)
