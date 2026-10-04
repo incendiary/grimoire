@@ -4,7 +4,7 @@
 > Parent: discoverability and consolidation programme
 > Model: sonnet
 > Fallback: opus
-> Depends on: RA-02, RA-22
+> Depends on: RA-02
 > Effort: S
 > Touches: `clusters/07-devops/devops-practices/` → `clusters/07-devops/ci-standards/`, `clusters/07-devops/devops-practices-updater/` (deleted), `.pre-commit-config.yaml`, `.github/workflows/devops-check.yml`, `ROADMAP.md` (header text only), `CLAUDE.md`, `docs/tasks/discoverability/00-runbook.md`, references, `scripts/renamed-skills.txt`, `CHANGELOG.md`
 
@@ -40,7 +40,7 @@ procedure for evolving it.
 - [ ] Parity checklist complete.
 - [ ] `pre-commit run roadmap-sync --all-files` passes (or the equivalent `bash clusters/07-devops/ci-standards/check-roadmap-sync.sh . --check`).
 - [ ] Each of the four check scripts runs from the new path on this repo with the same exit code as before.
-- [ ] `grep -rn 'devops-practices' . --exclude=CHANGELOG.md --exclude=REVIEW.md --exclude=renamed-skills.txt --exclude=discoverability-intents.tsv --exclude-dir=node_modules --exclude-dir=.git --exclude-dir=tasks` prints nothing.
+- [ ] `grep -rn 'devops-practices' . --exclude=CHANGELOG.md --exclude=REVIEW.md --exclude=renamed-skills.txt --exclude=discoverability-intents.md --exclude-dir=node_modules --exclude-dir=.git --exclude-dir=tasks` prints nothing.
 
 ## Return signal
 Commit message: `feat!: merge devops-practices and its updater into ci-standards` with footer

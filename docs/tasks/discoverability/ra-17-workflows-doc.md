@@ -1,78 +1,47 @@
-# Task RA-17: Rewrite PROJECT-WORKFLOWS.md in pathway terms
+# Task RA-17: Delete PROJECT-WORKFLOWS.md, keep a short table in README
 
 > Status: pending
 > Parent: discoverability and consolidation programme
 > Model: haiku
 > Fallback: sonnet
 > Depends on: RA-15, RA-16
-> Effort: S
-> Touches: `PROJECT-WORKFLOWS.md`, `README.md` (one paragraph), `CHANGELOG.md`
+> Effort: XS
+> Touches: `PROJECT-WORKFLOWS.md` (deleted), `README.md`, any file linking to it, `CHANGELOG.md`
 
 ## Objective
-`PROJECT-WORKFLOWS.md` becomes a short guide organised by pathway prefix, using only
-current skill names, under 150 lines.
-
-## Background
-- The old document is organised by project type and recommends obsolete chains (for
-  example three Python lint skills in a row). After RA-15, every skill name follows
-  `<prefix>-<step>`, and the four entry skills (`orient`, `plan`, `release`, `publish`)
-  contain a `## Pathway` table (RA-16).
-- Source of truth for names and descriptions: `SKILLS.md` (generated). Source of truth for
-  orders: the `## Pathway` tables in the four entry skills.
+Remove the hand-kept 329-line workflow guide. The entry skills' pathway tables (RA-16) and
+the generated `SKILLS.md` (RA-04) now carry that information.
 
 ## Steps
-1. Read `SKILLS.md` and the four `## Pathway` tables.
-2. Replace the whole of `PROJECT-WORKFLOWS.md` with this structure:
+1. `git rm PROJECT-WORKFLOWS.md`.
+2. In `README.md`, replace the whole `## Project Workflows` section body (keep the heading)
+   with:
    ```
-   # Project workflows
+   Skills are named by pathway: the prefix says when you need it. Type a prefix (for
+   example `/release`) in Claude Code, or `#release` in Copilot Chat, to see the pathway.
+   The entry skills `orient`, `plan`, `release` and `publish` list their steps in order.
+   Full list: [SKILLS.md](SKILLS.md).
 
-   Skills are named by pathway: the prefix tells you when you need it. Type the prefix
-   (for example `/release`) in Claude Code, or `#release` in Copilot Chat, to see the
-   whole pathway. Full list: [SKILLS.md](SKILLS.md).
-
-   | Prefix | Use it when |
+   | Project type | Pathways, in order |
    |---|---|
-   | `orient` | starting or resuming work on a repo |
-   | `plan` | ... |
-   (one row per prefix that exists in SKILLS.md: orient, plan, roadmap, py, ci, deps,
-    release, publish, tf, write, incident, review, grimoire)
-
-   ## orient
-   <copy the Pathway table from the orient entry skill>
-
-   ## plan
-   <copy the Pathway table>
-
-   ## release
-   <copy>
-
-   ## publish
-   <copy>
-
-   ## Other prefixes
-   For each remaining prefix: a `###` heading and a bullet list of its skills, each
-   `` `name` ``: the first sentence of its description from SKILLS.md.
-
-   ## By project type
-   A table: Project type | Pathways in order. Rows: Python tool, .NET tool, Node service,
-   Terraform, Security tool, Publishing a private repo. Use only prefixes and skill names
-   that exist in SKILLS.md.
+   | Python tool | `orient`, `plan`, `py-lint`, `ci-python`, `release` |
+   | .NET tool | `orient`, `plan`, `ci-dotnet`, `release` |
+   | Node service | `orient`, `plan`, `deps-integrity`, `release`, `release-docker-ghcr` |
+   | Terraform | `orient`, `plan`, `tf-guardrails`, `publish-secret-scan`, `release` |
+   | Security tool | `orient`, `plan-spec`, `publish-secret-scan`, `publish-readme`, `release` |
+   | Going public | `publish` (follow its pathway table) |
    ```
-3. In `README.md`, replace the bullet list under `## Project Workflows` with one sentence
-   linking to `PROJECT-WORKFLOWS.md` and `SKILLS.md`.
-4. `CHANGELOG.md` → `### Changed`: `- PROJECT-WORKFLOWS.md reorganised by pathway prefix.`
-
-## Constraints
-- Only skill names that exist. Check each with `ls -d clusters/*/<name>`.
-- Under 150 lines. No em dashes.
+3. Confirm every skill named in the table exists (`ls -d clusters/*/<name>`). If one does
+   not, stop with `CHUNK BLOCKED: RA-17 missing <name>`.
+4. Remove links to the deleted file:
+   `grep -rn 'PROJECT-WORKFLOWS' . --exclude=CHANGELOG.md --exclude=REVIEW.md --exclude-dir=node_modules --exclude-dir=.git --exclude-dir=tasks`
+   and delete or repoint each hit to `README.md#project-workflows`.
+5. `CHANGELOG.md` → `### Removed`: `- PROJECT-WORKFLOWS.md (replaced by pathway tables and a README summary).`
 
 ## Done when
-- [ ] `wc -l < PROJECT-WORKFLOWS.md` is at most 150.
-- [ ] Every backticked name in the file that looks like a skill exists:
-      `grep -o '`[a-z][a-z0-9-]*`' PROJECT-WORKFLOWS.md | tr -d '`' | sort -u | while read n; do ls -d clusters/*/"$n" >/dev/null 2>&1 || echo "UNKNOWN $n"; done`
-      prints nothing except flags such as `--sync` (none should start with a letter and be unknown).
-- [ ] `grep -c '—' PROJECT-WORKFLOWS.md` prints `0`.
+- [ ] `PROJECT-WORKFLOWS.md` does not exist and step 4 grep prints nothing.
+- [ ] `grep -c '—' README.md` does not increase compared with `main`.
 
 ## Return signal
-Commit message: `docs: reorganise PROJECT-WORKFLOWS.md by pathway`
+Commit message: `docs: replace PROJECT-WORKFLOWS.md with a README summary`
 Then follow Shared conventions step 7.

@@ -14,11 +14,13 @@ a proposed replacement for each, so the owner can approve the edits.
 
 ## Background
 - Renames and merges are listed in `scripts/renamed-skills.txt` (`old<TAB>new`; `-` means
-  retired, now a rule file under `rules/`).
+  retired with no replacement).
 - Known locations that reference skill names:
   - `~/.claude/CLAUDE.md` (names `github-authored-repos`)
   - `~/.claude/rules/*.md` (`git-ci.md` names `local-ci` and `pre-push-validation`)
   - Local clones of the private repos `grimoire-private` and `grimoire-offsec`, if present.
+- Also include the two proposed global CLAUDE.md lines from RA-07's return message, if the
+  dispatch prompt provides them, as rows with File `~/.claude/CLAUDE.md` and Old `(new line)`.
 - **This task edits nothing.** Files outside the repo belong to the owner and need approval.
 
 ## Steps
@@ -41,7 +43,7 @@ a proposed replacement for each, so the owner can approve the edits.
    |---|---|---|---|---|
    ```
    One row per hit. "Proposed" is the new name from `renamed-skills.txt`; for retired names
-   write `rules/<file>` if you can tell which rule replaced it from `rules/`, else `owner to decide`.
+   write `delete reference`.
    In "Note" flag anything that is a command or path (for example `bash local-ci.sh`),
    since script names did not change and may still be correct.
 4. Do not modify any file. Output the report path.

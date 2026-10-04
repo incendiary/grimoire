@@ -11,7 +11,7 @@ Decisions already taken with the owner (do not re-open them while executing this
 | Delivery surfaces in use | All four: Claude Code (this Mac), VS Code/Copilot prompt files, JetBrains MCP, and VS Code plus JetBrains on a second machine |
 | Renaming appetite | Hard rename in one planned batch, no alias stubs |
 | Naming scheme | Pathway prefix (see [Canonical rename map](#canonical-rename-map)) |
-| Always-on behavioural skills | Move to rules files, retire as skills |
+| Always-on behavioural skills | Delete (revised in the 2026-10-04 audit: three duplicate Claude Code built-ins, two become global CLAUDE.md lines, Python authoring folds into `py-lint`) |
 
 ---
 
@@ -27,7 +27,7 @@ cannot browse by purpose. Descriptions also come from three unsynchronised sourc
 2026, only about 15 of the 57 skills were ever invoked, and each invocation was
 explicit, by name. The fix order is: (1) frontmatter as the single description
 source, with a measurable discoverability test; (2) cross-machine usage telemetry;
-(3) consolidation and the pathway-prefix rename, which cuts 57 skills to 42, grouped
+(3) consolidation and the pathway-prefix rename, which cuts 57 skills to 41, grouped
 under 13 prefixes. Other health is good: CI is comprehensive and secrets scanning is
 layered. The only material hygiene items are transitive npm advisories in the MCP
 server and a roadmap dominated by validation items that cannot close.
@@ -131,7 +131,7 @@ but not for descriptions.
 ## 5. Predicted failure scenarios (score 3 and above)
 
 **PF-1 (risk 1): skills never fire.** Happening today. Any session that does not name
-a skill explicitly gets no grimoire help. Minimum fix: RA-02. Full fix: RA-01 to RA-05.
+a skill explicitly gets no grimoire help. Minimum fix: RA-02. Full fix: RA-01 to RA-04, checked by the RA-05 spot-check.
 
 **PF-2 (risk 2): descriptions diverge per surface.** After the frontmatter lands, the
 MCP registry and prompt files keep old text, so VS Code and JetBrains route
@@ -149,20 +149,18 @@ install and uninstall (RA-15).
 
 **PF-5 (risk 7): history-wipe regression.** A future edit to
 `capture-releases.sh`/`recreate-releases.sh` breaks release recreation after a force
-push, and the loss is discovered only on a real repo. Fix: RA-21.
+push, and the loss is discovered only on a real repo. Accepted risk: the skill has no recorded use, so the 2026-10-04 audit dropped the planned test harness (RA-21).
 
-**PF-6 (risk 4): rules not reaching IDEs.** Rules moved to `~/.claude/rules` are
-invisible to Copilot and JetBrains. Fix: RA-07 emits Copilot `.instructions.md` files
-too. The JetBrains equivalent is unverified (see decisions).
+**PF-6 (risk 4): rules not reaching IDEs.** Resolved by not creating rules files: the 2026-10-04 audit deletes the always-on skills instead (RA-07).
 
 ## 6. Test coverage gaps
 
 | Path | Why critical | Test type needed |
 |---|---|---|
 | Skill frontmatter | Discoverability depends on it | CI validator (RA-01) |
-| Intent to skill routing | The key success criterion | Fixture-driven hit-rate test (RA-05) |
+| Intent to skill routing | The key success criterion | Manual spot-check in a fresh session (RA-05); a keyword scorer would measure the wrong thing |
 | `install-all.sh --update` with renamed skills | Stale skills on every machine | bats test with a temp skills dir (RA-15) |
-| `github-history-wipe/*.sh` | Destructive, force-push adjacent | bats test against a local bare repo (RA-21) |
+| `github-history-wipe/*.sh` | Destructive, force-push adjacent | Deferred: no recorded use (RA-21 dropped) |
 | `mcp-server` tool execution per skill | Only a smoke and registry test exist | Add one executor test per merged skill (RA-08 to RA-13) |
 
 ## 7. Dependency audit
@@ -180,27 +178,26 @@ too. The JetBrains equivalent is unverified (see decisions).
 | Secret scanning | Yes (gitleaks, TruffleHog, detect-secrets locally) |
 | Action versions pinned | Tags only, not SHAs (RA-20) |
 | Scheduled dependency drift | **No** (RA-19) |
-| Frontmatter and discoverability | **No** (RA-01, RA-05) |
+| Frontmatter | **No** (RA-01, RA-03) |
 
 ---
 
 ## Canonical rename map
 
-This table is the specification for RA-08 to RA-18. 57 skills become 42 skills plus
-6 rules files, under 13 prefixes: `orient`, `plan`, `roadmap`, `py`, `ci`, `deps`,
+This table is the specification for RA-07 to RA-18 (revised 2026-10-04). 57 skills become
+41 skills, under 13 prefixes: `orient`, `plan`, `roadmap`, `py`, `ci`, `deps`,
 `release`, `publish`, `tf`, `write`, `incident`, `review`, `grimoire`. The bare prefix,
 where it exists, is the pathway entry skill that lists its steps in order.
 
 | Current | New | How |
 |---|---|---|
-| *(new)* | `orient` | New entry skill: cwd check, code-version check, push-protocol check, then `orient-repo-state` |
-| `repo-compass` | `orient-repo-state` | Rename |
+| `repo-compass` | `orient` | Rename, becomes entry (RA-14) |
 | `branch-surface-resolve` | `orient-branches` | Rename |
 | `github-morning-run` | `orient-morning-run` | Rename |
 | `github-authored-repos` | `orient-authored-repos` | Rename |
-| `cwd-verification` | rule `grimoire-cwd` + script into `orient` | Retire skill |
-| `verify-code-version` | rule `grimoire-code-version` + check into `orient` | Retire skill |
-| `git-push-protocol-handler` | script into `orient` | Retire skill |
+| `cwd-verification` | one line in global `~/.claude/CLAUDE.md` | Delete (RA-07) |
+| `verify-code-version` | one line in global `~/.claude/CLAUDE.md` | Delete (RA-07) |
+| `git-push-protocol-handler` | section and script in `orient` | Merge (RA-14) |
 | `karpathy-framework` | `plan` | Rename (already a router) |
 | `karpathy-spec` | `plan-spec` | Rename |
 | `karpathy-verify` | `plan-verify` | Rename |
@@ -208,14 +205,13 @@ where it exists, is the pathway entry skill that lists its steps in order.
 | `task-decomposer` | `plan-decompose` | Rename |
 | `task-handoff` | `plan-handoff` | Rename |
 | `model-selection-framework` | `plan-model-tier` | Rename |
-| `test-before-asking` | rule `grimoire-test-before-asking` | Retire skill |
-| `mid-task-checkin` | rule `grimoire-mid-task-checkin` | Retire skill |
-| `roadmap-driver` + `grimoire-roadmap-status` | `roadmap` | Merge |
+| `test-before-asking` | Claude Code auto mode | Delete (RA-07) |
+| `mid-task-checkin` | Claude Code queued messages | Delete (RA-07) |
+| `roadmap-driver` (+ delete `grimoire-roadmap-status`) | `roadmap` | Rename (RA-13) |
 | `roadmap-sync` | `roadmap-sync` | Unchanged |
 | `project-delivery-workflow` | `roadmap-deliver` | Rename |
-| `python-lint-gate` + `format-before-commit` + `python-ci-lint-precheck` | `py-lint` | Merge |
-| `python-black-ruff-authoring` | rule `grimoire-python-authoring` | Retire skill |
-| `pre-commit-aware-commits` | rule `grimoire-pre-commit` | Retire skill |
+| `python-lint-gate` + `format-before-commit` + `python-ci-lint-precheck` + `python-black-ruff-authoring` | `py-lint` | Merge (RA-09) |
+| `pre-commit-aware-commits` | Claude Code system prompt | Delete (RA-07) |
 | `local-ci` + `pre-push-validation` | `ci-local` | Merge (`local-ci` is the base) |
 | `python-ci-template` | `ci-python` | Rename |
 | `dotnet-ci-template` | `ci-dotnet` | Rename |
@@ -262,6 +258,40 @@ completion.
 
 ---
 
+## Over-engineering audit (2026-10-04)
+
+A `ponytail-audit` pass over the repo, cross-checked against this plan. Owner approved all
+changes below.
+
+**Repo findings added as tasks:**
+
+| Finding | Task |
+|---|---|
+| `## Installation` copied into 57 skill READMEs (about 1,170 lines), plus a CI job forcing it | RA-24 |
+| `model-select.sh` (interactive, agents cannot drive it), `roadmap-close.sh`, `skill-dependency-graph.sh` (no callers) | RA-25 |
+| VERSION/tag drift checks in this repo's CI, superseded by release-please | RA-26 |
+| 93 duplicated lines between the VS Code and JetBrains installers | RA-27 |
+
+**Plan changes:**
+
+| Task | Change | Reason |
+|---|---|---|
+| RA-01/03 | No non-blocking CI phase; RA-03 adds the check once all skills pass | Removes a two-step CI dance |
+| RA-05 | Manual spot-check list, no scorer or CI gate | `find-skill.sh` hit-rate does not measure how Claude routes |
+| RA-06 | Report over existing transcripts and MCP logs | Both already record every invocation; no hooks or settings edits |
+| RA-07 | Delete five skills; no rules files or install plumbing | Three duplicate Claude Code behaviour; two are one-line global rules |
+| RA-13 | Delete `grimoire-roadmap-status` | It has no script; `roadmap-collect.sh` is the status |
+| RA-14 | Rename `repo-compass` to `orient` instead of building an orchestrator | Already the de facto session-start skill |
+| RA-16 | Entry tables only, no per-step back-references | The prefix already says it |
+| RA-17 | Delete `PROJECT-WORKFLOWS.md` | Pathway tables and `SKILLS.md` cover it |
+| RA-21 | Dropped | Test harness for an unused skill; one install assertion moves into RA-15 |
+| RA-22 | Delete validation items instead of tracking them separately | They are never scheduled |
+
+Correction to 2.2: `session-skill-extractor` runs from a Stop hook, so it is in use even
+though no transcript records an invocation.
+
+---
+
 ## Needs owner decision
 
 1. **`~/.claude/rules/git-ci.md`** is a seven-phase publish procedure loaded into every
@@ -271,7 +301,5 @@ completion.
    (`release-`, `publish-`, `ci-`). Recommend deferring: the prefix carries the grouping
    for users, and moving directories touches CI, install scripts, and the private repos.
    Revisit after RA-15 if it still grates.
-3. **JetBrains rules channel.** RA-07 covers Claude Code and Copilot. The equivalent for
-   JetBrains AI Assistant rules is unverified; confirm which JetBrains assistant the
-   second machine uses before extending RA-07.
+3. ~~JetBrains rules channel~~: moot, no rules files are created (2026-10-04 audit).
 4. **Prefix refinements** listed under the rename map.

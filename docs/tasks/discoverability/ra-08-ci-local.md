@@ -4,7 +4,7 @@
 > Parent: discoverability and consolidation programme
 > Model: opus
 > Fallback: none (escalate to owner)
-> Depends on: RA-02, RA-22
+> Depends on: RA-02
 > Effort: M
 > Touches: `clusters/07-devops/local-ci/` → `clusters/07-devops/ci-local/`, `clusters/07-devops/pre-push-validation/` (deleted), `mcp-server/registry.json`, `clusters/07-devops/README.md`, references across the repo, `scripts/renamed-skills.txt`, `CHANGELOG.md`
 

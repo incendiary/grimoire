@@ -40,31 +40,35 @@ Tick the first column when a task's brief reaches `> Status: done`.
 
 | | ID | Task | Model | Fallback | Wave | Brief |
 |---|---|---|---|---|---|---|
-| [ ] | RA-01 | Frontmatter checker script, non-blocking CI | haiku | sonnet | 1 | [ra-01](docs/tasks/discoverability/ra-01-frontmatter-check.md) |
-| [ ] | RA-02 | Frontmatter descriptions on all 57 skills (4 parallel scopes) | haiku ×4 | sonnet | 2 | [ra-02](docs/tasks/discoverability/ra-02-frontmatter-descriptions.md) |
-| [ ] | RA-03 | Single-source descriptions for prompts and MCP; CI check blocking | sonnet | opus | 3 | [ra-03](docs/tasks/discoverability/ra-03-single-source-descriptions.md) |
+| [ ] | RA-01 | Frontmatter checker script | haiku | sonnet | 1 | [ra-01](docs/tasks/discoverability/ra-01-frontmatter-check.md) |
+| [ ] | RA-02 | Frontmatter descriptions on every skill (4 parallel scopes) | haiku ×4 | sonnet | 2 | [ra-02](docs/tasks/discoverability/ra-02-frontmatter-descriptions.md) |
+| [ ] | RA-03 | Single-source descriptions for prompts and MCP; frontmatter CI check | sonnet | opus | 3 | [ra-03](docs/tasks/discoverability/ra-03-single-source-descriptions.md) |
 | [ ] | RA-04 | Generate `SKILLS.md`, retire hand-kept README index | haiku | sonnet | 3 | [ra-04](docs/tasks/discoverability/ra-04-skills-catalogue.md) |
-| [ ] | RA-05 | Discoverability intent test, hit@3 gate 80% (owner checkpoint) | sonnet | opus | 3 | [ra-05](docs/tasks/discoverability/ra-05-discoverability-test.md) |
-| [ ] | RA-06 | Opt-in usage telemetry across machines and surfaces | sonnet | opus | 1 | [ra-06](docs/tasks/discoverability/ra-06-usage-telemetry.md) |
-| [ ] | RA-07 | Six always-on skills become rules (Claude Code + Copilot) | sonnet | opus | 2 | [ra-07](docs/tasks/discoverability/ra-07-rules-migration.md) |
+| [ ] | RA-05 | Discoverability spot-check list (owner checkpoint) | sonnet | opus | 1 | [ra-05](docs/tasks/discoverability/ra-05-discoverability-test.md) |
+| [ ] | RA-06 | Usage report from transcripts and MCP logs | haiku | sonnet | 1 | [ra-06](docs/tasks/discoverability/ra-06-usage-telemetry.md) |
+| [ ] | RA-07 | Delete five always-on skills | haiku | sonnet | 1 | [ra-07](docs/tasks/discoverability/ra-07-remove-always-on.md) |
 | [ ] | RA-08 | `ci-local` = `local-ci` + `pre-push-validation` | opus | owner | 3 | [ra-08](docs/tasks/discoverability/ra-08-ci-local.md) |
-| [ ] | RA-09 | `py-lint` = three Python lint skills | sonnet | opus | 3 | [ra-09](docs/tasks/discoverability/ra-09-py-lint.md) |
+| [ ] | RA-09 | `py-lint` = four Python lint skills | sonnet | opus | 3 | [ra-09](docs/tasks/discoverability/ra-09-py-lint.md) |
 | [ ] | RA-10 | `deps-integrity` = npm/python lockfile + provenance | sonnet | opus | 3 | [ra-10](docs/tasks/discoverability/ra-10-deps-integrity.md) |
 | [ ] | RA-11 | `tf-guardrails` = three terraform skills | haiku | sonnet | 3 | [ra-11](docs/tasks/discoverability/ra-11-tf-guardrails.md) |
 | [ ] | RA-12 | `ci-standards` = `devops-practices` + updater | sonnet | opus | 3 | [ra-12](docs/tasks/discoverability/ra-12-ci-standards.md) |
-| [ ] | RA-13 | `roadmap` = `roadmap-driver` + `grimoire-roadmap-status` | sonnet | opus | 3 | [ra-13](docs/tasks/discoverability/ra-13-roadmap.md) |
-| [ ] | RA-14 | `orient` entry skill | sonnet | opus | 3 | [ra-14](docs/tasks/discoverability/ra-14-orient.md) |
-| [ ] | RA-15 | Pathway-prefix rename (33 skills), install-side clean-up | sonnet + opus review | opus | 4 | [ra-15](docs/tasks/discoverability/ra-15-rename.md) |
-| [ ] | RA-16 | Pathway tables in `orient`, `plan`, `release`, `publish` | sonnet | opus | 5 | [ra-16](docs/tasks/discoverability/ra-16-pathway-entries.md) |
-| [ ] | RA-17 | Rewrite `PROJECT-WORKFLOWS.md` by pathway | haiku | sonnet | 6 | [ra-17](docs/tasks/discoverability/ra-17-workflows-doc.md) |
+| [ ] | RA-13 | `roadmap-driver` → `roadmap`; delete `grimoire-roadmap-status` | haiku | sonnet | 3 | [ra-13](docs/tasks/discoverability/ra-13-roadmap.md) |
+| [ ] | RA-14 | `repo-compass` → `orient`, absorbing the push check | haiku | sonnet | 3 | [ra-14](docs/tasks/discoverability/ra-14-orient.md) |
+| [ ] | RA-15 | Pathway-prefix rename (32 skills), install-side clean-up | sonnet + opus review | opus | 4 | [ra-15](docs/tasks/discoverability/ra-15-rename.md) |
+| [ ] | RA-16 | Pathway tables in `orient`, `plan`, `release`, `publish` | haiku | sonnet | 5 | [ra-16](docs/tasks/discoverability/ra-16-pathway-entries.md) |
+| [ ] | RA-17 | Delete `PROJECT-WORKFLOWS.md`, short README table | haiku | sonnet | 6 | [ra-17](docs/tasks/discoverability/ra-17-workflows-doc.md) |
 | [ ] | RA-18 | Report old names outside the repo (read-only; owner approves edits) | haiku | sonnet | 5 | [ra-18](docs/tasks/discoverability/ra-18-cross-repo-report.md) |
 | [ ] | RA-19 | `npm audit fix` in `mcp-server`, add Dependabot | haiku | sonnet | 1 | [ra-19](docs/tasks/discoverability/ra-19-npm-audit-dependabot.md) |
 | [ ] | RA-20 | Align TruffleHog, SHA-pin actions | haiku | sonnet | 1 | [ra-20](docs/tasks/discoverability/ra-20-pin-versions.md) |
-| [ ] | RA-21 | bats tests for history-wipe and install scripts | sonnet | opus | 1 | [ra-21](docs/tasks/discoverability/ra-21-script-tests.md) |
-| [ ] | RA-22 | Split validation items from actionable roadmap | sonnet | opus | 1 | [ra-22](docs/tasks/discoverability/ra-22-validation-split.md) |
-| [ ] | RA-23 | Evidence-based prune report (60 days after RA-06; owner decides) | sonnet | owner | later | [ra-23](docs/tasks/discoverability/ra-23-usage-prune.md) |
+| n/a | RA-21 | ~~bats tests~~ dropped in the 2026-10-04 audit | | | | |
+| [ ] | RA-22 | Delete unschedulable validation items | haiku | sonnet | 1 | [ra-22](docs/tasks/discoverability/ra-22-delete-validation-items.md) |
+| [ ] | RA-23 | Evidence-based prune report (owner decides) | sonnet | owner | later | [ra-23](docs/tasks/discoverability/ra-23-usage-prune.md) |
+| [ ] | RA-24 | Remove per-skill Installation boilerplate and its CI job | haiku | sonnet | 1 | [ra-24](docs/tasks/discoverability/ra-24-readme-install-boilerplate.md) |
+| [ ] | RA-25 | Delete three unused scripts | haiku | sonnet | 1 | [ra-25](docs/tasks/discoverability/ra-25-dead-scripts.md) |
+| [ ] | RA-26 | Drop version-sync checks superseded by release-please | haiku | sonnet | 1 | [ra-26](docs/tasks/discoverability/ra-26-version-sync-ci.md) |
+| [ ] | RA-27 | Share duplicated installer functions | sonnet | opus | 1 | [ra-27](docs/tasks/discoverability/ra-27-installer-dedupe.md) |
 
-Open owner decisions are listed at the end of `REVIEW.md`.
+Revised by the 2026-10-04 over-engineering audit (see `REVIEW.md`). Open owner decisions are listed at the end of `REVIEW.md`.
 
 ---
 

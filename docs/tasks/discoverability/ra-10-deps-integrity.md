@@ -4,7 +4,7 @@
 > Parent: discoverability and consolidation programme
 > Model: sonnet
 > Fallback: opus
-> Depends on: RA-02, RA-22
+> Depends on: RA-02
 > Effort: M
 > Touches: `clusters/07-devops/npm-lockfile-integrity/`, `python-lockfile-integrity/`, `npm-provenance-attestation/` (deleted), `clusters/07-devops/deps-integrity/` (new), `mcp-server/registry.json`, possibly `mcp-server/src/executor.ts`, `clusters/07-devops/README.md`, references, `scripts/renamed-skills.txt`, `CHANGELOG.md`
 

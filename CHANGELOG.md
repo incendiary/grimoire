@@ -22,6 +22,9 @@ workflow.
   tier, fallback, dependencies, exact steps, and verification commands, plus
   `00-runbook.md` for a master agent (dispatch waves, prompt template, escalation,
   integration order). Action items moved out of `REVIEW.md` into these briefs.
+- Over-engineering audit (2026-10-04) applied to the plan: six tasks simplified, the bats
+  test task dropped, and four deletion tasks added (RA-24 to RA-27). Most briefs now run on
+  Haiku.
 - `release-please-config.json` + `.release-please-manifest.json` — `release-type: simple`
   targeting the root `VERSION` file, `skip-changelog: true` (this file stays
   hand-written).

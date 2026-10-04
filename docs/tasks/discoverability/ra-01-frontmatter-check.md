@@ -1,4 +1,4 @@
-# Task RA-01: Frontmatter validator script and non-blocking CI job
+# Task RA-01: Frontmatter validator script
 
 > Status: pending
 > Parent: discoverability and consolidation programme
@@ -6,11 +6,11 @@
 > Fallback: sonnet
 > Depends on: none
 > Effort: S
-> Touches: `scripts/check-frontmatter.sh` (new), `.github/workflows/validate.yml`, `CHANGELOG.md`
+> Touches: `scripts/check-frontmatter.sh` (new), `CHANGELOG.md`
 
 ## Objective
 Add `scripts/check-frontmatter.sh`, which verifies every skill's `SKILL.md` starts with
-valid YAML frontmatter, and run it in CI as a non-blocking job.
+valid YAML frontmatter. CI wiring is added by RA-03, once every skill passes.
 
 ## Background
 These decisions are already made. Do not change them:
@@ -25,12 +25,9 @@ These decisions are already made. Do not change them:
   ---
   ```
   followed by the existing content (the `# title` line and so on) unchanged.
-- The CI job must not block merges yet (`continue-on-error: true`). RA-03 makes it
-  blocking once RA-02 is complete.
 
 ## Context files
 Read these before starting:
-- `.github/workflows/validate.yml`: see how the existing `structure` job is written; copy its style.
 - `clusters/07-devops/devops-practices/check-roadmap-sync.sh`: an example of this repo's
   shell style (header comment, `set -e`, exit codes).
 
@@ -54,22 +51,9 @@ Read these before starting:
      file failed, else 0.
    - Use only bash, `sed`, `awk`, `grep`, `head`. No Python, no `yq`.
 2. `chmod +x scripts/check-frontmatter.sh`.
-3. In `.github/workflows/validate.yml`, add a new job after the `structure` job:
-   ```yaml
-     frontmatter:
-       name: Skill frontmatter
-       runs-on: ubuntu-latest
-       # Non-blocking until RA-02 adds frontmatter to every skill; RA-03 removes this line.
-       continue-on-error: true
-       steps:
-         - uses: actions/checkout@v7
-         - name: Every SKILL.md has name/description frontmatter
-           run: bash scripts/check-frontmatter.sh
-   ```
-   Match the file's existing indentation exactly.
-4. Test it by hand:
-   - `bash scripts/check-frontmatter.sh; echo "exit=$?"` must print 57 `FAIL` lines,
-     `0/57 skills have valid frontmatter`, and `exit=1`.
+3. Test it by hand:
+   - `bash scripts/check-frontmatter.sh; echo "exit=$?"` must print one `FAIL` line per skill,
+     `0/<N> skills have valid frontmatter`, and `exit=1`.
    - Make a temporary copy to prove the pass path:
      ```bash
      tmp=$(mktemp -d); mkdir -p "$tmp/clusters/x/demo-skill"
@@ -79,20 +63,19 @@ Read these before starting:
      ```
      Must print `1/1 ...` and `exit=0`. Then change `name: demo-skill` to `name: wrong` and
      confirm it fails with a `name` reason.
-5. Add to `CHANGELOG.md` under `## [Unreleased]` → `### Added`:
-   `- scripts/check-frontmatter.sh and a non-blocking validate.yml job checking SKILL.md frontmatter.`
+4. Add to `CHANGELOG.md` under `## [Unreleased]` → `### Added`:
+   `- scripts/check-frontmatter.sh: validates SKILL.md frontmatter.`
 
 ## Constraints
 - Do not add frontmatter to any `SKILL.md` (that is RA-02).
-- Do not modify other jobs in `validate.yml`.
+- Do not edit `.github/workflows/` (RA-03 adds the CI job).
 - Script must be shellcheck clean.
 
 ## Done when
 - [ ] `shellcheck scripts/check-frontmatter.sh` prints nothing.
-- [ ] `bash scripts/check-frontmatter.sh` exits 1 and reports `0/57`.
+- [ ] `bash scripts/check-frontmatter.sh` exits 1 and reports `0/<N>` where N is `ls -d clusters/*/*/ | wc -l`.
 - [ ] The step 4 temporary-file test passes for the valid case and fails for the wrong name.
-- [ ] `grep -n 'continue-on-error: true' .github/workflows/validate.yml` shows the new job.
 
 ## Return signal
-Commit message: `ci: add SKILL.md frontmatter checker (non-blocking)`
+Commit message: `feat: add SKILL.md frontmatter checker`
 Then follow Shared conventions step 7.

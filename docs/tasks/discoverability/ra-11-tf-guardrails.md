@@ -4,7 +4,7 @@
 > Parent: discoverability and consolidation programme
 > Model: haiku
 > Fallback: sonnet
-> Depends on: RA-02, RA-22
+> Depends on: RA-02
 > Effort: S
 > Touches: `clusters/07-devops/terraform-aws-syntax/`, `terraform-checkov-skips/`, `terraform-version-compat/` (deleted), `clusters/07-devops/tf-guardrails/` (new), `clusters/07-devops/README.md`, `PROJECT-WORKFLOWS.md`, `scripts/renamed-skills.txt`, `CHANGELOG.md`
 
@@ -67,7 +67,6 @@ content lost.
      (from aws-syntax); "Skip placement rule", "Common skip patterns and justifications"
      with all its subsections (from checkov-skips).
    - `## Roadmap`: every line from the three `## Roadmap` sections (checked and unchecked), prefixed with the area in bold, e.g. `- [ ] **AWS syntax:** Add resource type gotchas as they are encountered`.
-   - `## Validation`: likewise from the three `## Validation` sections (if any).
 4. Content check before deleting anything. For each of the 6 source files, every
    non-blank line outside `## Installation` must appear in the new files:
    ```bash
@@ -86,7 +85,7 @@ content lost.
    ```
 6. Find and fix every reference:
    ```bash
-   grep -rnwE 'terraform-aws-syntax|terraform-checkov-skips|terraform-version-compat' . --exclude=CHANGELOG.md --exclude=renamed-skills.txt --exclude=REVIEW.md --exclude=discoverability-intents.tsv --exclude-dir=node_modules --exclude-dir=.git --exclude-dir=tasks
+   grep -rnwE 'terraform-aws-syntax|terraform-checkov-skips|terraform-version-compat' . --exclude=CHANGELOG.md --exclude=renamed-skills.txt --exclude=REVIEW.md --exclude=discoverability-intents.md --exclude-dir=node_modules --exclude-dir=.git --exclude-dir=tasks
    ```
    - In `clusters/07-devops/README.md`: replace the three skill entries with one entry in the
      format from `CLAUDE.md` "Cluster README entries":

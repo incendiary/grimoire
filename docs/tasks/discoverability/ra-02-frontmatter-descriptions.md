@@ -5,7 +5,7 @@
 > Parent: discoverability and consolidation programme
 > Model: haiku (one agent per scope, run in parallel)
 > Fallback: sonnet
-> Depends on: RA-01
+> Depends on: RA-01, RA-07 (so deleted skills are already gone)
 > Effort: M total (S per scope)
 > Touches: the `SKILL.md` files in your scope only, `CHANGELOG.md` (scope A only)
 
@@ -18,10 +18,10 @@ The dispatch prompt names one scope. Work only on these directories:
 
 | Scope | Directories |
 |---|---|
-| A | `clusters/01-meta/*/` (17 skills) |
-| B | `clusters/02-comms/*/`, `clusters/03-incident/*/`, `clusters/04-security/*/`, `clusters/05-technical/*/` (11 skills) |
-| C | `clusters/07-devops/*/` whose directory name starts with `a` to `n` (13 skills) |
-| D | `clusters/07-devops/*/` whose directory name starts with `o` to `z` (16 skills) |
+| A | `clusters/01-meta/*/` (about 13 skills) |
+| B | `clusters/02-comms/*/`, `clusters/03-incident/*/`, `clusters/04-security/*/`, `clusters/05-technical/*/` (about 11 skills) |
+| C | `clusters/07-devops/*/` whose directory name starts with `a` to `n` (about 13 skills) |
+| D | `clusters/07-devops/*/` whose directory name starts with `o` to `z` (about 15 skills) |
 
 List yours with, for example, `ls -d clusters/07-devops/[a-n]*/`.
 
@@ -74,7 +74,6 @@ description: "Runs this repo's GitHub Actions workflow steps locally, auto-fixes
 | `format-before-commit` | `Provides the Black/Ruff config; to run the check use python-lint-gate.` |
 | `python-ci-lint-precheck` | `Only for repos using pylint; for Black/Ruff only use python-lint-gate.` |
 | `python-black-ruff-authoring` | `Guidance while writing code; to check existing code use python-lint-gate.` |
-| `pre-commit-aware-commits` | `Not for setting up hooks (use repo-security-bootstrap or format-before-commit).` |
 | `npm-lockfile-integrity` | `For Python lockfiles use python-lockfile-integrity; for package provenance use npm-provenance-attestation.` |
 | `python-lockfile-integrity` | `For Node lockfiles use npm-lockfile-integrity.` |
 | `npm-provenance-attestation` | `For lockfile hash checks use npm-lockfile-integrity.` |
@@ -109,8 +108,6 @@ description: "Runs this repo's GitHub Actions workflow steps locally, auto-fixes
 | `github-release-workflow` | `For README version pins use readme-version-pin; for container images use docker-ghcr-publish.` |
 | `readme-version-pin` | `Part of releasing; start with github-release-workflow.` |
 | `docker-ghcr-publish` | `Part of releasing; start with github-release-workflow.` |
-| `cwd-verification` | `For stale running code after a pull use verify-code-version.` |
-| `verify-code-version` | `For wrong-directory problems use cwd-verification.` |
 | `skill-keyword-lookup` | `Use when you cannot remember which grimoire skill fits.` |
 | `session-skill-extractor` | `To vet a third-party skill use skill-vetter.` |
 | `skill-vetter` | `To create skills from your own sessions use session-skill-extractor.` |

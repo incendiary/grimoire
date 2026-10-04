@@ -10,8 +10,8 @@
 
 ## Objective
 Prompt files (VS Code) and MCP tools (VS Code, JetBrains) take their descriptions from
-`SKILL.md` frontmatter, so one edit updates all three surfaces; and the frontmatter CI
-check becomes blocking.
+`SKILL.md` frontmatter, so one edit updates all three surfaces; and CI enforces the
+frontmatter.
 
 ## Background
 - The owner uses Claude Code, VS Code prompt files, and JetBrains MCP on two machines.
@@ -29,7 +29,7 @@ check becomes blocking.
 - `mcp-server/src/loader.ts`: how `registry.json` is read and tools are built.
 - `mcp-server/src/__tests__/registry.test.ts`: existing registry tests (note it
   hard-codes `clusters/01-meta` and `clusters/07-devops`; leave that for RA-15).
-- `.github/workflows/validate.yml`: the `frontmatter` job added by RA-01, and the
+- `.github/workflows/validate.yml`: the `structure` job (copy its style), and the
   `registry-sync` job (its python one-liner reads `t['skill']`, which stays valid).
 
 ## Steps
@@ -45,8 +45,11 @@ check becomes blocking.
 3. Remove the `description` field from every entry in `mcp-server/registry.json`.
 4. Add a test in `registry.test.ts`: for every registry entry, the loaded tool
    description equals the frontmatter description of its `SKILL.md`.
-5. In `validate.yml`, delete the `continue-on-error: true` line and its comment from the
-   `frontmatter` job.
+5. In `validate.yml`, add a step at the end of the `structure` job:
+   ```yaml
+         - name: Every SKILL.md has name/description frontmatter
+           run: bash scripts/check-frontmatter.sh
+   ```
 6. `CHANGELOG.md` → `### Changed`: `- build.sh and the MCP server now read descriptions from SKILL.md frontmatter; registry.json no longer carries descriptions.`
 
 ## Constraints
