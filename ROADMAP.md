@@ -60,7 +60,6 @@ Tick the first column when a task's brief reaches `> Status: done`.
 | [ ] | RA-18 | Report old names outside the repo (read-only; owner approves edits) | haiku | sonnet | 5 | [ra-18](docs/tasks/discoverability/ra-18-cross-repo-report.md) |
 | [ ] | RA-19 | `npm audit fix` in `mcp-server`, add Dependabot | haiku | sonnet | 1 | [ra-19](docs/tasks/discoverability/ra-19-npm-audit-dependabot.md) |
 | [ ] | RA-20 | Align TruffleHog, SHA-pin actions | haiku | sonnet | 1 | [ra-20](docs/tasks/discoverability/ra-20-pin-versions.md) |
-| n/a | RA-21 | ~~bats tests~~ dropped in the 2026-10-04 audit | | | | |
 | [ ] | RA-22 | Delete unschedulable validation items | haiku | sonnet | 1 | [ra-22](docs/tasks/discoverability/ra-22-delete-validation-items.md) |
 | [ ] | RA-23 | Evidence-based prune report (owner decides) | sonnet | owner | later | [ra-23](docs/tasks/discoverability/ra-23-usage-prune.md) |
 | [ ] | RA-24 | Remove per-skill Installation boilerplate and its CI job | haiku | sonnet | 1 | [ra-24](docs/tasks/discoverability/ra-24-readme-install-boilerplate.md) |

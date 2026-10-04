@@ -151,8 +151,6 @@ install and uninstall (RA-15).
 `capture-releases.sh`/`recreate-releases.sh` breaks release recreation after a force
 push, and the loss is discovered only on a real repo. Accepted risk: the skill has no recorded use, so the 2026-10-04 audit dropped the planned test harness (RA-21).
 
-**PF-6 (risk 4): rules not reaching IDEs.** Resolved by not creating rules files: the 2026-10-04 audit deletes the always-on skills instead (RA-07).
-
 ## 6. Test coverage gaps
 
 | Path | Why critical | Test type needed |
@@ -160,7 +158,6 @@ push, and the loss is discovered only on a real repo. Accepted risk: the skill h
 | Skill frontmatter | Discoverability depends on it | CI validator (RA-01) |
 | Intent to skill routing | The key success criterion | Manual spot-check in a fresh session (RA-05); a keyword scorer would measure the wrong thing |
 | `install-all.sh --update` with renamed skills | Stale skills on every machine | bats test with a temp skills dir (RA-15) |
-| `github-history-wipe/*.sh` | Destructive, force-push adjacent | Deferred: no recorded use (RA-21 dropped) |
 | `mcp-server` tool execution per skill | Only a smoke and registry test exist | Add one executor test per merged skill (RA-08 to RA-13) |
 
 ## 7. Dependency audit

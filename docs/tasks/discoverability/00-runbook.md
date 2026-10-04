@@ -209,7 +209,6 @@ one major version.
 | RA-18 | `ra-18-cross-repo-report.md` | haiku | sonnet | RA-15, owner approval to apply |
 | RA-19 | `ra-19-npm-audit-dependabot.md` | haiku | sonnet | none |
 | RA-20 | `ra-20-pin-versions.md` | haiku | sonnet | none |
-| RA-21 | dropped (2026-10-04 audit) | | | |
 | RA-22 | `ra-22-delete-validation-items.md` | haiku | sonnet | none |
 | RA-23 | `ra-23-usage-prune.md` | sonnet | none | RA-06, RA-15, 60 days; owner decides |
 | RA-24 | `ra-24-readme-install-boilerplate.md` | haiku | sonnet | none |
