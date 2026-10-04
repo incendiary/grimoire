@@ -16,8 +16,12 @@ workflow.
 
 - `REVIEW.md` — holistic review of discoverability and skill sprawl, with a canonical
   pathway-prefix rename map (57 skills to 42 plus 6 rules) and 23 agent-executable work
-  items (RA-1 to RA-23). `ROADMAP.md` gains a "Discoverability and consolidation
+  items (RA-01 to RA-23). `ROADMAP.md` gains a "Discoverability and consolidation
   programme" section tracking them.
+- `docs/tasks/discoverability/` — one self-contained brief per work item, each with model
+  tier, fallback, dependencies, exact steps, and verification commands, plus
+  `00-runbook.md` for a master agent (dispatch waves, prompt template, escalation,
+  integration order). Action items moved out of `REVIEW.md` into these briefs.
 - `release-please-config.json` + `.release-please-manifest.json` — `release-type: simple`
   targeting the root `VERSION` file, `skip-changelog: true` (this file stays
   hand-written).

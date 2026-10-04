@@ -6,7 +6,7 @@
 > run `bash scripts/roadmap-collect.sh` (or `--json` for machine-readable output) and
 > `bash clusters/07-devops/devops-practices/check-roadmap-sync.sh . --fix`.
 
-**Last updated:** 2026-09-28
+**Last updated:** 2026-10-04
 **Open items:** 49 | **Completed:** 230
 
 ---
@@ -26,46 +26,43 @@ Items marked "Ship: copy to ~/.claude/skills/..." are legacy — the install pat
 
 ## Discoverability and consolidation programme (priority: top)
 
-Source: [REVIEW.md](REVIEW.md) (2026-09-29 holistic review). Each item there carries
-context, success criteria, files, effort, and a suggested model tier, so an agent can
-execute it cold. Work the phases in order; items inside a phase are independent unless
-noted. Success criterion for the programme: you can find the right skill by intent
-(measured by RA-5) and by prefix autocomplete (after RA-15).
+Findings: [REVIEW.md](REVIEW.md) (2026-09-29). Programme goal: you can find the right skill
+by intent (measured by RA-05) and by prefix autocomplete (after RA-15).
 
-**Phase 1: make existing skills findable (no renames)**
-- [ ] RA-1: Frontmatter spec and CI check (Sonnet, S)
-- [ ] RA-2: Add frontmatter to all 57 skills (Sonnet, M), depends on RA-1
-- [ ] RA-3: Single-source descriptions for prompt files and MCP (Sonnet, S)
-- [ ] RA-4: Generate `SKILLS.md` catalogue, retire hand-kept README index (Haiku, S)
-- [ ] RA-5: Discoverability intent test, hit@3 gate at 80% (Sonnet, M)
+**To execute:** a master agent (Opus) starts at
+[docs/tasks/discoverability/00-runbook.md](docs/tasks/discoverability/00-runbook.md), which
+defines dispatch waves, the sub-agent prompt template, verification, escalation, and merge
+order. Each brief is self-contained for a sub-agent with no context. Haiku briefs are
+deliberately prescriptive (exact commands, pre-decided wording) so the cheaper tier is safe.
+"Model" is the Agent tool `model` alias; "Fallback" is used if verification fails.
 
-**Phase 2: evidence before pruning**
-- [ ] RA-6: Cross-machine usage telemetry (Claude Code hooks + MCP log) (Sonnet, M)
+Tick the first column when a task's brief reaches `> Status: done`.
 
-**Phase 3: rules, not skills**
-- [ ] RA-7: Six always-on skills become rules for Claude Code and Copilot (Sonnet, M)
-
-**Phase 4: consolidation (merged skills created under new names)**
-- [ ] RA-8: `ci-local` = `local-ci` + `pre-push-validation` (Opus, M)
-- [ ] RA-9: `py-lint` = three Python lint skills (Sonnet, S)
-- [ ] RA-10: `deps-integrity` = npm/python lockfile + provenance (Sonnet, M)
-- [ ] RA-11: `tf-guardrails` = three terraform skills (Haiku, S)
-- [ ] RA-12: `ci-standards` = `devops-practices` + updater (Sonnet, S)
-- [ ] RA-13: `roadmap` = `roadmap-driver` + `grimoire-roadmap-status` (Sonnet, S)
-- [ ] RA-14: `orient` entry skill (Sonnet, M)
-
-**Phase 5: rename and pathway entries** (breaking change, `feat!:`)
-- [ ] RA-15: Execute the canonical rename map, with install-side cleanup (Sonnet + Opus review, L)
-- [ ] RA-16: Pathway sections in `orient`, `plan`, `release`, `publish` (Sonnet, S)
-- [ ] RA-17: Rewrite `PROJECT-WORKFLOWS.md` and cluster READMEs (Haiku, S)
-- [ ] RA-18: Cross-repo and global-config follow-up, owner approval required (Haiku, S)
-
-**Phase 6: hygiene** (independent; can run any time)
-- [ ] RA-19: `npm audit fix` in `mcp-server`, add Dependabot (Haiku, XS)
-- [ ] RA-20: Align TruffleHog versions, SHA-pin actions (Haiku, XS)
-- [ ] RA-21: bats tests for history-wipe and install scripts (Sonnet, M)
-- [ ] RA-22: Split "test on real X" validation items from actionable roadmap (Sonnet, S)
-- [ ] RA-23: Evidence-based prune, 60 days after RA-6 (Sonnet report, owner decides)
+| | ID | Task | Model | Fallback | Wave | Brief |
+|---|---|---|---|---|---|---|
+| [ ] | RA-01 | Frontmatter checker script, non-blocking CI | haiku | sonnet | 1 | [ra-01](docs/tasks/discoverability/ra-01-frontmatter-check.md) |
+| [ ] | RA-02 | Frontmatter descriptions on all 57 skills (4 parallel scopes) | haiku ×4 | sonnet | 2 | [ra-02](docs/tasks/discoverability/ra-02-frontmatter-descriptions.md) |
+| [ ] | RA-03 | Single-source descriptions for prompts and MCP; CI check blocking | sonnet | opus | 3 | [ra-03](docs/tasks/discoverability/ra-03-single-source-descriptions.md) |
+| [ ] | RA-04 | Generate `SKILLS.md`, retire hand-kept README index | haiku | sonnet | 3 | [ra-04](docs/tasks/discoverability/ra-04-skills-catalogue.md) |
+| [ ] | RA-05 | Discoverability intent test, hit@3 gate 80% (owner checkpoint) | sonnet | opus | 3 | [ra-05](docs/tasks/discoverability/ra-05-discoverability-test.md) |
+| [ ] | RA-06 | Opt-in usage telemetry across machines and surfaces | sonnet | opus | 1 | [ra-06](docs/tasks/discoverability/ra-06-usage-telemetry.md) |
+| [ ] | RA-07 | Six always-on skills become rules (Claude Code + Copilot) | sonnet | opus | 2 | [ra-07](docs/tasks/discoverability/ra-07-rules-migration.md) |
+| [ ] | RA-08 | `ci-local` = `local-ci` + `pre-push-validation` | opus | owner | 3 | [ra-08](docs/tasks/discoverability/ra-08-ci-local.md) |
+| [ ] | RA-09 | `py-lint` = three Python lint skills | sonnet | opus | 3 | [ra-09](docs/tasks/discoverability/ra-09-py-lint.md) |
+| [ ] | RA-10 | `deps-integrity` = npm/python lockfile + provenance | sonnet | opus | 3 | [ra-10](docs/tasks/discoverability/ra-10-deps-integrity.md) |
+| [ ] | RA-11 | `tf-guardrails` = three terraform skills | haiku | sonnet | 3 | [ra-11](docs/tasks/discoverability/ra-11-tf-guardrails.md) |
+| [ ] | RA-12 | `ci-standards` = `devops-practices` + updater | sonnet | opus | 3 | [ra-12](docs/tasks/discoverability/ra-12-ci-standards.md) |
+| [ ] | RA-13 | `roadmap` = `roadmap-driver` + `grimoire-roadmap-status` | sonnet | opus | 3 | [ra-13](docs/tasks/discoverability/ra-13-roadmap.md) |
+| [ ] | RA-14 | `orient` entry skill | sonnet | opus | 3 | [ra-14](docs/tasks/discoverability/ra-14-orient.md) |
+| [ ] | RA-15 | Pathway-prefix rename (33 skills), install-side clean-up | sonnet + opus review | opus | 4 | [ra-15](docs/tasks/discoverability/ra-15-rename.md) |
+| [ ] | RA-16 | Pathway tables in `orient`, `plan`, `release`, `publish` | sonnet | opus | 5 | [ra-16](docs/tasks/discoverability/ra-16-pathway-entries.md) |
+| [ ] | RA-17 | Rewrite `PROJECT-WORKFLOWS.md` by pathway | haiku | sonnet | 6 | [ra-17](docs/tasks/discoverability/ra-17-workflows-doc.md) |
+| [ ] | RA-18 | Report old names outside the repo (read-only; owner approves edits) | haiku | sonnet | 5 | [ra-18](docs/tasks/discoverability/ra-18-cross-repo-report.md) |
+| [ ] | RA-19 | `npm audit fix` in `mcp-server`, add Dependabot | haiku | sonnet | 1 | [ra-19](docs/tasks/discoverability/ra-19-npm-audit-dependabot.md) |
+| [ ] | RA-20 | Align TruffleHog, SHA-pin actions | haiku | sonnet | 1 | [ra-20](docs/tasks/discoverability/ra-20-pin-versions.md) |
+| [ ] | RA-21 | bats tests for history-wipe and install scripts | sonnet | opus | 1 | [ra-21](docs/tasks/discoverability/ra-21-script-tests.md) |
+| [ ] | RA-22 | Split validation items from actionable roadmap | sonnet | opus | 1 | [ra-22](docs/tasks/discoverability/ra-22-validation-split.md) |
+| [ ] | RA-23 | Evidence-based prune report (60 days after RA-06; owner decides) | sonnet | owner | later | [ra-23](docs/tasks/discoverability/ra-23-usage-prune.md) |
 
 Open owner decisions are listed at the end of `REVIEW.md`.
 
