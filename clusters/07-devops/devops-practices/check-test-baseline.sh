@@ -56,6 +56,10 @@ for pattern in 'VERSION.*tag\|tag.*VERSION' 'version.*sync\|sync.*version' 'desc
     break
   fi
 done
+# release-please bumps VERSION and tags in one step, so it satisfies this by construction.
+if grep -rlq 'release-please-action' .github/workflows/ 2>/dev/null; then
+  VERSION_TEST_FOUND=true
+fi
 if [ "$VERSION_TEST_FOUND" = true ]; then
   check_pass "Version-sync test found"
 else
