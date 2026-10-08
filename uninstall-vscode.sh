@@ -15,6 +15,8 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROMPTS_DIR="${SCRIPT_DIR}/prompts"
+# shellcheck source=scripts/install-lib.sh
+source "${SCRIPT_DIR}/scripts/install-lib.sh"
 
 AUTO_APPLY=false
 DRY_RUN=false
@@ -44,25 +46,6 @@ if [[ "${AUTO_APPLY}" == "true" && "${DRY_RUN}" == "true" ]]; then
     exit 1
 fi
 
-detect_vscode_user_dir() {
-    local candidate=""
-    case "$(uname -s)" in
-        Darwin)
-            candidate="${HOME}/Library/Application Support/Code/User"
-            ;;
-        Linux)
-            candidate="${HOME}/.config/Code/User"
-            ;;
-        MINGW*|MSYS*|CYGWIN*)
-            if [[ -n "${APPDATA:-}" ]]; then
-                candidate="${APPDATA}/Code/User"
-            fi
-            ;;
-    esac
-    if [[ -n "${candidate}" && -d "${candidate}" ]]; then
-        echo "${candidate}"
-    fi
-}
 
 VSCODE_USER_DIR="$(detect_vscode_user_dir)"
 if [[ -z "${VSCODE_USER_DIR}" ]]; then

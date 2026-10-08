@@ -49,6 +49,7 @@ workflow.
   `git tag`/`gh release create` steps; added a "Releases" section documenting the new
   flow. Removed the now-obsolete "VERSION conflict resolution (squash merges)" section
   — feature branches never touch `VERSION`, so it can no longer conflict.
+- install-vscode.sh, install-jetbrains.sh and uninstall-vscode.sh share scripts/install-lib.sh.
 
 ---
 
