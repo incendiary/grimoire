@@ -86,7 +86,5 @@ Output
 ## Notes
 
 - **Status field:** Use `complete` for shipped skills, `promoted` for stubs awaiting expansion.
-- **Installation section:** Always include all three platforms (Claude Code, prompt file, MCP). For `instructional` type skills, note that MCP is not applicable.
-- **Action vs instructional:** Only `action` type skills get an MCP subsection. Check the skill's `SKILL.md` for the `Type:` field.
 - **Invocation examples:** Should be realistic — use actual repo names or plausible scenarios.
 - **Roadmap:** Keep up to date. Tick items as they ship. Outstanding items guide future work.
