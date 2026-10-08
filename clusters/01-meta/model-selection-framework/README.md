@@ -135,53 +135,6 @@ Should I use Haiku or Opus for this refactor?
 - This is exactly where you escalate on failure: try Sonnet, if the review finds major errors, re-run with Opus
 - Worth it ✅
 
-## The Decision Tool
-
-Use `model-select.sh` to walk through the framework interactively:
-
-```bash
-bash model-select.sh
-```
-
-It will:
-1. Ask the 5 decision questions
-2. Plot your task on the verifiability/blast-radius matrix
-3. Recommend a model tier
-4. Explain the cost-benefit
-
-### Running interactively
-
-```bash
-$ bash model-select.sh
-
-=== Model Selection Framework ===
-
-Task description: Add a new utility function to handle file uploads
-Specification detail: exact (I have line numbers and a test suite)
-
-Question 1: Can a machine prove it's done right?
-- Test suite?   [y/n] y
-- Type checker? [y/n] n
-- Linter/compiler? [y/n] y
-Score: HIGH verifiability ✅
-
-Question 2: Can it be "wrong but green"?
-- Risk of subtle correctness issues? [y/n] n
-- Risk of test weakening? [y/n] n
-Score: LOW risk ✅
-
-Question 3: Blast radius?
-- Additive change (new code)? [y/n] y
-- Single file or tightly scoped? [y/n] y
-- Breaking changes? [y/n] n
-Score: SMALL blast radius ✅
-
-=== RECOMMENDATION ===
-Matrix position: HIGH verifiability + SMALL blast radius
-→ Haiku is appropriate ✅
-Cost: ~$0.10, risk is low (gate-protected)
-```
-
 ## When to Escalate
 
 Even if your analysis suggests Haiku:
@@ -199,4 +152,3 @@ Even if your analysis suggests Haiku:
 ## References
 
 - [SKILL.md](SKILL.md) — Full framework with theory and examples
-- `model-select.sh` — Interactive decision tool

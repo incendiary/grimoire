@@ -61,7 +61,7 @@ Compounds — each session setup is faster than the last.
 
 Cost-benefit framework for choosing LLM model tier (Haiku, Sonnet, Opus) based on task
 characteristics—verifiability and blast radius—not just capability. Prevents false savings and
-overspending. Includes interactive decision tool (`model-select.sh`).
+overspending.
 → [Full documentation](model-selection-framework/README.md)
 
 ### [roadmap-driver](roadmap-driver/) ✅ complete

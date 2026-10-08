@@ -36,6 +36,7 @@ workflow.
 - `.github/workflows/release-on-tag.yml` — superseded by `release-please-action`, which
   now owns tag + release creation directly.
 - test-before-asking, mid-task-checkin, pre-commit-aware-commits, cwd-verification, verify-code-version (duplicated Claude Code behaviour or belong in global CLAUDE.md).
+- Unused scripts: model-select.sh, scripts/roadmap-close.sh, scripts/skill-dependency-graph.sh.
 
 ### Changed
 
