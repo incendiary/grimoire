@@ -44,7 +44,7 @@ Tick the first column when a task's brief reaches `> Status: done`.
 | [ ] | RA-02 | Frontmatter descriptions on every skill (4 parallel scopes) | haiku ×4 | sonnet | 2 | [ra-02](docs/tasks/discoverability/ra-02-frontmatter-descriptions.md) |
 | [ ] | RA-03 | Single-source descriptions for prompts and MCP; frontmatter CI check | sonnet | opus | 3 | [ra-03](docs/tasks/discoverability/ra-03-single-source-descriptions.md) |
 | [ ] | RA-04 | Generate `SKILLS.md`, retire hand-kept README index | haiku | sonnet | 3 | [ra-04](docs/tasks/discoverability/ra-04-skills-catalogue.md) |
-| [ ] | RA-05 | Discoverability spot-check list (owner checkpoint) | sonnet | opus | 1 | [ra-05](docs/tasks/discoverability/ra-05-discoverability-test.md) |
+| [x] | RA-05 | Discoverability spot-check list (owner checkpoint) | sonnet | opus | 1 | [ra-05](docs/tasks/discoverability/ra-05-discoverability-test.md) |
 | [x] | RA-06 | Usage report from transcripts and MCP logs | haiku | sonnet | 1 | [ra-06](docs/tasks/discoverability/ra-06-usage-telemetry.md) |
 | [x] | RA-07 | Delete five always-on skills | haiku | sonnet | 1 | [ra-07](docs/tasks/discoverability/ra-07-remove-always-on.md) |
 | [ ] | RA-08 | `ci-local` = `local-ci` + `pre-push-validation` | opus | owner | 3 | [ra-08](docs/tasks/discoverability/ra-08-ci-local.md) |

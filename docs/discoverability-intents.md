@@ -29,4 +29,4 @@ invokes the expected skill. Map old names through scripts/renamed-skills.txt.
 | Draft the list of logs and evidence we need to ask the vendor for after this breach. | incident-ask-builder |
 | We've collected the evidence, now write it up as an appendix for the incident report. | incident-appendix |
 | Review this whole codebase and tell me what's weak. | codebase-holistic-review |
-| I can't remember which skill does this, what have we got for checking a third-party skill is safe? | skill-vetter |
+| Is this third-party skill safe to install? | skill-vetter |
