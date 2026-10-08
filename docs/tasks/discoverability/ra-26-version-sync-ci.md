@@ -1,6 +1,6 @@
 # Task RA-26: Drop version-sync checks from this repo's CI
 
-> Status: pending
+> Status: done
 > Parent: discoverability and consolidation programme
 > Model: haiku
 > Fallback: sonnet

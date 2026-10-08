@@ -22,7 +22,7 @@ CI workflows:
 - `validate.yml` — shellcheck, skill structure, registry sync
 - `ci-mcp.yml` — TypeScript build, lint, test (path-filtered to `mcp-server/`)
 - `secret-scan.yml` — gitleaks + TruffleHog
-- `devops-check.yml` — version sync, clone-ref pinning, test baseline, roadmap sync
+- `devops-check.yml` — clone-ref pinning, test baseline, roadmap sync
 - `release-please.yml` — see "Releases" below
 
 VERSION file: semver, managed entirely by `release-please` (see "Releases"). Feature PRs
@@ -77,11 +77,6 @@ the release PR whenever you're ready to ship what's queued.
 (`validate.yml`, `devops-check.yml`); GitHub's default token can't cascade-trigger other
 workflows. If that secret expires or is revoked, the release PR will exist but sit with no
 CI checks ever reporting, which will block it under branch protection.
-
-`devops-check.yml`'s version-sync check is deliberately **not** in `main`'s required status
-checks, even though release PRs should now trip it only on the release-please PR itself
-(ordinary feature PRs never touch `VERSION`). Requiring it would block merging that exact
-PR. It still runs and reports — expect it red on the release PR, green everywhere else.
 
 ---
 
