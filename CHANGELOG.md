@@ -24,6 +24,7 @@ workflow.
   the GitHub Release atomically. Authenticated via the `RELEASE_PLEASE_TOKEN` repo
   secret (fine-grained PAT), not the default `GITHUB_TOKEN`, so the release PR still
   triggers `pull_request`-scoped CI under branch protection.
+- `scripts/usage-report.py`: skill usage from Claude Code transcripts and MCP logs.
 
 ### Removed
 
