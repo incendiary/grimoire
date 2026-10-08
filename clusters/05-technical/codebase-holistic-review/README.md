@@ -29,27 +29,6 @@ for a lesser-capable agent to execute items independently.
 
 ---
 
-## Installation
-
-### Claude Code
-
-```bash
-cp -r clusters/05-technical/codebase-holistic-review ~/.claude/skills/
-```
-
-### VS Code (prompt file)
-
-After running `bash build.sh`, reference in Copilot Chat:
-```
-#codebase-holistic-review
-```
-
-### VS Code / MCP
-
-This is an `instructional` skill — loaded as prompt context, not an MCP action tool.
-
----
-
 ## Invocation
 
 **Explicit:**

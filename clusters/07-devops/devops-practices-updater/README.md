@@ -41,19 +41,3 @@ disorganised.
 
 ---
 
-## Installation
-
-### Claude Code
-
-```bash
-bash install-all.sh  # copies all skills including devops-practices-updater
-```
-
-### VS Code (Copilot Chat)
-
-After running `bash build.sh`, reference with `#devops-practices-updater` in Copilot Chat.
-
-### MCP (VS Code / JetBrains)
-
-This skill is instructional — loaded as a prompt file, not an MCP tool.
-Use `#devops-practices-updater` in Copilot Chat after running `bash build.sh`.

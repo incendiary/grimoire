@@ -22,23 +22,6 @@ Guides model tier selection through a cost-benefit equation: `total cost = run c
 
 ---
 
-## Installation
-
-### Claude Code
-
-```bash
-cp -r clusters/01-meta/model-selection-framework ~/.claude/skills/
-```
-
-### VS Code (prompt file)
-
-After running `bash build.sh`, reference in Copilot Chat:
-```
-#model-selection-framework
-```
-
----
-
 ## Invocation
 
 **Explicit:**

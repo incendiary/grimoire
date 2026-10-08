@@ -38,28 +38,6 @@ A Slack message that sounds like an email is itself an AI marker.
 
 ---
 
-## Installation
-
-### Claude Code
-
-```bash
-cp -r clusters/02-comms/human-rewrite ~/.claude/skills/
-```
-
-### VS Code (prompt file)
-
-After running `bash build.sh`, reference in Copilot Chat:
-```
-#human-rewrite
-```
-
-> **Note:** This is an `instructional` type skill — prompt file and Claude Code only.
-> Not exposed as an MCP tool.
-
-
-
----
-
 ## How to invoke it in a session
 
 After another skill produces a draft:

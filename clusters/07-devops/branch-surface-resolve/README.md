@@ -52,24 +52,6 @@ bash branch-surface-resolve.sh --resolve --prune-stale
 
 ---
 
-## Installation
-
-### Claude Code
-
-```bash
-bash install-all.sh  # copies all skills including branch-surface-resolve
-```
-
-### VS Code (Copilot Chat)
-
-After running `bash build.sh`, reference with `#branch-surface-resolve` in Copilot Chat.
-
-### MCP tool
-
-Registered as `branch-surface-resolve` in `mcp-server/registry.json`.
-
----
-
 ## Chain
 
 ```

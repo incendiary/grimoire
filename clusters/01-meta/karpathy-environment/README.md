@@ -28,27 +28,6 @@ environment saves ~50% of session setup time and compounds with each completed t
 
 ---
 
-## Installation
-
-### Claude Code
-
-```bash
-cp -r clusters/01-meta/karpathy-environment ~/.claude/skills/
-```
-
-### VS Code (prompt file)
-
-After running `bash build.sh`, reference in Copilot Chat:
-```
-#karpathy-environment
-```
-
-> **Note:** This is an `instructional` type skill — prompt file and Claude Code only.
-> Not exposed as an MCP tool.
-
-
----
-
 ## Quick reference
 
 ```

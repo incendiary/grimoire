@@ -7,24 +7,6 @@ Extracted from a session where the same workflow was written from scratch for 5 
 
 ---
 
-## Installation
-
-### Claude Code
-
-```bash
-cp -r clusters/07-devops/dotnet-ci-template ~/.claude/skills/
-```
-
-### VS Code (prompt file)
-
-After running `bash build.sh`, reference in Copilot Chat:
-```
-#dotnet-ci-template
-```
-
-> **Note:** This is an `instructional` type skill — prompt file and Claude Code only.
-> Not exposed as an MCP tool.
-
 ## Roadmap
 
 - [x] Extracted from archive session (5x — WindowsServiceTemplate, QueuserAPC, IncendiaryService, EarlyWorm, csharp-shellcode-runner)

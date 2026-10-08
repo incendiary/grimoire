@@ -39,6 +39,7 @@ workflow.
 - test-before-asking, mid-task-checkin, pre-commit-aware-commits, cwd-verification, verify-code-version (duplicated Claude Code behaviour or belong in global CLAUDE.md).
 - Unused scripts: model-select.sh, scripts/roadmap-close.sh, scripts/skill-dependency-graph.sh.
 - VERSION/tag drift checks from this repo's CI (release-please keeps them in step).
+- Per-skill README Installation sections and the readme-quality CI job (installation is documented once in README.md).
 
 ### Changed
 

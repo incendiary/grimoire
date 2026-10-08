@@ -33,29 +33,6 @@ Use this skill when:
 
 ---
 
-## Installation
-
-### Claude Code
-
-```bash
-cp -r clusters/07-devops/python-lint-gate ~/.claude/skills/
-```
-
-### VS Code (prompt file)
-
-After running `bash build.sh`, reference in Copilot Chat:
-
-```
-#python-lint-gate
-```
-
-### VS Code / MCP client
-
-This is an `action` skill and is available as a tool via the grimoire MCP server
-after installation.
-
----
-
 ## Invocation
 
 **Explicit:**
