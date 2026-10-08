@@ -33,6 +33,4 @@ After running `bash build.sh`, reference in Copilot Chat:
 - [x] Add `ci-no-tests.yml` variant for projects without a test suite
 - [x] Add `ci-requirements-only.yml` variant for `requirements.txt`-only projects
 - [x] Document Jython exception with minimal Jython-compatible CI template
-- [ ] Test on one new repo (requires real session)
-- [ ] Document any new gotchas from real usage (requires real session)
 - [x] Ship: copy to `~/.claude/skills/python-ci-template/`

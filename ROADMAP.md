@@ -6,8 +6,8 @@
 > run `bash scripts/roadmap-collect.sh` (or `--json` for machine-readable output) and
 > `bash clusters/07-devops/devops-practices/check-roadmap-sync.sh . --fix`.
 
-**Last updated:** 2026-10-04
-**Open items:** 49 | **Completed:** 230
+**Last updated:** 2026-10-08
+**Open items:** 10 | **Completed:** 230
 
 ---
 
@@ -60,7 +60,7 @@ Tick the first column when a task's brief reaches `> Status: done`.
 | [ ] | RA-18 | Report old names outside the repo (read-only; owner approves edits) | haiku | sonnet | 5 | [ra-18](docs/tasks/discoverability/ra-18-cross-repo-report.md) |
 | [ ] | RA-19 | `npm audit fix` in `mcp-server`, add Dependabot | haiku | sonnet | 1 | [ra-19](docs/tasks/discoverability/ra-19-npm-audit-dependabot.md) |
 | [ ] | RA-20 | Align TruffleHog, SHA-pin actions | haiku | sonnet | 1 | [ra-20](docs/tasks/discoverability/ra-20-pin-versions.md) |
-| [ ] | RA-22 | Delete unschedulable validation items | haiku | sonnet | 1 | [ra-22](docs/tasks/discoverability/ra-22-delete-validation-items.md) |
+| [x] | RA-22 | Delete unschedulable validation items | haiku | sonnet | 1 | [ra-22](docs/tasks/discoverability/ra-22-delete-validation-items.md) |
 | [ ] | RA-23 | Evidence-based prune report (owner decides) | sonnet | owner | later | [ra-23](docs/tasks/discoverability/ra-23-usage-prune.md) |
 | [ ] | RA-24 | Remove per-skill Installation boilerplate and its CI job | haiku | sonnet | 1 | [ra-24](docs/tasks/discoverability/ra-24-readme-install-boilerplate.md) |
 | [ ] | RA-25 | Delete three unused scripts | haiku | sonnet | 1 | [ra-25](docs/tasks/discoverability/ra-25-dead-scripts.md) |
@@ -76,74 +76,26 @@ Revised by the 2026-10-04 over-engineering audit (see `REVIEW.md`). Open owner d
 <!-- ROADMAP-COLLECT:START (auto-generated — do not hand-edit; run check-roadmap-sync.sh --fix) -->
 ### 01-meta
 
-  - **cwd-verification**: Add all known path pairs as they are encountered
-  - **github-authored-repos**: Test on one multi-repo session (requires real session)
-  - **github-authored-repos**: Document any new gotchas from real usage (requires real usage)
   - **mid-task-checkin**: Consider a heuristic for detecting user typing mid-task (if tooling permits)
-  - **skill-vetter**: Test on 3 real third-party skills (requires real sessions)
   - **task-handoff**: Add `--auto` mode: triggered automatically when context exceeds a threshold
-  - **test-before-asking**: Test across 5 sessions to confirm the rule lands correctly
-  - **verify-code-version**: Test on DNSResolver and Slice-N-Dice sessions
-
-### 02-comms
-
-  - **executive-translate**: Test on 3 real findings
-  - **human-rewrite**: Test on 5 real outputs from other skills
-  - **human-rewrite**: Add any further rules that emerge from real usage
-  - **tone-check**: Test on 5 real drafts across different audience tiers
-
-### 03-incident
-
-  - **incident-appendix**: Test on 2 real investigation write-ups
-  - **incident-ask-builder**: Test on 2 real incident scenarios
-  - **risk-to-action**: Test on 3 real risk items
-
-### 04-security
-
-  - **ios-signing-risk**: Test on a real IPA integrity scenario
 
 ### 05-technical
 
   - **codebase-holistic-review**: Add worked example: Python web service holistic review (before/after findings)
   - **codebase-holistic-review**: Add worked example: Node.js monorepo review
-  - **codebase-holistic-review**: Test on 3 real repos and capture recurring finding patterns
-  - **python-black-ruff-authoring**: Test on 3 Python repos with different Ruff profiles
 
 ### 07-devops
 
-  - **docker-ghcr-publish**: Test on pdf2john-docker and bgp_rogue
-  - **dotnet-ci-template**: Test on one new repo (requires real session)
-  - **dotnet-ci-template**: Document any new gotchas from real usage (requires real session)
-  - **format-before-commit**: Test on 3 Python repos
-  - **git-push-protocol-handler**: Test on a representative set of repos
-  - **github-history-wipe**: Test on one repo end-to-end (requires real session)
-  - **github-history-wipe**: Document any new gotchas from real usage (requires real session)
-  - **github-release-workflow**: Test on DNSResolver v2 release
   - **local-ci**: Auto-fix for prettier/eslint (JS/TS projects)
   - **local-ci**: Pin detection for pyproject.toml / poetry.lock / constraints files
   - **local-ci**: Job dependency graph (`needs:`) and matrix expansion awareness
   - **local-ci**: Caching of discovered jobs (skip re-parsing on each run)
-  - **npm-lockfile-integrity**: Test on 3 Node.js repos
-  - **npm-provenance-attestation**: Test on 3 Node.js repos with mixed provenance coverage
   - **portfolio-readme-generator**: Planned enhancement
-  - **pre-commit-aware-commits**: Test on DNSResolver and Slice-N-Dice
-  - **python-ci-lint-precheck**: Test on Slice-N-Dice and DNSResolver
-  - **python-ci-template**: Test on one new repo (requires real session)
-  - **python-ci-template**: Document any new gotchas from real usage (requires real session)
-  - **python-lockfile-integrity**: Test on 3 Python repos (pip-tools, poetry, uv variants)
-  - **readme-version-pin**: Test on DNSResolver and Slice-N-Dice release cuts
-  - **repo-compass**: Test on 3 repos with varying states (tidy, lagged, genuinely outstanding)
-  - **repo-publication-prep**: Test end-to-end on one new repo (requires real session)
-  - **repo-publication-prep**: Document any new gotchas from real usage (requires real usage)
-  - **repo-security-bootstrap**: Test on one repo end-to-end (requires real session)
-  - **repo-security-bootstrap**: Document any new gotchas from real usage (requires real session)
-  - **roadmap-sync**: Test on DNSResolver and Slice-N-Dice
-  - **terraform-aws-syntax**: Add resource type gotchas as they are encountered
   - **terraform-version-compat**: Add known-good version matrix for frequently used module combinations
 
 ---
 
-**Summary:** 49 open items | 230 completed items
+**Summary:** 10 open items | 230 completed items
 <!-- ROADMAP-COLLECT:END -->
 
 > **08-offsec** roadmap items now live in the private `grimoire-offsec` submodule

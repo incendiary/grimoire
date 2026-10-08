@@ -98,6 +98,5 @@ terraform {
 ## Roadmap
 
 - [x] SKILL.md written and validated
-- [ ] Add resource type gotchas as they are encountered
 - [x] Add provider version matrix for known argument type changes
 - [x] Ship: copy to `~/.claude/skills/terraform-aws-syntax/`

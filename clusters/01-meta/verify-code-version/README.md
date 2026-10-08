@@ -86,5 +86,4 @@ pip show <package> | grep Version
 - [x] SKILL.md written and validated
 - [x] Write `verify_version.sh`
 - [x] Add `.pyc` cache-clearing step to the post-pull checklist
-- [ ] Test on DNSResolver and Slice-N-Dice sessions
 - [x] Ship: copy to `~/.claude/skills/verify-code-version/`

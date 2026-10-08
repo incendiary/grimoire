@@ -237,6 +237,5 @@ it without consequence. If the deadline is firm, state what happens if it is mis
 ## Roadmap
 
 - [x] SKILL.md written and validated
-- [ ] Test on 5 real drafts across different audience tiers
 - [x] Add worked examples of PASS vs FLAG vs borderline for each axis
 - [x] Ship: copy to `~/.claude/skills/tone-check/`

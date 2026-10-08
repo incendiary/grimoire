@@ -150,5 +150,4 @@ jobs:
 - [x] README.md written
 - [x] Write `check-lockfile-integrity.sh` — lockfile version, integrity coverage, PASS/FAIL summary
 - [x] Add GitHub Actions workflow snippet for lockfile drift gating
-- [ ] Test on 3 Node.js repos
 - [x] Ship: copy to `~/.claude/skills/npm-lockfile-integrity/`

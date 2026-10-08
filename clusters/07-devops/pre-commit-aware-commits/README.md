@@ -148,5 +148,4 @@ produces no protection for the rest of the commit.
 - [x] SKILL.md written and validated
 - [x] Write `pre_commit_check.sh`
 - [x] Add gitleaks false-positive allowlist template
-- [ ] Test on DNSResolver and Slice-N-Dice
 - [x] Ship: copy to `~/.claude/skills/pre-commit-aware-commits/`

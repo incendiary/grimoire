@@ -33,6 +33,4 @@ After running `bash build.sh`, reference in Copilot Chat:
 - [x] Add `ci-cross-platform.yml` variant (`ubuntu-latest` for library projects)
 - [x] Add `ci-windows-only.yml` variant (`windows-latest` for WinAPI/BOF projects)
 - [x] Document net6.0 → net8.0 upgrade path in SKILL.md
-- [ ] Test on one new repo (requires real session)
-- [ ] Document any new gotchas from real usage (requires real session)
 - [x] Ship: copy to `~/.claude/skills/dotnet-ci-template/`

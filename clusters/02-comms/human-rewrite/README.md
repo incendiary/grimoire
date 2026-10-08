@@ -198,6 +198,4 @@ After: `Without this control, an attacker can exploit the vulnerability to gain 
 
 - [x] SKILL.md written and validated
 - [x] Build worked before/after examples for each style rule
-- [ ] Test on 5 real outputs from other skills
-- [ ] Add any further rules that emerge from real usage
 - [x] Ship: copy to `~/.claude/skills/human-rewrite/`

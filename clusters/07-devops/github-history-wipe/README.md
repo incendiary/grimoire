@@ -36,6 +36,4 @@ Register the grimoire MCP server — this skill is exposed as tool `github_histo
 - [x] Add `recreate-releases.sh` script
 - [x] Handle archived-repo unarchive/re-archive automatically
 - [x] Add author email override to the commit step
-- [ ] Test on one repo end-to-end (requires real session)
-- [ ] Document any new gotchas from real usage (requires real session)
 - [x] Ship: copy to `~/.claude/skills/github-history-wipe/`

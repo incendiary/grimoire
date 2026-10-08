@@ -209,4 +209,3 @@ context loss.*
 - [x] SKILL.md written and validated
 - [x] README.md written
 - [x] Add before/after examples for common Ruff violations (F401, F841, E722, B904)
-- [ ] Test on 3 Python repos with different Ruff profiles

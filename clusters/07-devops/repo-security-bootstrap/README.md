@@ -35,6 +35,4 @@ Register the grimoire MCP server — this skill is exposed as tool `repo_securit
 - [x] Add `bootstrap-security.sh` script (handles unarchive/re-archive automatically)
 - [x] Add `gitleaks-config-template.toml` with parameterised corporate-refs placeholders
 - [x] Handle archived-repo unarchive/re-archive in the script
-- [ ] Test on one repo end-to-end (requires real session)
-- [ ] Document any new gotchas from real usage (requires real session)
 - [x] Ship: copy to `~/.claude/skills/repo-security-bootstrap/`

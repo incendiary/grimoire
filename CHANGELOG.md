@@ -27,6 +27,7 @@ workflow.
 
 ### Removed
 
+- "Test on real X" validation items from skill roadmaps (40 items).
 - `.github/workflows/release-on-tag.yml` — superseded by `release-please-action`, which
   now owns tag + release creation directly.
 

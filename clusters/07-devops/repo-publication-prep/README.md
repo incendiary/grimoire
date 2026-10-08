@@ -36,6 +36,4 @@ After running `bash build.sh`, reference in Copilot Chat:
 - [x] Add `audit_history.sh` script
 - [x] Add `detect-language.sh` script
 - [x] Expand pre-commit hook version pinning section
-- [ ] Test end-to-end on one new repo (requires real session)
-- [ ] Document any new gotchas from real usage (requires real usage)
 - [x] Ship: copy to `~/.claude/skills/repo-publication-prep/`

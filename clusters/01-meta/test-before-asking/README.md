@@ -121,5 +121,4 @@ Load test-before-asking. Try things before asking me to decide.
 
 - [x] SKILL.md written and validated
 - [x] Add concrete examples of ask vs test for common session types
-- [ ] Test across 5 sessions to confirm the rule lands correctly
 - [x] Ship: copy to `~/.claude/skills/test-before-asking/`

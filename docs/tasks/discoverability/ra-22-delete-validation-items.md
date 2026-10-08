@@ -1,6 +1,6 @@
 # Task RA-22: Delete "test on real X" validation items from skill roadmaps
 
-> Status: pending
+> Status: done
 > Parent: discoverability and consolidation programme
 > Model: haiku
 > Fallback: sonnet

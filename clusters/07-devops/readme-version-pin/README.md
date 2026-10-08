@@ -86,4 +86,3 @@ bash check_readme_version.sh
 - [x] Write `check_readme_version.sh` — assert all pins match current version, exit 1 on mismatch
 - [x] Ship: copy to `~/.claude/skills/readme-version-pin/`
 - [x] Add `--pattern` flag to `pin_readme_version.sh` for custom install line formats
-- [ ] Test on DNSResolver and Slice-N-Dice release cuts
