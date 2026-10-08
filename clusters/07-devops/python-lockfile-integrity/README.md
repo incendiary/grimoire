@@ -117,5 +117,4 @@ pip install --require-hashes -r requirements.txt && git diff --exit-code require
 - [x] SKILL.md written and validated
 - [x] README.md written
 - [x] Write `check-python-lockfile-integrity.sh` — toolchain detection, hash coverage, CI audit, PASS/FAIL summary
-- [ ] Test on 3 Python repos (pip-tools, poetry, uv variants)
 - [x] Ship: copy to `~/.claude/skills/python-lockfile-integrity/`

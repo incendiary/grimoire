@@ -119,5 +119,4 @@ who has never seen the repo.
 - [x] README.md written
 - [ ] Add worked example: Python web service holistic review (before/after findings)
 - [ ] Add worked example: Node.js monorepo review
-- [ ] Test on 3 real repos and capture recurring finding patterns
 - [x] Add language-specific risk pattern tables (Python, TypeScript, C#, Go)

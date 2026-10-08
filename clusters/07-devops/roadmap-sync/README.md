@@ -64,5 +64,4 @@ New planned items: add --json flag, add IPv6 support
 
 - [x] SKILL.md written and validated
 - [x] Write `update_roadmap.py` (parse closed issues, propose checkbox diff)
-- [ ] Test on DNSResolver and Slice-N-Dice
 - [x] Ship: copy to `~/.claude/skills/roadmap-sync/`

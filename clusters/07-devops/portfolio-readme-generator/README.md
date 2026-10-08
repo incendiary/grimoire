@@ -258,5 +258,4 @@ MIT
 - [x] SKILL.md written and validated
 - [ ] Add README linter to check structure compliance post-generation
 - [x] Add per-language examples (Python CLI, C# Windows tool, C++ BOF)
-- [ ] Test on 5 repos
 - [x] Ship: copy to `~/.claude/skills/portfolio-readme-generator/`

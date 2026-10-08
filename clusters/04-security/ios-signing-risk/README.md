@@ -152,5 +152,4 @@ incident — Apple has changed retention policies without public notice.
 - [x] Write `verify-ipa.sh` (hash + codesign verification)
 - [x] Write `check-manifest.sh` (OTA manifest parse and verification)
 - [x] Add Apple Developer Portal log retention window specifics
-- [ ] Test on a real IPA integrity scenario
 - [x] Ship: copy to `~/.claude/skills/ios-signing-risk/`

@@ -172,4 +172,3 @@ jobs:
 - [x] Ship: copy to `~/.claude/skills/docker-ghcr-publish/`
 - [x] Add `--platform linux/amd64,linux/arm64` multi-arch build support
 - [x] Add GitHub Actions workflow snippet for automated GHCR publish on tag push
-- [ ] Test on pdf2john-docker and bgp_rogue

@@ -63,6 +63,4 @@ Or implicitly when Claude detects a multi-repo operation is about to begin.
 - [x] Add `list-authored.sh` script
 - [x] Add fork-detection one-liner to SKILL.md examples
 - [x] Set up process to keep the authored list in sync with CLAUDE.md
-- [ ] Test on one multi-repo session (requires real session)
-- [ ] Document any new gotchas from real usage (requires real usage)
 - [x] Ship: copy to `~/.claude/skills/github-authored-repos/`

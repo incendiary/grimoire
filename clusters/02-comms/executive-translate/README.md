@@ -220,5 +220,4 @@ not solution, single ask with cost and return stated, consequence quantified.
 - [x] SKILL.md written and validated
 - [x] Build 3 worked examples (finding → CISO brief, incident → board summary, risk → C-suite ask)
 - [x] Add worked examples for different audience tiers (CISO, C-suite, board)
-- [ ] Test on 3 real findings
 - [x] Ship: copy to `~/.claude/skills/executive-translate/`

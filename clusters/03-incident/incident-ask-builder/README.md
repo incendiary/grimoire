@@ -195,5 +195,4 @@ Available teams: AWS Platform, SOC, Legal
 - [x] Write `incident-ask-template.md` for common incident types
 - [x] Add worked example for common incident types
 - [x] Add HSM/Developer Portal retention window specifics
-- [ ] Test on 2 real incident scenarios
 - [x] Ship: copy to `~/.claude/skills/incident-ask-builder/`

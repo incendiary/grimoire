@@ -163,5 +163,4 @@ axios
 - [x] README.md written
 - [x] Write `check-provenance.sh` — batch signature audit + critical package provenance check
 - [x] Add GitHub Actions workflow snippet for provenance gating
-- [ ] Test on 3 Node.js repos with mixed provenance coverage
 - [x] Ship: copy to `~/.claude/skills/npm-provenance-attestation/`

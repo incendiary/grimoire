@@ -80,5 +80,4 @@ gh release create vX.Y.Z
 - [x] Add `release-on-tag.yml` CI workflow (auto-creates release from CHANGELOG)
 - [x] Add `release-backfill.sh` reconciliation script
 - [x] Add version-tag drift warning in validate.yml
-- [ ] Test on DNSResolver v2 release
 - [x] Ship: copy to `~/.claude/skills/github-release-workflow/`
