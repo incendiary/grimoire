@@ -97,13 +97,6 @@ fixed 6-section structure. Mandates an authorised-use disclaimer for any securit
 Applies human-rewrite style rules.
 → [Full documentation](portfolio-readme-generator/README.md)
 
-### [pre-commit-aware-commits](pre-commit-aware-commits/) ✅ complete
-
-Prevents commits where pre-commit hooks have silently modified files. Enforces a
-hook dry-run before staging, re-review of hook changes, and a gitleaks-finding
-review before adding to allowlist.
-→ [Full documentation](pre-commit-aware-commits/README.md)
-
 ### [pre-push-validation](pre-push-validation/) ✅ complete
 
 Shift-left validation: runs all feasible local checks (linting, formatting, type checking,
@@ -255,7 +248,6 @@ roadmap-sync              → tick completed items, confirm state is clean
         ↓
 format-before-commit      → ensure code is formatted before final commit
         ↓
-pre-commit-aware-commits  → verify hooks haven't silently modified files
         ↓
 github-release-workflow   → branch → version bump → PR → CI → merge → tag → release
         ↓
@@ -275,7 +267,6 @@ python-lint-gate          → unified check/fix gate for ruff + black
         ↓
 python-ci-lint-precheck   → ruff + pylint with correct suppression rules
         ↓
-pre-commit-aware-commits  → dry-run hooks, review changes, gitleaks check
         ↓
 git-push-protocol-handler → (if SSH fails) switch to HTTPS, push, restore
 ```
@@ -329,7 +320,6 @@ check-test-baseline.sh       → CI + baseline tests present?
         ↓
 github-release-workflow      → (if version drift) align release
 readme-version-pin           → (if unpinned refs) pin all
-pre-commit-aware-commits     → (if no hooks) install
         ↓
 devops-practices-updater     → (if new practice discovered) capture it
 ```
@@ -364,7 +354,6 @@ repo-compass                  → verify final clean repo state
 | `python-ci-lint-precheck` | About to commit Python code; want to catch lint issues pre-push |
 | `python-lint-gate` | Need one command to run Ruff + Black checks (or safe auto-fixes) before commit |
 | `format-before-commit` | About to commit Python code; need to run formatters first |
-| `pre-commit-aware-commits` | Repo has pre-commit hooks; need to verify they haven't silently modified staged files |
 | `portfolio-readme-generator` | Repo needs a portfolio-quality README; publishing or updating docs |
 | `github-morning-run` | Daily/weekly repo hygiene; checking PRs, auto-merging dependabots, checking CI status |
 | `github-release-workflow` | Cutting a version: branch → PR → CI → merge → tag → release |

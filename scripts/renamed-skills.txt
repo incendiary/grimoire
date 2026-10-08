@@ -1,0 +1,5 @@
+test-before-asking	-
+mid-task-checkin	-
+pre-commit-aware-commits	-
+cwd-verification	-
+verify-code-version	-

@@ -204,10 +204,6 @@ Seven public clusters + two private (via submodule). See [clusters/README.md](cl
 | 01-meta | `session-skill-extractor` | ✅ |
 | 01-meta | `skill-vetter` | ✅ |
 | 01-meta | `github-authored-repos` | ✅ |
-| 01-meta | `test-before-asking` | ✅ |
-| 01-meta | `cwd-verification` | ✅ |
-| 01-meta | `verify-code-version` | ✅ |
-| 01-meta | `mid-task-checkin` | ✅ |
 | 01-meta | `task-decomposer` | ✅ |
 | 01-meta | `task-handoff` | ✅ |
 | 01-meta | `karpathy-environment` | ✅ |
@@ -236,7 +232,6 @@ Seven public clusters + two private (via submodule). See [clusters/README.md](cl
 | 07-devops | `python-lint-gate` | ✅ |
 | 07-devops | `format-before-commit` | ✅ |
 | 07-devops | `portfolio-readme-generator` | ✅ |
-| 07-devops | `pre-commit-aware-commits` | ✅ |
 | 07-devops | `github-release-workflow` | ✅ |
 | 07-devops | `git-push-protocol-handler` | ✅ |
 | 07-devops | `roadmap-sync` | ✅ |

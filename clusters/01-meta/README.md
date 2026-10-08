@@ -29,33 +29,6 @@ Enforces the canonical authored-repo list from CLAUDE.md. Extracted after forks 
 incorrectly processed in three separate bulk operations.
 → [Full documentation](github-authored-repos/README.md)
 
-### [test-before-asking](test-before-asking/) ✅ complete
-
-Prevents unnecessary clarification requests by defining a decision threshold: try the
-reasonable interpretation first, ask only for destructive, expensive, or preference-dependent
-actions. Indexed by action type with carve-outs.
-→ [Full documentation](test-before-asking/README.md)
-
-### [cwd-verification](cwd-verification/) ✅ complete
-
-Prevents bulk file operations running in the wrong directory. Enforces a session-start
-cwd confirm and a pre-bulk-op confirm, with special handling for iCloud paths that
-require quoting.
-→ [Full documentation](cwd-verification/README.md)
-
-### [verify-code-version](verify-code-version/) ✅ complete
-
-Prevents debugging against the wrong code version. Enforces a version check after
-every pull and before diagnosing unexpected output, comparing working tree against HEAD.
-→ [Full documentation](verify-code-version/README.md)
-
-### [mid-task-checkin](mid-task-checkin/) ✅ complete
-
-Pauses at natural phase boundaries during long multi-step tasks and checks whether
-new instructions have been added since execution started. One-line prompt, then
-resumes. Activates on tasks with 3+ planned steps.
-→ [Full documentation](mid-task-checkin/README.md)
-
 ### [karpathy-framework](karpathy-framework/) ✅ complete
 
 Umbrella entry point for the Karpathy three-layer framework. Routes to the right layer
@@ -155,7 +128,6 @@ karpathy-environment      → (if patterns emerged) capture in CLAUDE.md / skill
 **Trigger:** "Context is getting long" / session feels sluggish / about to hit limits
 
 ```
-mid-task-checkin           → pause, check for new instructions, confirm direction
         ↓
 task-handoff              → package state for a fresh session to continue
         ↓
@@ -167,9 +139,7 @@ task-handoff              → package state for a fresh session to continue
 **Trigger:** Opening a new session / "where was I?" / resuming work
 
 ```
-cwd-verification          → confirm you're in the right directory
         ↓
-verify-code-version       → confirm working tree matches HEAD (no stale code)
         ↓
 github-authored-repos     → (if multi-repo) scope to authored repos only
 ```
@@ -181,7 +151,6 @@ github-authored-repos     → (if multi-repo) scope to authored repos only
 ```
 karpathy-verify           → second-opinion evaluation against criteria
         ↓
-test-before-asking        → try the reasonable interpretation rather than asking
 ```
 
 ### Workflow 5: Post-session / environment improvement
@@ -249,11 +218,7 @@ and `roadmap-sync` keeps the README roadmap from becoming the long-term source o
 | `model-selection-framework` | Choosing model tier for a task; avoiding false savings on high-risk work; assigning models to chunks |
 | `task-decomposer` | Task will span multiple sessions; need independent chunks before starting |
 | `task-handoff` | Context pressure building mid-task; need to hand off cleanly to a fresh session |
-| `mid-task-checkin` | Long multi-step task in progress; natural phase boundary reached; 3+ steps planned |
 | `session-skill-extractor` | Session ending; want to extract reusable patterns into proposed skills |
 | `skill-vetter` | Evaluating a third-party skill before installing; need safety/quality check |
 | `github-authored-repos` | Multi-repo operation starting; need to exclude forks and reference clones |
-| `cwd-verification` | Starting a session; about to run bulk file operations; path might be wrong |
-| `verify-code-version` | After a pull; before debugging unexpected output; code might be stale |
-| `test-before-asking` | About to ask the user a clarifying question; check if you should just try first |
 | `skill-keyword-lookup` | You know the workflow concept but not the skill name; need ranked skill matches |

@@ -44,10 +44,6 @@ karpathy-spec output
 
 → Prevents context-window collisions mid-project.
 
-### 3. **cwd-verification** (01-meta)
-
-Confirm you're in the right directory before bulk operations.
-
 ---
 
 ## Project type: Node.js library or service
@@ -58,7 +54,6 @@ Confirm you're in the right directory before bulk operations.
 
 1. **karpathy-spec** — Define the API surface, success criteria, breaking-change boundaries
 2. **task-decomposer** — Split into: (1) core API, (2) tests, (3) docs, (4) release prep
-3. **cwd-verification** — Confirm you're in the right repo
 
 ### Development
 
@@ -85,7 +80,6 @@ Confirm you're in the right directory before bulk operations.
 
 1. **karpathy-spec** — Define the CLI interface, success criteria, error handling model
 2. **task-decomposer** — Split into: (1) core logic, (2) CLI wrapper, (3) tests, (4) docs
-3. **cwd-verification** — Confirm directory
 
 ### Development
 
@@ -113,7 +107,6 @@ Confirm you're in the right directory before bulk operations.
 
 1. **karpathy-spec** — Define namespace structure, breaking-change boundaries, target frameworks
 2. **task-decomposer** — Split into: (1) core logic, (2) unit tests, (3) integration tests, (4) docs
-3. **cwd-verification** — Confirm directory
 
 ### Development
 
@@ -137,7 +130,6 @@ Confirm you're in the right directory before bulk operations.
 
 1. **karpathy-spec** — Define the target cloud state, success criteria, disaster-recovery assumptions
 2. **task-decomposer** — Split into: (1) networking, (2) compute, (3) security, (4) monitoring, (5) docs
-3. **cwd-verification** — Confirm directory
 
 ### Development
 
@@ -163,7 +155,6 @@ Confirm you're in the right directory before bulk operations.
 
 1. **karpathy-spec** — Define the attack surface, success criteria, OPSEC constraints
 2. **repo-security-bootstrap** — Deploy secret scanning upfront (credentials leak risk)
-3. **cwd-verification** — Confirm directory
 
 ### Development
 
@@ -200,12 +191,11 @@ Confirm you're in the right directory before bulk operations.
 
 ## Workflow: Multi-repo bulk operations
 
-**Skill stack:** cwd-verification → github-authored-repos → [bulk task] → roadmap-sync → github-release-workflow
+**Skill stack:** github-authored-repos → [bulk task] → roadmap-sync → github-release-workflow
 
 ### Setup
 
-1. **cwd-verification** — Confirm you're in the right parent directory
-2. **github-authored-repos** — Filter to authored repos only (prevent forks from being processed)
+1. **github-authored-repos** — Filter to authored repos only (prevent forks from being processed)
 
 ### Bulk task
 
@@ -245,7 +235,6 @@ Confirm you're in the right directory before bulk operations.
 **Trigger:** "Context is getting full" / session sluggish / about to hit limits
 
 ```
-mid-task-checkin  →  pause, check for new instructions, confirm direction
         ↓
 task-handoff      →  package state for a fresh session to continue
         ↓
@@ -256,7 +245,7 @@ task-handoff      →  package state for a fresh session to continue
 
 ## Workflow: Review and verification
 
-**Skill stack:** karpathy-verify → test-before-asking
+**Skill stack:** karpathy-verify
 
 ### After development
 
@@ -265,23 +254,13 @@ task-handoff      →  package state for a fresh session to continue
    - External signal testing (run it, check output)
    - Feedback loops improve quality 2–3× per invocation
 
-### Before accepting AI output
-
-1. **test-before-asking** — Try the reasonable interpretation rather than clarifying
-   - Defined decision threshold: try first, ask only for destructive/expensive/preference-dependent actions
-   - Indexed by action type
-
 ---
 
 ## Workflow: Session start (any project)
 
-Always load these three before diving into project-specific work:
+Load this before diving into project-specific work:
 
 ```
-cwd-verification       →  "Am I in the right directory?"
-        ↓
-verify-code-version    →  "Is my working tree current?"
-        ↓
 github-authored-repos  →  (multi-repo only) "Scope to authored repos"
 ```
 

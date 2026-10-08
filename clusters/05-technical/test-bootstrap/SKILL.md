@@ -308,6 +308,4 @@ tests must gate the pipeline.
 
 - `python-ci-template` — full Python CI pipeline including test stage
 - `dotnet-ci-template` — full C# CI pipeline including `dotnet test`
-- `test-before-asking` — workflow: run existing tests before raising questions
 - `format-before-commit` — pair with test-bootstrap to enforce formatting + tests pre-commit
-- `pre-commit-aware-commits` — add a test-run hook to `.pre-commit-config.yaml`

@@ -106,7 +106,6 @@ devops-practices              → audit current state
         ↓
 github-release-workflow       → set up proper release process
 readme-version-pin            → pin all refs
-pre-commit-aware-commits      → install hooks
         ↓
 check-version-sync.sh         → verify version sync
 check-clone-refs.sh           → verify ref pinning
@@ -131,9 +130,7 @@ bash clusters/07-devops/devops-practices/check-test-baseline.sh
 | `github-release-workflow` | Implements the versioning practice |
 | `readme-version-pin` | Implements clone-ref pinning |
 | `project-delivery-workflow` | Implements PR discipline |
-| `pre-commit-aware-commits` | Implements hook-based enforcement |
 | `test-bootstrap` (05-technical) | Implements test framework setup |
-| `verify-code-version` (01-meta) | Verifies code matches HEAD |
 | `devops-practices-updater` | Evolves this skill with new practices |
 
 ## Companion skill

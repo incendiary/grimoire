@@ -208,5 +208,4 @@ A handoff should be readable in under 2 minutes. If it's longer, trim it.
 ## Related skills
 
 - `task-decomposer` — proactive complement: decomposes work before context pressure hits
-- `mid-task-checkin` — periodic check-ins during a single chunk's execution
 - `project-delivery-workflow` — delivery planning at the PR / release level
