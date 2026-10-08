@@ -7,27 +7,6 @@ Extracted from a session where the same 9-step procedure was repeated verbatim 1
 
 ---
 
-## Installation
-
-### Claude Code
-
-```bash
-cp -r clusters/07-devops/github-history-wipe ~/.claude/skills/
-```
-
-### VS Code (prompt file)
-
-After running `bash build.sh`, reference in Copilot Chat:
-```
-#github-history-wipe
-```
-
-### MCP client
-
-Register the grimoire MCP server — this skill is exposed as tool `github_history_wipe`.
-
-> **Note:** This is an `action` type skill — available as MCP tool, prompt file, and Claude Code.
-
 ## Roadmap
 
 - [x] Extracted from PycharmProjects session (16x repetition)

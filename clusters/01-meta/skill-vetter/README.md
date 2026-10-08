@@ -33,29 +33,6 @@ review process before they are committed here.
 
 ---
 
-## Installation
-
-### Claude Code
-
-```bash
-cp -r clusters/01-meta/skill-vetter ~/.claude/skills/
-```
-
-### VS Code (prompt file)
-
-After running `bash build.sh`, reference in Copilot Chat:
-```
-#skill-vetter
-```
-
-> **Note:** This is an `instructional` type skill — prompt file and Claude Code only.
-> Not exposed as an MCP tool.
-
-
-No hook wiring required. This is a context-load skill only.
-
----
-
 ## How to invoke it in a session
 
 Open a new Claude Code session and say:

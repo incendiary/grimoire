@@ -27,28 +27,6 @@ A fast keyword-to-skill lookup utility. Use this when you know the behavior you 
 
 ---
 
-## Installation
-
-### Claude Code
-
-```bash
-cp -r clusters/01-meta/skill-keyword-lookup ~/.claude/skills/
-```
-
-### VS Code (prompt file)
-
-After running `bash build.sh`, reference in Copilot Chat:
-
-```
-#skill-keyword-lookup
-```
-
-### VS Code / MCP client
-
-This is an `action` skill and is available as a tool via the grimoire MCP server.
-
----
-
 ## Invocation
 
 **Explicit:**

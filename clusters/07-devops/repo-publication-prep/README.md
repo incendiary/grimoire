@@ -10,24 +10,6 @@ Consolidated from three session-extracted stubs: `precommit-bootstrap` (×7),
 
 ---
 
-## Installation
-
-### Claude Code
-
-```bash
-cp -r clusters/07-devops/repo-publication-prep ~/.claude/skills/
-```
-
-### VS Code (prompt file)
-
-After running `bash build.sh`, reference in Copilot Chat:
-```
-#repo-publication-prep
-```
-
-> **Note:** This is an `instructional` type skill — prompt file and Claude Code only.
-> Not exposed as an MCP tool.
-
 ## Roadmap
 
 - [x] Extracted from PycharmProjects, DNSResolver, and StudySaurus sessions

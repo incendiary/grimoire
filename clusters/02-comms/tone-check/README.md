@@ -30,28 +30,6 @@ draft → tone-check → human-rewrite → send.
 
 ---
 
-## Installation
-
-### Claude Code
-
-```bash
-cp -r clusters/02-comms/tone-check ~/.claude/skills/
-```
-
-### VS Code (prompt file)
-
-After running `bash build.sh`, reference in Copilot Chat:
-```
-#tone-check
-```
-
-> **Note:** This is an `instructional` type skill — prompt file and Claude Code only.
-> Not exposed as an MCP tool.
-
-
-
----
-
 ## How to invoke it in a session
 
 ```

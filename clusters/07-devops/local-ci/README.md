@@ -35,28 +35,6 @@ Every executed step is judged by its **exit code**. A normal run always exits 0 
 
 ---
 
-## Installation
-
-### Claude Code
-
-```bash
-bash install-all.sh            # first install (all grimoire skills)
-bash install-all.sh --update   # update an existing copy
-```
-
-### VS Code (prompt file)
-
-After running `bash build.sh`, reference in Copilot Chat:
-```
-#local-ci
-```
-
-### MCP (VS Code / JetBrains)
-
-Registered as the `local-ci` action tool in grimoire's MCP server (`mcp-server/registry.json`). Build with `cd mcp-server && npm ci && npm run build`, then invoke the `local-ci` tool from your MCP client.
-
----
-
 ## Usage
 
 ```bash

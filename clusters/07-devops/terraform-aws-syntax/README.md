@@ -23,27 +23,6 @@ and Cognito resources.
 
 ---
 
-## Installation
-
-### Claude Code
-
-```bash
-cp -r clusters/07-devops/terraform-aws-syntax ~/.claude/skills/
-```
-
-### VS Code (prompt file)
-
-After running `bash build.sh`, reference in Copilot Chat:
-```
-#terraform-aws-syntax
-```
-
-> **Note:** This is an `instructional` type skill — prompt file and Claude Code only.
-> Not exposed as an MCP tool.
-
-
----
-
 ## Block vs attribute quick reference
 
 | Resource | Argument | Type | Correct form |

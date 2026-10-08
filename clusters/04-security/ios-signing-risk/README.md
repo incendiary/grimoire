@@ -29,28 +29,6 @@ a finding of confirmed safe / confirmed compromised / inconclusive with what wou
 
 ---
 
-## Installation
-
-### Claude Code
-
-```bash
-cp -r clusters/04-security/ios-signing-risk ~/.claude/skills/
-```
-
-### VS Code (prompt file)
-
-After running `bash build.sh`, reference in Copilot Chat:
-```
-#ios-signing-risk
-```
-
-> **Note:** This is an `instructional` type skill — prompt file and Claude Code only.
-> Not exposed as an MCP tool.
-
-
-
----
-
 ## How to invoke it in a session
 
 ```

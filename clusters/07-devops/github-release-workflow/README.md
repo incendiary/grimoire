@@ -23,30 +23,6 @@ repo using GitHub releases and semver tags.
 
 ---
 
-## Installation
-
-### Claude Code
-
-```bash
-cp -r clusters/07-devops/github-release-workflow ~/.claude/skills/
-```
-
-### VS Code (prompt file)
-
-After running `bash build.sh`, reference in Copilot Chat:
-```
-#github-release-workflow
-```
-
-### MCP client
-
-Register the grimoire MCP server — this skill is exposed as tool `github_release_workflow`.
-
-> **Note:** This is an `action` type skill — available as MCP tool, prompt file, and Claude Code.
-
-
----
-
 ## Flow summary
 
 ```

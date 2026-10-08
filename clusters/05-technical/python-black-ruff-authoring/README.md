@@ -34,29 +34,6 @@ Load this at the start of Python implementation sessions when:
 
 ---
 
-## Installation
-
-### Claude Code
-
-```bash
-cp -r clusters/05-technical/python-black-ruff-authoring ~/.claude/skills/
-```
-
-### VS Code (prompt file)
-
-After running `bash build.sh`, reference in Copilot Chat:
-
-```
-#python-black-ruff-authoring
-```
-
-### VS Code / MCP
-
-This is an `instructional` skill (guidance only), not an MCP action tool.
-Use it as prompt context in chat sessions.
-
----
-
 ## Invocation
 
 **Explicit:**
