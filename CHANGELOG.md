@@ -14,6 +14,7 @@ workflow.
 
 ### Added
 
+- `scripts/check-frontmatter.sh`: validates SKILL.md frontmatter.
 - `REVIEW.md` and `docs/tasks/discoverability/`: holistic review plus 26 agent-executable
   task briefs and a runbook; tracked in `ROADMAP.md`.
 - `release-please-config.json` + `.release-please-manifest.json` — `release-type: simple`
