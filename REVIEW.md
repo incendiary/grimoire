@@ -164,7 +164,7 @@ push, and the loss is discovered only on a real repo. Accepted risk: the skill h
 
 - `mcp-server/package.json`: all versions exact-pinned. Good.
 - `npm audit`: 9 advisories, all transitive, all "fix available via `npm audit fix`".
-- No dependency scheduled drift detection (no Dependabot config). RA-19.
+- Dependabot is configured (`.github/dependabot.yml`, since #39) for scheduled drift detection. (Corrected 2026-10-08; the original review missed it.)
 
 ## 8. CI/CD gaps
 
@@ -174,7 +174,7 @@ push, and the loss is discovered only on a real repo. Accepted risk: the skill h
 | Lint and format | Yes (shellcheck, eslint) |
 | Secret scanning | Yes (gitleaks, TruffleHog, detect-secrets locally) |
 | Action versions pinned | Tags only, not SHAs (RA-20) |
-| Scheduled dependency drift | **No** (RA-19) |
+| Scheduled dependency drift | Yes (Dependabot) |
 | Frontmatter | **No** (RA-01, RA-03) |
 
 ---

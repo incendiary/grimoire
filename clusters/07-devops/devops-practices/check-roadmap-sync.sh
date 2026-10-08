@@ -58,6 +58,10 @@ case "$DONE_COUNT" in
 esac
 
 TODAY="$(date -u +%Y-%m-%d)"
+# --check must not compare against today's date, or every PR fails the day after the last regeneration.
+if [ "$MODE" = "--check" ]; then
+  TODAY="$(sed -n 's/^\*\*Last updated:\*\* //p' "$ROADMAP_FILE" | head -1)"
+fi
 
 # Build the full replacement file: header stats updated, generated block
 # spliced in between the markers, everything else untouched.
