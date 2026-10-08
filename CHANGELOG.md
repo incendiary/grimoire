@@ -37,6 +37,7 @@ workflow.
   now owns tag + release creation directly.
 - test-before-asking, mid-task-checkin, pre-commit-aware-commits, cwd-verification, verify-code-version (duplicated Claude Code behaviour or belong in global CLAUDE.md).
 - Unused scripts: model-select.sh, scripts/roadmap-close.sh, scripts/skill-dependency-graph.sh.
+- VERSION/tag drift checks from this repo's CI (release-please keeps them in step).
 
 ### Changed
 
