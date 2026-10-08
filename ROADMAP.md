@@ -6,7 +6,7 @@
 > run `bash scripts/roadmap-collect.sh` (or `--json` for machine-readable output) and
 > `bash clusters/07-devops/devops-practices/check-roadmap-sync.sh . --fix`.
 
-**Last updated:** 2026-10-04
+**Last updated:** 2026-10-08
 **Open items:** 49 | **Completed:** 230
 
 ---
@@ -65,7 +65,7 @@ Tick the first column when a task's brief reaches `> Status: done`.
 | [ ] | RA-24 | Remove per-skill Installation boilerplate and its CI job | haiku | sonnet | 1 | [ra-24](docs/tasks/discoverability/ra-24-readme-install-boilerplate.md) |
 | [ ] | RA-25 | Delete three unused scripts | haiku | sonnet | 1 | [ra-25](docs/tasks/discoverability/ra-25-dead-scripts.md) |
 | [ ] | RA-26 | Drop version-sync checks superseded by release-please | haiku | sonnet | 1 | [ra-26](docs/tasks/discoverability/ra-26-version-sync-ci.md) |
-| [ ] | RA-27 | Share duplicated installer functions | sonnet | opus | 1 | [ra-27](docs/tasks/discoverability/ra-27-installer-dedupe.md) |
+| [x] | RA-27 | Share duplicated installer functions | sonnet | opus | 1 | [ra-27](docs/tasks/discoverability/ra-27-installer-dedupe.md) |
 
 Revised by the 2026-10-04 over-engineering audit (see `REVIEW.md`). Open owner decisions are listed at the end of `REVIEW.md`.
 

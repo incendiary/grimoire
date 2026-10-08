@@ -1,6 +1,6 @@
 # Task RA-27: Share duplicated functions between the MCP installers
 
-> Status: pending
+> Status: done
 > Parent: discoverability and consolidation programme
 > Model: sonnet
 > Fallback: opus
