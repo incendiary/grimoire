@@ -29,6 +29,7 @@ workflow.
 
 - `.github/workflows/release-on-tag.yml` — superseded by `release-please-action`, which
   now owns tag + release creation directly.
+- Unused scripts: model-select.sh, scripts/roadmap-close.sh, scripts/skill-dependency-graph.sh.
 
 ### Changed
 

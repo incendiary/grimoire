@@ -1,6 +1,6 @@
 # Task RA-25: Delete three unused scripts
 
-> Status: pending
+> Status: done
 > Parent: discoverability and consolidation programme
 > Model: haiku
 > Fallback: sonnet
