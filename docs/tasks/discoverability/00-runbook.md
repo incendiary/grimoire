@@ -2,7 +2,7 @@
 
 Generated: 2026-10-04 (from `REVIEW.md`, 2026-09-29)
 Format: `task-decomposer` task files, extended with dispatch fields for a master agent.
-Total tasks: 26 (RA-01 to RA-27; RA-21 dropped in the 2026-10-04 audit). RA-02 dispatches as four parallel sub-tasks.
+Total tasks: 27 (RA-01 to RA-28; RA-21 dropped in the 2026-10-04 audit). RA-02 dispatches as four parallel sub-tasks.
 
 This file is for two readers:
 
@@ -36,6 +36,7 @@ same wave can run in parallel. Use `isolation: "worktree"` for every sub-agent.
 | 4 | RA-15 | Needs every task in waves 1 to 3; Opus review gate. Owner reruns the RA-05 spot-check after |
 | 5 | RA-16, RA-18 | RA-18 is read-only; applying its edits needs owner approval |
 | 6 | RA-17 | Needs RA-16's pathway tables |
+| 7 | RA-28 | Needs RA-17; report only, owner decides on findings |
 | Later | RA-23 | 60 days of transcripts on both machines; owner decides |
 
 ### Model selection
@@ -215,3 +216,4 @@ one major version.
 | RA-25 | `ra-25-dead-scripts.md` | haiku | sonnet | none |
 | RA-26 | `ra-26-version-sync-ci.md` | haiku | sonnet | none |
 | RA-27 | `ra-27-installer-dedupe.md` | sonnet | opus | none |
+| RA-28 | `ra-28-ponytail-followup.md` | sonnet | opus | RA-17 |
