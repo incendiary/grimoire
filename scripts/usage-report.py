@@ -6,8 +6,8 @@ Read-only. Stdlib only. Needs no hooks and no settings changes.
 Sources:
   skill-tool  Skill tool_use blocks in Claude Code transcripts
   slash       <command-name>/<name></command-name> in transcript text
-  mcp         mcp__grimoire__<name> tool_use blocks in transcripts, and
-              "[tool-call] Executing: <name>" lines in the MCP server log
+  mcp         "[tool-call] Executing: <name>" lines in the MCP server log (transcript
+              mcp__grimoire__ calls are not counted: the log already records them)
 """
 
 import argparse
@@ -18,7 +18,6 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 HOOK_DRIVEN = {"session-skill-extractor"}
-MCP_PREFIX = "mcp__grimoire__"
 LOG_RE = re.compile(r"^\[([^\]]+)\].*\[tool-call\] Executing: (\S+)")
 SLASH_RE = re.compile(r"<command-name>/([^<\s]+)</command-name>")
 SOURCES = ("skill-tool", "slash", "mcp")
@@ -132,8 +131,6 @@ class Usage:
         tool_input = block.get("input")
         if name == "Skill" and isinstance(tool_input, dict) and tool_input.get("skill"):
             self.record(str(tool_input["skill"]), "skill-tool", when)
-        elif isinstance(name, str) and name.startswith(MCP_PREFIX):
-            self.record(name[len(MCP_PREFIX):], "mcp", when)
 
     def scan_log(self, path):
         fallback = file_ts(path)
