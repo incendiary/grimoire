@@ -215,7 +215,6 @@ Add `.claude/tasks/` to `.gitignore` if needed.
 - `task-handoff` — reactive complement: packages current session state mid-task
   when context pressure is already high
 - `project-delivery-workflow` — higher-level delivery planning across PRs
-- `mid-task-checkin` — periodic check-ins during execution of a single chunk
 
 ## Roadmap
 

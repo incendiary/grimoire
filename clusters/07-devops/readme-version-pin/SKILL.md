@@ -125,5 +125,3 @@ If none are found the scripts exit 1 with a clear message.
 ## Related skills
 
 - `github-release-workflow` — the release mechanics this skill follows
-- `pre-commit-aware-commits` — pre-commit hook discipline and re-stage workflow
-- `verify-code-version` — runtime version checks (post-pull, not README-facing)

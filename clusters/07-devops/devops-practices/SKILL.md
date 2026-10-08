@@ -184,7 +184,7 @@ README.md
 | No broad file-level disables | Suppress per-line with justification; never blanket-ignore |
 
 **Enforcement:** `format-before-commit` skill handles Python; language-specific CI templates handle others.
-**Existing skills:** `format-before-commit`, `python-ci-lint-precheck`, `pre-commit-aware-commits`
+**Existing skills:** `format-before-commit`, `python-ci-lint-precheck`
 
 ---
 
@@ -225,8 +225,6 @@ When a practice needs more than enforcement — it needs *implementation* — ro
 | Sync roadmap after PR merge or release | `roadmap-sync` |
 | Full delivery loop (branch → PR → release) | `project-delivery-workflow` |
 | Bootstrap test framework in a new repo | `test-bootstrap` (05-technical) |
-| Set up pre-commit hooks | `pre-commit-aware-commits` |
-| Verify code version matches HEAD | `verify-code-version` (01-meta) |
 | Deploy secret scanning | `repo-security-bootstrap` |
 
 ---

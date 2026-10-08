@@ -171,4 +171,3 @@ If the host has no NVIDIA runtime, the GPU test is skipped with a `[SKIP]` notic
 
 - `github-release-workflow` — run this skill after tagging the release
 - `readme-version-pin` — pins git clone / pip install refs; Docker pull refs are handled separately by this skill
-- `pre-commit-aware-commits` — commit the README update cleanly after running `--update-readme`

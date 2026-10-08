@@ -6,8 +6,8 @@
 > run `bash scripts/roadmap-collect.sh` (or `--json` for machine-readable output) and
 > `bash clusters/07-devops/devops-practices/check-roadmap-sync.sh . --fix`.
 
-**Last updated:** 2026-10-04
-**Open items:** 49 | **Completed:** 230
+**Last updated:** 2026-10-08
+**Open items:** 44 | **Completed:** 213
 
 ---
 
@@ -46,7 +46,7 @@ Tick the first column when a task's brief reaches `> Status: done`.
 | [ ] | RA-04 | Generate `SKILLS.md`, retire hand-kept README index | haiku | sonnet | 3 | [ra-04](docs/tasks/discoverability/ra-04-skills-catalogue.md) |
 | [ ] | RA-05 | Discoverability spot-check list (owner checkpoint) | sonnet | opus | 1 | [ra-05](docs/tasks/discoverability/ra-05-discoverability-test.md) |
 | [ ] | RA-06 | Usage report from transcripts and MCP logs | haiku | sonnet | 1 | [ra-06](docs/tasks/discoverability/ra-06-usage-telemetry.md) |
-| [ ] | RA-07 | Delete five always-on skills | haiku | sonnet | 1 | [ra-07](docs/tasks/discoverability/ra-07-remove-always-on.md) |
+| [x] | RA-07 | Delete five always-on skills | haiku | sonnet | 1 | [ra-07](docs/tasks/discoverability/ra-07-remove-always-on.md) |
 | [ ] | RA-08 | `ci-local` = `local-ci` + `pre-push-validation` | opus | owner | 3 | [ra-08](docs/tasks/discoverability/ra-08-ci-local.md) |
 | [ ] | RA-09 | `py-lint` = four Python lint skills | sonnet | opus | 3 | [ra-09](docs/tasks/discoverability/ra-09-py-lint.md) |
 | [ ] | RA-10 | `deps-integrity` = npm/python lockfile + provenance | sonnet | opus | 3 | [ra-10](docs/tasks/discoverability/ra-10-deps-integrity.md) |
@@ -76,14 +76,10 @@ Revised by the 2026-10-04 over-engineering audit (see `REVIEW.md`). Open owner d
 <!-- ROADMAP-COLLECT:START (auto-generated — do not hand-edit; run check-roadmap-sync.sh --fix) -->
 ### 01-meta
 
-  - **cwd-verification**: Add all known path pairs as they are encountered
   - **github-authored-repos**: Test on one multi-repo session (requires real session)
   - **github-authored-repos**: Document any new gotchas from real usage (requires real usage)
-  - **mid-task-checkin**: Consider a heuristic for detecting user typing mid-task (if tooling permits)
   - **skill-vetter**: Test on 3 real third-party skills (requires real sessions)
   - **task-handoff**: Add `--auto` mode: triggered automatically when context exceeds a threshold
-  - **test-before-asking**: Test across 5 sessions to confirm the rule lands correctly
-  - **verify-code-version**: Test on DNSResolver and Slice-N-Dice sessions
 
 ### 02-comms
 
@@ -126,7 +122,6 @@ Revised by the 2026-10-04 over-engineering audit (see `REVIEW.md`). Open owner d
   - **npm-lockfile-integrity**: Test on 3 Node.js repos
   - **npm-provenance-attestation**: Test on 3 Node.js repos with mixed provenance coverage
   - **portfolio-readme-generator**: Planned enhancement
-  - **pre-commit-aware-commits**: Test on DNSResolver and Slice-N-Dice
   - **python-ci-lint-precheck**: Test on Slice-N-Dice and DNSResolver
   - **python-ci-template**: Test on one new repo (requires real session)
   - **python-ci-template**: Document any new gotchas from real usage (requires real session)
@@ -143,7 +138,7 @@ Revised by the 2026-10-04 over-engineering audit (see `REVIEW.md`). Open owner d
 
 ---
 
-**Summary:** 49 open items | 230 completed items
+**Summary:** 44 open items | 213 completed items
 <!-- ROADMAP-COLLECT:END -->
 
 > **08-offsec** roadmap items now live in the private `grimoire-offsec` submodule
