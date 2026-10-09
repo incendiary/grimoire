@@ -1,3 +1,7 @@
+---
+name: format-before-commit
+description: "Runs black and ruff format checks locally before every commit so formatting failures never reach CI, and sets up pinned pre-commit hooks for them. Use when asked to 'set up formatting', 'pre-commit for this project', or when a CI run fails on black or ruff format errors. Provides the Black/Ruff config; to run the check use python-lint-gate."
+---
 # format-before-commit
 
 > **Status:** COMPLETE

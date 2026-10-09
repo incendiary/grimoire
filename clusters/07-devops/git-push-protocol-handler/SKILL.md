@@ -1,3 +1,7 @@
+---
+name: git-push-protocol-handler
+description: "Checks SSH connectivity to GitHub before pushing, switches the remote and gh CLI to HTTPS when SSH is unavailable, and restores SSH afterwards if preferred. Use when a push fails with a connection or authentication error, or at the start of a session where SSH agent access is uncertain, such as after a reboot or on a remote machine."
+---
 # git-push-protocol-handler
 
 > **Status:** COMPLETE

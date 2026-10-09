@@ -1,3 +1,7 @@
+---
+name: npm-lockfile-integrity
+description: "Enforces sha512 integrity checks for Node.js dependencies by requiring npm ci and gating lockfile drift and npm audit in CI. Use when setting up a Node.js project's CI, auditing supply chain hygiene, or reviewing dependencies after a supply chain incident. For Python lockfiles use python-lockfile-integrity; for package provenance use npm-provenance-attestation."
+---
 # npm-lockfile-integrity
 
 > **Status:** COMPLETE

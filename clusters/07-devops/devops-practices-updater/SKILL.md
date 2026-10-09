@@ -1,3 +1,7 @@
+---
+name: devops-practices-updater
+description: "Adds a newly discovered repeating practice to the devops-practices standard, placing it in the right category and updating its enforcement script if one applies. Use when asked to 'add this to my devops practices', after a session reveals a pattern worth standardising, or when an existing practice needs refining. To apply the standard to a repo use devops-practices."
+---
 # devops-practices-updater
 
 > **Status:** COMPLETE

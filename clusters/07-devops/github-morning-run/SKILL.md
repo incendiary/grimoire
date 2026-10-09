@@ -1,3 +1,7 @@
+---
+name: github-morning-run
+description: "Audits open PRs, auto-merges simple passing dependabot updates, checks recent CI runs and flags complex or failing items across one repo or all authored repos. Use when asked to 'check my GitHub repos', 'morning run', 'GitHub status', or 'any routine repo maintenance'. For a single repo's true state at session start use repo-compass."
+---
 # github-morning-run
 
 > **Status:** COMPLETE

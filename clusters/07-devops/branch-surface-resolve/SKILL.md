@@ -1,3 +1,7 @@
+---
+name: branch-surface-resolve
+description: "Audits all local and remote branches, sorts each into ready, local-only, conflict, open-PR or stale, and routes it to a PR, manual conflict review or pruning. Use when asked to 'clean up my branch state', 'I have branches everywhere', 'land everything that is ready', or for a pre-release branch hygiene pass. For overall repo state use repo-compass."
+---
 # branch-surface-resolve
 
 > **Status:** COMPLETE
