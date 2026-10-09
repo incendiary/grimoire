@@ -57,6 +57,8 @@ jobs:
           done
           if [ "$failed" -eq 1 ]; then exit 1; fi
           echo "No stale paths found"
+      - name: SKILLS.md catalogue is current
+        run: bash scripts/gen-catalogue.sh --check
 
   registry-sync:
     name: Registry sync
