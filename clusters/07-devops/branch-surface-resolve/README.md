@@ -59,7 +59,7 @@ branch-surface-resolve --resolve     → land all READY/LOCAL-ONLY work via PRs
         ↓
 [manual conflict resolution]         → for any CONFLICT branches
         ↓
-repo-compass                         → verify final repo truth state
+orient                         → verify final repo truth state
 ```
 
 ---

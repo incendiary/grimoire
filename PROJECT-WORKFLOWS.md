@@ -48,7 +48,7 @@ karpathy-spec output
 
 ## Project type: Node.js library or service
 
-**Skill stack:** karpathy-spec → task-decomposer → [dev] → npm-lockfile-integrity → github-release-workflow → docker-ghcr-publish (optional)
+**Skill stack:** karpathy-spec → task-decomposer → [dev] → deps-integrity → github-release-workflow → docker-ghcr-publish (optional)
 
 ### Pre-development
 
@@ -57,12 +57,11 @@ karpathy-spec output
 
 ### Development
 
-1. **format-before-commit** — Auto-format + review hook changes before staging
-2. **python-ci-lint-precheck** *or equivalent* — Lint before committing (ESLint for JS)
+1. **py-lint** *or equivalent* — Format and lint before committing (ESLint for JS)
 
 ### Pre-release
 
-1. **npm-lockfile-integrity** — Audit `package-lock.json` for integrity coverage
+1. **deps-integrity** — Audit `package-lock.json` for integrity coverage
 2. **github-release-workflow** — Version bump → PR → CI → merge → tag → release
 3. **docker-ghcr-publish** (optional) — Build and push images to GHCR
 
@@ -74,7 +73,7 @@ karpathy-spec output
 
 ## Project type: Python CLI tool or library
 
-**Skill stack:** karpathy-spec → task-decomposer → python-black-ruff-authoring → [dev] → python-lint-gate → python-ci-lint-precheck → format-before-commit → python-ci-template → github-release-workflow
+**Skill stack:** karpathy-spec → task-decomposer → [dev] → py-lint → python-ci-template → github-release-workflow
 
 ### Pre-development
 
@@ -83,10 +82,7 @@ karpathy-spec output
 
 ### Development
 
-1. **python-black-ruff-authoring** — Write code in a style likely to pass Black + Ruff first pass
-2. **python-lint-gate** — One-command Ruff + Black gate (`--check` or `--fix`)
-3. **python-ci-lint-precheck** — Ruff + pylint before each commit
-4. **format-before-commit** — Black + ruff auto-format with review
+1. **py-lint** — Write code in a Black + Ruff-stable style, then run the one-command gate (`--check` or `--fix`) with pylint exceptions before each commit
 
 ### Release prep
 
@@ -133,9 +129,7 @@ karpathy-spec output
 
 ### Development
 
-1. **terraform-version-compat** — Before adding/upgrading modules, check provider constraints
-2. **terraform-aws-syntax** — Apply known AWS syntax patterns (VPN, spot, Cognito edge cases)
-3. **terraform-checkov-skips** — Enforce justifications on every security skip
+1. **tf-guardrails** — Before adding/upgrading modules, check provider constraints, apply known AWS syntax patterns (VPN, spot, Cognito edge cases), and enforce justifications on every security skip
 
 ### Security
 
@@ -159,7 +153,7 @@ karpathy-spec output
 ### Development
 
 1. **[08-offsec specific skill]** — Load the relevant offsec convention (shellcode, BOF, EDR iteration, etc.)
-2. **format-before-commit** — Code review before staging
+2. **py-lint** — Format and lint before staging
 
 ### Pre-release
 
@@ -210,11 +204,11 @@ karpathy-spec output
 
 ## Workflow: Repository assessment
 
-**Skill stack:** repo-compass → [identify outstanding work] → roadmap-driver
+**Skill stack:** orient → [identify outstanding work] → roadmap
 
 ### Assessment
 
-1. **repo-compass** — Session-start orientation
+1. **orient** — Session-start orientation
    - GitHub platform state: PRs, issues, CI status, stale branches
    - README roadmap state: cross-check each unchecked item against codebase
    - Output: "true state" summary (catches "all clean" when roadmap items are pending)
@@ -222,8 +216,8 @@ karpathy-spec output
 ### Next steps
 
 1. If you need the roadmap broken down into executable chunks:
-   - **roadmap-driver** → selects next implementation-ready item and chains to:
-     - `repo-compass` (full state)
+   - **roadmap** → selects next implementation-ready item and chains to:
+     - `orient` (full state)
      - `task-decomposer` (break into chunks)
      - `karpathy-framework` (decide which Karpathy layer)
      - `karpathy-verify` (evaluate output)

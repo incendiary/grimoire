@@ -70,7 +70,7 @@ gh release view — confirm release is correct
 
 - `roadmap-sync` — for standalone README roadmap updates outside a full delivery session
 - `github-release-workflow` — for the release/tag mechanics in detail
-- `git-push-protocol-handler` — for SSH push failures mid-session
+- `orient` — for SSH push failures mid-session
 
 ---
 

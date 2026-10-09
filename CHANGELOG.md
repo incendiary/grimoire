@@ -12,6 +12,10 @@ This project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 Release automation migrated to `release-please`; retired the manual VERSION-bump/tag
 workflow.
 
+### Removed
+
+- `npm-lockfile-integrity`, `python-lockfile-integrity` and `npm-provenance-attestation` (replaced by `deps-integrity`).
+
 ### Fixed
 
 - `check-roadmap-sync.sh --check` no longer fails every PR opened on a later day than the last ROADMAP regeneration (it compared the Last updated stamp against today).
@@ -19,8 +23,12 @@ workflow.
 
 ### Added
 
+- `ci-standards` skill: merges `devops-practices` and `devops-practices-updater` (updater is now the "Evolving this standard" section); check scripts moved to `clusters/07-devops/ci-standards/`.
+- `deps-integrity` skill (RA-10): merges lockfile and provenance checks. MCP registry shape: one `deps-integrity` entry, because `executor.ts` runs every bash block in the `SKILL.md` and cannot select a script per entry.
 - YAML frontmatter (name, description) on every SKILL.md, so Claude Code can select skills by intent.
+- `scripts/gen-catalogue.sh` generates SKILLS.md; README links to it instead of a hand-kept index.
 - RA-28 brief: post-programme ponytail-debt ledger and ponytail-audit re-run.
+- RA-29 brief: MCP tools to run one registered script instead of every SKILL.md bash block.
 - `scripts/check-frontmatter.sh`: validates SKILL.md frontmatter.
 - `docs/discoverability-intents.md`: manual routing spot-check.
 - `REVIEW.md` and `docs/tasks/discoverability/`: holistic review plus 26 agent-executable
@@ -35,8 +43,14 @@ workflow.
   triggers `pull_request`-scoped CI under branch protection.
 - `scripts/usage-report.py`: skill usage from Claude Code transcripts and MCP logs.
 
+### Changed
+
+- build.sh and the MCP server now read descriptions from SKILL.md frontmatter; registry.json no longer carries descriptions.
+- **Breaking:** `local-ci` is now `ci-local` and absorbs `pre-push-validation` (new `--strict` and `--no-hook` flags; script still `local-ci.sh`). Remove any old `pre-push-validation` hook before installing `ci-local`'s pre-push hook.
+
 ### Removed
 
+- `pre-push-validation` skill (merged into `ci-local`).
 - "Test on real X" validation items from skill roadmaps (40 items).
 - `.github/workflows/release-on-tag.yml` — superseded by `release-please-action`, which
   now owns tag + release creation directly.
@@ -44,9 +58,14 @@ workflow.
 - Unused scripts: model-select.sh, scripts/roadmap-close.sh, scripts/skill-dependency-graph.sh.
 - VERSION/tag drift checks from this repo's CI (release-please keeps them in step).
 - Per-skill README Installation sections and the readme-quality CI job (installation is documented once in README.md).
+- python-lint-gate, format-before-commit, python-ci-lint-precheck and python-black-ruff-authoring, merged into `py-lint` (RA-09).
 
 ### Changed
 
+- terraform-aws-syntax, terraform-checkov-skips and terraform-version-compat merged into tf-guardrails.
+- roadmap-driver renamed to roadmap; grimoire-roadmap-status removed (use scripts/roadmap-collect.sh).
+
+- repo-compass renamed to orient; git-push-protocol-handler folded into it.
 - `CLAUDE.md`: "Delivery loop" no longer includes manual `VERSION` bump or
   `git tag`/`gh release create` steps; added a "Releases" section documenting the new
   flow. Removed the now-obsolete "VERSION conflict resolution (squash merges)" section
@@ -56,6 +75,7 @@ workflow.
 ### Security
 
 - GitHub Actions pinned to commit SHAs; TruffleHog pre-commit aligned with CI (v3.98.0).
+- mcp-server: @modelcontextprotocol/sdk 1.29.0 to 1.32.1 and npm audit fix for transitive advisories.
 
 ---
 

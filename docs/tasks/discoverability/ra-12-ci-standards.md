@@ -1,6 +1,6 @@
 # Task RA-12: Fold `devops-practices-updater` into `devops-practices` as `ci-standards`
 
-> Status: pending
+> Status: done
 > Parent: discoverability and consolidation programme
 > Model: sonnet
 > Fallback: opus

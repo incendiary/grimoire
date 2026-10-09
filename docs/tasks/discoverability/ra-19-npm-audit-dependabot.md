@@ -1,6 +1,6 @@
 # Task RA-19: Clear MCP server npm advisories
 
-> Status: pending
+> Status: done
 > Parent: discoverability and consolidation programme
 > Model: haiku
 > Fallback: sonnet

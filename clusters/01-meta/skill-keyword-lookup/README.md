@@ -62,9 +62,9 @@ bash clusters/01-meta/skill-keyword-lookup/find-skill.sh devops roadmap readme s
 
 Expected top matches:
 
-- `devops-practices` (standard devops practices)
+- `ci-standards` (standard devops practices)
 - `roadmap-sync` (move/tick roadmap items in README based on actual completion)
-- `repo-compass` (cross-check README roadmap against real repo state)
+- `orient` (cross-check README roadmap against real repo state)
 
 ---
 

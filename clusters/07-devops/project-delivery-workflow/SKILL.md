@@ -1,6 +1,6 @@
 ---
 name: project-delivery-workflow
-description: "Delivers a GitHub project end to end from a cold checkout, building the roadmap from its READMEs, working each item as a PR, keeping READMEs and versions in sync, and cutting a major release at the end. Use when handed a repo to work through, asked to complete outstanding roadmap items, or starting a structured delivery session. To pick a single next item use roadmap-driver."
+description: "Delivers a GitHub project end to end from a cold checkout, building the roadmap from its READMEs, working each item as a PR, keeping READMEs and versions in sync, and cutting a major release at the end. Use when handed a repo to work through, asked to complete outstanding roadmap items, or starting a structured delivery session. To pick a single next item use roadmap."
 ---
 # project-delivery-workflow
 
@@ -25,7 +25,7 @@ roadmap items, or starting a structured delivery session on any project.
 
 ## What to do
 
-1. **Start cold: clone and run repo-compass before touching any code.**
+1. **Start cold: clone and run orient before touching any code.**
 
    ```bash
    gh repo clone <owner>/<repo>
@@ -34,7 +34,7 @@ roadmap items, or starting a structured delivery session on any project.
      xargs -I{} sh -c 'echo "=== {} ===" && cat {}'
    ```
 
-   Run `repo-compass` (or follow its checklist manually) to produce the true state
+   Run `orient` (or follow its checklist manually) to produce the true state
    summary: GitHub state + README roadmap cross-check + discrepancy list. This is
    the single source of truth for what is outstanding before any work begins.
 
@@ -244,7 +244,7 @@ If any check fails, fix it before declaring the delivery complete.
 - Do not `git add .` or `git add -A` — stage specific files. Stray `.env`, build
   artefacts, or test fixtures have been committed this way before.
 - SSH push failures are common after a session gap. Check `git remote -v` and
-  switch to HTTPS if needed (`git-push-protocol-handler` skill).
+  switch to HTTPS if needed (`orient` skill).
 - Do not bump the version mid-PR. The version bump commit goes on main after merge,
   not on the feature branch.
 - `gh pr merge --squash` rewrites history — the branch commits are squashed into

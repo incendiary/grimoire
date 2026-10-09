@@ -2,7 +2,7 @@
 
 Generated: 2026-10-04 (from `REVIEW.md`, 2026-09-29)
 Format: `task-decomposer` task files, extended with dispatch fields for a master agent.
-Total tasks: 27 (RA-01 to RA-28; RA-21 dropped in the 2026-10-04 audit). RA-02 dispatches as four parallel sub-tasks.
+Total tasks: 28 (RA-01 to RA-29; RA-21 dropped in the 2026-10-04 audit). RA-02 dispatches as four parallel sub-tasks.
 
 This file is for two readers:
 
@@ -34,7 +34,7 @@ same wave can run in parallel. Use `isolation: "worktree"` for every sub-agent.
 | 2 | RA-02 (×4: scopes A, B, C, D) | Needs RA-01 and RA-07. Afterwards the owner runs the RA-05 spot-check in a fresh session |
 | 3 | RA-03, RA-04, RA-08, RA-09, RA-10, RA-11, RA-12, RA-13, RA-14 | |
 | 4 | RA-15 | Needs every task in waves 1 to 3; Opus review gate. Owner reruns the RA-05 spot-check after |
-| 5 | RA-16, RA-18 | RA-18 is read-only; applying its edits needs owner approval |
+| 5 | RA-16, RA-18, RA-29 | RA-18 is read-only; applying its edits needs owner approval |
 | 6 | RA-17 | Needs RA-16's pathway tables |
 | 7 | RA-28 | Needs RA-17; report only, owner decides on findings |
 | Later | RA-23 | 60 days of transcripts on both machines; owner decides |
@@ -145,9 +145,8 @@ Every executing agent follows these. Your task file adds task-specific steps.
 6. **Before committing, run and pass:**
    ```bash
    find . -name "*.sh" -not -path "./.git/*" -not -path "./clusters-*/*" -not -path "*/node_modules/*" -exec shellcheck {} +
-   bash clusters/07-devops/devops-practices/check-roadmap-sync.sh . --fix
+   bash clusters/07-devops/ci-standards/check-roadmap-sync.sh . --fix
    ```
-   (After RA-12 the second path is `clusters/07-devops/ci-standards/check-roadmap-sync.sh`.)
    If you changed anything under `mcp-server/` or `registry.json`:
    `cd mcp-server && npm ci && npm run build && npm test && cd ..`
    If `scripts/gen-catalogue.sh` exists: `bash scripts/gen-catalogue.sh` (regenerates `SKILLS.md`).
@@ -217,3 +216,4 @@ one major version.
 | RA-26 | `ra-26-version-sync-ci.md` | haiku | sonnet | none |
 | RA-27 | `ra-27-installer-dedupe.md` | sonnet | opus | none |
 | RA-28 | `ra-28-ponytail-followup.md` | sonnet | opus | RA-17 |
+| RA-29 | `ra-29-mcp-explicit-script.md` | sonnet, review opus | opus | RA-15 |

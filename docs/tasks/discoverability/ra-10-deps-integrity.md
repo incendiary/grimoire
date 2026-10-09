@@ -1,6 +1,6 @@
 # Task RA-10: Merge lockfile and provenance skills into `deps-integrity`
 
-> Status: pending
+> Status: done
 > Parent: discoverability and consolidation programme
 > Model: sonnet
 > Fallback: opus

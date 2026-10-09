@@ -2,6 +2,7 @@ import { readFile } from "node:fs/promises";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { executeTool } from "./executor.js";
+import { logger } from "./logger.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = resolve(__dirname, "../..");
@@ -16,7 +17,7 @@ export interface ToolDefinition {
 interface RegistryEntry {
     name: string;
     skill: string;
-    description: string;
+    description?: string;
 }
 
 interface Registry {
@@ -42,6 +43,16 @@ function extractCommands(skillContent: string): string[] {
     return commands;
 }
 
+/** Returns the one-line quoted `description:` from the leading frontmatter, if any. */
+export function parseFrontmatterDescription(skillContent: string): string | undefined {
+    const lines = skillContent.split("\n").slice(0, 6);
+    for (const line of lines.slice(1)) {
+        const m = /^description: "(.*)"$/.exec(line);
+        if (m) return m[1];
+    }
+    return undefined;
+}
+
 /**
  * Loads the registry and resolves each entry to a full tool definition.
  */
@@ -56,10 +67,15 @@ export async function loadRegistry(): Promise<ToolDefinition[]> {
         const skillPath = resolve(REPO_ROOT, entry.skill);
         const skillContent = await readFile(skillPath, "utf-8");
         const commands = extractCommands(skillContent);
+        let description = parseFrontmatterDescription(skillContent);
+        if (!description) {
+            description = entry.description || entry.name;
+            logger.warn("loader", `No frontmatter description for ${entry.name}; using fallback`);
+        }
 
         tools.push({
             name: entry.name,
-            description: entry.description,
+            description,
             inputSchema: {
                 type: "object",
                 properties: {
