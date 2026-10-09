@@ -40,9 +40,11 @@ workflow.
 ### Changed
 
 - build.sh and the MCP server now read descriptions from SKILL.md frontmatter; registry.json no longer carries descriptions.
+- **Breaking:** `local-ci` is now `ci-local` and absorbs `pre-push-validation` (new `--strict` and `--no-hook` flags; script still `local-ci.sh`). Remove any old `pre-push-validation` hook before installing `ci-local`'s pre-push hook.
 
 ### Removed
 
+- `pre-push-validation` skill (merged into `ci-local`).
 - "Test on real X" validation items from skill roadmaps (40 items).
 - `.github/workflows/release-on-tag.yml` — superseded by `release-please-action`, which
   now owns tag + release creation directly.

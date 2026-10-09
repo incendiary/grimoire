@@ -5,8 +5,24 @@
             "skill": "clusters/01-meta/github-authored-repos/SKILL.md"
         },
         {
-            "name": "repo-compass",
-            "skill": "clusters/07-devops/repo-compass/SKILL.md"
+            "name": "grimoire-roadmap-status",
+            "skill": "clusters/01-meta/grimoire-roadmap-status/SKILL.md"
+        },
+        {
+            "name": "roadmap-driver",
+            "skill": "clusters/01-meta/roadmap-driver/SKILL.md"
+        },
+        {
+            "name": "skill-keyword-lookup",
+            "skill": "clusters/01-meta/skill-keyword-lookup/SKILL.md"
+        },
+        {
+            "name": "branch-surface-resolve",
+            "skill": "clusters/07-devops/branch-surface-resolve/SKILL.md"
+        },
+        {
+            "name": "ci-local",
+            "skill": "clusters/07-devops/ci-local/SKILL.md"
         },
         {
             "name": "format-before-commit",
@@ -17,24 +33,20 @@
             "skill": "clusters/07-devops/git-push-protocol-handler/SKILL.md"
         },
         {
-            "name": "github-release-workflow",
-            "skill": "clusters/07-devops/github-release-workflow/SKILL.md"
-        },
-        {
             "name": "github-history-wipe",
             "skill": "clusters/07-devops/github-history-wipe/SKILL.md"
-        },
-        {
-            "name": "local-ci",
-            "skill": "clusters/07-devops/local-ci/SKILL.md"
         },
         {
             "name": "github-morning-run",
             "skill": "clusters/07-devops/github-morning-run/SKILL.md"
         },
         {
-            "name": "repo-security-bootstrap",
-            "skill": "clusters/07-devops/repo-security-bootstrap/SKILL.md"
+            "name": "github-release-workflow",
+            "skill": "clusters/07-devops/github-release-workflow/SKILL.md"
+        },
+        {
+            "name": "npm-lockfile-integrity",
+            "skill": "clusters/07-devops/npm-lockfile-integrity/SKILL.md"
         },
         {
             "name": "portfolio-readme-generator",
@@ -49,14 +61,6 @@
             "skill": "clusters/07-devops/python-lint-gate/SKILL.md"
         },
         {
-            "name": "roadmap-sync",
-            "skill": "clusters/07-devops/roadmap-sync/SKILL.md"
-        },
-        {
-            "name": "npm-lockfile-integrity",
-            "skill": "clusters/07-devops/npm-lockfile-integrity/SKILL.md"
-        },
-        {
             "name": "python-lockfile-integrity",
             "skill": "clusters/07-devops/python-lockfile-integrity/SKILL.md"
         },
@@ -65,24 +69,16 @@
             "skill": "clusters/07-devops/readme-version-pin/SKILL.md"
         },
         {
-            "name": "grimoire-roadmap-status",
-            "skill": "clusters/01-meta/grimoire-roadmap-status/SKILL.md"
+            "name": "repo-compass",
+            "skill": "clusters/07-devops/repo-compass/SKILL.md"
         },
         {
-            "name": "skill-keyword-lookup",
-            "skill": "clusters/01-meta/skill-keyword-lookup/SKILL.md"
+            "name": "repo-security-bootstrap",
+            "skill": "clusters/07-devops/repo-security-bootstrap/SKILL.md"
         },
         {
-            "name": "roadmap-driver",
-            "skill": "clusters/01-meta/roadmap-driver/SKILL.md"
-        },
-        {
-            "name": "branch-surface-resolve",
-            "skill": "clusters/07-devops/branch-surface-resolve/SKILL.md"
-        },
-        {
-            "name": "pre-push-validation",
-            "skill": "clusters/07-devops/pre-push-validation/SKILL.md"
+            "name": "roadmap-sync",
+            "skill": "clusters/07-devops/roadmap-sync/SKILL.md"
         }
     ]
 }

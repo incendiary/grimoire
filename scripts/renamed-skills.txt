@@ -5,3 +5,5 @@ cwd-verification	-
 verify-code-version	-
 devops-practices	ci-standards
 devops-practices-updater	ci-standards
+local-ci	ci-local
+pre-push-validation	ci-local

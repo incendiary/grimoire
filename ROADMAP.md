@@ -7,7 +7,7 @@
 > `bash clusters/07-devops/ci-standards/check-roadmap-sync.sh . --fix`.
 
 **Last updated:** 2026-10-09
-**Open items:** 9 | **Completed:** 213
+**Open items:** 9 | **Completed:** 214
 
 ---
 
@@ -47,7 +47,7 @@ Tick the first column when a task's brief reaches `> Status: done`.
 | [x] | RA-05 | Discoverability spot-check list (owner checkpoint) | sonnet | opus | 1 | [ra-05](docs/tasks/discoverability/ra-05-discoverability-test.md) |
 | [x] | RA-06 | Usage report from transcripts and MCP logs | haiku | sonnet | 1 | [ra-06](docs/tasks/discoverability/ra-06-usage-telemetry.md) |
 | [x] | RA-07 | Delete five always-on skills | haiku | sonnet | 1 | [ra-07](docs/tasks/discoverability/ra-07-remove-always-on.md) |
-| [ ] | RA-08 | `ci-local` = `local-ci` + `pre-push-validation` | opus | owner | 3 | [ra-08](docs/tasks/discoverability/ra-08-ci-local.md) |
+| [x] | RA-08 | `ci-local` = `local-ci` + `pre-push-validation` | opus | owner | 3 | [ra-08](docs/tasks/discoverability/ra-08-ci-local.md) |
 | [ ] | RA-09 | `py-lint` = four Python lint skills | sonnet | opus | 3 | [ra-09](docs/tasks/discoverability/ra-09-py-lint.md) |
 | [ ] | RA-10 | `deps-integrity` = npm/python lockfile + provenance | sonnet | opus | 3 | [ra-10](docs/tasks/discoverability/ra-10-deps-integrity.md) |
 | [ ] | RA-11 | `tf-guardrails` = three terraform skills | haiku | sonnet | 3 | [ra-11](docs/tasks/discoverability/ra-11-tf-guardrails.md) |
@@ -86,16 +86,16 @@ Revised by the 2026-10-04 over-engineering audit (see `REVIEW.md`). Open owner d
 
 ### 07-devops
 
-  - **local-ci**: Auto-fix for prettier/eslint (JS/TS projects)
-  - **local-ci**: Pin detection for pyproject.toml / poetry.lock / constraints files
-  - **local-ci**: Job dependency graph (`needs:`) and matrix expansion awareness
-  - **local-ci**: Caching of discovered jobs (skip re-parsing on each run)
+  - **ci-local**: Auto-fix for prettier/eslint (JS/TS projects)
+  - **ci-local**: Pin detection for pyproject.toml / poetry.lock / constraints files
+  - **ci-local**: Job dependency graph (`needs:`) and matrix expansion awareness
+  - **ci-local**: Caching of discovered jobs (skip re-parsing on each run)
   - **portfolio-readme-generator**: Planned enhancement
   - **terraform-version-compat**: Add known-good version matrix for frequently used module combinations
 
 ---
 
-**Summary:** 9 open items | 213 completed items
+**Summary:** 9 open items | 214 completed items
 <!-- ROADMAP-COLLECT:END -->
 
 > **08-offsec** roadmap items now live in the private `grimoire-offsec` submodule

@@ -40,13 +40,11 @@ updates when CI passes, checks GitHub Actions status, and flags complex issues f
 Supports single repo, multiple repos, or full portfolio audit. Scope is confirmed on invocation.
 → [Full documentation](github-morning-run/README.md)
 
-### [local-ci](local-ci/) ✅ complete
-
-Run your GitHub Actions workflows locally before pushing: real YAML parsing, exit-code
-truth, stop-on-failure per job, and version-gated auto-fix (black/ruff) that only writes
-when it matches CI's pinned version. Installs as a fast informational `pre-commit` hook or a
-fail-closed `pre-push` gate — chaining any existing hook, never clobbering it.
-→ [Full documentation](local-ci/README.md)
+### [ci-local](ci-local/) ✅ complete
+Runs this repo's GitHub Actions workflow steps locally before pushing, auto-fixes Black/Ruff
+only when tool versions match CI, and installs a fast informational `pre-commit` hook or a
+fail-closed `pre-push` gate, chaining any existing hook rather than clobbering it.
+→ [Full documentation](ci-local/README.md)
 
 ### [repo-security-bootstrap](repo-security-bootstrap/) 📋 promoted
 
@@ -96,14 +94,6 @@ Generates a portfolio-quality README from code — reads first, then writes with
 fixed 6-section structure. Mandates an authorised-use disclaimer for any security tool.
 Applies human-rewrite style rules.
 → [Full documentation](portfolio-readme-generator/README.md)
-
-### [pre-push-validation](pre-push-validation/) ✅ complete
-
-Shift-left validation: runs all feasible local checks (linting, formatting, type checking,
-tests, security scans) before pushing to GitHub. Auto-detects project type (Node.js, Python,
-Go, Rust, C#, bash) and chains appropriate validators. Optionally installs a pre-push git
-hook for automatic enforcement, preventing avoidable CI failures.
-→ [Full documentation](pre-push-validation/README.md)
 
 ### [github-release-workflow](github-release-workflow/) ✅ complete
 
