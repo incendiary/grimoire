@@ -149,7 +149,7 @@ missing tool). If you skip the removal, the installer chains the old hook and ev
 
 ## Integration with other skills
 
-- **format-before-commit** — narrower, Python-only formatting check.
+- **py-lint** — narrower, Python-only formatting check.
 - **github-morning-run** — use after pushing, to catch what CI found on the morning audit.
 
 ---

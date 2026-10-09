@@ -69,24 +69,12 @@ Generates a standardised .NET CI workflow: build and test matrix (Debug/Release)
 was written from scratch for 5 separate repos.
 → [Full documentation](dotnet-ci-template/README.md)
 
-### [python-ci-lint-precheck](python-ci-lint-precheck/) ✅ complete
+### [py-lint](py-lint/) ✅ complete
 
-Runs ruff and pylint before committing Python code, with rules for suppressing false
-positives (W0621, E0401, R0914) at the correct scope — no broad file-level disables.
-→ [Full documentation](python-ci-lint-precheck/README.md)
-
-### [python-lint-gate](python-lint-gate/) ✅ complete
-
-Unified pre-commit gate for Python repos using Ruff + Black. Provides one command for
-check-only validation or safe auto-fix + re-check, and prints targeted guidance when
-issues remain.
-→ [Full documentation](python-lint-gate/README.md)
-
-### [format-before-commit](format-before-commit/) ✅ complete
-
-Enforces running black and ruff in check-mode first, then auto-fix mode, then
-re-staging to review formatter changes before they go into the commit.
-→ [Full documentation](format-before-commit/README.md)
+Python-only lint and format gate: Ruff and Black check with optional safe auto-fix and
+re-check, a standard `pyproject.toml` / pre-commit / pylintrc config template, writing-time
+patterns that pass first time, and scoped pylint exceptions (W0621, E0401, R0914).
+→ [Full documentation](py-lint/README.md)
 
 ### [portfolio-readme-generator](portfolio-readme-generator/) ✅ complete
 
@@ -230,7 +218,7 @@ github-release-workflow   → cut first release (tag + GH release)
 ```
 roadmap-sync              → tick completed items, confirm state is clean
         ↓
-format-before-commit      → ensure code is formatted before final commit
+py-lint                   → ensure code is formatted before final commit
         ↓
         ↓
 github-release-workflow   → branch → version bump → PR → CI → merge → tag → release
@@ -245,11 +233,7 @@ docker-ghcr-publish       → (if containerised) build + push images
 **Trigger:** "Ready to commit" / making changes to any repo with CI
 
 ```
-format-before-commit      → run black + ruff check, then auto-fix, re-stage
-        ↓
-python-lint-gate          → unified check/fix gate for ruff + black
-        ↓
-python-ci-lint-precheck   → ruff + pylint with correct suppression rules
+py-lint                   → ruff + black check/fix gate, pylint exceptions, re-stage
         ↓
         ↓
 git-push-protocol-handler → (if SSH fails) switch to HTTPS, push, restore
@@ -335,9 +319,7 @@ repo-compass                  → verify final clean repo state
 | `repo-security-bootstrap` | New repo needs gitleaks + secret-scan workflow; bulk deploying to many repos |
 | `python-ci-template` | Python repo has no CI or needs standardised CI from scratch |
 | `dotnet-ci-template` | .NET repo has no CI or needs standardised CI from scratch |
-| `python-ci-lint-precheck` | About to commit Python code; want to catch lint issues pre-push |
-| `python-lint-gate` | Need one command to run Ruff + Black checks (or safe auto-fixes) before commit |
-| `format-before-commit` | About to commit Python code; need to run formatters first |
+| `py-lint` | About to commit Python code; need Ruff + Black checks (or safe auto-fixes), formatter setup, or pylint exceptions |
 | `portfolio-readme-generator` | Repo needs a portfolio-quality README; publishing or updating docs |
 | `github-morning-run` | Daily/weekly repo hygiene; checking PRs, auto-merging dependabots, checking CI status |
 | `github-release-workflow` | Cutting a version: branch → PR → CI → merge → tag → release |

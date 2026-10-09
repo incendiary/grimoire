@@ -25,10 +25,6 @@
             "skill": "clusters/07-devops/ci-local/SKILL.md"
         },
         {
-            "name": "format-before-commit",
-            "skill": "clusters/07-devops/format-before-commit/SKILL.md"
-        },
-        {
             "name": "git-push-protocol-handler",
             "skill": "clusters/07-devops/git-push-protocol-handler/SKILL.md"
         },
@@ -53,12 +49,8 @@
             "skill": "clusters/07-devops/portfolio-readme-generator/SKILL.md"
         },
         {
-            "name": "python-ci-lint-precheck",
-            "skill": "clusters/07-devops/python-ci-lint-precheck/SKILL.md"
-        },
-        {
-            "name": "python-lint-gate",
-            "skill": "clusters/07-devops/python-lint-gate/SKILL.md"
+            "name": "py-lint",
+            "skill": "clusters/07-devops/py-lint/SKILL.md"
         },
         {
             "name": "python-lockfile-integrity",

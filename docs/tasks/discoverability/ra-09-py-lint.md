@@ -1,6 +1,6 @@
 # Task RA-09: Merge four Python lint skills into `py-lint`
 
-> Status: pending
+> Status: done
 > Parent: discoverability and consolidation programme
 > Model: sonnet
 > Fallback: opus

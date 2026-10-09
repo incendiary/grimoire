@@ -57,8 +57,7 @@ karpathy-spec output
 
 ### Development
 
-1. **format-before-commit** — Auto-format + review hook changes before staging
-2. **python-ci-lint-precheck** *or equivalent* — Lint before committing (ESLint for JS)
+1. **py-lint** *or equivalent* — Format and lint before committing (ESLint for JS)
 
 ### Pre-release
 
@@ -74,7 +73,7 @@ karpathy-spec output
 
 ## Project type: Python CLI tool or library
 
-**Skill stack:** karpathy-spec → task-decomposer → python-black-ruff-authoring → [dev] → python-lint-gate → python-ci-lint-precheck → format-before-commit → python-ci-template → github-release-workflow
+**Skill stack:** karpathy-spec → task-decomposer → [dev] → py-lint → python-ci-template → github-release-workflow
 
 ### Pre-development
 
@@ -83,10 +82,7 @@ karpathy-spec output
 
 ### Development
 
-1. **python-black-ruff-authoring** — Write code in a style likely to pass Black + Ruff first pass
-2. **python-lint-gate** — One-command Ruff + Black gate (`--check` or `--fix`)
-3. **python-ci-lint-precheck** — Ruff + pylint before each commit
-4. **format-before-commit** — Black + ruff auto-format with review
+1. **py-lint** — Write code in a Black + Ruff-stable style, then run the one-command gate (`--check` or `--fix`) with pylint exceptions before each commit
 
 ### Release prep
 
@@ -159,7 +155,7 @@ karpathy-spec output
 ### Development
 
 1. **[08-offsec specific skill]** — Load the relevant offsec convention (shellcode, BOF, EDR iteration, etc.)
-2. **format-before-commit** — Code review before staging
+2. **py-lint** — Format and lint before staging
 
 ### Pre-release
 
