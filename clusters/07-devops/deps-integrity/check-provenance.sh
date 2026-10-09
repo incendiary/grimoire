@@ -34,7 +34,7 @@ PASS=0
 WARN=0
 FAIL=0
 
-echo "=== npm-provenance-attestation ==="
+echo "=== deps-integrity: npm provenance ==="
 echo "  Project : $(realpath "$PROJECT_DIR")"
 echo ""
 
@@ -51,7 +51,7 @@ echo ""
 if ! command -v npm &>/dev/null; then
     fail "npm not found on PATH"
     echo ""
-    echo "=== npm-provenance-attestation — FAILED ==="
+    echo "=== deps-integrity: npm provenance — FAILED ==="
     exit 1
 fi
 
@@ -69,9 +69,9 @@ if [[ "$NPM_MAJOR" -lt 9 ]] || { [[ "$NPM_MAJOR" -eq 9 ]] && [[ "$NPM_MINOR" -lt
     echo "  Remediation:"
     echo "    npm install -g npm@latest"
     echo "    Minimum for provenance: npm 9.5.0 (released 2023-04)"
-    echo "    Fallback: use npm-lockfile-integrity skill (sha512 hashes remain valid)"
+    echo "    Fallback: use check-lockfile-integrity.sh (sha512 hashes remain valid)"
     echo ""
-    echo "=== npm-provenance-attestation — FAILED ==="
+    echo "=== deps-integrity: npm provenance — FAILED ==="
     exit 1
 fi
 
@@ -87,7 +87,7 @@ if [[ ! -d "$PROJECT_DIR/node_modules" ]]; then
     echo ""
     echo "  npm audit signatures requires installed packages to be present."
     echo ""
-    echo "=== npm-provenance-attestation — FAILED ==="
+    echo "=== deps-integrity: npm provenance — FAILED ==="
     exit 1
 fi
 
@@ -278,11 +278,11 @@ echo "  Failed:   $FAIL"
 echo ""
 
 if [[ "$FAIL" -gt 0 ]]; then
-    echo "=== npm-provenance-attestation — FAILED ($FAIL check(s)) ==="
+    echo "=== deps-integrity: npm provenance — FAILED ($FAIL check(s)) ==="
     exit 1
 elif $STRICT && [[ "$WARN" -gt 0 ]]; then
-    echo "=== npm-provenance-attestation — FAILED in --strict mode ($WARN warning(s)) ==="
+    echo "=== deps-integrity: npm provenance — FAILED in --strict mode ($WARN warning(s)) ==="
     exit 1
 else
-    echo "=== npm-provenance-attestation complete ==="
+    echo "=== deps-integrity: npm provenance complete ==="
 fi

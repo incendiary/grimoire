@@ -99,4 +99,16 @@ describe("registry.json bidirectional validation", () => {
             ).toBe(true);
         }
     });
+
+    it("registers deps-integrity once and no longer registers the merged skills", () => {
+        const names = registry.tools.map((t) => t.name);
+        expect(names.filter((n) => n === "deps-integrity")).toHaveLength(1);
+        for (const old of [
+            "npm-lockfile-integrity",
+            "python-lockfile-integrity",
+            "npm-provenance-attestation",
+        ]) {
+            expect(names).not.toContain(old);
+        }
+    });
 });

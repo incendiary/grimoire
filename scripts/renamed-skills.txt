@@ -11,3 +11,6 @@ python-lint-gate	py-lint
 format-before-commit	py-lint
 python-ci-lint-precheck	py-lint
 python-black-ruff-authoring	py-lint
+npm-lockfile-integrity	deps-integrity
+python-lockfile-integrity	deps-integrity
+npm-provenance-attestation	deps-integrity

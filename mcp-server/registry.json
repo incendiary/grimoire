@@ -25,6 +25,10 @@
             "skill": "clusters/07-devops/ci-local/SKILL.md"
         },
         {
+            "name": "deps-integrity",
+            "skill": "clusters/07-devops/deps-integrity/SKILL.md"
+        },
+        {
             "name": "git-push-protocol-handler",
             "skill": "clusters/07-devops/git-push-protocol-handler/SKILL.md"
         },
@@ -41,20 +45,12 @@
             "skill": "clusters/07-devops/github-release-workflow/SKILL.md"
         },
         {
-            "name": "npm-lockfile-integrity",
-            "skill": "clusters/07-devops/npm-lockfile-integrity/SKILL.md"
-        },
-        {
             "name": "portfolio-readme-generator",
             "skill": "clusters/07-devops/portfolio-readme-generator/SKILL.md"
         },
         {
             "name": "py-lint",
             "skill": "clusters/07-devops/py-lint/SKILL.md"
-        },
-        {
-            "name": "python-lockfile-integrity",
-            "skill": "clusters/07-devops/python-lockfile-integrity/SKILL.md"
         },
         {
             "name": "readme-version-pin",

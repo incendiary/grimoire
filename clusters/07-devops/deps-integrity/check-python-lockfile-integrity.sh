@@ -34,7 +34,7 @@ PASS=0
 WARN=0
 FAIL=0
 
-echo "=== python-lockfile-integrity ==="
+echo "=== deps-integrity: python lockfile ==="
 echo "  Project : $(realpath "$PROJECT_DIR")"
 echo ""
 
@@ -92,7 +92,7 @@ if ! $HAS_UV && ! $HAS_PIPENV && ! $HAS_POETRY && ! $HAS_PIPTOOLS; then
     echo "    pyproject.toml with [tool.poetry] → poetry"
     echo "    requirements*.txt     → pip-tools"
     echo ""
-    echo "=== python-lockfile-integrity — FAILED ==="
+    echo "=== deps-integrity: python lockfile — FAILED ==="
     exit 1
 fi
 
@@ -451,11 +451,11 @@ echo "  Failed:   $FAIL"
 echo ""
 
 if [[ "$FAIL" -gt 0 ]]; then
-    echo "=== python-lockfile-integrity — FAILED ($FAIL check(s)) ==="
+    echo "=== deps-integrity: python lockfile — FAILED ($FAIL check(s)) ==="
     exit 1
 elif $STRICT && [[ "$WARN" -gt 0 ]]; then
-    echo "=== python-lockfile-integrity — FAILED in --strict mode ($WARN warning(s)) ==="
+    echo "=== deps-integrity: python lockfile — FAILED in --strict mode ($WARN warning(s)) ==="
     exit 1
 else
-    echo "=== python-lockfile-integrity complete ==="
+    echo "=== deps-integrity: python lockfile complete ==="
 fi

@@ -30,7 +30,7 @@ PASS=0
 WARN=0
 FAIL=0
 
-echo "=== npm-lockfile-integrity ==="
+echo "=== deps-integrity: npm lockfile ==="
 echo "  Project : $(realpath "$PROJECT_DIR")"
 echo ""
 
@@ -52,7 +52,7 @@ if [[ ! -f "$LOCKFILE" ]]; then
     echo "    Then commit it: git add package-lock.json && git commit -m 'chore: add lockfile'"
     echo "    Switch all CI pipelines from 'npm install' to 'npm ci' after committing."
     echo ""
-    echo "=== npm-lockfile-integrity — FAILED ==="
+    echo "=== deps-integrity: npm lockfile — FAILED ==="
     exit 1
 fi
 
@@ -247,11 +247,11 @@ echo "  Failed:   $FAIL"
 echo ""
 
 if [[ "$FAIL" -gt 0 ]]; then
-    echo "=== npm-lockfile-integrity — FAILED ($FAIL check(s)) ==="
+    echo "=== deps-integrity: npm lockfile — FAILED ($FAIL check(s)) ==="
     exit 1
 elif $STRICT && [[ "$WARN" -gt 0 ]]; then
-    echo "=== npm-lockfile-integrity — FAILED in --strict mode ($WARN warning(s)) ==="
+    echo "=== deps-integrity: npm lockfile — FAILED in --strict mode ($WARN warning(s)) ==="
     exit 1
 else
-    echo "=== npm-lockfile-integrity complete ==="
+    echo "=== deps-integrity: npm lockfile complete ==="
 fi
