@@ -12,6 +12,10 @@ This project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 Release automation migrated to `release-please`; retired the manual VERSION-bump/tag
 workflow.
 
+### Removed
+
+- `npm-lockfile-integrity`, `python-lockfile-integrity` and `npm-provenance-attestation` (replaced by `deps-integrity`).
+
 ### Fixed
 
 - `check-roadmap-sync.sh --check` no longer fails every PR opened on a later day than the last ROADMAP regeneration (it compared the Last updated stamp against today).
@@ -19,6 +23,7 @@ workflow.
 
 ### Added
 
+- `deps-integrity` skill (RA-10): merges lockfile and provenance checks. MCP registry shape: one `deps-integrity` entry, because `executor.ts` runs every bash block in the `SKILL.md` and cannot select a script per entry.
 - YAML frontmatter (name, description) on every SKILL.md, so Claude Code can select skills by intent.
 - RA-28 brief: post-programme ponytail-debt ledger and ponytail-audit re-run.
 - `scripts/check-frontmatter.sh`: validates SKILL.md frontmatter.

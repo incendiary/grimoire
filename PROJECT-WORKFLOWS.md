@@ -48,7 +48,7 @@ karpathy-spec output
 
 ## Project type: Node.js library or service
 
-**Skill stack:** karpathy-spec → task-decomposer → [dev] → npm-lockfile-integrity → github-release-workflow → docker-ghcr-publish (optional)
+**Skill stack:** karpathy-spec → task-decomposer → [dev] → deps-integrity → github-release-workflow → docker-ghcr-publish (optional)
 
 ### Pre-development
 
@@ -62,7 +62,7 @@ karpathy-spec output
 
 ### Pre-release
 
-1. **npm-lockfile-integrity** — Audit `package-lock.json` for integrity coverage
+1. **deps-integrity** — Audit `package-lock.json` for integrity coverage
 2. **github-release-workflow** — Version bump → PR → CI → merge → tag → release
 3. **docker-ghcr-publish** (optional) — Build and push images to GHCR
 

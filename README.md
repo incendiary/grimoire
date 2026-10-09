@@ -240,9 +240,7 @@ Seven public clusters + two private (via submodule). See [clusters/README.md](cl
 | 07-devops | `terraform-version-compat` | ✅ |
 | 07-devops | `project-delivery-workflow` | ✅ |
 | 07-devops | `docker-ghcr-publish` | ✅ |
-| 07-devops | `npm-lockfile-integrity` | ✅ |
-| 07-devops | `npm-provenance-attestation` | ✅ |
-| 07-devops | `python-lockfile-integrity` | ✅ |
+| 07-devops | `deps-integrity` | ✅ |
 | 07-devops | `readme-version-pin` | ✅ |
 | 08-offsec | *(private submodule)* | — |
 | 09-odpc | *(private submodule)* | — |

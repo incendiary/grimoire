@@ -7,7 +7,7 @@
 > `bash clusters/07-devops/devops-practices/check-roadmap-sync.sh . --fix`.
 
 **Last updated:** 2026-10-09
-**Open items:** 9 | **Completed:** 213
+**Open items:** 9 | **Completed:** 202
 
 ---
 
@@ -49,7 +49,7 @@ Tick the first column when a task's brief reaches `> Status: done`.
 | [x] | RA-07 | Delete five always-on skills | haiku | sonnet | 1 | [ra-07](docs/tasks/discoverability/ra-07-remove-always-on.md) |
 | [ ] | RA-08 | `ci-local` = `local-ci` + `pre-push-validation` | opus | owner | 3 | [ra-08](docs/tasks/discoverability/ra-08-ci-local.md) |
 | [ ] | RA-09 | `py-lint` = four Python lint skills | sonnet | opus | 3 | [ra-09](docs/tasks/discoverability/ra-09-py-lint.md) |
-| [ ] | RA-10 | `deps-integrity` = npm/python lockfile + provenance | sonnet | opus | 3 | [ra-10](docs/tasks/discoverability/ra-10-deps-integrity.md) |
+| [x] | RA-10 | `deps-integrity` = npm/python lockfile + provenance | sonnet | opus | 3 | [ra-10](docs/tasks/discoverability/ra-10-deps-integrity.md) |
 | [ ] | RA-11 | `tf-guardrails` = three terraform skills | haiku | sonnet | 3 | [ra-11](docs/tasks/discoverability/ra-11-tf-guardrails.md) |
 | [ ] | RA-12 | `ci-standards` = `devops-practices` + updater | sonnet | opus | 3 | [ra-12](docs/tasks/discoverability/ra-12-ci-standards.md) |
 | [ ] | RA-13 | `roadmap-driver` → `roadmap`; delete `grimoire-roadmap-status` | haiku | sonnet | 3 | [ra-13](docs/tasks/discoverability/ra-13-roadmap.md) |
@@ -95,7 +95,7 @@ Revised by the 2026-10-04 over-engineering audit (see `REVIEW.md`). Open owner d
 
 ---
 
-**Summary:** 9 open items | 213 completed items
+**Summary:** 9 open items | 202 completed items
 <!-- ROADMAP-COLLECT:END -->
 
 > **08-offsec** roadmap items now live in the private `grimoire-offsec` submodule

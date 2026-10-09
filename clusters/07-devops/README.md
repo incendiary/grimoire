@@ -165,29 +165,13 @@ Builds and pushes CPU and GPU Docker images to GHCR pinned to the current releas
 `docker-test.sh` smoke-tests each variant (CPU, GPU, docker-compose) before pushing.
 → [Full documentation](docker-ghcr-publish/README.md)
 
-### [npm-lockfile-integrity](npm-lockfile-integrity/) ✅ complete
+### [deps-integrity](deps-integrity/) ✅ complete
 
-Enforces content-hash-based dependency verification for Node.js projects. Version pinning
-alone does not prevent a republished package at the same version — `sha512` integrity hashes
-in `package-lock.json`, enforced via `npm ci`, are the correct control.
-`check-lockfile-integrity.sh` audits lockfile version, integrity coverage, and CI pipeline usage.
-→ [Full documentation](npm-lockfile-integrity/README.md)
-
-### [npm-provenance-attestation](npm-provenance-attestation/) ✅ complete
-
-Verifies npm package provenance: Sigstore-backed attestations linking each published package
-to its source repository, CI workflow, and commit SHA. Complements `npm-lockfile-integrity` —
-integrity hashes confirm content hasn't changed; provenance confirms where it came from.
-`check-provenance.sh` runs `npm audit signatures` and inspects critical package attestations.
-→ [Full documentation](npm-provenance-attestation/README.md)
-
-### [python-lockfile-integrity](python-lockfile-integrity/) ✅ complete
-
-Enforces content-hash-based dependency verification for Python projects. Covers four toolchains:
-pip-tools (`--require-hashes`), poetry (`poetry install`), pipenv (`--deploy`), and uv (`--frozen`).
-`check-python-lockfile-integrity.sh` detects the toolchain in use, verifies sha256 hash coverage,
-and audits CI pipelines for bare `pip install` usage. Mirrors `npm-lockfile-integrity` for Python.
-→ [Full documentation](python-lockfile-integrity/README.md)
+Checks dependency supply-chain integrity: `sha512` npm lockfile hashes, `sha256` Python lockfile
+hashes (pip-tools, poetry, pipenv, uv) and npm Sigstore provenance attestations. Version pinning
+alone does not stop a republished package; hashes enforced at install, plus signed provenance, do.
+`check-lockfile-integrity.sh`, `check-python-lockfile-integrity.sh` and `check-provenance.sh` cover the three checks.
+→ [Full documentation](deps-integrity/README.md)
 
 ### [devops-practices](devops-practices/) ✅ complete
 
@@ -298,11 +282,8 @@ terraform-checkov-skips   → ensure #checkov:skip is inside blocks with justifi
 **Trigger:** "Check dependencies" / "Audit lockfile" / dependency review
 
 ```
-npm-lockfile-integrity       → (Node.js) verify sha512 hash coverage in lockfile
-        ↓
-npm-provenance-attestation   → (Node.js) verify Sigstore attestations on packages
-        ↓
-python-lockfile-integrity    → (Python) verify hash-based pinning across toolchains
+deps-integrity   → Node.js lockfile sha512 coverage, Sigstore provenance on packages,
+                   Python hash-based pinning across toolchains
 ```
 
 ### Workflow 7: Establish devops practices on a repo
@@ -361,9 +342,7 @@ repo-compass                  → verify final clean repo state
 | `roadmap-sync` | Code changes completed; README roadmap needs ticking; pre-release state check |
 | `docker-ghcr-publish` | Release tagged; need to build and push Docker images to GHCR |
 | `readme-version-pin` | Release tagged; README install instructions reference old version |
-| `npm-lockfile-integrity` | Auditing Node.js project; checking lockfile has integrity hashes |
-| `npm-provenance-attestation` | Auditing Node.js deps; verifying packages have Sigstore provenance |
-| `python-lockfile-integrity` | Auditing Python project; checking hash-based pinning is enforced |
+| `deps-integrity` | Auditing Node.js or Python deps; lockfile hashes enforced, packages have Sigstore provenance |
 | `terraform-version-compat` | Adding/upgrading a Terraform module; need constraint pre-flight |
 | `terraform-aws-syntax` | Writing AWS Terraform resources; need to avoid known block/attribute traps |
 | `terraform-checkov-skips` | Adding checkov skip annotations; need correct placement and justification |

@@ -66,14 +66,9 @@
             "description": "Sync README roadmap checkboxes with actual project state"
         },
         {
-            "name": "npm-lockfile-integrity",
-            "skill": "clusters/07-devops/npm-lockfile-integrity/SKILL.md",
-            "description": "Verify npm lockfile integrity and hash consistency"
-        },
-        {
-            "name": "python-lockfile-integrity",
-            "skill": "clusters/07-devops/python-lockfile-integrity/SKILL.md",
-            "description": "Verify Python lockfile integrity (pip/poetry/uv)"
+            "name": "deps-integrity",
+            "skill": "clusters/07-devops/deps-integrity/SKILL.md",
+            "description": "Verify npm and Python lockfile integrity and npm provenance attestations"
         },
         {
             "name": "readme-version-pin",
