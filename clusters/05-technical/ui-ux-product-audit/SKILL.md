@@ -1,3 +1,7 @@
+---
+name: ui-ux-product-audit
+description: "Audit a web application's UI and UX as a product experience, prioritising fixes by impact into a phased Today, This week, Later plan with exact files, and optionally implementing the top fixes. Use when asked to 'audit the UI', 'make this app feel polished', 'review design system quality', or 'improve UX and implement top fixes'. For whole-codebase risk review use codebase-holistic-review."
+---
 # ui-ux-product-audit
 
 > **Status:** COMPLETE

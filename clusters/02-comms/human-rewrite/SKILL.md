@@ -1,3 +1,7 @@
+---
+name: human-rewrite
+description: "Rewrite a draft to remove AI markers and apply the user's style rules without changing substance. Use when asked to 'make this sound more human', 'remove the AI from this', 'rewrite this in my style', or after executive-translate produces a draft needing a final pass. For a leadership audience use executive-translate; to only review tone use tone-check."
+---
 # human-rewrite
 
 > **Status:** COMPLETE

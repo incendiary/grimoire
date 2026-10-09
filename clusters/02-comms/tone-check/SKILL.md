@@ -1,3 +1,7 @@
+---
+name: tone-check
+description: "Review a draft and annotate whether it reads as blaming, too soft, too authoritative, or too vague, without rewriting it. Use when asked to 'check the tone of this', 'does this sound too aggressive', 'is this too soft', or 'review this before I send it'. Annotates only; to rewrite use human-rewrite, for leadership audiences use executive-translate."
+---
 # tone-check
 
 > **Status:** COMPLETE
