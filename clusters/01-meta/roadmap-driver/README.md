@@ -16,7 +16,7 @@ roadmap item and providing a clear action sequence.
 
 ## Chain
 
-`repo-compass` -> `task-decomposer` -> `karpathy-framework` -> `karpathy-verify`
+`orient` -> `task-decomposer` -> `karpathy-framework` -> `karpathy-verify`
 
 ## Output
 

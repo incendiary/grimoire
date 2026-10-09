@@ -68,7 +68,7 @@ overspending.
 
 Selects the next implementation-ready roadmap item from `ROADMAP.md` and outputs a
 focused execution chain. Designed for "what should I work on next?" and "pick up from
-the roadmap" prompts. Chains: `repo-compass` → `task-decomposer` → `karpathy-framework`
+the roadmap" prompts. Chains: `orient` → `task-decomposer` → `karpathy-framework`
 → `karpathy-verify`.
 → [Full documentation](roadmap-driver/README.md)
 

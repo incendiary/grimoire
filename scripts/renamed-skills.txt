@@ -3,3 +3,5 @@ mid-task-checkin	-
 pre-commit-aware-commits	-
 cwd-verification	-
 verify-code-version	-
+repo-compass	orient
+git-push-protocol-handler	orient

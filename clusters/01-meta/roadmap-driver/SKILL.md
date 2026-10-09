@@ -1,6 +1,6 @@
 ---
 name: roadmap-driver
-description: "Selects the next roadmap work item from ROADMAP.md and frames an execution chain for it. Use when asking 'what should I work on next?', 'pick up from roadmap', starting a new implementation batch, or recovering after an interruption. To tick items after a merge use roadmap-sync; for full repo state use repo-compass."
+description: "Selects the next roadmap work item from ROADMAP.md and frames an execution chain for it. Use when asking 'what should I work on next?', 'pick up from roadmap', starting a new implementation batch, or recovering after an interruption. To tick items after a merge use roadmap-sync; for full repo state use orient."
 ---
 # roadmap-driver
 
@@ -21,7 +21,7 @@ recovering after interruption.
 
 ## Execution chain
 
-1. `repo-compass` — assess repository truth state
+1. `orient` — assess repository truth state
 2. `task-decomposer` — split chosen work into atomic chunks
 3. `karpathy-framework` — clarify spec and success criteria
 4. `karpathy-verify` — verify result quality before close-out
@@ -63,7 +63,7 @@ if [[ -n "${infra_choice}" ]]; then
   echo "Selected next item (infrastructure):"
   echo "${infra_choice}"
   echo ""
-  echo "Suggested chain: repo-compass -> task-decomposer -> karpathy-framework -> karpathy-verify"
+  echo "Suggested chain: orient -> task-decomposer -> karpathy-framework -> karpathy-verify"
   exit 0
 fi
 
@@ -84,7 +84,7 @@ if [[ -n "${cluster_choice}" ]]; then
   echo "Selected next item (cluster):"
   echo "${cluster_choice}"
   echo ""
-  echo "Suggested chain: repo-compass -> task-decomposer -> karpathy-framework -> karpathy-verify"
+  echo "Suggested chain: orient -> task-decomposer -> karpathy-framework -> karpathy-verify"
   exit 0
 fi
 

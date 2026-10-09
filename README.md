@@ -222,7 +222,7 @@ Seven public clusters + two private (via submodule). See [clusters/README.md](cl
 | 05-technical | `python-black-ruff-authoring` | ✅ |
 | 05-technical | `codebase-holistic-review` | ✅ |
 | 06-study | *(private submodule)* | — |
-| 07-devops | `repo-compass` | ✅ |
+| 07-devops | `orient` | ✅ |
 | 07-devops | `repo-publication-prep` | ✅ |
 | 07-devops | `github-history-wipe` | ✅ |
 | 07-devops | `repo-security-bootstrap` | ✅ |
@@ -233,7 +233,6 @@ Seven public clusters + two private (via submodule). See [clusters/README.md](cl
 | 07-devops | `format-before-commit` | ✅ |
 | 07-devops | `portfolio-readme-generator` | ✅ |
 | 07-devops | `github-release-workflow` | ✅ |
-| 07-devops | `git-push-protocol-handler` | ✅ |
 | 07-devops | `roadmap-sync` | ✅ |
 | 07-devops | `terraform-checkov-skips` | ✅ |
 | 07-devops | `terraform-aws-syntax` | ✅ |

@@ -7,7 +7,7 @@
 > `bash clusters/07-devops/devops-practices/check-roadmap-sync.sh . --fix`.
 
 **Last updated:** 2026-10-09
-**Open items:** 9 | **Completed:** 213
+**Open items:** 9 | **Completed:** 209
 
 ---
 
@@ -53,7 +53,7 @@ Tick the first column when a task's brief reaches `> Status: done`.
 | [ ] | RA-11 | `tf-guardrails` = three terraform skills | haiku | sonnet | 3 | [ra-11](docs/tasks/discoverability/ra-11-tf-guardrails.md) |
 | [ ] | RA-12 | `ci-standards` = `devops-practices` + updater | sonnet | opus | 3 | [ra-12](docs/tasks/discoverability/ra-12-ci-standards.md) |
 | [ ] | RA-13 | `roadmap-driver` → `roadmap`; delete `grimoire-roadmap-status` | haiku | sonnet | 3 | [ra-13](docs/tasks/discoverability/ra-13-roadmap.md) |
-| [ ] | RA-14 | `repo-compass` → `orient`, absorbing the push check | haiku | sonnet | 3 | [ra-14](docs/tasks/discoverability/ra-14-orient.md) |
+| [x] | RA-14 | `repo-compass` → `orient`, absorbing the push check | haiku | sonnet | 3 | [ra-14](docs/tasks/discoverability/ra-14-orient.md) |
 | [ ] | RA-15 | Pathway-prefix rename (32 skills), install-side clean-up | sonnet + opus review | opus | 4 | [ra-15](docs/tasks/discoverability/ra-15-rename.md) |
 | [ ] | RA-16 | Pathway tables in `orient`, `plan`, `release`, `publish` | haiku | sonnet | 5 | [ra-16](docs/tasks/discoverability/ra-16-pathway-entries.md) |
 | [ ] | RA-17 | Delete `PROJECT-WORKFLOWS.md`, short README table | haiku | sonnet | 6 | [ra-17](docs/tasks/discoverability/ra-17-workflows-doc.md) |
@@ -95,7 +95,7 @@ Revised by the 2026-10-04 over-engineering audit (see `REVIEW.md`). Open owner d
 
 ---
 
-**Summary:** 9 open items | 213 completed items
+**Summary:** 9 open items | 209 completed items
 <!-- ROADMAP-COLLECT:END -->
 
 > **08-offsec** roadmap items now live in the private `grimoire-offsec` submodule

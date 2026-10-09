@@ -6,19 +6,14 @@
             "description": "List GitHub repos authored by the authenticated user"
         },
         {
-            "name": "repo-compass",
-            "skill": "clusters/07-devops/repo-compass/SKILL.md",
+            "name": "orient",
+            "skill": "clusters/07-devops/orient/SKILL.md",
             "description": "Session-start orientation - GitHub state + README roadmap"
         },
         {
             "name": "format-before-commit",
             "skill": "clusters/07-devops/format-before-commit/SKILL.md",
             "description": "Run black/ruff format check before every commit"
-        },
-        {
-            "name": "git-push-protocol-handler",
-            "skill": "clusters/07-devops/git-push-protocol-handler/SKILL.md",
-            "description": "Execute git push with pre-push protocol checks"
         },
         {
             "name": "github-release-workflow",
