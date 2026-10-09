@@ -44,6 +44,7 @@ workflow.
 - Unused scripts: model-select.sh, scripts/roadmap-close.sh, scripts/skill-dependency-graph.sh.
 - VERSION/tag drift checks from this repo's CI (release-please keeps them in step).
 - Per-skill README Installation sections and the readme-quality CI job (installation is documented once in README.md).
+- python-lint-gate, format-before-commit, python-ci-lint-precheck and python-black-ruff-authoring, merged into `py-lint` (RA-09).
 
 ### Changed
 

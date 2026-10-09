@@ -1,6 +1,6 @@
 ---
 name: local-ci
-description: "Runs this repo's GitHub Actions workflow steps locally, auto-fixes Black and Ruff only when versions match CI, and can install pre-commit or pre-push hooks. Use when asked to 'run CI locally', 'test before pushing', 'preview what CI will do', or 'gate my pushes on CI'. Not for a quick Python lint only (use python-lint-gate)."
+description: "Runs this repo's GitHub Actions workflow steps locally, auto-fixes Black and Ruff only when versions match CI, and can install pre-commit or pre-push hooks. Use when asked to 'run CI locally', 'test before pushing', 'preview what CI will do', or 'gate my pushes on CI'. Not for a quick Python lint only (use py-lint)."
 ---
 # local-ci
 
@@ -136,7 +136,7 @@ Manual attention needed: 1 job(s)
 ## Integration with other skills
 
 - **pre-push-validation:** an older, `validate.yml`-focused fail-closed pre-push gate. `local-ci` now covers the same ground more generally (all workflows, version parity, stop-on-failure) and can itself install a fail-closed `pre-push` gate — so on a repo using `local-ci` you typically won't also need `pre-push-validation`. They both write `.git/hooks/pre-push`; pick one owner per repo.
-- **format-before-commit:** narrower, Python-only formatting check; this skill's auto-fix covers the same ground plus arbitrary `run:` steps.
+- **py-lint:** narrower, Python-only formatting check; this skill's auto-fix covers the same ground plus arbitrary `run:` steps.
 - **github-morning-run:** use after pushing to catch what CI found on the morning audit.
 
 ---

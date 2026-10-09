@@ -130,7 +130,7 @@ If a slot already holds a hook this skill didn't write (the pre-commit framework
 ## Integration with other skills
 
 - **pre-push-validation** — an older `validate.yml`-focused fail-closed pre-push gate. `local-ci` now covers the same ground more generally and installs its own fail-closed `pre-push` gate, so a repo using `local-ci` usually won't also need it. Both write `.git/hooks/pre-push` — pick one owner per repo.
-- **format-before-commit** — narrower, Python-only formatting check.
+- **py-lint** — narrower, Python-only formatting check.
 - **github-morning-run** — use after pushing, to catch what CI found on the morning audit.
 
 ---

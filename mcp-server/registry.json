@@ -11,9 +11,9 @@
             "description": "Session-start orientation - GitHub state + README roadmap"
         },
         {
-            "name": "format-before-commit",
-            "skill": "clusters/07-devops/format-before-commit/SKILL.md",
-            "description": "Run black/ruff format check before every commit"
+            "name": "py-lint",
+            "skill": "clusters/07-devops/py-lint/SKILL.md",
+            "description": "Run a Ruff + Black gate (check, safe fix, re-check) with config template and pylint exceptions"
         },
         {
             "name": "git-push-protocol-handler",
@@ -49,16 +49,6 @@
             "name": "portfolio-readme-generator",
             "skill": "clusters/07-devops/portfolio-readme-generator/SKILL.md",
             "description": "Generate portfolio README from GitHub repo metadata"
-        },
-        {
-            "name": "python-ci-lint-precheck",
-            "skill": "clusters/07-devops/python-ci-lint-precheck/SKILL.md",
-            "description": "Run Python linters locally before pushing to CI"
-        },
-        {
-            "name": "python-lint-gate",
-            "skill": "clusters/07-devops/python-lint-gate/SKILL.md",
-            "description": "Run a unified Ruff + Black gate in check or fix mode"
         },
         {
             "name": "roadmap-sync",

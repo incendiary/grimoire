@@ -219,7 +219,6 @@ Seven public clusters + two private (via submodule). See [clusters/README.md](cl
 | 03-incident | `risk-to-action` | ✅ |
 | 04-security | `ios-signing-risk` | ✅ |
 | 05-technical | `test-bootstrap` | ✅ |
-| 05-technical | `python-black-ruff-authoring` | ✅ |
 | 05-technical | `codebase-holistic-review` | ✅ |
 | 06-study | *(private submodule)* | — |
 | 07-devops | `repo-compass` | ✅ |
@@ -228,9 +227,7 @@ Seven public clusters + two private (via submodule). See [clusters/README.md](cl
 | 07-devops | `repo-security-bootstrap` | ✅ |
 | 07-devops | `python-ci-template` | ✅ |
 | 07-devops | `dotnet-ci-template` | ✅ |
-| 07-devops | `python-ci-lint-precheck` | ✅ |
-| 07-devops | `python-lint-gate` | ✅ |
-| 07-devops | `format-before-commit` | ✅ |
+| 07-devops | `py-lint` | ✅ |
 | 07-devops | `portfolio-readme-generator` | ✅ |
 | 07-devops | `github-release-workflow` | ✅ |
 | 07-devops | `git-push-protocol-handler` | ✅ |

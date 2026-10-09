@@ -3,3 +3,7 @@ mid-task-checkin	-
 pre-commit-aware-commits	-
 cwd-verification	-
 verify-code-version	-
+python-lint-gate	py-lint
+format-before-commit	py-lint
+python-ci-lint-precheck	py-lint
+python-black-ruff-authoring	py-lint

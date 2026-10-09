@@ -187,8 +187,8 @@ README.md
 | Pin formatter/linter versions | In lockfile or CI config; prevents drift between devs |
 | No broad file-level disables | Suppress per-line with justification; never blanket-ignore |
 
-**Enforcement:** `format-before-commit` skill handles Python; language-specific CI templates handle others.
-**Existing skills:** `format-before-commit`, `python-ci-lint-precheck`
+**Enforcement:** `py-lint` skill handles Python; language-specific CI templates handle others.
+**Existing skills:** `py-lint`
 
 ---
 
