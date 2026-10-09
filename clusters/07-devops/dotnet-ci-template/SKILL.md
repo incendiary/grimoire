@@ -1,3 +1,7 @@
+---
+name: dotnet-ci-template
+description: "Generates a standard GitHub Actions CI workflow for a .NET or C# repo covering build, test, format check and secret scanning, with Windows and cross-platform variants and a net6.0 to net8.0 upgrade path. Use when adding CI to a C# or .NET project, or when asked to 'create a GitHub Actions workflow for my .NET project'."
+---
 # dotnet-ci-template
 
 > **Status:** COMPLETE

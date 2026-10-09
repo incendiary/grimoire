@@ -1,3 +1,7 @@
+---
+name: github-history-wipe
+description: "Replaces a public repo's git history with a fresh single commit after scanning for sensitive strings, capturing releases and tags, and force pushing. Use when a repo needs clean history before publication and history need not be kept, or when git filter-repo has already been tried and references remain. Part of publishing; start with repo-publication-prep."
+---
 # github-history-wipe
 
 > **Status:** COMPLETE

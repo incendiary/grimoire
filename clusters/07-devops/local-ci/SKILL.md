@@ -1,3 +1,7 @@
+---
+name: local-ci
+description: "Runs this repo's GitHub Actions workflow steps locally, auto-fixes Black and Ruff only when versions match CI, and can install pre-commit or pre-push hooks. Use when asked to 'run CI locally', 'test before pushing', 'preview what CI will do', or 'gate my pushes on CI'. Not for a quick Python lint only (use python-lint-gate)."
+---
 # local-ci
 
 > **Status:** COMPLETE

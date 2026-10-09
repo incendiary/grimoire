@@ -1,3 +1,7 @@
+---
+name: npm-provenance-attestation
+description: "Verifies npm package provenance and Sigstore signatures, checking that a package was built from its claimed source repository and CI run, and classifying missing or failed attestations. Use when evaluating a new npm dependency, doing a supply chain review, investigating a suspicious package, or enforcing a provenance policy. For lockfile hash checks use npm-lockfile-integrity."
+---
 # npm-provenance-attestation
 
 > **Status:** COMPLETE

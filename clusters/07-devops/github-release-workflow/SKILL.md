@@ -1,3 +1,7 @@
+---
+name: github-release-workflow
+description: "Runs the full release flow for a repo (release branch, version bump, PR, CI wait, squash merge, tag and GitHub release), with an optional release-on-tag workflow to create releases. Use when asked to 'cut a release', 'release this version', or 'create the GitHub release for vX.Y.Z'. For README version pins use readme-version-pin; for container images use docker-ghcr-publish."
+---
 # github-release-workflow
 
 > **Status:** COMPLETE
