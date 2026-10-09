@@ -2,9 +2,9 @@
 
 > Auto-generated overview of outstanding work across all public skill clusters.
 > The "Open items by cluster" section is kept in sync automatically — see
-> `clusters/07-devops/devops-practices/check-roadmap-sync.sh`. To regenerate by hand,
+> `clusters/07-devops/ci-standards/check-roadmap-sync.sh`. To regenerate by hand,
 > run `bash scripts/roadmap-collect.sh` (or `--json` for machine-readable output) and
-> `bash clusters/07-devops/devops-practices/check-roadmap-sync.sh . --fix`.
+> `bash clusters/07-devops/ci-standards/check-roadmap-sync.sh . --fix`.
 
 **Last updated:** 2026-10-09
 **Open items:** 9 | **Completed:** 213
@@ -51,7 +51,7 @@ Tick the first column when a task's brief reaches `> Status: done`.
 | [ ] | RA-09 | `py-lint` = four Python lint skills | sonnet | opus | 3 | [ra-09](docs/tasks/discoverability/ra-09-py-lint.md) |
 | [ ] | RA-10 | `deps-integrity` = npm/python lockfile + provenance | sonnet | opus | 3 | [ra-10](docs/tasks/discoverability/ra-10-deps-integrity.md) |
 | [ ] | RA-11 | `tf-guardrails` = three terraform skills | haiku | sonnet | 3 | [ra-11](docs/tasks/discoverability/ra-11-tf-guardrails.md) |
-| [ ] | RA-12 | `ci-standards` = `devops-practices` + updater | sonnet | opus | 3 | [ra-12](docs/tasks/discoverability/ra-12-ci-standards.md) |
+| [x] | RA-12 | `ci-standards` = the DevOps standard + its updater | sonnet | opus | 3 | [ra-12](docs/tasks/discoverability/ra-12-ci-standards.md) |
 | [ ] | RA-13 | `roadmap-driver` → `roadmap`; delete `grimoire-roadmap-status` | haiku | sonnet | 3 | [ra-13](docs/tasks/discoverability/ra-13-roadmap.md) |
 | [ ] | RA-14 | `repo-compass` → `orient`, absorbing the push check | haiku | sonnet | 3 | [ra-14](docs/tasks/discoverability/ra-14-orient.md) |
 | [ ] | RA-15 | Pathway-prefix rename (32 skills), install-side clean-up | sonnet + opus review | opus | 4 | [ra-15](docs/tasks/discoverability/ra-15-rename.md) |
@@ -147,7 +147,7 @@ These are repo-level improvements not tied to individual skills:
 
 - [x] **Roadmap sync check (local + CI)** — `ROADMAP.md`'s "Open items by cluster"
   section is now delimited (`<!-- ROADMAP-COLLECT:START/END -->`) and enforced by
-  `clusters/07-devops/devops-practices/check-roadmap-sync.sh` (`--check` gate,
+  `clusters/07-devops/ci-standards/check-roadmap-sync.sh` (`--check` gate,
   `--fix` regenerator): wired into `devops-check.yml` as a 4th required check, and
   into `.pre-commit-config.yaml` as a local auto-fix hook triggered on any
   `clusters/*/*/README.md` change. Along the way, fixed a real bug in

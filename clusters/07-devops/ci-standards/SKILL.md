@@ -1,8 +1,8 @@
 ---
-name: devops-practices
-description: "Applies and audits a standard set of devops practices on a repo covering versioning, PR discipline, testing, clone ref pinning, roadmap sync and formatting, with portable check scripts. Use when setting up a new repo, onboarding a project to my standards, running a pre-release audit, or a periodic health check. To add a new practice to this standard use devops-practices-updater."
+name: ci-standards
+description: "Applies and audits the owner's standard DevOps practices on a repo (version sync, roadmap sync, clone-ref pinning, test baseline), routing to the right skill for each practice, and records new practices when a session reveals one. Use when setting up a new repo, auditing a repo against the standard, doing a periodic health check, or asked to 'add this to my devops practices'."
 ---
-# devops-practices
+# ci-standards
 
 > **Status:** COMPLETE
 > **Cluster:** 07-devops
@@ -205,7 +205,7 @@ All scripts are portable POSIX-compatible shell, runnable in any repo:
 Run all three for a full audit:
 ```bash
 for script in check-version-sync.sh check-clone-refs.sh check-test-baseline.sh; do
-  bash "path/to/devops-practices/$script" || echo "FAIL: $script"
+  bash "path/to/ci-standards/$script" || echo "FAIL: $script"
 done
 ```
 
@@ -233,14 +233,47 @@ When a practice needs more than enforcement — it needs *implementation* — ro
 
 ---
 
-## Self-update protocol
+## Evolving this standard
 
-When a session reveals a new repeating practice:
-1. Invoke `devops-practices-updater`
-2. It reads this SKILL.md, identifies the correct category
-3. Appends the new rule to the category table
-4. If enforceable, updates or creates a check script
-5. Commits as a standalone change
+Invoke when a session reveals a new repeating practice, a pattern worth standardising,
+the user says "add this to my devops practices", or an existing practice needs refinement.
+
+1. **Read current state.** Re-read this file. Identify the category the practice fits (or
+   whether a new one is needed), whether it overlaps an existing rule (update vs. add), and
+   whether it is enforceable via script.
+2. **Classify.**
+
+   | Type | Action |
+   |------|--------|
+   | New rule in existing category | Add row to that category's table |
+   | Refinement of existing rule | Update the existing row |
+   | New category entirely | Add new H3 section following the existing pattern |
+   | Enforceable via script | Also update/create check script |
+   | Routes to existing skill | Add to the routing table |
+
+3. **Update this SKILL.md.** Add the rule to the category table in the existing format
+   (`| Rule name | Detail explaining the rule |`).
+4. **Update enforcement if applicable.** Pick the check script it belongs to (or create one),
+   add the check logic, keep it `shellcheck`-clean, and test it against the current repo.
+5. **Update README.md** if the high-level practice categories change.
+6. **Commit** `clusters/07-devops/ci-standards/` as a standalone change
+   (`feat(ci-standards): add <practice-name> rule`).
+
+Examples:
+
+- "Update CHANGELOG before release" fits Versioning; rules only (enforcement deferred).
+- "GitHub Actions should pin to SHA" fits Clone-ref pinning; enforceable, so extend
+  `check-clone-refs.sh` to check `uses:` lines in workflow files.
+- "Documentation freshness" fits no category: add a new H3 section with rules, enforcement
+  notes, and related skills, and update the README category list.
+
+Guardrails:
+
+- Never remove existing rules, only add or refine.
+- Each addition must include a "why" (the failure mode it prevents).
+- Enforcement scripts must pass shellcheck after modification.
+- If unsure about category, ask before adding.
+- Keep rules concise: one sentence per rule, detail in the "Detail" column.
 
 ---
 
@@ -250,3 +283,6 @@ When a session reveals a new repeating practice:
 - [ ] Add `--fix` mode to `check-clone-refs.sh` (auto-update refs to current VERSION)
 - [ ] Add GitHub Actions version-pinning check (not just docs, also workflow files)
 - [x] Add scheduled CI template for periodic test execution — `validate.yml` now runs weekly (`schedule: cron`) in addition to push/PR
+- [ ] Add automatic detection: chain with `session-skill-extractor` to route devops patterns here
+- [ ] Add `--dry-run` mode for "Evolving this standard": show what would change without writing
+- [ ] Add practice versioning: track when each rule was added and by whom

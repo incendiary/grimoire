@@ -22,21 +22,21 @@ jobs:
         id: clone-refs
         continue-on-error: true
         run: |
-          bash ./clusters/07-devops/devops-practices/check-clone-refs.sh . || EXIT_CODE=$?
+          bash ./clusters/07-devops/ci-standards/check-clone-refs.sh . || EXIT_CODE=$?
           exit ${EXIT_CODE:-0}
 
       - name: Check test baseline
         id: test-baseline
         continue-on-error: true
         run: |
-          bash ./clusters/07-devops/devops-practices/check-test-baseline.sh . || EXIT_CODE=$?
+          bash ./clusters/07-devops/ci-standards/check-test-baseline.sh . || EXIT_CODE=$?
           exit ${EXIT_CODE:-0}
 
       - name: Check roadmap sync
         id: roadmap-sync
         continue-on-error: true
         run: |
-          bash ./clusters/07-devops/devops-practices/check-roadmap-sync.sh . --check || EXIT_CODE=$?
+          bash ./clusters/07-devops/ci-standards/check-roadmap-sync.sh . --check || EXIT_CODE=$?
           exit ${EXIT_CODE:-0}
 
       - name: Report results
@@ -60,7 +60,7 @@ jobs:
             echo "❌ Roadmap sync: FAIL" >> $GITHUB_STEP_SUMMARY
           fi
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "See skill: [\`devops-practices\`](https://github.com/incendiary/grimoire/tree/main/clusters/07-devops/devops-practices)" >> $GITHUB_STEP_SUMMARY
+          echo "See skill: [\`ci-standards\`](https://github.com/incendiary/grimoire/tree/main/clusters/07-devops/ci-standards)" >> $GITHUB_STEP_SUMMARY
 
       - name: Fail if any check failed
         if: always()
