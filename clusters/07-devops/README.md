@@ -123,26 +123,9 @@ Keeps README roadmaps in sync after code changes: reads the current state first,
 ticks completed items, adds new ones, removes stale items. Always a standalone commit.
 → [Full documentation](roadmap-sync/README.md)
 
-### [terraform-checkov-skips](terraform-checkov-skips/) ✅ complete
-
-Enforces `#checkov:skip` placement inside resource blocks (not before them) and
-requires a justification on every skip line. Includes grep command to find misplaced
-annotations before pushing.
-→ [Full documentation](terraform-checkov-skips/README.md)
-
-### [terraform-aws-syntax](terraform-aws-syntax/) ✅ complete
-
-Known block-vs-attribute syntax patterns for AWS provider resources: VPN endpoints,
-spot instances, Cognito token validity. Enforces `terraform validate` after every
-resource block change.
-→ [Full documentation](terraform-aws-syntax/README.md)
-
-### [terraform-version-compat](terraform-version-compat/) ✅ complete
-
-Pre-flight check before adding or upgrading a Terraform module: reads module
-`required_providers`, checks constraint conflicts, checks for breaking syntax changes,
-and locks the provider lock file for linux and darwin.
-→ [Full documentation](terraform-version-compat/README.md)
+### [tf-guardrails](tf-guardrails/) ✅ complete
+Terraform guardrails: provider version compatibility, AWS provider syntax, and checkov skip placement.
+→ [Full documentation](tf-guardrails/README.md)
 
 ### [project-delivery-workflow](project-delivery-workflow/) ✅ complete
 
@@ -286,11 +269,7 @@ roadmap-sync              → (if items completed) tick and commit
 **Trigger:** "Adding a Terraform module" / "Upgrading provider" / IaC work
 
 ```
-terraform-version-compat  → pre-flight: constraint conflicts, breaking changes
-        ↓
-terraform-aws-syntax      → known block-vs-attribute gotchas for AWS resources
-        ↓
-terraform-checkov-skips   → ensure #checkov:skip is inside blocks with justification
+tf-guardrails → pre-flight: provider constraints, AWS syntax gotchas, checkov skip placement
 ```
 
 ### Workflow 6: Supply chain security audit
@@ -364,9 +343,7 @@ repo-compass                  → verify final clean repo state
 | `npm-lockfile-integrity` | Auditing Node.js project; checking lockfile has integrity hashes |
 | `npm-provenance-attestation` | Auditing Node.js deps; verifying packages have Sigstore provenance |
 | `python-lockfile-integrity` | Auditing Python project; checking hash-based pinning is enforced |
-| `terraform-version-compat` | Adding/upgrading a Terraform module; need constraint pre-flight |
-| `terraform-aws-syntax` | Writing AWS Terraform resources; need to avoid known block/attribute traps |
-| `terraform-checkov-skips` | Adding checkov skip annotations; need correct placement and justification |
+| `tf-guardrails` | Writing or reviewing Terraform; adding modules, AWS resources, or checkov skips |
 | `project-delivery-workflow` | Full delivery loop: clone → roadmap → feature branches → PRs → release |
 | `devops-practices` | Establishing standards on a repo; auditing compliance; onboarding a project |
 | `devops-practices-updater` | Session revealed a new practice; need to capture it in the devops-practices skill |

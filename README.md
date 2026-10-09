@@ -235,9 +235,7 @@ Seven public clusters + two private (via submodule). See [clusters/README.md](cl
 | 07-devops | `github-release-workflow` | ✅ |
 | 07-devops | `git-push-protocol-handler` | ✅ |
 | 07-devops | `roadmap-sync` | ✅ |
-| 07-devops | `terraform-checkov-skips` | ✅ |
-| 07-devops | `terraform-aws-syntax` | ✅ |
-| 07-devops | `terraform-version-compat` | ✅ |
+| 07-devops | `tf-guardrails` | ✅ |
 | 07-devops | `project-delivery-workflow` | ✅ |
 | 07-devops | `docker-ghcr-publish` | ✅ |
 | 07-devops | `npm-lockfile-integrity` | ✅ |

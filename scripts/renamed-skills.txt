@@ -3,3 +3,6 @@ mid-task-checkin	-
 pre-commit-aware-commits	-
 cwd-verification	-
 verify-code-version	-
+terraform-aws-syntax	tf-guardrails
+terraform-checkov-skips	tf-guardrails
+terraform-version-compat	tf-guardrails

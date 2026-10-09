@@ -133,9 +133,7 @@ karpathy-spec output
 
 ### Development
 
-1. **terraform-version-compat** — Before adding/upgrading modules, check provider constraints
-2. **terraform-aws-syntax** — Apply known AWS syntax patterns (VPN, spot, Cognito edge cases)
-3. **terraform-checkov-skips** — Enforce justifications on every security skip
+1. **tf-guardrails** — Before adding/upgrading modules, check provider constraints, apply known AWS syntax patterns (VPN, spot, Cognito edge cases), and enforce justifications on every security skip
 
 ### Security
 
