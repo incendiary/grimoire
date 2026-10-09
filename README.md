@@ -197,55 +197,8 @@ Seven public clusters + two private (via submodule). See [clusters/README.md](cl
 
 ## Skills Index
 
-> **Status:** ✅ complete · 📋 promoted (needs expansion) · 🔲 stub
-
-| Cluster | Skill | Status |
-|---------|-------|--------|
-| 01-meta | `session-skill-extractor` | ✅ |
-| 01-meta | `skill-vetter` | ✅ |
-| 01-meta | `github-authored-repos` | ✅ |
-| 01-meta | `task-decomposer` | ✅ |
-| 01-meta | `task-handoff` | ✅ |
-| 01-meta | `karpathy-environment` | ✅ |
-| 01-meta | `karpathy-framework` | ✅ |
-| 01-meta | `karpathy-spec` | ✅ |
-| 01-meta | `karpathy-verify` | ✅ |
-| 01-meta | `skill-keyword-lookup` | ✅ |
-| 02-comms | `tone-check` | ✅ |
-| 02-comms | `human-rewrite` | ✅ |
-| 02-comms | `executive-translate` | ✅ |
-| 03-incident | `incident-ask-builder` | ✅ |
-| 03-incident | `incident-appendix` | ✅ |
-| 03-incident | `risk-to-action` | ✅ |
-| 04-security | `ios-signing-risk` | ✅ |
-| 05-technical | `test-bootstrap` | ✅ |
-| 05-technical | `python-black-ruff-authoring` | ✅ |
-| 05-technical | `codebase-holistic-review` | ✅ |
-| 06-study | *(private submodule)* | — |
-| 07-devops | `repo-compass` | ✅ |
-| 07-devops | `repo-publication-prep` | ✅ |
-| 07-devops | `github-history-wipe` | ✅ |
-| 07-devops | `repo-security-bootstrap` | ✅ |
-| 07-devops | `python-ci-template` | ✅ |
-| 07-devops | `dotnet-ci-template` | ✅ |
-| 07-devops | `python-ci-lint-precheck` | ✅ |
-| 07-devops | `python-lint-gate` | ✅ |
-| 07-devops | `format-before-commit` | ✅ |
-| 07-devops | `portfolio-readme-generator` | ✅ |
-| 07-devops | `github-release-workflow` | ✅ |
-| 07-devops | `git-push-protocol-handler` | ✅ |
-| 07-devops | `roadmap-sync` | ✅ |
-| 07-devops | `terraform-checkov-skips` | ✅ |
-| 07-devops | `terraform-aws-syntax` | ✅ |
-| 07-devops | `terraform-version-compat` | ✅ |
-| 07-devops | `project-delivery-workflow` | ✅ |
-| 07-devops | `docker-ghcr-publish` | ✅ |
-| 07-devops | `npm-lockfile-integrity` | ✅ |
-| 07-devops | `npm-provenance-attestation` | ✅ |
-| 07-devops | `python-lockfile-integrity` | ✅ |
-| 07-devops | `readme-version-pin` | ✅ |
-| 08-offsec | *(private submodule)* | — |
-| 09-odpc | *(private submodule)* | — |
+The full, generated list of skills with descriptions is in [SKILLS.md](SKILLS.md).
+In Claude Code, type `/` and start typing to filter; in Copilot Chat use `#skill-name`.
 
 ---
 

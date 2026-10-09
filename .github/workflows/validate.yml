@@ -59,6 +59,8 @@ jobs:
           echo "No stale paths found"
       - name: Every SKILL.md has name/description frontmatter
         run: bash scripts/check-frontmatter.sh
+      - name: SKILLS.md catalogue is current
+        run: bash scripts/gen-catalogue.sh --check
 
   registry-sync:
     name: Registry sync
