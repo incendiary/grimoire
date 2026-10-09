@@ -1,3 +1,7 @@
+---
+name: skill-keyword-lookup
+description: "Finds the best matching grimoire skills from plain-language keywords when the concept is remembered but not the skill name. Use when asking 'which skill handles X?', 'find the skill for this workflow', 'find skill', or 'skill search'. Use when you cannot remember which grimoire skill fits."
+---
 # skill-keyword-lookup
 
 > **Status:** COMPLETE

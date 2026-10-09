@@ -1,3 +1,7 @@
+---
+name: session-skill-extractor
+description: "Analyses the current session transcript for repeated patterns such as context re-explanation, correction loops, and boilerplate, and drafts SKILL.md stubs for review. Use when a session is ending, when asked 'what patterns did we repeat?', or when asked to 'extract skills from this session'. To vet a third-party skill use skill-vetter."
+---
 # session-skill-extractor
 
 ## Description

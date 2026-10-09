@@ -19,6 +19,7 @@ workflow.
 
 ### Added
 
+- YAML frontmatter (name, description) on every SKILL.md, so Claude Code can select skills by intent.
 - RA-28 brief: post-programme ponytail-debt ledger and ponytail-audit re-run.
 - `scripts/check-frontmatter.sh`: validates SKILL.md frontmatter.
 - `docs/discoverability-intents.md`: manual routing spot-check.

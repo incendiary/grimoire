@@ -1,3 +1,7 @@
+---
+name: task-handoff
+description: "Packages the current session state into a self-contained handoff document when context is filling up mid-task. Use when context pressure is already high and the next chunk needs a fresh session with its objective, decisions, files, constraints, and success criteria. Use when context is already full; to split work up front use task-decomposer."
+---
 # task-handoff
 
 > **Status:** COMPLETE
