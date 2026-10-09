@@ -14,3 +14,6 @@ python-black-ruff-authoring	py-lint
 npm-lockfile-integrity	deps-integrity
 python-lockfile-integrity	deps-integrity
 npm-provenance-attestation	deps-integrity
+terraform-aws-syntax	tf-guardrails
+terraform-checkov-skips	tf-guardrails
+terraform-version-compat	tf-guardrails
