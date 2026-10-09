@@ -1,3 +1,7 @@
+---
+name: test-bootstrap
+description: "Add a unit test layer to a project with none, or fill coverage gaps in one that has some, generating failing test stubs and wiring the runner into CI. Use when asked to 'add tests', 'write unit tests for X', 'set up testing', or 'what tests should this have', or when a PR touches logic with no test coverage."
+---
 # test-bootstrap
 
 > **Status:** COMPLETE

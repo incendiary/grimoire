@@ -1,3 +1,7 @@
+---
+name: executive-translate
+description: "Convert technical or security content into exec-readable language for CISO or senior leadership, leading with impact and the ask. Use when asked to 'write this up for leadership', 'make this exec-ready', 'CISO version of this', or 'translate this for non-technical stakeholders'. To remove AI style without changing audience use human-rewrite."
+---
 # executive-translate
 
 > **Status:** COMPLETE

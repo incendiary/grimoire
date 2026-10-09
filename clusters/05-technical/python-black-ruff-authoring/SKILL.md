@@ -1,3 +1,7 @@
+---
+name: python-black-ruff-authoring
+description: "Write Python that passes Black and Ruff on the first run by applying authoring patterns that satisfy common lint rules before checks execute. Use when writing or editing Python in repos using ruff or black, or when asked to 'write clean Python', 'make this pass ruff', 'avoid linter churn', or 'black-compatible style'. Guidance while writing code; to check existing code use python-lint-gate."
+---
 # python-black-ruff-authoring
 
 > **Status:** COMPLETE
