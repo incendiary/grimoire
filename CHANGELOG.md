@@ -28,6 +28,7 @@ workflow.
 - YAML frontmatter (name, description) on every SKILL.md, so Claude Code can select skills by intent.
 - `scripts/gen-catalogue.sh` generates SKILLS.md; README links to it instead of a hand-kept index.
 - RA-28 brief: post-programme ponytail-debt ledger and ponytail-audit re-run.
+- RA-29 brief: MCP tools to run one registered script instead of every SKILL.md bash block.
 - `scripts/check-frontmatter.sh`: validates SKILL.md frontmatter.
 - `docs/discoverability-intents.md`: manual routing spot-check.
 - `REVIEW.md` and `docs/tasks/discoverability/`: holistic review plus 26 agent-executable

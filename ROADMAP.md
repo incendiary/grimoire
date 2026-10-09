@@ -7,7 +7,7 @@
 > `bash clusters/07-devops/ci-standards/check-roadmap-sync.sh . --fix`.
 
 **Last updated:** 2026-10-09
-**Open items:** 9 | **Completed:** 214
+**Open items:** 9 | **Completed:** 190
 
 ---
 
@@ -43,17 +43,17 @@ Tick the first column when a task's brief reaches `> Status: done`.
 | [x] | RA-01 | Frontmatter checker script | haiku | sonnet | 1 | [ra-01](docs/tasks/discoverability/ra-01-frontmatter-check.md) |
 | [x] | RA-02 | Frontmatter descriptions on every skill (4 parallel scopes) | haiku ×4 | sonnet | 2 | [ra-02](docs/tasks/discoverability/ra-02-frontmatter-descriptions.md) |
 | [x] | RA-03 | Single-source descriptions for prompts and MCP; frontmatter CI check | sonnet | opus | 3 | [ra-03](docs/tasks/discoverability/ra-03-single-source-descriptions.md) |
-| [ ] | RA-04 | Generate `SKILLS.md`, retire hand-kept README index | haiku | sonnet | 3 | [ra-04](docs/tasks/discoverability/ra-04-skills-catalogue.md) |
+| [x] | RA-04 | Generate `SKILLS.md`, retire hand-kept README index | haiku | sonnet | 3 | [ra-04](docs/tasks/discoverability/ra-04-skills-catalogue.md) |
 | [x] | RA-05 | Discoverability spot-check list (owner checkpoint) | sonnet | opus | 1 | [ra-05](docs/tasks/discoverability/ra-05-discoverability-test.md) |
 | [x] | RA-06 | Usage report from transcripts and MCP logs | haiku | sonnet | 1 | [ra-06](docs/tasks/discoverability/ra-06-usage-telemetry.md) |
 | [x] | RA-07 | Delete five always-on skills | haiku | sonnet | 1 | [ra-07](docs/tasks/discoverability/ra-07-remove-always-on.md) |
 | [x] | RA-08 | `ci-local` = `local-ci` + `pre-push-validation` | opus | owner | 3 | [ra-08](docs/tasks/discoverability/ra-08-ci-local.md) |
-| [ ] | RA-09 | `py-lint` = four Python lint skills | sonnet | opus | 3 | [ra-09](docs/tasks/discoverability/ra-09-py-lint.md) |
-| [ ] | RA-10 | `deps-integrity` = npm/python lockfile + provenance | sonnet | opus | 3 | [ra-10](docs/tasks/discoverability/ra-10-deps-integrity.md) |
-| [ ] | RA-11 | `tf-guardrails` = three terraform skills | haiku | sonnet | 3 | [ra-11](docs/tasks/discoverability/ra-11-tf-guardrails.md) |
+| [x] | RA-09 | `py-lint` = four Python lint skills | sonnet | opus | 3 | [ra-09](docs/tasks/discoverability/ra-09-py-lint.md) |
+| [x] | RA-10 | `deps-integrity` = npm/python lockfile + provenance | sonnet | opus | 3 | [ra-10](docs/tasks/discoverability/ra-10-deps-integrity.md) |
+| [x] | RA-11 | `tf-guardrails` = three terraform skills | haiku | sonnet | 3 | [ra-11](docs/tasks/discoverability/ra-11-tf-guardrails.md) |
 | [x] | RA-12 | `ci-standards` = the DevOps standard + its updater | sonnet | opus | 3 | [ra-12](docs/tasks/discoverability/ra-12-ci-standards.md) |
-| [ ] | RA-13 | `roadmap-driver` → `roadmap`; delete `grimoire-roadmap-status` | haiku | sonnet | 3 | [ra-13](docs/tasks/discoverability/ra-13-roadmap.md) |
-| [ ] | RA-14 | `repo-compass` → `orient`, absorbing the push check | haiku | sonnet | 3 | [ra-14](docs/tasks/discoverability/ra-14-orient.md) |
+| [x] | RA-13 | `roadmap-driver` → `roadmap`; delete `grimoire-roadmap-status` | haiku | sonnet | 3 | [ra-13](docs/tasks/discoverability/ra-13-roadmap.md) |
+| [x] | RA-14 | `repo-compass` → `orient`, absorbing the push check | haiku | sonnet | 3 | [ra-14](docs/tasks/discoverability/ra-14-orient.md) |
 | [ ] | RA-15 | Pathway-prefix rename (32 skills), install-side clean-up | sonnet + opus review | opus | 4 | [ra-15](docs/tasks/discoverability/ra-15-rename.md) |
 | [ ] | RA-16 | Pathway tables in `orient`, `plan`, `release`, `publish` | haiku | sonnet | 5 | [ra-16](docs/tasks/discoverability/ra-16-pathway-entries.md) |
 | [ ] | RA-17 | Delete `PROJECT-WORKFLOWS.md`, short README table | haiku | sonnet | 6 | [ra-17](docs/tasks/discoverability/ra-17-workflows-doc.md) |
@@ -67,6 +67,7 @@ Tick the first column when a task's brief reaches `> Status: done`.
 | [x] | RA-26 | Drop version-sync checks superseded by release-please | haiku | sonnet | 1 | [ra-26](docs/tasks/discoverability/ra-26-version-sync-ci.md) |
 | [x] | RA-27 | Share duplicated installer functions | sonnet | opus | 1 | [ra-27](docs/tasks/discoverability/ra-27-installer-dedupe.md) |
 | [ ] | RA-28 | Post-programme ponytail-debt ledger and ponytail-audit re-run | sonnet | opus | 7 | [ra-28](docs/tasks/discoverability/ra-28-ponytail-followup.md) |
+| [ ] | RA-29 | MCP tools run one registered script, not every SKILL.md bash block (security) | sonnet + opus review | opus | 5 | [ra-29](docs/tasks/discoverability/ra-29-mcp-explicit-script.md) |
 
 Revised by the 2026-10-04 over-engineering audit (see `REVIEW.md`). Open owner decisions are listed at the end of `REVIEW.md`.
 
@@ -91,11 +92,11 @@ Revised by the 2026-10-04 over-engineering audit (see `REVIEW.md`). Open owner d
   - **ci-local**: Job dependency graph (`needs:`) and matrix expansion awareness
   - **ci-local**: Caching of discovered jobs (skip re-parsing on each run)
   - **portfolio-readme-generator**: Planned enhancement
-  - **terraform-version-compat**: Add known-good version matrix for frequently used module combinations
+  - **tf-guardrails**: **Version compat:** Add known-good version matrix for frequently used module combinations
 
 ---
 
-**Summary:** 9 open items | 214 completed items
+**Summary:** 9 open items | 190 completed items
 <!-- ROADMAP-COLLECT:END -->
 
 > **08-offsec** roadmap items now live in the private `grimoire-offsec` submodule
