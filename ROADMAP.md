@@ -6,7 +6,7 @@
 > run `bash scripts/roadmap-collect.sh` (or `--json` for machine-readable output) and
 > `bash clusters/07-devops/devops-practices/check-roadmap-sync.sh . --fix`.
 
-**Last updated:** 2026-10-08
+**Last updated:** 2026-10-09
 **Open items:** 9 | **Completed:** 213
 
 ---
@@ -59,7 +59,7 @@ Tick the first column when a task's brief reaches `> Status: done`.
 | [ ] | RA-17 | Delete `PROJECT-WORKFLOWS.md`, short README table | haiku | sonnet | 6 | [ra-17](docs/tasks/discoverability/ra-17-workflows-doc.md) |
 | [ ] | RA-18 | Report old names outside the repo (read-only; owner approves edits) | haiku | sonnet | 5 | [ra-18](docs/tasks/discoverability/ra-18-cross-repo-report.md) |
 | [ ] | RA-19 | `npm audit fix` in `mcp-server` | haiku | sonnet | 1 | [ra-19](docs/tasks/discoverability/ra-19-npm-audit-dependabot.md) |
-| [ ] | RA-20 | Align TruffleHog, SHA-pin actions | haiku | sonnet | 1 | [ra-20](docs/tasks/discoverability/ra-20-pin-versions.md) |
+| [x] | RA-20 | Align TruffleHog, SHA-pin actions | haiku | sonnet | 1 | [ra-20](docs/tasks/discoverability/ra-20-pin-versions.md) |
 | [x] | RA-22 | Delete unschedulable validation items | haiku | sonnet | 1 | [ra-22](docs/tasks/discoverability/ra-22-delete-validation-items.md) |
 | [ ] | RA-23 | Evidence-based prune report (owner decides) | sonnet | owner | later | [ra-23](docs/tasks/discoverability/ra-23-usage-prune.md) |
 | [x] | RA-24 | Remove per-skill Installation boilerplate and its CI job | haiku | sonnet | 1 | [ra-24](docs/tasks/discoverability/ra-24-readme-install-boilerplate.md) |

@@ -52,6 +52,10 @@ workflow.
   — feature branches never touch `VERSION`, so it can no longer conflict.
 - install-vscode.sh, install-jetbrains.sh and uninstall-vscode.sh share scripts/install-lib.sh.
 
+### Security
+
+- GitHub Actions pinned to commit SHAs; TruffleHog pre-commit aligned with CI (v3.98.0).
+
 ---
 
 ## [1.7.1] — 2026-09-28

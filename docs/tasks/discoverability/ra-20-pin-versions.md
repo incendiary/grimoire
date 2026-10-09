@@ -1,6 +1,6 @@
 # Task RA-20: Align TruffleHog versions and SHA-pin GitHub Actions
 
-> Status: pending
+> Status: done
 > Parent: discoverability and consolidation programme
 > Model: haiku
 > Fallback: sonnet
