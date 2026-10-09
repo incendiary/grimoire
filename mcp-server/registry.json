@@ -5,12 +5,8 @@
             "skill": "clusters/01-meta/github-authored-repos/SKILL.md"
         },
         {
-            "name": "grimoire-roadmap-status",
-            "skill": "clusters/01-meta/grimoire-roadmap-status/SKILL.md"
-        },
-        {
-            "name": "roadmap-driver",
-            "skill": "clusters/01-meta/roadmap-driver/SKILL.md"
+            "name": "roadmap",
+            "skill": "clusters/01-meta/roadmap/SKILL.md"
         },
         {
             "name": "skill-keyword-lookup",

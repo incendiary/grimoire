@@ -204,7 +204,7 @@ karpathy-spec output
 
 ## Workflow: Repository assessment
 
-**Skill stack:** repo-compass → [identify outstanding work] → roadmap-driver
+**Skill stack:** repo-compass → [identify outstanding work] → roadmap
 
 ### Assessment
 
@@ -216,7 +216,7 @@ karpathy-spec output
 ### Next steps
 
 1. If you need the roadmap broken down into executable chunks:
-   - **roadmap-driver** → selects next implementation-ready item and chains to:
+   - **roadmap** → selects next implementation-ready item and chains to:
      - `repo-compass` (full state)
      - `task-decomposer` (break into chunks)
      - `karpathy-framework` (decide which Karpathy layer)

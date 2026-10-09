@@ -1,6 +1,6 @@
 ---
 name: roadmap-sync
-description: "Updates a repo README roadmap after a PR merges, an issue closes, or a release ships, ticking completed items, adding a few realistic planned items, and removing stale ones. Use when a PR has been merged, an issue closed, or a version released, or asked to 'update the roadmap', 'mark this as done in the README', or 'sync the roadmap'. To choose what to work on next use roadmap-driver."
+description: "Updates a repo README roadmap after a PR merges, an issue closes, or a release ships, ticking completed items, adding a few realistic planned items, and removing stale ones. Use when a PR has been merged, an issue closed, or a version released, or asked to 'update the roadmap', 'mark this as done in the README', or 'sync the roadmap'. To choose what to work on next use roadmap."
 ---
 # roadmap-sync
 

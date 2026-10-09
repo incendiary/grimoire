@@ -17,3 +17,5 @@ npm-provenance-attestation	deps-integrity
 terraform-aws-syntax	tf-guardrails
 terraform-checkov-skips	tf-guardrails
 terraform-version-compat	tf-guardrails
+roadmap-driver	roadmap
+grimoire-roadmap-status	roadmap
