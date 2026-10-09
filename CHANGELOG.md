@@ -35,6 +35,10 @@ workflow.
   triggers `pull_request`-scoped CI under branch protection.
 - `scripts/usage-report.py`: skill usage from Claude Code transcripts and MCP logs.
 
+### Changed
+
+- build.sh and the MCP server now read descriptions from SKILL.md frontmatter; registry.json no longer carries descriptions.
+
 ### Removed
 
 - "Test on real X" validation items from skill roadmaps (40 items).

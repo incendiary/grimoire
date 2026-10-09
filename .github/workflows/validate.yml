@@ -57,6 +57,8 @@ jobs:
           done
           if [ "$failed" -eq 1 ]; then exit 1; fi
           echo "No stale paths found"
+      - name: Every SKILL.md has name/description frontmatter
+        run: bash scripts/check-frontmatter.sh
 
   registry-sync:
     name: Registry sync

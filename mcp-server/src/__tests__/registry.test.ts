@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import { readFileSync, existsSync } from "node:fs";
 import { resolve } from "node:path";
 import { execSync } from "node:child_process";
+import { loadRegistry as loadTools, parseFrontmatterDescription } from "../loader.js";
 
 const REPO_ROOT = resolve(import.meta.dirname, "../../..");
 const REGISTRY_PATH = resolve(import.meta.dirname, "../../registry.json");
@@ -9,7 +10,7 @@ const REGISTRY_PATH = resolve(import.meta.dirname, "../../registry.json");
 interface RegistryEntry {
     name: string;
     skill: string;
-    description: string;
+    description?: string;
 }
 
 interface Registry {
@@ -79,12 +80,14 @@ describe("registry.json bidirectional validation", () => {
         }
     });
 
-    it("every entry has a non-empty description", () => {
-        for (const tool of registry.tools) {
-            expect(
-                tool.description.length > 0,
-                `Tool "${tool.name}" has empty description`
-            ).toBe(true);
+    it("loaded tool descriptions equal SKILL.md frontmatter descriptions", async () => {
+        const tools = await loadTools();
+        expect(tools.length).toBe(registry.tools.length);
+        for (const entry of registry.tools) {
+            const content = readFileSync(resolve(REPO_ROOT, entry.skill), "utf-8");
+            const expected = parseFrontmatterDescription(content);
+            expect(expected, `${entry.skill} has no frontmatter description`).toBeTruthy();
+            expect(tools.find((t) => t.name === entry.name)?.description).toBe(expected);
         }
     });
 
