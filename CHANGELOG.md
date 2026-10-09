@@ -19,6 +19,7 @@ workflow.
 
 ### Added
 
+- `ci-standards` skill: merges `devops-practices` and `devops-practices-updater` (updater is now the "Evolving this standard" section); check scripts moved to `clusters/07-devops/ci-standards/`.
 - YAML frontmatter (name, description) on every SKILL.md, so Claude Code can select skills by intent.
 - RA-28 brief: post-programme ponytail-debt ledger and ponytail-audit re-run.
 - `scripts/check-frontmatter.sh`: validates SKILL.md frontmatter.

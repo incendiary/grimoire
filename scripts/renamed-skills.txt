@@ -3,3 +3,5 @@ mid-task-checkin	-
 pre-commit-aware-commits	-
 cwd-verification	-
 verify-code-version	-
+devops-practices	ci-standards
+devops-practices-updater	ci-standards

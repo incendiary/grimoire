@@ -189,20 +189,14 @@ pip-tools (`--require-hashes`), poetry (`poetry install`), pipenv (`--deploy`), 
 and audits CI pipelines for bare `pip install` usage. Mirrors `npm-lockfile-integrity` for Python.
 → [Full documentation](python-lockfile-integrity/README.md)
 
-### [devops-practices](devops-practices/) ✅ complete
+### [ci-standards](ci-standards/) ✅ complete
 
-Umbrella skill establishing standardised devops practices: semver versioning, atomic PR
-discipline, testing standards, clone-ref pinning, and continuous review. Routes to existing
-skills for implementation; provides portable shell scripts (`check-version-sync.sh`,
-`check-clone-refs.sh`, `check-test-baseline.sh`) for enforcement and auditing.
-→ [Full documentation](devops-practices/README.md)
-
-### [devops-practices-updater](devops-practices-updater/) ✅ complete
-
-Self-update mechanism for `devops-practices`. Invoked when a session reveals a new repeating
-practice. Reads the current skill, classifies the practice, appends to the correct category,
-and updates enforcement scripts if automatable. Ensures practices grow without becoming disorganised.
-→ [Full documentation](devops-practices-updater/README.md)
+Applies and audits standardised devops practices: semver versioning, atomic PR discipline,
+testing standards, clone-ref pinning, and continuous review. Routes to existing skills for
+implementation; provides shell scripts (`check-version-sync.sh`, `check-clone-refs.sh`,
+`check-test-baseline.sh`, `check-roadmap-sync.sh`) for enforcement and auditing, and a
+section for recording new practices as sessions reveal them.
+→ [Full documentation](ci-standards/README.md)
 
 ### [branch-surface-resolve](branch-surface-resolve/) ✅ complete
 
@@ -310,7 +304,7 @@ python-lockfile-integrity    → (Python) verify hash-based pinning across toolc
 **Trigger:** "Establish my devops practices" / "Is this repo compliant?" / onboarding a new project
 
 ```
-devops-practices             → audit repo against all practice categories
+ci-standards                 → audit repo against all practice categories
         ↓
 check-version-sync.sh        → VERSION == tag == release?
 check-clone-refs.sh          → no @main/@master in docs?
@@ -321,7 +315,7 @@ check-test-baseline.sh       → CI + baseline tests present?
 github-release-workflow      → (if version drift) align release
 readme-version-pin           → (if unpinned refs) pin all
         ↓
-devops-practices-updater     → (if new practice discovered) capture it
+ci-standards                 → (if new practice discovered) "Evolving this standard"
 ```
 
 ### Workflow 8: Surface and resolve scattered branches
@@ -368,6 +362,5 @@ repo-compass                  → verify final clean repo state
 | `terraform-aws-syntax` | Writing AWS Terraform resources; need to avoid known block/attribute traps |
 | `terraform-checkov-skips` | Adding checkov skip annotations; need correct placement and justification |
 | `project-delivery-workflow` | Full delivery loop: clone → roadmap → feature branches → PRs → release |
-| `devops-practices` | Establishing standards on a repo; auditing compliance; onboarding a project |
-| `devops-practices-updater` | Session revealed a new practice; need to capture it in the devops-practices skill |
+| `ci-standards` | Establishing standards on a repo; auditing compliance; onboarding a project; capturing a newly discovered practice |
 | `branch-surface-resolve` | Branches have accumulated across sessions; need to audit, surface conflicts, and land work via PRs |}

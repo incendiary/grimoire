@@ -145,9 +145,8 @@ Every executing agent follows these. Your task file adds task-specific steps.
 6. **Before committing, run and pass:**
    ```bash
    find . -name "*.sh" -not -path "./.git/*" -not -path "./clusters-*/*" -not -path "*/node_modules/*" -exec shellcheck {} +
-   bash clusters/07-devops/devops-practices/check-roadmap-sync.sh . --fix
+   bash clusters/07-devops/ci-standards/check-roadmap-sync.sh . --fix
    ```
-   (After RA-12 the second path is `clusters/07-devops/ci-standards/check-roadmap-sync.sh`.)
    If you changed anything under `mcp-server/` or `registry.json`:
    `cd mcp-server && npm ci && npm run build && npm test && cd ..`
    If `scripts/gen-catalogue.sh` exists: `bash scripts/gen-catalogue.sh` (regenerates `SKILLS.md`).

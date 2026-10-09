@@ -94,7 +94,7 @@ echo "Result: $PASS passed, $FAIL failed"
 
 if [ $FAIL -gt 0 ]; then
   echo ""
-  echo "Run 'devops-practices' skill to address gaps."
+  echo "Run 'ci-standards' skill to address gaps."
   exit 1
 fi
 

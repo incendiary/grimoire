@@ -30,7 +30,7 @@ fi
 if ! grep -qF "$START_MARKER" "$ROADMAP_FILE" || ! grep -qF "$END_MARKER" "$ROADMAP_FILE"; then
   echo "✗ ROADMAP.md is missing the ROADMAP-COLLECT:START/END markers."
   echo "  Expected markers around the 'Open items by cluster' section — see"
-  echo "  clusters/07-devops/devops-practices/check-roadmap-sync.sh header."
+  echo "  clusters/07-devops/ci-standards/check-roadmap-sync.sh header."
   exit 1
 fi
 
@@ -97,6 +97,6 @@ else
   echo ""
   diff -u "$ROADMAP_FILE" "$UPDATED" || true
   echo ""
-  echo "Run: bash clusters/07-devops/devops-practices/check-roadmap-sync.sh . --fix"
+  echo "Run: bash clusters/07-devops/ci-standards/check-roadmap-sync.sh . --fix"
   exit 1
 fi

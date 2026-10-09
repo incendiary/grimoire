@@ -1,4 +1,4 @@
-# devops-practices
+# ci-standards
 
 > Standardised devops practices — umbrella skill with enforcement scripts.
 
@@ -69,7 +69,7 @@ $ bash check-test-baseline.sh
 ✓ CI workflow found: .github/workflows/ci.yml
 ✗ No version-sync test found
 ✗ No clone-ref test found
-2 baseline tests missing. Run devops-practices to install them.
+2 baseline tests missing. Run ci-standards to install them.
 ```
 
 ### check-roadmap-sync.sh
@@ -87,7 +87,7 @@ skill's own README (the source of truth).
 $ bash check-roadmap-sync.sh . --check
 ✗ DRIFT DETECTED — ROADMAP.md does not match the per-skill README sources.
 ...
-Run: bash clusters/07-devops/devops-practices/check-roadmap-sync.sh . --fix
+Run: bash clusters/07-devops/ci-standards/check-roadmap-sync.sh . --fix
 ```
 
 ```
@@ -100,7 +100,7 @@ $ bash check-roadmap-sync.sh . --fix
 ### Full setup (new repo)
 
 ```
-devops-practices              → audit current state
+ci-standards                  → audit current state
         ↓
 [review violations]
         ↓
@@ -118,9 +118,9 @@ All green → repo is compliant
 
 ```bash
 cd your-repo-root
-bash clusters/07-devops/devops-practices/check-version-sync.sh
-bash clusters/07-devops/devops-practices/check-clone-refs.sh
-bash clusters/07-devops/devops-practices/check-test-baseline.sh
+bash clusters/07-devops/ci-standards/check-version-sync.sh
+bash clusters/07-devops/ci-standards/check-clone-refs.sh
+bash clusters/07-devops/ci-standards/check-test-baseline.sh
 ```
 
 ## Related skills
@@ -131,13 +131,12 @@ bash clusters/07-devops/devops-practices/check-test-baseline.sh
 | `readme-version-pin` | Implements clone-ref pinning |
 | `project-delivery-workflow` | Implements PR discipline |
 | `test-bootstrap` (05-technical) | Implements test framework setup |
-| `devops-practices-updater` | Evolves this skill with new practices |
 
-## Companion skill
+## Evolving this standard
 
-**`devops-practices-updater`** — invoke when a session reveals a new practice that should
-be standardised. It reads this skill, appends the new rule to the correct category, and
-updates enforcement scripts if applicable.
+When a session reveals a new repeating practice, follow "Evolving this standard" in
+`SKILL.md`: classify the practice, add the rule to the correct category, and update
+enforcement scripts if it is automatable. Related: `session-skill-extractor` (01-meta)
+discovers patterns; `karpathy-environment` (01-meta) captures broader workspace-level ones.
 
 ---
-
