@@ -1,7 +1,7 @@
 # Task RA-02: Add frontmatter descriptions to every skill (dispatched as 4 scopes)
 
-> Status: pending
-> Scope A: done | Scope B: pending | Scope C: pending | Scope D: pending
+> Status: done
+> Scope A: done | Scope B: done | Scope C: done | Scope D: done
 > Parent: discoverability and consolidation programme
 > Model: haiku (one agent per scope, run in parallel)
 > Fallback: sonnet

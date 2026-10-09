@@ -41,7 +41,7 @@ Tick the first column when a task's brief reaches `> Status: done`.
 | | ID | Task | Model | Fallback | Wave | Brief |
 |---|---|---|---|---|---|---|
 | [x] | RA-01 | Frontmatter checker script | haiku | sonnet | 1 | [ra-01](docs/tasks/discoverability/ra-01-frontmatter-check.md) |
-| [ ] | RA-02 | Frontmatter descriptions on every skill (4 parallel scopes) | haiku ×4 | sonnet | 2 | [ra-02](docs/tasks/discoverability/ra-02-frontmatter-descriptions.md) |
+| [x] | RA-02 | Frontmatter descriptions on every skill (4 parallel scopes) | haiku ×4 | sonnet | 2 | [ra-02](docs/tasks/discoverability/ra-02-frontmatter-descriptions.md) |
 | [ ] | RA-03 | Single-source descriptions for prompts and MCP; frontmatter CI check | sonnet | opus | 3 | [ra-03](docs/tasks/discoverability/ra-03-single-source-descriptions.md) |
 | [ ] | RA-04 | Generate `SKILLS.md`, retire hand-kept README index | haiku | sonnet | 3 | [ra-04](docs/tasks/discoverability/ra-04-skills-catalogue.md) |
 | [x] | RA-05 | Discoverability spot-check list (owner checkpoint) | sonnet | opus | 1 | [ra-05](docs/tasks/discoverability/ra-05-discoverability-test.md) |

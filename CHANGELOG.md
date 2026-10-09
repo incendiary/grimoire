@@ -66,7 +66,6 @@ per-skill README `## Roadmap` sections going forward.
 
 ### Added
 
-- RA-28 brief: post-programme ponytail-debt ledger and ponytail-audit re-run.
 - `clusters/07-devops/devops-practices/check-roadmap-sync.sh` — diffs
   `ROADMAP.md`'s generated block (delimited by `<!-- ROADMAP-COLLECT:START/END -->`)
   against `scripts/roadmap-collect.sh`'s output. `--check` (gate, exit 1 on drift) /
@@ -92,7 +91,6 @@ Offensive-security content extracted to its own private submodule.
 
 ### Added
 
-- RA-28 brief: post-programme ponytail-debt ledger and ponytail-audit re-run.
 - `clusters-offsec/` git submodule pointing to `incendiary/grimoire-offsec`
   (7 skills, consolidated under `08-offsec/`, including `pe-binary-analysis`)
 
@@ -269,7 +267,6 @@ Project workflow guide, two new Python skills, and changelog tidy for recent rel
 
 ### Added
 
-- RA-28 brief: post-programme ponytail-debt ledger and ponytail-audit re-run.
 - `PROJECT-WORKFLOWS.md` — practical skill-stack playbooks for common project types
   (Node.js, Python, .NET, Terraform, security tooling, multi-repo operations)
 - `README.md` — Project Workflows section linking to the new guide
@@ -292,7 +289,6 @@ Add `branch-surface-resolve` skill for surfacing and resolving scattered branche
 
 ### Added
 
-- RA-28 brief: post-programme ponytail-debt ledger and ponytail-audit re-run.
 - `07-devops/branch-surface-resolve` — audit local/remote branches, categorize by state
   (READY/LOCAL-ONLY/HAS-PR/CONFLICT/STALE), optionally resolve via PR creation.
   Includes `--resolve` and `--prune-stale` modes for branch cleanup workflows.
@@ -308,7 +304,6 @@ Add `devops-practices` and `devops-practices-updater` skills for grimoire mainte
 
 ### Added
 
-- RA-28 brief: post-programme ponytail-debt ledger and ponytail-audit re-run.
 - `07-devops/devops-practices` — enforcement suite for devops standards:
   version file sync, clone refs, test baseline, README quality gates
 - `07-devops/devops-practices-updater` — audit grimoire against standards
@@ -328,7 +323,6 @@ Infrastructure roadmap execution batch: MCP logging, install modes, uninstall sc
 
 ### Added
 
-- RA-28 brief: post-programme ponytail-debt ledger and ponytail-audit re-run.
 - `mcp-server/src/` — structured logging with Pino, health check endpoint,
   log rotation via pino-roll. Writes to `mcp-server/logs/` with cleanup on startup
 - `install-all.sh` — `--update` mode (safely update existing installs),
@@ -373,7 +367,6 @@ Fix MCP server registration to use VS Code's dedicated mcp.json file.
 
 ### Added
 
-- RA-28 brief: post-programme ponytail-debt ledger and ponytail-audit re-run.
 - `.github/workflows/release-on-tag.yml` — auto-creates GitHub Release on tag push
 - `scripts/release-backfill.sh` — reconciliation script for tag↔release drift
 - Version-tag drift warning in `validate.yml` (annotation only, not a hard fail)
@@ -387,7 +380,6 @@ README standardisation across all public clusters + global roadmap.
 
 ### Added
 
-- RA-28 brief: post-programme ponytail-debt ledger and ponytail-audit re-run.
 - `ROADMAP.md` — auto-generated overview of 95 open items across 50 skills
 - `scripts/roadmap-collect.sh` — generates roadmap from skill README checkboxes (supports `--json`)
 - Multi-platform Installation section in all 50 public skill READMEs:
@@ -414,7 +406,6 @@ Public/private cluster split via git submodule.
 
 ### Added
 
-- RA-28 brief: post-programme ponytail-debt ledger and ponytail-audit re-run.
 - `clusters-private/` git submodule pointing to `incendiary/grimoire-private`
 - `scripts/init-private-submodule.sh` — skeleton generator for colleagues to create
   their own private submodule with the correct structure
@@ -481,7 +472,6 @@ Multi-platform delivery: VS Code prompt files + MCP server.
 
 ### Added
 
-- RA-28 brief: post-programme ponytail-debt ledger and ponytail-audit re-run.
 - `mcp-server/` — TypeScript MCP server exposing action skills as callable tools.
   Uses `@modelcontextprotocol/sdk`, stdio transport, reads `registry.json` at startup.
 - `mcp-server/registry.json` — declares 16 action skills (3 from 01-meta, 13 from 07-devops).
@@ -506,7 +496,6 @@ Final Cat 5 delivery: c2-preflight.sh.
 
 ### Added
 
-- RA-28 brief: post-programme ponytail-debt ledger and ponytail-audit re-run.
 - `08-offsec/c2-integration-checklist`: `c2-preflight.sh` script
 
 ---
@@ -515,7 +504,6 @@ Final Cat 5 delivery: c2-preflight.sh.
 
 ### Added
 
-- RA-28 brief: post-programme ponytail-debt ledger and ponytail-audit re-run.
 - `07-devops/npm-lockfile-integrity` — content-hash dependency verification skill
 
 ---
@@ -524,7 +512,6 @@ Final Cat 5 delivery: c2-preflight.sh.
 
 ### Added
 
-- RA-28 brief: post-programme ponytail-debt ledger and ponytail-audit re-run.
 - `07-devops/npm-provenance-attestation` — Sigstore build transparency verification skill
 
 ---
@@ -533,7 +520,6 @@ Final Cat 5 delivery: c2-preflight.sh.
 
 ### Added
 
-- RA-28 brief: post-programme ponytail-debt ledger and ponytail-audit re-run.
 - `07-devops/python-lockfile-integrity` — content-hash enforcement for
   pip, poetry, pipenv, and uv lockfiles
 
@@ -543,7 +529,6 @@ Final Cat 5 delivery: c2-preflight.sh.
 
 ### Added
 
-- RA-28 brief: post-programme ponytail-debt ledger and ponytail-audit re-run.
 - `01-meta/karpathy-spec` — spec generation skill
 - `01-meta/karpathy-verify` — implementation verification skill
 - `01-meta/karpathy-environment` — environment/context gathering skill
@@ -557,7 +542,6 @@ Offsec scripts, ODPC C1–C5, devops utilities. Roadmap sync across 30 READMEs.
 
 ### Added
 
-- RA-28 brief: post-programme ponytail-debt ledger and ponytail-audit re-run.
 - `08-offsec/shellcode-dev-conventions`: `null-byte-audit.sh`, `size-report.sh`
 - `08-offsec/api-hashing-conventions`: `hash-api.py`, `collision-check.py`
 - `08-offsec/bof-dev-conventions`: BOF build and validate scripts
@@ -579,7 +563,6 @@ Offsec scripts, ODPC C1–C5, devops utilities. Roadmap sync across 30 READMEs.
 
 ### Added
 
-- RA-28 brief: post-programme ponytail-debt ledger and ponytail-audit re-run.
 - `05-technical/test-bootstrap` skill
 
 ---
@@ -588,7 +571,6 @@ Offsec scripts, ODPC C1–C5, devops utilities. Roadmap sync across 30 READMEs.
 
 ### Added
 
-- RA-28 brief: post-programme ponytail-debt ledger and ponytail-audit re-run.
 - `06-study/yt-curator` skill
 
 ---
@@ -613,7 +595,6 @@ Offsec scripts, ODPC C1–C5, devops utilities. Roadmap sync across 30 READMEs.
 
 ### Added
 
-- RA-28 brief: post-programme ponytail-debt ledger and ponytail-audit re-run.
 - `01-meta/task-decomposer` skill
 - `01-meta/task-handoff` skill
 
@@ -623,7 +604,6 @@ Offsec scripts, ODPC C1–C5, devops utilities. Roadmap sync across 30 READMEs.
 
 ### Added
 
-- RA-28 brief: post-programme ponytail-debt ledger and ponytail-audit re-run.
 - Cat 5 D1: meta utility scripts
 
 ---
@@ -632,7 +612,6 @@ Offsec scripts, ODPC C1–C5, devops utilities. Roadmap sync across 30 READMEs.
 
 ### Added
 
-- RA-28 brief: post-programme ponytail-debt ledger and ponytail-audit re-run.
 - Cat 5 D2: incident and risk templates
 
 ---
@@ -641,7 +620,6 @@ Offsec scripts, ODPC C1–C5, devops utilities. Roadmap sync across 30 READMEs.
 
 ### Added
 
-- RA-28 brief: post-programme ponytail-debt ledger and ponytail-audit re-run.
 - Cat 5 D3: iOS signing scripts
 
 ---
@@ -650,7 +628,6 @@ Offsec scripts, ODPC C1–C5, devops utilities. Roadmap sync across 30 READMEs.
 
 ### Added
 
-- RA-28 brief: post-programme ponytail-debt ledger and ponytail-audit re-run.
 - Cat 5 D4: `source-material-triage` file-classifier
 
 ---
@@ -659,7 +636,6 @@ Offsec scripts, ODPC C1–C5, devops utilities. Roadmap sync across 30 READMEs.
 
 ### Added
 
-- RA-28 brief: post-programme ponytail-debt ledger and ponytail-audit re-run.
 - `07-devops/readme-version-pin` skill
 
 ---
@@ -668,7 +644,6 @@ Offsec scripts, ODPC C1–C5, devops utilities. Roadmap sync across 30 READMEs.
 
 ### Added
 
-- RA-28 brief: post-programme ponytail-debt ledger and ponytail-audit re-run.
 - `07-devops/docker-ghcr-publish` skill
 
 ---
@@ -677,7 +652,6 @@ Offsec scripts, ODPC C1–C5, devops utilities. Roadmap sync across 30 READMEs.
 
 ### Added
 
-- RA-28 brief: post-programme ponytail-debt ledger and ponytail-audit re-run.
 - Cat 5 D5: devops remaining scripts and config templates
 
 ### Changed
@@ -690,7 +664,6 @@ Offsec scripts, ODPC C1–C5, devops utilities. Roadmap sync across 30 READMEs.
 
 ### Added
 
-- RA-28 brief: post-programme ponytail-debt ledger and ponytail-audit re-run.
 - `09-odpc` cluster — White Knight Labs ODPC chapter-mapped skills (7 skills:
   odpc-lab-setup, pe-resource-shellcode, syscall-techniques, call-stack-spoofing,
   dotnet-offensive, etw-evasion, caro-kann-injection)
@@ -708,7 +681,6 @@ Repo migrated from `loadout` to `grimoire`; employer references removed from wor
 
 ### Added
 
-- RA-28 brief: post-programme ponytail-debt ledger and ponytail-audit re-run.
 - `07-devops/repo-compass` — new skill: session-start orientation combining GitHub platform
   state with README roadmap cross-check; prevents "all clean" false reports
 - `07-devops/repo-publication-prep`: `find-large-files.sh`, `audit_history.sh`, `detect-language.sh`;
@@ -742,7 +714,6 @@ as pre-release history.
 
 ### Added
 
-- RA-28 brief: post-programme ponytail-debt ledger and ponytail-audit re-run.
 - `VERSION` file (semver baseline)
 - `CHANGELOG.md` (this file)
 - `.github/workflows/validate.yml` — shellcheck on all `.sh` files + skill structure
