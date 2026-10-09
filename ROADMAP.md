@@ -52,7 +52,7 @@ Tick the first column when a task's brief reaches `> Status: done`.
 | [ ] | RA-10 | `deps-integrity` = npm/python lockfile + provenance | sonnet | opus | 3 | [ra-10](docs/tasks/discoverability/ra-10-deps-integrity.md) |
 | [ ] | RA-11 | `tf-guardrails` = three terraform skills | haiku | sonnet | 3 | [ra-11](docs/tasks/discoverability/ra-11-tf-guardrails.md) |
 | [ ] | RA-12 | `ci-standards` = `devops-practices` + updater | sonnet | opus | 3 | [ra-12](docs/tasks/discoverability/ra-12-ci-standards.md) |
-| [ ] | RA-13 | `roadmap-driver` → `roadmap`; delete `grimoire-roadmap-status` | haiku | sonnet | 3 | [ra-13](docs/tasks/discoverability/ra-13-roadmap.md) |
+| [x] | RA-13 | Consolidate the two roadmap skills into `roadmap`; delete the status skill | haiku | sonnet | 3 | [ra-13](docs/tasks/discoverability/ra-13-roadmap.md) |
 | [ ] | RA-14 | `repo-compass` → `orient`, absorbing the push check | haiku | sonnet | 3 | [ra-14](docs/tasks/discoverability/ra-14-orient.md) |
 | [ ] | RA-15 | Pathway-prefix rename (32 skills), install-side clean-up | sonnet + opus review | opus | 4 | [ra-15](docs/tasks/discoverability/ra-15-rename.md) |
 | [ ] | RA-16 | Pathway tables in `orient`, `plan`, `release`, `publish` | haiku | sonnet | 5 | [ra-16](docs/tasks/discoverability/ra-16-pathway-entries.md) |

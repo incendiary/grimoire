@@ -81,18 +81,13 @@
             "description": "Verify README version references match VERSION file"
         },
         {
-            "name": "grimoire-roadmap-status",
-            "skill": "clusters/01-meta/grimoire-roadmap-status/SKILL.md",
-            "description": "Query roadmap totals, open clusters, and infrastructure status"
-        },
-        {
             "name": "skill-keyword-lookup",
             "skill": "clusters/01-meta/skill-keyword-lookup/SKILL.md",
             "description": "Find relevant skills by keyword intent and rank likely matches"
         },
         {
-            "name": "roadmap-driver",
-            "skill": "clusters/01-meta/roadmap-driver/SKILL.md",
+            "name": "roadmap",
+            "skill": "clusters/01-meta/roadmap/SKILL.md",
             "description": "Select next implementation-ready roadmap task and execution chain"
         },
         {

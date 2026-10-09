@@ -47,6 +47,8 @@ workflow.
 
 ### Changed
 
+- roadmap-driver renamed to roadmap; grimoire-roadmap-status removed (use scripts/roadmap-collect.sh).
+
 - `CLAUDE.md`: "Delivery loop" no longer includes manual `VERSION` bump or
   `git tag`/`gh release create` steps; added a "Releases" section documenting the new
   flow. Removed the now-obsolete "VERSION conflict resolution (squash merges)" section

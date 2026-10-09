@@ -64,19 +64,13 @@ characteristics—verifiability and blast radius—not just capability. Prevents
 overspending.
 → [Full documentation](model-selection-framework/README.md)
 
-### [roadmap-driver](roadmap-driver/) ✅ complete
+### [roadmap](roadmap/) ✅ complete
 
-Selects the next implementation-ready roadmap item from `ROADMAP.md` and outputs a
-focused execution chain. Designed for "what should I work on next?" and "pick up from
-the roadmap" prompts. Chains: `repo-compass` → `task-decomposer` → `karpathy-framework`
-→ `karpathy-verify`.
-→ [Full documentation](roadmap-driver/README.md)
-
-### [grimoire-roadmap-status](grimoire-roadmap-status/) ✅ complete
-
-MCP-friendly roadmap query utility for `ROADMAP.md`. Returns open/complete totals,
-top clusters by outstanding items, and unresolved infrastructure actions.
-→ [Full documentation](grimoire-roadmap-status/README.md)
+Shows roadmap status from `ROADMAP.md` and picks the next implementation-ready item, then
+outputs a focused execution chain. Designed for "what should I work on next?", "show roadmap
+status" and "pick up from the roadmap" prompts. Chains: `repo-compass` → `task-decomposer` →
+`karpathy-framework` → `karpathy-verify`.
+→ [Full documentation](roadmap/README.md)
 
 ### [skill-keyword-lookup](skill-keyword-lookup/) ✅ complete
 
@@ -190,7 +184,7 @@ skill-keyword-lookup      → rank likely matching skills from keywords
 **Trigger:** "Review the roadmap" / "Split the next task for subagents" / "Move README roadmap items into a dedicated file"
 
 ```
-roadmap-driver            → select the next implementation-ready roadmap item
+roadmap                   → select the next implementation-ready roadmap item
         ↓
 task-decomposer           → break that item into self-contained chunks with clear done criteria
         ↓
@@ -202,7 +196,7 @@ roadmap-sync              → move completed README roadmap items into ROADMAP.m
 ```
 
 Use this when you want a roadmap item turned into lesser-agent-friendly work
-packages. `roadmap-driver` chooses the item, `task-decomposer` writes the chunk files,
+packages. `roadmap` chooses the item, `task-decomposer` writes the chunk files,
 and `roadmap-sync` keeps the README roadmap from becoming the long-term source of truth.
 
 ---

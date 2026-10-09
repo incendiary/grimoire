@@ -1,6 +1,6 @@
 ---
 name: project-delivery-workflow
-description: "Delivers a GitHub project end to end from a cold checkout, building the roadmap from its READMEs, working each item as a PR, keeping READMEs and versions in sync, and cutting a major release at the end. Use when handed a repo to work through, asked to complete outstanding roadmap items, or starting a structured delivery session. To pick a single next item use roadmap-driver."
+description: "Delivers a GitHub project end to end from a cold checkout, building the roadmap from its READMEs, working each item as a PR, keeping READMEs and versions in sync, and cutting a major release at the end. Use when handed a repo to work through, asked to complete outstanding roadmap items, or starting a structured delivery session. To pick a single next item use roadmap."
 ---
 # project-delivery-workflow
 

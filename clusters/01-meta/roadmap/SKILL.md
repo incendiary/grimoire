@@ -1,14 +1,16 @@
 ---
-name: roadmap-driver
-description: "Selects the next roadmap work item from ROADMAP.md and frames an execution chain for it. Use when asking 'what should I work on next?', 'pick up from roadmap', starting a new implementation batch, or recovering after an interruption. To tick items after a merge use roadmap-sync; for full repo state use repo-compass."
+name: roadmap
+description: "Shows roadmap status and picks the next implementation-ready item from ROADMAP.md or README roadmaps, then frames the execution chain (state, decompose, plan, verify). Use when asked 'what should I work on next', 'show roadmap status', 'what is still open', or 'pick up from the roadmap'. To tick items after a merge use roadmap-sync."
 ---
-# roadmap-driver
+# roadmap
 
 > **Status:** COMPLETE
 > **Cluster:** 01-meta
 > **Type:** action
 
 ## Description
+**Status only:** run `bash scripts/roadmap-collect.sh` (add `--json` for machine-readable output) and summarise the counts.
+
 Selects the next roadmap work item and frames an execution chain automatically.
 Designed for prompts like "what should I work on next?" and "pick up from roadmap".
 
@@ -51,7 +53,7 @@ if [[ ! -f "${ROADMAP}" ]]; then
   exit 1
 fi
 
-echo "=== roadmap-driver ==="
+echo "=== roadmap ==="
 
 # 1) Prefer infrastructure roadmap open items
 infra_choice=$(awk '
