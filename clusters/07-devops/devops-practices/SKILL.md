@@ -1,3 +1,7 @@
+---
+name: devops-practices
+description: "Applies and audits a standard set of devops practices on a repo covering versioning, PR discipline, testing, clone ref pinning, roadmap sync and formatting, with portable check scripts. Use when setting up a new repo, onboarding a project to my standards, running a pre-release audit, or a periodic health check. To add a new practice to this standard use devops-practices-updater."
+---
 # devops-practices
 
 > **Status:** COMPLETE

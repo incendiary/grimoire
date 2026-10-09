@@ -1,3 +1,7 @@
+---
+name: codebase-holistic-review
+description: "Run a structured predictive review of an entire codebase to find risks that will emerge as it grows, writing findings to REVIEW.md or the README. Use when asked to 'review this codebase holistically', 'what issues should I expect', 'predict where this will break', 'do a full code audit', or 'what should I fix before scaling this up'. For UI/UX quality use ui-ux-product-audit."
+---
 # codebase-holistic-review
 
 > **Status:** COMPLETE

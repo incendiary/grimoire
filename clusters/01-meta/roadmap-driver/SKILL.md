@@ -1,3 +1,7 @@
+---
+name: roadmap-driver
+description: "Selects the next roadmap work item from ROADMAP.md and frames an execution chain for it. Use when asking 'what should I work on next?', 'pick up from roadmap', starting a new implementation batch, or recovering after an interruption. To tick items after a merge use roadmap-sync; for full repo state use repo-compass."
+---
 # roadmap-driver
 
 > **Status:** COMPLETE

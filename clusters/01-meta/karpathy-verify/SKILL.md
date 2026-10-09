@@ -1,3 +1,7 @@
+---
+name: karpathy-verify
+description: "Layer 2 of the Karpathy framework. Evaluates finished output against precise criteria by routing it through a second opinion and checking claims against external signal. Use when output exists and needs a quality check, factual claims can be tested, or before shipping, publishing, submitting, or deploying anything. Use after output exists; to define criteria first use karpathy-spec."
+---
 # karpathy-verify
 
 > **Status:** COMPLETE

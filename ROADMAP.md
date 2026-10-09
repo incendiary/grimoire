@@ -6,7 +6,7 @@
 > run `bash scripts/roadmap-collect.sh` (or `--json` for machine-readable output) and
 > `bash clusters/07-devops/devops-practices/check-roadmap-sync.sh . --fix`.
 
-**Last updated:** 2026-10-08
+**Last updated:** 2026-10-09
 **Open items:** 9 | **Completed:** 213
 
 ---
@@ -41,7 +41,7 @@ Tick the first column when a task's brief reaches `> Status: done`.
 | | ID | Task | Model | Fallback | Wave | Brief |
 |---|---|---|---|---|---|---|
 | [x] | RA-01 | Frontmatter checker script | haiku | sonnet | 1 | [ra-01](docs/tasks/discoverability/ra-01-frontmatter-check.md) |
-| [ ] | RA-02 | Frontmatter descriptions on every skill (4 parallel scopes) | haiku ×4 | sonnet | 2 | [ra-02](docs/tasks/discoverability/ra-02-frontmatter-descriptions.md) |
+| [x] | RA-02 | Frontmatter descriptions on every skill (4 parallel scopes) | haiku ×4 | sonnet | 2 | [ra-02](docs/tasks/discoverability/ra-02-frontmatter-descriptions.md) |
 | [ ] | RA-03 | Single-source descriptions for prompts and MCP; frontmatter CI check | sonnet | opus | 3 | [ra-03](docs/tasks/discoverability/ra-03-single-source-descriptions.md) |
 | [ ] | RA-04 | Generate `SKILLS.md`, retire hand-kept README index | haiku | sonnet | 3 | [ra-04](docs/tasks/discoverability/ra-04-skills-catalogue.md) |
 | [x] | RA-05 | Discoverability spot-check list (owner checkpoint) | sonnet | opus | 1 | [ra-05](docs/tasks/discoverability/ra-05-discoverability-test.md) |
@@ -59,7 +59,7 @@ Tick the first column when a task's brief reaches `> Status: done`.
 | [ ] | RA-17 | Delete `PROJECT-WORKFLOWS.md`, short README table | haiku | sonnet | 6 | [ra-17](docs/tasks/discoverability/ra-17-workflows-doc.md) |
 | [ ] | RA-18 | Report old names outside the repo (read-only; owner approves edits) | haiku | sonnet | 5 | [ra-18](docs/tasks/discoverability/ra-18-cross-repo-report.md) |
 | [ ] | RA-19 | `npm audit fix` in `mcp-server` | haiku | sonnet | 1 | [ra-19](docs/tasks/discoverability/ra-19-npm-audit-dependabot.md) |
-| [ ] | RA-20 | Align TruffleHog, SHA-pin actions | haiku | sonnet | 1 | [ra-20](docs/tasks/discoverability/ra-20-pin-versions.md) |
+| [x] | RA-20 | Align TruffleHog, SHA-pin actions | haiku | sonnet | 1 | [ra-20](docs/tasks/discoverability/ra-20-pin-versions.md) |
 | [x] | RA-22 | Delete unschedulable validation items | haiku | sonnet | 1 | [ra-22](docs/tasks/discoverability/ra-22-delete-validation-items.md) |
 | [ ] | RA-23 | Evidence-based prune report (owner decides) | sonnet | owner | later | [ra-23](docs/tasks/discoverability/ra-23-usage-prune.md) |
 | [x] | RA-24 | Remove per-skill Installation boilerplate and its CI job | haiku | sonnet | 1 | [ra-24](docs/tasks/discoverability/ra-24-readme-install-boilerplate.md) |

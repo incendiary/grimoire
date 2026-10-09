@@ -1,3 +1,7 @@
+---
+name: ios-signing-risk
+description: "Analyse iOS signing risk scenarios, covering IPA integrity, Apple developer certificate validity, OTA manifest verification, revocation timing, and redeployment sequencing. Use when discussing 'signing risk', 'IPA integrity', 'OTA manifest', 'certificate revocation', 're-sign and redeploy', or whether an app was signed before a revocation."
+---
 # ios-signing-risk
 
 > **Status:** COMPLETE

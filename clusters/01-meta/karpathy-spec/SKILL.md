@@ -1,3 +1,7 @@
+---
+name: karpathy-spec
+description: "Layer 1 of the Karpathy framework. Turns a vague request into a precise spec with clear goals, verifiable chunks, and success criteria before work begins. Use when starting any new task, a request feels vague or large, you are unsure what done looks like, or similar work previously drifted. Use before work starts; to evaluate finished output use karpathy-verify."
+---
 # karpathy-spec
 
 > **Status:** COMPLETE

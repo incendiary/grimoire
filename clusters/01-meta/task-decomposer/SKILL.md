@@ -1,3 +1,7 @@
+---
+name: task-decomposer
+description: "Splits a large task into self-contained task files, each with objective, background, files to read, constraints, and success criteria, so a fresh session can run each chunk cold. Use when starting work that spans several sessions, or when handing a multi-step plan to an agent. Use before work starts; if context is already full use task-handoff."
+---
 # task-decomposer
 
 > **Status:** COMPLETE

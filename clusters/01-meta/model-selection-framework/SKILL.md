@@ -1,3 +1,7 @@
+---
+name: model-selection-framework
+description: "Selects the right model tier (Haiku, Sonnet, or Opus) for a task using cost-benefit analysis rather than capability alone. Use when asking 'which model should I use for this task?', 'should I use Haiku or Opus?', 'is this task safe for a weak model?', or before delegating work to an agent."
+---
 # model-selection-framework
 
 > **Status:** COMPLETE

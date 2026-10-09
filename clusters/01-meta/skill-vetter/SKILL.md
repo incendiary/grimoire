@@ -1,3 +1,7 @@
+---
+name: skill-vetter
+description: "Runs a due diligence checklist before installing any third-party Claude Code skill and returns a verdict. Use when asked to 'install this skill', 'add this skill', given a GitHub URL to a skill repo, or shown a SKILL.md from an external source. To create skills from your own sessions use session-skill-extractor."
+---
 # skill-vetter
 
 > **Status:** COMPLETE

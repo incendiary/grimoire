@@ -1,3 +1,7 @@
+---
+name: incident-ask-builder
+description: "Produce a precise 'what we need from whom' checklist for a security incident, with named owners, urgency tier, format requirements, and retention risk flags. Use when asked 'what do we need to ask', 'who do I need to contact', or to coordinate evidence collection for an incident. To write up collected evidence use incident-appendix."
+---
 # incident-ask-builder
 
 > **Status:** COMPLETE

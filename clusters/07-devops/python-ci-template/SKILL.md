@@ -1,3 +1,7 @@
+---
+name: python-ci-template
+description: "Generates a standard Python GitHub Actions workflow with ruff and black linting, pytest with coverage, and gitleaks secret scanning, plus variants for requirements-only and no-test repos. Use when adding CI to a Python repo, creating a GitHub Actions workflow for a Python project, or when asked to 'set up Python CI'. Jython projects skip ruff and black and keep only the secret scan."
+---
 # python-ci-template
 
 > **Status:** COMPLETE

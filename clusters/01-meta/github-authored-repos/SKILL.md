@@ -1,3 +1,7 @@
+---
+name: github-authored-repos
+description: "Keeps multi-repo work to the authored repo list and excludes forks and reference clones. Use when a session spans several repos, for example 'portfolio audit', 'secret scanning sweep', 'bulk CI setup', or 'README generation across repos'."
+---
 # github-authored-repos
 
 > **Status:** promoted

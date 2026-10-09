@@ -1,3 +1,7 @@
+---
+name: risk-to-action
+description: "Convert an abstract risk statement from a register, audit, pen test or threat model into a structured action plan with owners, timelines, decision points and dependencies. Use when asked to 'turn this risk into actions', 'what do we actually do about this', 'action plan for this finding', or 'how do we remediate this'. For live incident evidence requests use incident-ask-builder."
+---
 # risk-to-action
 
 > **Status:** COMPLETE

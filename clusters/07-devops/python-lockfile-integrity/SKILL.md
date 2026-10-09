@@ -1,3 +1,7 @@
+---
+name: python-lockfile-integrity
+description: "Enforces sha256 content-hash verification for Python dependencies across pip-tools, poetry, pipenv and uv, and flags bare pip installs and lockfile drift in CI. Use when setting up a Python project's CI pipeline, auditing a project for supply chain hygiene, or reviewing a dependency change after a suspicious package alert. For Node lockfiles use npm-lockfile-integrity."
+---
 # python-lockfile-integrity
 
 > **Status:** COMPLETE

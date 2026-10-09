@@ -1,3 +1,7 @@
+---
+name: grimoire-roadmap-status
+description: "Shows the state of this repo's ROADMAP.md as open and complete counts, top clusters by outstanding items, and infrastructure progress. Use when asked 'what should I work on next?', 'show roadmap status', 'what is still open?', or before picking the next implementation batch. Only for this grimoire repo's ROADMAP.md; to choose the next item use roadmap-driver."
+---
 # grimoire-roadmap-status
 
 > **Status:** COMPLETE

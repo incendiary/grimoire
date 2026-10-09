@@ -1,3 +1,7 @@
+---
+name: karpathy-framework
+description: "Entry point for the Karpathy three-layer framework, routing to the right layer for where you are in a task. Use when unsure which Karpathy layer to use, starting a session and wanting the framework applied, or onboarding someone to the approach. Entry point when unsure; routes to karpathy-spec, karpathy-verify, or karpathy-environment."
+---
 # karpathy-framework
 
 > **Status:** COMPLETE

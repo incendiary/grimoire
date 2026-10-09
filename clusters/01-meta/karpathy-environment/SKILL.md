@@ -1,3 +1,7 @@
+---
+name: karpathy-environment
+description: "Layer 3 of the Karpathy framework. Builds a durable workspace for Claude across sessions, with a session CLAUDE.md, a knowledge base, a custom skills roadmap, and guardrails. Use when setting up a new project, sessions feel repetitive or ad hoc, after 3 to 5 tasks to capture patterns as skills, or to keep Claude consistent without re-explaining context. For per-task specs use karpathy-spec."
+---
 # karpathy-environment
 
 > **Status:** COMPLETE

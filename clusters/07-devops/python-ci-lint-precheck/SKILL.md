@@ -1,3 +1,7 @@
+---
+name: python-ci-lint-precheck
+description: "Runs ruff and pylint locally before committing to catch CI lint failures, and adds scoped pylint disable comments for pytest fixtures and crypto-style functions. Use when a Python project uses pylint in CI or has pytest tests, or when asked to 'set up lint' or 'CI kept failing on pylint'. Only for repos using pylint; for Black/Ruff only use python-lint-gate."
+---
 # python-ci-lint-precheck
 
 > **Status:** COMPLETE

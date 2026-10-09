@@ -1,3 +1,7 @@
+---
+name: docker-ghcr-publish
+description: "Builds, tests and pushes Docker images to GitHub Container Registry, tagged to the current release version with an optional GPU variant, and updates the README Docker section. Use when cutting a release that needs a container image, or when asked to 'publish to GHCR', 'build and push the Docker image', or 'add Docker deployment instructions'. Part of releasing; start with github-release-workflow."
+---
 # docker-ghcr-publish
 
 > **Status:** COMPLETE
