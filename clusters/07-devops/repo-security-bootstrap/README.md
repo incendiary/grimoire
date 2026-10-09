@@ -7,27 +7,6 @@ Extracted from a session where the same two files were committed to 16 repos ide
 
 ---
 
-## Installation
-
-### Claude Code
-
-```bash
-cp -r clusters/07-devops/repo-security-bootstrap ~/.claude/skills/
-```
-
-### VS Code (prompt file)
-
-After running `bash build.sh`, reference in Copilot Chat:
-```
-#repo-security-bootstrap
-```
-
-### MCP client
-
-Register the grimoire MCP server — this skill is exposed as tool `repo_security_bootstrap`.
-
-> **Note:** This is an `action` type skill — available as MCP tool, prompt file, and Claude Code.
-
 ## Roadmap
 
 - [x] Extracted from PycharmProjects session (16x repetition)
@@ -35,6 +14,4 @@ Register the grimoire MCP server — this skill is exposed as tool `repo_securit
 - [x] Add `bootstrap-security.sh` script (handles unarchive/re-archive automatically)
 - [x] Add `gitleaks-config-template.toml` with parameterised corporate-refs placeholders
 - [x] Handle archived-repo unarchive/re-archive in the script
-- [ ] Test on one repo end-to-end (requires real session)
-- [ ] Document any new gotchas from real usage (requires real session)
 - [x] Ship: copy to `~/.claude/skills/repo-security-bootstrap/`

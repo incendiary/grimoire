@@ -21,27 +21,6 @@ Automates daily repo hygiene across portfolio: identifies dependabot PRs safe fo
 
 ---
 
-## Installation
-
-### Claude Code
-
-```bash
-cp -r clusters/07-devops/github-morning-run ~/.claude/skills/
-```
-
-### VS Code (prompt file)
-
-After running `bash build.sh`, reference in Copilot Chat:
-```
-#github-morning-run
-```
-
-### VS Code / MCP client (action skill)
-
-Available as a tool via MCP after running `bash install-vscode.sh`. Callable automatically when relevant.
-
----
-
 ## Invocation
 
 **Explicit:**

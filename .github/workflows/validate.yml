@@ -44,6 +44,19 @@ jobs:
             exit 1
           fi
           echo "All skill directories have SKILL.md and README.md"
+      - name: No stale path references
+        run: |
+          set -e
+          failed=0
+          for readme in clusters/*/*/README.md; do
+            [ -f "$readme" ] || continue
+            if grep -q '/path/to/grimoire\|loadout/' "$readme"; then
+              echo "ERROR: stale path reference in $readme"
+              failed=1
+            fi
+          done
+          if [ "$failed" -eq 1 ]; then exit 1; fi
+          echo "No stale paths found"
 
   registry-sync:
     name: Registry sync
@@ -78,69 +91,3 @@ jobs:
           if [ "$failed" -eq 1 ]; then exit 1; fi
           echo "All registry entries are valid"
 
-  readme-quality:
-    name: README quality
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-      - name: Migrated clusters must have multi-platform install
-        run: |
-          set -e
-          failed=0
-          # All public clusters are now standardised
-          for readme in clusters/*/*/README.md; do
-            [ -f "$readme" ] || continue
-            if ! grep -q '## Installation' "$readme"; then
-              echo "ERROR: missing ## Installation in $readme"
-              failed=1
-            fi
-            platforms=0
-            if grep -q 'claude/skills' "$readme"; then platforms=$((platforms+1)); fi
-            if grep -q '#<\|#skill-name\|prompt\|Copilot Chat' "$readme"; then platforms=$((platforms+1)); fi
-            if grep -q 'MCP\|mcp' "$readme"; then platforms=$((platforms+1)); fi
-            if [ "$platforms" -lt 2 ]; then
-              echo "ERROR: $readme has fewer than 2 platform targets ($platforms found)"
-              failed=1
-            fi
-          done
-          if [ "$failed" -eq 1 ]; then
-            echo ""
-            echo "See docs/skill-readme-template.md for the expected format."
-            exit 1
-          fi
-          echo "All migrated cluster READMEs have multi-platform installation"
-      - name: No stale path references
-        run: |
-          set -e
-          failed=0
-          for readme in clusters/*/*/README.md; do
-            [ -f "$readme" ] || continue
-            if grep -q '/path/to/grimoire\|loadout/' "$readme"; then
-              echo "ERROR: stale path reference in $readme"
-              failed=1
-            fi
-          done
-          if [ "$failed" -eq 1 ]; then exit 1; fi
-          echo "No stale paths found"
-
-  version-tag-sync:
-    name: Version-tag drift check
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    steps:
-      - uses: actions/checkout@v7
-        with:
-          fetch-depth: 0
-      - name: Check VERSION matches latest tag
-        run: |
-          VERSION=$(tr -d '[:space:]' < VERSION)
-          LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "none")
-          EXPECTED_TAG="v${VERSION}"
-
-          if [ "$LATEST_TAG" = "none" ]; then
-            echo "::warning::No git tags found — VERSION is $VERSION but no tags exist"
-          elif [ "$LATEST_TAG" != "$EXPECTED_TAG" ]; then
-            echo "::warning::VERSION file ($VERSION) does not match latest tag ($LATEST_TAG). Did you forget to tag, or forget to bump VERSION?"
-          else
-            echo "✓ VERSION ($VERSION) matches latest tag ($LATEST_TAG)"
-          fi

@@ -1,6 +1,6 @@
 # Task RA-24: Remove per-skill Installation boilerplate and the CI job enforcing it
 
-> Status: pending
+> Status: done
 > Parent: discoverability and consolidation programme
 > Model: haiku
 > Fallback: sonnet

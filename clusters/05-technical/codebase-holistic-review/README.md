@@ -29,27 +29,6 @@ for a lesser-capable agent to execute items independently.
 
 ---
 
-## Installation
-
-### Claude Code
-
-```bash
-cp -r clusters/05-technical/codebase-holistic-review ~/.claude/skills/
-```
-
-### VS Code (prompt file)
-
-After running `bash build.sh`, reference in Copilot Chat:
-```
-#codebase-holistic-review
-```
-
-### VS Code / MCP
-
-This is an `instructional` skill — loaded as prompt context, not an MCP action tool.
-
----
-
 ## Invocation
 
 **Explicit:**
@@ -119,5 +98,4 @@ who has never seen the repo.
 - [x] README.md written
 - [ ] Add worked example: Python web service holistic review (before/after findings)
 - [ ] Add worked example: Node.js monorepo review
-- [ ] Test on 3 real repos and capture recurring finding patterns
 - [x] Add language-specific risk pattern tables (Python, TypeScript, C#, Go)

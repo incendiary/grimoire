@@ -1,6 +1,6 @@
 # Task RA-05: Discoverability spot-check list
 
-> Status: pending
+> Status: done
 > Parent: discoverability and consolidation programme
 > Model: sonnet
 > Fallback: opus

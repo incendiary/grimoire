@@ -33,30 +33,6 @@ Load this skill at the start of any Python session where:
 
 ---
 
-## Installation
-
-### Claude Code
-
-```bash
-cp -r clusters/07-devops/python-ci-lint-precheck ~/.claude/skills/
-```
-
-### VS Code (prompt file)
-
-After running `bash build.sh`, reference in Copilot Chat:
-```
-#python-ci-lint-precheck
-```
-
-### MCP client
-
-Register the grimoire MCP server — this skill is exposed as tool `python_ci_lint_precheck`.
-
-> **Note:** This is an `action` type skill — available as MCP tool, prompt file, and Claude Code.
-
-
----
-
 ## How to invoke it in a session
 
 ```
@@ -72,5 +48,4 @@ Functions to watch: decrypt_payload, parse_zone_file
 - [x] SKILL.md written and validated
 - [x] Add `.pylintrc` template with standard settings
 - [x] Add ruff + pylint pre-commit hook snippet (via .pre-commit-config.yaml in format-before-commit)
-- [ ] Test on Slice-N-Dice and DNSResolver
 - [x] Ship: copy to `~/.claude/skills/python-ci-lint-precheck/`

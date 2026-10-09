@@ -28,28 +28,6 @@ Pairs with `executive-translate` to produce the executive-facing version of the 
 
 ---
 
-## Installation
-
-### Claude Code
-
-```bash
-cp -r clusters/03-incident/risk-to-action ~/.claude/skills/
-```
-
-### VS Code (prompt file)
-
-After running `bash build.sh`, reference in Copilot Chat:
-```
-#risk-to-action
-```
-
-> **Note:** This is an `instructional` type skill — prompt file and Claude Code only.
-> Not exposed as an MCP tool.
-
-
-
----
-
 ## How to invoke it in a session
 
 ```
@@ -118,5 +96,4 @@ Output: action plan table + decision log
 - [x] Write `risk-action-template.md` for reuse
 - [x] Add example governance tiers (who signs off at what risk level)
 - [x] Add pen test finding format examples
-- [ ] Test on 3 real risk items
 - [x] Ship: copy to `~/.claude/skills/risk-to-action/`

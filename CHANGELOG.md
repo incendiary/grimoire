@@ -20,6 +20,8 @@ workflow.
 ### Added
 
 - RA-28 brief: post-programme ponytail-debt ledger and ponytail-audit re-run.
+- `scripts/check-frontmatter.sh`: validates SKILL.md frontmatter.
+- `docs/discoverability-intents.md`: manual routing spot-check.
 - `REVIEW.md` and `docs/tasks/discoverability/`: holistic review plus 26 agent-executable
   task briefs and a runbook; tracked in `ROADMAP.md`.
 - `release-please-config.json` + `.release-please-manifest.json` — `release-type: simple`
@@ -30,11 +32,17 @@ workflow.
   the GitHub Release atomically. Authenticated via the `RELEASE_PLEASE_TOKEN` repo
   secret (fine-grained PAT), not the default `GITHUB_TOKEN`, so the release PR still
   triggers `pull_request`-scoped CI under branch protection.
+- `scripts/usage-report.py`: skill usage from Claude Code transcripts and MCP logs.
 
 ### Removed
 
+- "Test on real X" validation items from skill roadmaps (40 items).
 - `.github/workflows/release-on-tag.yml` — superseded by `release-please-action`, which
   now owns tag + release creation directly.
+- test-before-asking, mid-task-checkin, pre-commit-aware-commits, cwd-verification, verify-code-version (duplicated Claude Code behaviour or belong in global CLAUDE.md).
+- Unused scripts: model-select.sh, scripts/roadmap-close.sh, scripts/skill-dependency-graph.sh.
+- VERSION/tag drift checks from this repo's CI (release-please keeps them in step).
+- Per-skill README Installation sections and the readme-quality CI job (installation is documented once in README.md).
 
 ### Changed
 
@@ -42,6 +50,7 @@ workflow.
   `git tag`/`gh release create` steps; added a "Releases" section documenting the new
   flow. Removed the now-obsolete "VERSION conflict resolution (squash merges)" section
   — feature branches never touch `VERSION`, so it can no longer conflict.
+- install-vscode.sh, install-jetbrains.sh and uninstall-vscode.sh share scripts/install-lib.sh.
 
 ---
 

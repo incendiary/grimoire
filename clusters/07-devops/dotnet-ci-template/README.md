@@ -7,24 +7,6 @@ Extracted from a session where the same workflow was written from scratch for 5 
 
 ---
 
-## Installation
-
-### Claude Code
-
-```bash
-cp -r clusters/07-devops/dotnet-ci-template ~/.claude/skills/
-```
-
-### VS Code (prompt file)
-
-After running `bash build.sh`, reference in Copilot Chat:
-```
-#dotnet-ci-template
-```
-
-> **Note:** This is an `instructional` type skill — prompt file and Claude Code only.
-> Not exposed as an MCP tool.
-
 ## Roadmap
 
 - [x] Extracted from archive session (5x — WindowsServiceTemplate, QueuserAPC, IncendiaryService, EarlyWorm, csharp-shellcode-runner)
@@ -33,6 +15,4 @@ After running `bash build.sh`, reference in Copilot Chat:
 - [x] Add `ci-cross-platform.yml` variant (`ubuntu-latest` for library projects)
 - [x] Add `ci-windows-only.yml` variant (`windows-latest` for WinAPI/BOF projects)
 - [x] Document net6.0 → net8.0 upgrade path in SKILL.md
-- [ ] Test on one new repo (requires real session)
-- [ ] Document any new gotchas from real usage (requires real session)
 - [x] Ship: copy to `~/.claude/skills/dotnet-ci-template/`

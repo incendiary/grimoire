@@ -24,28 +24,6 @@ scanning, publication prep) from accidentally including third-party repos.
 
 ---
 
-## Installation
-
-### Claude Code
-
-```bash
-cp -r clusters/01-meta/github-authored-repos ~/.claude/skills/
-```
-
-### VS Code (prompt file)
-
-After running `bash build.sh`, reference in Copilot Chat:
-```
-#github-authored-repos
-```
-
-### MCP client
-
-This is an `action` type skill — it's available as a callable tool via the grimoire
-MCP server after running `bash install-vscode.sh`. Invoked automatically when relevant.
-
----
-
 ## Invocation
 
 ```
@@ -63,6 +41,4 @@ Or implicitly when Claude detects a multi-repo operation is about to begin.
 - [x] Add `list-authored.sh` script
 - [x] Add fork-detection one-liner to SKILL.md examples
 - [x] Set up process to keep the authored list in sync with CLAUDE.md
-- [ ] Test on one multi-repo session (requires real session)
-- [ ] Document any new gotchas from real usage (requires real usage)
 - [x] Ship: copy to `~/.claude/skills/github-authored-repos/`

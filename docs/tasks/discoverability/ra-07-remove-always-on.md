@@ -1,6 +1,6 @@
 # Task RA-07: Delete five always-on skills that duplicate built-in or global behaviour
 
-> Status: pending
+> Status: done
 > Parent: discoverability and consolidation programme
 > Model: haiku
 > Fallback: sonnet

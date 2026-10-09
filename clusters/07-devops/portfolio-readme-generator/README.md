@@ -27,30 +27,6 @@ The authorised-use disclaimer is mandatory for all security tools — no excepti
 
 ---
 
-## Installation
-
-### Claude Code
-
-```bash
-cp -r clusters/07-devops/portfolio-readme-generator ~/.claude/skills/
-```
-
-### VS Code (prompt file)
-
-After running `bash build.sh`, reference in Copilot Chat:
-```
-#portfolio-readme-generator
-```
-
-### MCP client
-
-Register the grimoire MCP server — this skill is exposed as tool `portfolio_readme_generator`.
-
-> **Note:** This is an `action` type skill — available as MCP tool, prompt file, and Claude Code.
-
-
----
-
 ## How to invoke it in a session
 
 ```
@@ -102,14 +78,6 @@ One-sentence description of what it does and why.
 
 - Python 3.9+
 - `pip install requests` (or list key deps)
-
-## Installation
-
-```bash
-git clone -b v1.2.0 https://github.com/incendiary/tool-name.git
-cd tool-name
-pip install -r requirements.txt
-```
 
 ## Usage
 
@@ -258,5 +226,4 @@ MIT
 - [x] SKILL.md written and validated
 - [ ] Add README linter to check structure compliance post-generation
 - [x] Add per-language examples (Python CLI, C# Windows tool, C++ BOF)
-- [ ] Test on 5 repos
 - [x] Ship: copy to `~/.claude/skills/portfolio-readme-generator/`

@@ -7,24 +7,6 @@ Extracted from a session where the same workflow was written from scratch for 8 
 
 ---
 
-## Installation
-
-### Claude Code
-
-```bash
-cp -r clusters/07-devops/python-ci-template ~/.claude/skills/
-```
-
-### VS Code (prompt file)
-
-After running `bash build.sh`, reference in Copilot Chat:
-```
-#python-ci-template
-```
-
-> **Note:** This is an `instructional` type skill — prompt file and Claude Code only.
-> Not exposed as an MCP tool.
-
 ## Roadmap
 
 - [x] Extracted from archive session (8x repetition — htb-canvas, Slice-N-Dice, bgp_rogue, burps, others)
@@ -33,6 +15,4 @@ After running `bash build.sh`, reference in Copilot Chat:
 - [x] Add `ci-no-tests.yml` variant for projects without a test suite
 - [x] Add `ci-requirements-only.yml` variant for `requirements.txt`-only projects
 - [x] Document Jython exception with minimal Jython-compatible CI template
-- [ ] Test on one new repo (requires real session)
-- [ ] Document any new gotchas from real usage (requires real session)
 - [x] Ship: copy to `~/.claude/skills/python-ci-template/`

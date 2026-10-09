@@ -25,30 +25,6 @@ Any Python project that runs `black --check` or `ruff format --check` in CI.
 
 ---
 
-## Installation
-
-### Claude Code
-
-```bash
-cp -r clusters/07-devops/format-before-commit ~/.claude/skills/
-```
-
-### VS Code (prompt file)
-
-After running `bash build.sh`, reference in Copilot Chat:
-```
-#format-before-commit
-```
-
-### MCP client
-
-Register the grimoire MCP server — this skill is exposed as tool `format_before_commit`.
-
-> **Note:** This is an `action` type skill — available as MCP tool, prompt file, and Claude Code.
-
-
----
-
 ## Quick reference
 
 ```bash
@@ -69,5 +45,4 @@ git add -u && git diff --staged   # review, then commit
 - [x] SKILL.md written and validated
 - [x] Add `.pre-commit-config.yaml` snippet with current pinned versions
 - [x] Add pyproject.toml `[tool.black]` template with line-length
-- [ ] Test on 3 Python repos
 - [x] Ship: copy to `~/.claude/skills/format-before-commit/`

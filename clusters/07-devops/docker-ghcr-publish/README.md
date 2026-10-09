@@ -29,27 +29,6 @@ correctly, and updates README deployment instructions with versioned pull comman
 
 ---
 
-## Installation
-
-### Claude Code
-
-```bash
-cp -r clusters/07-devops/docker-ghcr-publish ~/.claude/skills/
-```
-
-### VS Code (prompt file)
-
-After running `bash build.sh`, reference in Copilot Chat:
-```
-#docker-ghcr-publish
-```
-
-> **Note:** This is an `instructional` type skill — prompt file and Claude Code only.
-> Not exposed as an MCP tool.
-
-
----
-
 ## Quick start
 
 ```bash
@@ -172,4 +151,3 @@ jobs:
 - [x] Ship: copy to `~/.claude/skills/docker-ghcr-publish/`
 - [x] Add `--platform linux/amd64,linux/arm64` multi-arch build support
 - [x] Add GitHub Actions workflow snippet for automated GHCR publish on tag push
-- [ ] Test on pdf2john-docker and bgp_rogue

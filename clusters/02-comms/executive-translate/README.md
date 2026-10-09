@@ -32,28 +32,6 @@ a CISO gets more technical framing than a C-suite peer.
 
 ---
 
-## Installation
-
-### Claude Code
-
-```bash
-cp -r clusters/02-comms/executive-translate ~/.claude/skills/
-```
-
-### VS Code (prompt file)
-
-After running `bash build.sh`, reference in Copilot Chat:
-```
-#executive-translate
-```
-
-> **Note:** This is an `instructional` type skill — prompt file and Claude Code only.
-> Not exposed as an MCP tool.
-
-
-
----
-
 ## How to invoke it in a session
 
 ```
@@ -220,5 +198,4 @@ not solution, single ask with cost and return stated, consequence quantified.
 - [x] SKILL.md written and validated
 - [x] Build 3 worked examples (finding → CISO brief, incident → board summary, risk → C-suite ask)
 - [x] Add worked examples for different audience tiers (CISO, C-suite, board)
-- [ ] Test on 3 real findings
 - [x] Ship: copy to `~/.claude/skills/executive-translate/`

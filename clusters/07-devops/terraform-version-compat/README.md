@@ -27,27 +27,6 @@ platform coverage.
 
 ---
 
-## Installation
-
-### Claude Code
-
-```bash
-cp -r clusters/07-devops/terraform-version-compat ~/.claude/skills/
-```
-
-### VS Code (prompt file)
-
-After running `bash build.sh`, reference in Copilot Chat:
-```
-#terraform-version-compat
-```
-
-> **Note:** This is an `instructional` type skill — prompt file and Claude Code only.
-> Not exposed as an MCP tool.
-
-
----
-
 ## Invocation
 
 This skill activates implicitly during any Terraform session where a module is being

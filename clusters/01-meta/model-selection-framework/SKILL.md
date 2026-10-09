@@ -182,7 +182,6 @@ This honesty gap itself is a quality signal worth paying for on high-risk tasks.
 
 ## Roadmap
 
-- [ ] Build interactive decision tree (`model-select.sh`) that walks an agent through the checklist
 - [ ] Add per-language examples (Python, TypeScript, Go, Rust)
 - [ ] Integrate with `task-decomposer` so agents self-select their tier when planning work
 - [ ] Gather cost data from real work to validate the framework

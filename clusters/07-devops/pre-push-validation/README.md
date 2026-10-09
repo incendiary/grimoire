@@ -62,32 +62,6 @@ Skipped: 6 (CI-only)
   local/CI drift (a newer local `shellcheck` may flag more than CI's pinned one; a stale local
   `package-lock.json` legitimately fails `npm ci`). This is faithful mirroring, not a bug.
 
-## Installation
-
-### Claude Code
-
-```bash
-bash install-all.sh            # first install
-bash install-all.sh --update   # update an existing copy (backs up the old one)
-```
-
-Then run in any repo:
-
-```bash
-bash ~/.claude/skills/pre-push-validation/pre-push-validation.sh
-```
-
-### VS Code (Copilot Chat, prompt file)
-
-After `bash build.sh`, reference it as `#pre-push-validation` in Copilot Chat, or run the
-script directly as above.
-
-### MCP (VS Code / JetBrains)
-
-Registered as the `pre-push-validation` action tool in grimoire's MCP server
-(`mcp-server/registry.json`). Build with `cd mcp-server && npm ci && npm run build`, then invoke
-the `pre-push-validation` tool from your MCP client.
-
 ## The pre-push hook (opt-in)
 
 After a successful run in an interactive terminal, the script offers to install a `pre-push`

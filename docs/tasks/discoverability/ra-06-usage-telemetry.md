@@ -1,6 +1,6 @@
 # Task RA-06: Usage report from existing transcripts and MCP logs
 
-> Status: pending
+> Status: done
 > Parent: discoverability and consolidation programme
 > Model: haiku
 > Fallback: sonnet

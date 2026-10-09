@@ -1,6 +1,6 @@
 # Task RA-01: Frontmatter validator script
 
-> Status: pending
+> Status: done
 > Parent: discoverability and consolidation programme
 > Model: haiku
 > Fallback: sonnet

@@ -35,30 +35,6 @@ Load at the start of any session where you need to know what's actually outstand
 
 ---
 
-## Installation
-
-### Claude Code
-
-```bash
-cp -r clusters/07-devops/repo-compass ~/.claude/skills/
-```
-
-### VS Code (prompt file)
-
-After running `bash build.sh`, reference in Copilot Chat:
-```
-#repo-compass
-```
-
-### MCP client
-
-Register the grimoire MCP server — this skill is exposed as tool `repo_compass`.
-
-> **Note:** This is an `action` type skill — available as MCP tool, prompt file, and Claude Code.
-
-
----
-
 ## How to invoke it in a session
 
 ```
@@ -123,5 +99,4 @@ github-release-workflow  (tag and release when done)
 - [x] SKILL.md written and validated
 - [x] README.md written
 - [x] Add `repo-compass.sh` — runs all `gh` commands in sequence and outputs the summary
-- [ ] Test on 3 repos with varying states (tidy, lagged, genuinely outstanding)
 - [x] Ship: copy to `~/.claude/skills/repo-compass/`

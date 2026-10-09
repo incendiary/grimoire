@@ -32,26 +32,7 @@ Bullet list of trigger conditions or scenarios:
 
 ---
 
-## Installation
-
-### Claude Code
-
-```bash
-cp -r clusters/<cluster>/<skill-name> ~/.claude/skills/
-```
-
-### VS Code (prompt file)
-
-After running `bash build.sh`, reference in Copilot Chat:
-```
-#<skill-name>
-```
-
-### VS Code / MCP client (action skills only)
-
-If this skill has `Type: action`, it's available as a tool via the MCP server
-after running `bash install-vscode.sh`. No manual invocation needed — the tool
-is called automatically when relevant.
+Installation is covered by the root README; do not repeat it here.
 
 ---
 
@@ -105,7 +86,5 @@ Output
 ## Notes
 
 - **Status field:** Use `complete` for shipped skills, `promoted` for stubs awaiting expansion.
-- **Installation section:** Always include all three platforms (Claude Code, prompt file, MCP). For `instructional` type skills, note that MCP is not applicable.
-- **Action vs instructional:** Only `action` type skills get an MCP subsection. Check the skill's `SKILL.md` for the `Type:` field.
 - **Invocation examples:** Should be realistic — use actual repo names or plausible scenarios.
 - **Roadmap:** Keep up to date. Tick items as they ship. Outstanding items guide future work.

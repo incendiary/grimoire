@@ -33,30 +33,6 @@ Pairs with `npm-provenance-attestation` — run both for full supply chain cover
 
 ---
 
-## Installation
-
-### Claude Code
-
-```bash
-cp -r clusters/07-devops/npm-lockfile-integrity ~/.claude/skills/
-```
-
-### VS Code (prompt file)
-
-After running `bash build.sh`, reference in Copilot Chat:
-```
-#npm-lockfile-integrity
-```
-
-### MCP client
-
-Register the grimoire MCP server — this skill is exposed as tool `npm_lockfile_integrity`.
-
-> **Note:** This is an `action` type skill — available as MCP tool, prompt file, and Claude Code.
-
-
----
-
 ## Quick reference
 
 ```bash
@@ -150,5 +126,4 @@ jobs:
 - [x] README.md written
 - [x] Write `check-lockfile-integrity.sh` — lockfile version, integrity coverage, PASS/FAIL summary
 - [x] Add GitHub Actions workflow snippet for lockfile drift gating
-- [ ] Test on 3 Node.js repos
 - [x] Ship: copy to `~/.claude/skills/npm-lockfile-integrity/`
