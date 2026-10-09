@@ -1,3 +1,7 @@
+---
+name: terraform-aws-syntax
+description: "Prevents common AWS provider Terraform syntax errors, such as block-versus-attribute confusion, for VPC, EC2, Cognito and client VPN resources. Use when writing or reviewing Terraform for AWS resources, or when terraform validate says a block or argument is not expected here. For provider version conflicts use terraform-version-compat; for checkov skips use terraform-checkov-skips."
+---
 # terraform-aws-syntax
 
 > **Status:** COMPLETE

@@ -1,3 +1,7 @@
+---
+name: repo-security-bootstrap
+description: "Deploys standard secret-scanning infrastructure, a custom gitleaks config and a GitHub Actions secret-scan workflow, to one or more repos in bulk. Use when setting up a new repo for publication, applying security scanning across a batch of repos, or asked to add secret scanning to a repo. Part of publishing; start with repo-publication-prep."
+---
 # repo-security-bootstrap
 
 > **Status:** COMPLETE
