@@ -56,6 +56,7 @@ workflow.
 ### Security
 
 - GitHub Actions pinned to commit SHAs; TruffleHog pre-commit aligned with CI (v3.98.0).
+- mcp-server: @modelcontextprotocol/sdk 1.29.0 to 1.32.1 and npm audit fix for transitive advisories.
 
 ---
 
