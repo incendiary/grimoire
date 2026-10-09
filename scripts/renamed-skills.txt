@@ -19,3 +19,5 @@ terraform-checkov-skips	tf-guardrails
 terraform-version-compat	tf-guardrails
 roadmap-driver	roadmap
 grimoire-roadmap-status	roadmap
+repo-compass	orient
+git-push-protocol-handler	orient

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # repo-compass.sh
 # Runs all GitHub platform state commands for the current repository and
-# prints a structured summary. Feeds the repo-compass skill workflow.
+# prints a structured summary. Feeds the orient skill workflow.
 #
 # Usage:
 #   ./repo-compass.sh [--repo <owner/repo>]
@@ -24,7 +24,7 @@ else
     REPO_NAME=$(gh repo view --json nameWithOwner --jq '.nameWithOwner' 2>/dev/null || echo "(unknown)")
 fi
 
-echo "=== repo-compass: ${REPO_NAME} ==="
+echo "=== orient: ${REPO_NAME} ==="
 echo ""
 
 # ── Open PRs ─────────────────────────────────────────────────────────────────
@@ -103,4 +103,4 @@ else
 fi
 echo ""
 
-echo "=== repo-compass complete ==="
+echo "=== orient complete ==="

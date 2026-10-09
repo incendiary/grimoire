@@ -204,11 +204,11 @@ karpathy-spec output
 
 ## Workflow: Repository assessment
 
-**Skill stack:** repo-compass → [identify outstanding work] → roadmap
+**Skill stack:** orient → [identify outstanding work] → roadmap
 
 ### Assessment
 
-1. **repo-compass** — Session-start orientation
+1. **orient** — Session-start orientation
    - GitHub platform state: PRs, issues, CI status, stale branches
    - README roadmap state: cross-check each unchecked item against codebase
    - Output: "true state" summary (catches "all clean" when roadmap items are pending)
@@ -217,7 +217,7 @@ karpathy-spec output
 
 1. If you need the roadmap broken down into executable chunks:
    - **roadmap** → selects next implementation-ready item and chains to:
-     - `repo-compass` (full state)
+     - `orient` (full state)
      - `task-decomposer` (break into chunks)
      - `karpathy-framework` (decide which Karpathy layer)
      - `karpathy-verify` (evaluate output)

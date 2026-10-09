@@ -68,7 +68,7 @@ overspending.
 
 Shows roadmap status from `ROADMAP.md` and picks the next implementation-ready item, then
 outputs a focused execution chain. Designed for "what should I work on next?", "show roadmap
-status" and "pick up from the roadmap" prompts. Chains: `repo-compass` → `task-decomposer` →
+status" and "pick up from the roadmap" prompts. Chains: `orient` → `task-decomposer` →
 `karpathy-framework` → `karpathy-verify`.
 → [Full documentation](roadmap/README.md)
 

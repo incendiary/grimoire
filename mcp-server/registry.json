@@ -25,10 +25,6 @@
             "skill": "clusters/07-devops/deps-integrity/SKILL.md"
         },
         {
-            "name": "git-push-protocol-handler",
-            "skill": "clusters/07-devops/git-push-protocol-handler/SKILL.md"
-        },
-        {
             "name": "github-history-wipe",
             "skill": "clusters/07-devops/github-history-wipe/SKILL.md"
         },
@@ -41,6 +37,10 @@
             "skill": "clusters/07-devops/github-release-workflow/SKILL.md"
         },
         {
+            "name": "orient",
+            "skill": "clusters/07-devops/orient/SKILL.md"
+        },
+        {
             "name": "portfolio-readme-generator",
             "skill": "clusters/07-devops/portfolio-readme-generator/SKILL.md"
         },
@@ -51,10 +51,6 @@
         {
             "name": "readme-version-pin",
             "skill": "clusters/07-devops/readme-version-pin/SKILL.md"
-        },
-        {
-            "name": "repo-compass",
-            "skill": "clusters/07-devops/repo-compass/SKILL.md"
         },
         {
             "name": "repo-security-bootstrap",

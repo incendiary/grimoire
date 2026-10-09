@@ -9,13 +9,14 @@ known gotchas baked in.
 
 ## Skills
 
-### [repo-compass](repo-compass/) ✅ complete
+### [orient](orient/) ✅ complete
 
 Session-start orientation for any GitHub project. Combines `gh` CLI platform state
 (PRs, issues, CI, releases, stale branches) with README roadmap state, cross-checks
 each unchecked item against the codebase, and produces a "true state" summary.
 Prevents "all clean" reports when README roadmap items are still outstanding.
-→ [Full documentation](repo-compass/README.md)
+Also runs the SSH push check, with HTTPS fallback when SSH is unavailable.
+→ [Full documentation](orient/README.md)
 
 ### [repo-publication-prep](repo-publication-prep/) 📋 promoted
 
@@ -89,12 +90,6 @@ End-to-end release workflow: issue → branch → version bump → PR → CI wai
 tag → GitHub release. Includes SSH authentication check before tag push.
 → [Full documentation](github-release-workflow/README.md)
 
-### [git-push-protocol-handler](git-push-protocol-handler/) ✅ complete
-
-Handles SSH push failures by switching to HTTPS, pushing, then restoring the SSH
-remote after the session. Prevents broken remote state.
-→ [Full documentation](git-push-protocol-handler/README.md)
-
 ### [roadmap-sync](roadmap-sync/) ✅ complete
 
 Keeps README roadmaps in sync after code changes: reads the current state first,
@@ -160,7 +155,7 @@ Invoke to clean up scattered branches and land all work on `main` via proper PRs
 **Trigger:** "I want to publish this repo" / "Make this repo public" / starting a new open-source release
 
 ```
-repo-compass              → assess current state (PRs, CI, stale branches)
+orient              → assess current state (PRs, CI, stale branches)
         ↓
 repo-publication-prep     → file audit + history decision + pre-commit setup
         ↓
@@ -203,7 +198,7 @@ docker-ghcr-publish       → (if containerised) build + push images
 py-lint                   → ruff + black check/fix gate, pylint exceptions, re-stage
         ↓
         ↓
-git-push-protocol-handler → (if SSH fails) switch to HTTPS, push, restore
+orient → (if SSH fails) switch to HTTPS, push, restore
 ```
 
 ### Workflow 4: Session start / orientation
@@ -211,7 +206,7 @@ git-push-protocol-handler → (if SSH fails) switch to HTTPS, push, restore
 **Trigger:** "What's the state of this repo?" / starting a new session on any project
 
 ```
-repo-compass              → platform state + README roadmap cross-check
+orient              → platform state + README roadmap cross-check
         ↓
 roadmap-sync              → (if items completed) tick and commit
 ```
@@ -264,7 +259,7 @@ branch-surface-resolve --resolve
         ↓
 [manual resolution]           → for any CONFLICT branches (diff surfaced by script)
         ↓
-repo-compass                  → verify final clean repo state
+orient                  → verify final clean repo state
 ```
 
 ---
@@ -273,7 +268,7 @@ repo-compass                  → verify final clean repo state
 
 | Skill | Invoke when... |
 |-------|---------------|
-| `repo-compass` | Starting a session; need ground truth on repo state; before planning work |
+| `orient` | Starting a session; need ground truth on repo state; before planning work |
 | `repo-publication-prep` | Moving private → public; need file-size audit and history decision |
 | `github-history-wipe` | Repo has sensitive history that cannot be filtered surgically |
 | `repo-security-bootstrap` | New repo needs gitleaks + secret-scan workflow; bulk deploying to many repos |
@@ -283,7 +278,6 @@ repo-compass                  → verify final clean repo state
 | `portfolio-readme-generator` | Repo needs a portfolio-quality README; publishing or updating docs |
 | `github-morning-run` | Daily/weekly repo hygiene; checking PRs, auto-merging dependabots, checking CI status |
 | `github-release-workflow` | Cutting a version: branch → PR → CI → merge → tag → release |
-| `git-push-protocol-handler` | SSH push just failed; need HTTPS fallback without breaking remote config |
 | `roadmap-sync` | Code changes completed; README roadmap needs ticking; pre-release state check |
 | `docker-ghcr-publish` | Release tagged; need to build and push Docker images to GHCR |
 | `readme-version-pin` | Release tagged; README install instructions reference old version |

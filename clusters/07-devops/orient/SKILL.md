@@ -1,8 +1,8 @@
 ---
-name: repo-compass
-description: "Gives a session-start true-state summary of a GitHub repo by combining platform state with README roadmap items and flagging any mismatch. Use when starting a session on a GitHub project, asked to 'review the repo', 'triage this', or 'where are we on this project'. For routine PR/dependabot upkeep use github-morning-run; for branch clean-up use branch-surface-resolve."
+name: orient
+description: "Session-start orientation for a GitHub repo: true state from PRs, issues, CI and releases cross-checked against README roadmap items, plus an SSH push check with HTTPS fallback. Use when starting or resuming work on a repo, asked 'where are we on this project', 'what is outstanding', or when a push fails on SSH. For branch clean-up use branch-surface-resolve; for routine upkeep use github-morning-run."
 ---
-# repo-compass
+# orient
 
 > **Status:** COMPLETE
 > **Cluster:** 07-devops
@@ -87,7 +87,7 @@ the release/PR actually exists and is merged. Spot-check the most recent 3–5 i
 Always produce this before doing any work. Format:
 
 ```
-=== repo-compass: [repo-name] ===
+=== orient: [repo-name] ===
 
 GitHub platform state:
   Open PRs:      N
@@ -121,6 +121,57 @@ After the summary:
 - If only README lag → run `roadmap-sync` to tick completed items
 - If genuinely tidy → confirm and stop; do not invent work
 
+## Push protocol check
+
+### What to do
+
+1. **Before the first push in any session, verify SSH connectivity:**
+   ```bash
+   ssh -T git@github.com
+   ```
+   Expected output: `Hi incendiary! You've successfully authenticated...`
+   If this fails (timeout, permission denied), do not attempt SSH push — switch to HTTPS now.
+
+2. **If SSH is unavailable, switch the remote and the gh default protocol:**
+   ```bash
+   # Switch this repo's remote to HTTPS
+   git remote set-url origin https://github.com/incendiary/<repo>.git
+
+   # Set gh CLI to use HTTPS globally for this session
+   gh config set git_protocol https
+
+   # Verify
+   git remote -v
+   gh auth status
+   ```
+
+3. **Push and verify:**
+   ```bash
+   git push origin <branch>
+   ```
+   HTTPS pushes use the `gh` auth token — confirm `gh auth status` shows a valid,
+   unexpired token before pushing.
+
+4. **After the session, restore SSH if preferred:**
+   ```bash
+   git remote set-url origin git@github.com:incendiary/<repo>.git
+   gh config set git_protocol ssh
+   ```
+
+### Gotchas
+- HTTPS fallback requires the `gh` CLI to have a valid token with `repo` scope.
+  Run `gh auth status` before relying on HTTPS — an expired token will fail silently.
+- SSH agent forwarding does not work in all terminal configurations. If working over
+  a remote session or tmux, the agent socket may not be available even if the key is loaded.
+- Do not attempt to debug SSH configuration mid-session if a deadline exists. Switch to
+  HTTPS, ship the work, and fix SSH separately.
+- `gh config set git_protocol https` is a global setting — it affects all repos in this
+  `gh` session. Restore it after the session if SSH is the preferred default.
+
+### Suggested scripts
+- `orient/check_push_protocol.sh` — tests SSH with `ssh -T git@github.com`, reports status,
+  and offers to switch to HTTPS if SSH is unavailable
+
 ## Gotchas
 
 - **"No open PRs" ≠ "nothing to do."** Always read the READMEs.
@@ -137,6 +188,6 @@ After the summary:
 
 ## Related skills
 
-- `project-delivery-workflow` — use after repo-compass to execute the delivery
+- `project-delivery-workflow` — use after orient to execute the delivery
 - `roadmap-sync` — standalone README tick-off after a PR merges
 - `github-release-workflow` — for the tag → release mechanics in detail

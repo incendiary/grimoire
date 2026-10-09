@@ -23,7 +23,7 @@ recovering after interruption.
 
 ## Execution chain
 
-1. `repo-compass` — assess repository truth state
+1. `orient` — assess repository truth state
 2. `task-decomposer` — split chosen work into atomic chunks
 3. `karpathy-framework` — clarify spec and success criteria
 4. `karpathy-verify` — verify result quality before close-out
@@ -65,7 +65,7 @@ if [[ -n "${infra_choice}" ]]; then
   echo "Selected next item (infrastructure):"
   echo "${infra_choice}"
   echo ""
-  echo "Suggested chain: repo-compass -> task-decomposer -> karpathy-framework -> karpathy-verify"
+  echo "Suggested chain: orient -> task-decomposer -> karpathy-framework -> karpathy-verify"
   exit 0
 fi
 
@@ -86,7 +86,7 @@ if [[ -n "${cluster_choice}" ]]; then
   echo "Selected next item (cluster):"
   echo "${cluster_choice}"
   echo ""
-  echo "Suggested chain: repo-compass -> task-decomposer -> karpathy-framework -> karpathy-verify"
+  echo "Suggested chain: orient -> task-decomposer -> karpathy-framework -> karpathy-verify"
   exit 0
 fi
 
