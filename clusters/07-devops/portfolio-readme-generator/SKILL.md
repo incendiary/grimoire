@@ -1,3 +1,7 @@
+---
+name: portfolio-readme-generator
+description: "Writes a consistent, professional README for a security tool or research repo after reading the actual code, including the authorised-use disclaimer. Use when a repo needs a README, its README is a placeholder, or asked to 'write a README for this', 'generate the README', or 'this repo needs docs'. Part of publishing; start with repo-publication-prep."
+---
 # portfolio-readme-generator
 
 > **Status:** COMPLETE

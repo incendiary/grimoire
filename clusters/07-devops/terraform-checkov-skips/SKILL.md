@@ -1,3 +1,7 @@
+---
+name: terraform-checkov-skips
+description: "Places checkov skip annotations inside Terraform resource blocks with a justification, since annotations placed before a resource are silently ignored. Use when writing Terraform with checkov in CI, reviewing checkov results, or asked to 'skip this checkov rule' or 'fix checkov skip placement'. For AWS argument syntax use terraform-aws-syntax."
+---
 # terraform-checkov-skips
 
 > **Status:** COMPLETE

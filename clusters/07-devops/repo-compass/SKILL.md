@@ -1,3 +1,7 @@
+---
+name: repo-compass
+description: "Gives a session-start true-state summary of a GitHub repo by combining platform state with README roadmap items and flagging any mismatch. Use when starting a session on a GitHub project, asked to 'review the repo', 'triage this', or 'where are we on this project'. For routine PR/dependabot upkeep use github-morning-run; for branch clean-up use branch-surface-resolve."
+---
 # repo-compass
 
 > **Status:** COMPLETE

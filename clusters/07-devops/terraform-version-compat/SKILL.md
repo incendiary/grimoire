@@ -1,3 +1,7 @@
+---
+name: terraform-version-compat
+description: "Checks Terraform module and provider version compatibility before adding or upgrading a module, so validate and CI do not fail on conflicting provider constraints. Use when adding a Terraform module, upgrading one, or when terraform init or validate fails with provider constraint errors. For AWS argument syntax use terraform-aws-syntax."
+---
 # terraform-version-compat
 
 > **Status:** COMPLETE

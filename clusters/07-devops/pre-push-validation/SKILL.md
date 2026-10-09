@@ -1,3 +1,7 @@
+---
+name: pre-push-validation
+description: "Runs the repo's own GitHub Actions workflow steps locally before you push, skipping CI-only steps explicitly, and can install a fail-closed pre-push hook. Use when asked to 'validate before push', 'run CI checks locally', 'install pre-push hook', or 'check everything before pushing'. Prefer local-ci, which supersedes this skill."
+---
 # pre-push-validation
 
 > **Status:** COMPLETE

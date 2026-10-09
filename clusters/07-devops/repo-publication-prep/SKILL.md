@@ -1,3 +1,7 @@
+---
+name: repo-publication-prep
+description: "Walks through preparing a private repo for public release, covering file size, history sanitisation, and pre-commit hooks. Use when making a private repo public, or asked to 'prep', 'publish', or 'clean up' a repo before pushing to GitHub. Entry point for going public; history rewrite is github-history-wipe, secret scanning is repo-security-bootstrap, README is portfolio-readme-generator."
+---
 # repo-publication-prep
 
 > **Status:** complete

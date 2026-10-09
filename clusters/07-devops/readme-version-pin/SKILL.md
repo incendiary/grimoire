@@ -1,3 +1,7 @@
+---
+name: readme-version-pin
+description: "Pins README install instructions to the latest release tag instead of main or master, with a check script usable as a pre-commit hook or CI gate. Use when cutting a new release, asked to 'pin the version in the README', or when README install instructions reference main, master, or an old tag. Part of releasing; start with github-release-workflow."
+---
 # readme-version-pin
 
 > **Status:** COMPLETE
