@@ -1,5 +1,5 @@
 #!/bin/bash
-# local-ci.sh — Run your GitHub Actions workflows locally, before you push.
+# local-ci.sh (ci-local skill) — Run your GitHub Actions workflows locally, before you push.
 #
 # Discovers .github/workflows/*.yml with a real YAML parser, extracts each
 # job's `run:` steps, executes them in file order (stopping a job at its
@@ -22,6 +22,8 @@
 #
 # Exit code: 0 by default (a normal run never breaks your shell). With --gate,
 # non-zero on a genuine check failure, so the pre-push hook blocks the push.
+# --strict also counts local toolchain gaps (missing tools) as failures.
+# --no-hook never offers or installs a hook on a normal run.
 
 set -u
 
@@ -41,6 +43,8 @@ WORKFLOW_FILTER=""
 SYNC_REQUESTED=false  # --sync: build CI's pinned toolchain before running
 SYNC_ACTIVE=false     # set true once that ephemeral env is actually built
 GATE=false            # --gate: exit non-zero on real failures (for a blocking hook)
+STRICT=false          # --strict: toolchain gaps also fail the gate (implies --gate)
+NO_HOOK=false         # --no-hook: never offer or auto-install a hook
 HARD_FAILURES=0       # count of genuine check failures (excludes local toolchain gaps)
 
 # Results tracking
@@ -195,6 +199,8 @@ while [[ $# -gt 0 ]]; do
         --workflow) WORKFLOW_FILTER="$2"; shift 2 ;;
         --sync) SYNC_REQUESTED=true; shift ;;
         --gate) GATE=true; shift ;;
+        --strict) STRICT=true; GATE=true; shift ;;
+        --no-hook) NO_HOOK=true; shift ;;
         --install-hook)
             INSTALL_HOOK_ONLY=true
             # Optional slot argument: --install-hook pre-commit|pre-push
@@ -273,7 +279,7 @@ exit 0"
             ;;
         pre-push)
             install_to_slot pre-push \
-"exec bash \"$SCRIPT_PATH\" --gate"
+"exec bash \"$SCRIPT_PATH\" --gate$([[ "$STRICT" == true ]] && echo ' --strict')"
             echo -e "${GREEN}✓ pre-push hook installed${NC} (full CI, fail-closed — blocks a red push; bypass once with 'git push --no-verify')"
             ;;
         *)
@@ -289,7 +295,11 @@ exit 0"
 # live in pre-commit), and it *chains* rather than clobbers anything present.
 # Interactive: ask. Non-interactive: install (chaining keeps it safe).
 maybe_install_hook() {
-    have_our_hook && return 0
+    [[ "$NO_HOOK" == true ]] && return 0
+    if have_our_hook; then
+        echo -e "${GREEN}✓ local-ci hook already installed${NC}"
+        return 0
+    fi
     if [[ -t 0 ]]; then
         echo -e "${BLUE}Install the pre-push CI gate (full run, fail-closed; chains any existing hook)?${NC}"
         read -rp "Install? (y/n) " -n 1 reply
@@ -336,8 +346,7 @@ classify_job() {
 
 # Real YAML parser: discover every job's `run:` steps under every
 # .github/workflows/*.yml, honoring working-directory (step > job
-# defaults.run > workflow defaults.run), exactly as pre-push-validation.sh
-# does. Emits one line per step to $1:
+# defaults.run > workflow defaults.run). Emits one line per step to $1:
 #   STATUS|B64(WORKFLOW)|B64(JOB)|B64(STEPNAME)|B64(CMD)|B64(REASON)
 # STATUS = RUN | SKIP (CI-only: ${{ }} contexts, secrets., gh release,
 # GITHUB_* files, or OS package installs — never run locally).
@@ -514,6 +523,7 @@ run_job() {
         echo -e "${RED}✗ TOOLCHAIN ISSUE${NC} (not a code failure — a required tool is missing or misconfigured)"
         echo "$output" | head -10
         FAILED_JOBS+=("$job_name (toolchain)")
+        [[ "$STRICT" == true ]] && HARD_FAILURES=$((HARD_FAILURES + 1))
         return 1
     fi
 
@@ -726,7 +736,9 @@ main "$@"
 # genuine check failure so the push is blocked. Local toolchain gaps (a tool
 # CI has that you don't) are NOT counted as hard failures — they shouldn't
 # block a push CI would pass; they're reported for you to install the tool.
+# --strict counts them too (a missing tool blocks the push).
 if [[ "$GATE" == true && "$HARD_FAILURES" -gt 0 ]]; then
+    echo -e "${RED}VALIDATION FAILED: push blocked${NC} ($HARD_FAILURES failure(s))"
     exit 1
 fi
 exit 0

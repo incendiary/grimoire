@@ -1,13 +1,14 @@
 ---
-name: local-ci
-description: "Runs this repo's GitHub Actions workflow steps locally, auto-fixes Black and Ruff only when versions match CI, and can install pre-commit or pre-push hooks. Use when asked to 'run CI locally', 'test before pushing', 'preview what CI will do', or 'gate my pushes on CI'. Not for a quick Python lint only (use python-lint-gate)."
+name: ci-local
+description: "Runs this repo's GitHub Actions workflow steps locally before pushing, auto-fixes Black/Ruff when tool versions match CI, and installs pre-commit (fast, informational) or pre-push (full, blocking) hooks. Use when asked to 'run CI locally', 'test before pushing', 'preview what CI will do', or 'gate my pushes on CI'. For a quick Python lint only use py-lint."
 ---
-# local-ci
+# ci-local
 
 > **Status:** COMPLETE
 > **Cluster:** 07-devops
 > **Type:** action
-> **Formerly:** `github-actions-locally` (renamed in v1.6.36)
+> **Formerly:** merged from two earlier skills; see `scripts/renamed-skills.txt`
+> **Script:** `local-ci.sh` (name kept so existing hooks and docs keep working)
 
 ## Description
 Run your GitHub Actions workflows locally before pushing. Discovers every `.github/workflows/*.yml` with a real YAML parser, extracts each job's `run:` steps, executes them, and reports **only what actually ran** — auto-fixing failures where a known fixer exists (black, ruff) *only when the tool version matches CI's pin*. A normal run exits 0; it never breaks your shell.
@@ -18,10 +19,10 @@ Run your GitHub Actions workflows locally before pushing. Discovers every `.gith
 >
 > A pre-existing hook in the slot (the pre-commit framework, gitleaks, your own) is **preserved
 > as a sidecar and still runs first** — installs *complement*, never overwrite. A normal run with
-> no local-ci hook yet auto-installs the pre-push gate (chaining anything present). Uninstall with
+> no ci-local hook yet auto-installs the pre-push gate (chaining anything present). Uninstall with
 > `rm .git/hooks/<slot>` (and `mv .git/hooks/<slot>.local-ci-prev` back if it chained one).
 
-Invoke when: "run CI locally", "test before pushing", "check linting locally", "shift left testing", "preview what CI will do", "gate my pushes on CI".
+Invoke when: "run CI locally", "test before pushing", "check linting locally", "shift left testing", "preview what CI will do", "gate my pushes on CI", "validate before push", "run CI checks locally", "install pre-push hook", "check everything before pushing".
 
 ## Context needed
 - `.github/workflows/*.yml` (nothing to do without at least one)
@@ -50,11 +51,13 @@ The rule that resolves it, and that everything below follows from:
 5. **Execute** in file order. Every runnable step actually runs, judged by **exit code**. A job **stops at its first failed step** — later steps in that job are skipped, exactly as CI does, so stale local state can't make them look like they passed. A `command not found`-class failure (exit 127 / missing `pyenv` shim) is reported as a distinct **toolchain issue**, not a code failure.
 6. **Auto-fix — only when version-verified.** On a `black`/`ruff` failure, the fixer runs **only if** step 4 confirmed the version matches CI's pin (or `--sync` built a matched env). Otherwise it's skipped with a message. This is the guarantee that it can never corrupt correct files with the wrong formatter version.
 7. **Report.** Counts only steps actually executed; says `0 steps executed` explicitly when nothing ran.
-8. **Offer/install the hook.** If no local-ci hook exists in either slot: auto-install the **pre-push gate** (prompt when interactive, else install), *chaining* any hook already there — never clobbering. Skipped once a local-ci hook is present, and never offered when running as a hook itself (`--gate`).
+8. **Offer/install the hook.** If no ci-local hook exists in either slot: auto-install the **pre-push gate** (prompt when interactive, else install), *chaining* any hook already there — never clobbering. Skipped once a ci-local hook is present, and never offered when running as a hook itself (`--gate`).
 
 **`--sync`** builds CI's exact pinned toolchain in an ephemeral venv inside `.git/` (never your own venv, never global, never in the work tree), so mismatched tools become verified and auto-fix becomes safe. Falls back to report-only if pins can't be found or `pip install` fails.
 
-**Exit code.** A normal run always exits **0** (never breaks your shell). Under `--gate` (used by the fail-closed pre-push hook) it exits non-zero on a genuine check failure so the push is blocked — but a *local toolchain gap* (a tool CI has that you don't) is reported and does **not** gate, since it isn't evidence the push is bad.
+**Exit code.** A normal run always exits **0** (never breaks your shell). Under `--gate` (used by the fail-closed pre-push hook) it exits non-zero on a genuine check failure so the push is blocked, printing `VALIDATION FAILED: push blocked`. A *local toolchain gap* (a tool CI has that you don't) is reported and does **not** gate by default, since it isn't evidence the push is bad. Pass `--strict` (implies `--gate`) to make a missing tool block too (fully fail-closed).
+
+**Skipped steps are always printed.** Every run, including a run as the hook, prints the `Discovered` list first, where each CI-only step appears as `skip  <name>  (<reason>)`. Treat skipped steps as unverified, not passing.
 
 ## Hooks — commit vs push, never clobber
 
@@ -95,6 +98,13 @@ bash local-ci.sh --install-hook               # defaults to pre-push
 
 # Exit non-zero on a real failure (what the pre-push hook runs under the hood)
 bash local-ci.sh --gate
+
+# Also fail on a missing local tool (fully fail-closed); bake it into the hook
+bash local-ci.sh --strict
+bash local-ci.sh --install-hook pre-push --strict
+
+# Run without offering or auto-installing a hook
+bash local-ci.sh --no-hook
 ```
 
 ## Example output
@@ -129,13 +139,23 @@ Manual attention needed: 1 job(s)
 - **Pin detection covers `pip install X==Y` and `-r requirements*.txt`.** A pin expressed some other way (constraints files, `pyproject.toml`/`poetry.lock`, a version baked into a container image) reads as "CI unpinned" → report-only. Use `--sync`… only helps if the pin is one it can parse; otherwise the honest fallback is report-only.
 - **Without a venv and without `--sync`, `pip install` steps run against your ambient Python** (they're real CI commands, so they execute) — which can touch your user/global site-packages. Use a project `venv`/`.venv`, or `--sync` (isolated ephemeral env), to keep installs contained.
 - **CI-only steps are skipped, not simulated.** Anything gated on GitHub context, secrets, or OS package installs won't be verified locally; check those in CI.
+- **Faithful to CI, including CI's blind spots.** Commands run verbatim, so local drift shows up: a newer local `shellcheck` may flag more than CI's pinned one, and a local `node_modules`/`.venv` can widen a `find` in a CI command.
+- **`npm ci` and other dependency steps run as written.** They are validation, not CI-only, so a stale local lockfile legitimately fails the check.
 - **No cross-job graph.** `needs:` ordering and `strategy.matrix` expansion aren't modelled — steps run in file order. Stop-on-failure is enforced *within* a job, not across dependent jobs.
 
 ---
 
+## Migrating from pre-push-validation
+
+`pre-push-validation` is removed; its behaviour lives here. Its hook in `.git/hooks/pre-push`
+calls `pre-push-validation.sh`, which no longer exists. **Remove that hook before installing
+this skill's pre-push hook** (`rm .git/hooks/pre-push`), otherwise the installer chains it as a
+foreign hook and every push fails on the missing script. Then run
+`bash local-ci.sh --install-hook pre-push` (add `--strict` for the old fail-on-missing-tool
+behaviour). Only one tool should own `.git/hooks/pre-push` per repo.
+
 ## Integration with other skills
 
-- **pre-push-validation:** an older, `validate.yml`-focused fail-closed pre-push gate. `local-ci` now covers the same ground more generally (all workflows, version parity, stop-on-failure) and can itself install a fail-closed `pre-push` gate — so on a repo using `local-ci` you typically won't also need `pre-push-validation`. They both write `.git/hooks/pre-push`; pick one owner per repo.
 - **format-before-commit:** narrower, Python-only formatting check; this skill's auto-fix covers the same ground plus arbitrary `run:` steps.
 - **github-morning-run:** use after pushing to catch what CI found on the morning audit.
 
@@ -153,7 +173,7 @@ Manual attention needed: 1 job(s)
 - [x] `--sync`: build CI's exact pinned toolchain in an ephemeral `.git/` venv to enable safe auto-fix
 - [x] Two hook slots (fast `pre-commit` lint / fail-closed `pre-push` gate via `--gate`), chosen at install
 - [x] Chaining hook installer — preserves any existing hook as a sidecar, never clobbers (fixes the framework-hook-destroyed trap)
-- [x] Renamed from `github-actions-locally` → `local-ci`
+- [x] Renamed from `github-actions-locally`
 - [ ] Auto-fix for prettier/eslint (JS/TS projects)
 - [ ] Pin detection for `pyproject.toml`/`poetry.lock`/constraints files
 - [ ] Job dependency graph (`needs:`) and matrix expansion awareness

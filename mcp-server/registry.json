@@ -31,8 +31,8 @@
             "description": "Rewrite git history to remove sensitive content"
         },
         {
-            "name": "local-ci",
-            "skill": "clusters/07-devops/local-ci/SKILL.md",
+            "name": "ci-local",
+            "skill": "clusters/07-devops/ci-local/SKILL.md",
             "description": "Run your GitHub Actions workflows locally before pushing; optional pre-commit/pre-push hooks"
         },
         {
@@ -99,11 +99,6 @@
             "name": "branch-surface-resolve",
             "skill": "clusters/07-devops/branch-surface-resolve/SKILL.md",
             "description": "Audit all branches, categorise by state, and resolve via PRs or surface conflicts"
-        },
-        {
-            "name": "pre-push-validation",
-            "skill": "clusters/07-devops/pre-push-validation/SKILL.md",
-            "description": "Run all local checks before pushing to GitHub using spec-driven validation"
         }
     ]
 }

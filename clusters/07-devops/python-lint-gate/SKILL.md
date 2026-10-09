@@ -1,6 +1,6 @@
 ---
 name: python-lint-gate
-description: "Runs a pre-commit quality gate for Python with Ruff and Black, checking for lint and format failures and optionally applying safe fixes before re-validating. Use when about to commit Python code, CI keeps failing on Ruff or Black, or asked to 'run python lint gate', 'check this before commit', or 'fix ruff and black'. Not for running the full CI workflow (use local-ci)."
+description: "Runs a pre-commit quality gate for Python with Ruff and Black, checking for lint and format failures and optionally applying safe fixes before re-validating. Use when about to commit Python code, CI keeps failing on Ruff or Black, or asked to 'run python lint gate', 'check this before commit', or 'fix ruff and black'. Not for running the full CI workflow (use ci-local)."
 ---
 # python-lint-gate
 
