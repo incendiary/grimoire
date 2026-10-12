@@ -57,11 +57,11 @@ repos:
 
   # ── README version pin check ─────────────────────────────────────────────
   # Uncomment to gate commits on README install pins matching current version.
-  # Requires: grimoire readme-version-pin skill installed alongside this config.
+  # Requires: grimoire release-readme-pin skill installed alongside this config.
   #
   # - repo: local
   #   hooks:
-  #     - id: readme-version-pin
+  #     - id: release-readme-pin
   #       name: README version pin check
   #       language: script
   #       entry: bash check_readme_version.sh

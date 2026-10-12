@@ -24,9 +24,9 @@ recovering after interruption.
 ## Execution chain
 
 1. `orient` — assess repository truth state
-2. `task-decomposer` — split chosen work into atomic chunks
-3. `karpathy-framework` — clarify spec and success criteria
-4. `karpathy-verify` — verify result quality before close-out
+2. `plan-decompose` — split chosen work into atomic chunks
+3. `plan` — clarify spec and success criteria
+4. `plan-verify` — verify result quality before close-out
 
 ## What to do
 
@@ -65,7 +65,7 @@ if [[ -n "${infra_choice}" ]]; then
   echo "Selected next item (infrastructure):"
   echo "${infra_choice}"
   echo ""
-  echo "Suggested chain: orient -> task-decomposer -> karpathy-framework -> karpathy-verify"
+  echo "Suggested chain: orient -> plan-decompose -> plan -> plan-verify"
   exit 0
 fi
 
@@ -86,7 +86,7 @@ if [[ -n "${cluster_choice}" ]]; then
   echo "Selected next item (cluster):"
   echo "${cluster_choice}"
   echo ""
-  echo "Suggested chain: orient -> task-decomposer -> karpathy-framework -> karpathy-verify"
+  echo "Suggested chain: orient -> plan-decompose -> plan -> plan-verify"
   exit 0
 fi
 

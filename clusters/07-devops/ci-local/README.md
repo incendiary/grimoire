@@ -150,7 +150,7 @@ missing tool). If you skip the removal, the installer chains the old hook and ev
 ## Integration with other skills
 
 - **py-lint** — narrower, Python-only formatting check.
-- **github-morning-run** — use after pushing, to catch what CI found on the morning audit.
+- **orient-morning-run** — use after pushing, to catch what CI found on the morning audit.
 
 ---
 

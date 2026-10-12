@@ -39,7 +39,7 @@ audit; "establish my devops practices on this repo"; periodic health check.
 | Major = breaking change | API or interface contract broken |
 
 **Enforcement:** `check-version-sync.sh`
-**Existing skills:** `github-release-workflow`, `readme-version-pin`
+**Existing skills:** `release`, `release-readme-pin`
 
 ---
 
@@ -57,7 +57,7 @@ audit; "establish my devops practices on this repo"; periodic health check.
 | PR description references issue | Link the issue being addressed (if one exists) |
 
 **Enforcement:** Rules only (human discipline). PR title checked by CI where available.
-**Existing skills:** `project-delivery-workflow`
+**Existing skills:** `roadmap-deliver`
 
 ---
 
@@ -91,7 +91,7 @@ test_clone_refs_pinned() {
 ```
 
 **Enforcement:** `check-test-baseline.sh`
-**Existing skills:** `test-bootstrap` (05-technical)
+**Existing skills:** `ci-tests` (05-technical)
 
 ---
 
@@ -107,7 +107,7 @@ test_clone_refs_pinned() {
 | Cross-check against VERSION | Pinned version must match current release |
 
 **Enforcement:** `check-clone-refs.sh`
-**Existing skills:** `readme-version-pin`
+**Existing skills:** `release-readme-pin`
 
 ---
 
@@ -224,12 +224,12 @@ When a practice needs more than enforcement — it needs *implementation* — ro
 
 | Need | Skill to invoke |
 |------|----------------|
-| Cut a release with proper tagging | `github-release-workflow` |
-| Pin README install refs to version | `readme-version-pin` |
+| Cut a release with proper tagging | `release` |
+| Pin README install refs to version | `release-readme-pin` |
 | Sync roadmap after PR merge or release | `roadmap-sync` |
-| Full delivery loop (branch → PR → release) | `project-delivery-workflow` |
-| Bootstrap test framework in a new repo | `test-bootstrap` (05-technical) |
-| Deploy secret scanning | `repo-security-bootstrap` |
+| Full delivery loop (branch → PR → release) | `roadmap-deliver` |
+| Bootstrap test framework in a new repo | `ci-tests` (05-technical) |
+| Deploy secret scanning | `publish-secret-scan` |
 
 ---
 

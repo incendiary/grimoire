@@ -1,6 +1,6 @@
 ---
 name: incident-appendix
-description: "Structure raw evidence, indicators, timeline, gaps, and assumptions into a formal technical appendix for an incident report. Use when asked to 'write up the technical appendix', 'document the evidence', 'format this for the incident report', or 'structure the technical detail'. To plan what evidence to request use incident-ask-builder."
+description: "Structure raw evidence, indicators, timeline, gaps, and assumptions into a formal technical appendix for an incident report. Use when asked to 'write up the technical appendix', 'document the evidence', 'format this for the incident report', or 'structure the technical detail'. To plan what evidence to request use incident-asks."
 ---
 # incident-appendix
 

@@ -1,6 +1,6 @@
 ---
 name: orient
-description: "Session-start orientation for a GitHub repo: true state from PRs, issues, CI and releases cross-checked against README roadmap items, plus an SSH push check with HTTPS fallback. Use when starting or resuming work on a repo, asked 'where are we on this project', 'what is outstanding', or when a push fails on SSH. For branch clean-up use branch-surface-resolve; for routine upkeep use github-morning-run."
+description: "Session-start orientation for a GitHub repo: true state from PRs, issues, CI and releases cross-checked against README roadmap items, plus an SSH push check with HTTPS fallback. Use when starting or resuming work on a repo, asked 'where are we on this project', 'what is outstanding', or when a push fails on SSH. For branch clean-up use orient-branches; for routine upkeep use orient-morning-run."
 ---
 # orient
 
@@ -117,7 +117,7 @@ report a project as tidy if the roadmap disagrees.
 ### 5. Recommend next action
 
 After the summary:
-- If outstanding items exist → propose delivery plan (or hand off to `project-delivery-workflow`)
+- If outstanding items exist → propose delivery plan (or hand off to `roadmap-deliver`)
 - If only README lag → run `roadmap-sync` to tick completed items
 - If genuinely tidy → confirm and stop; do not invent work
 
@@ -188,6 +188,6 @@ After the summary:
 
 ## Related skills
 
-- `project-delivery-workflow` — use after orient to execute the delivery
+- `roadmap-deliver` — use after orient to execute the delivery
 - `roadmap-sync` — standalone README tick-off after a PR merges
-- `github-release-workflow` — for the tag → release mechanics in detail
+- `release` — for the tag → release mechanics in detail

@@ -8,13 +8,13 @@ structured action plans. Skills in this cluster are designed to chain: collect �
 
 ## Skills
 
-### [incident-ask-builder](incident-ask-builder/) ✅ complete
+### [incident-asks](incident-asks/) ✅ complete
 
 Converts an incident description into a structured evidence-collection checklist grouped
 by owner. Each ask specifies what exactly is needed, who owns it, urgency tier, and
 whether Legal sign-off is required. Retention-risk flags appear at the top so
 time-sensitive evidence is not missed.
-→ [Full documentation](incident-ask-builder/README.md)
+→ [Full documentation](incident-asks/README.md)
 
 ### [incident-appendix](incident-appendix/) ✅ complete
 
@@ -24,14 +24,14 @@ basis, and remediation actions. Every factual claim cites its evidence source.
 Distinguishes clearly between confirmed facts and assumptions.
 → [Full documentation](incident-appendix/README.md)
 
-### [risk-to-action](risk-to-action/) ✅ complete
+### [incident-risk-plan](incident-risk-plan/) ✅ complete
 
 Converts an abstract risk statement into a structured action plan. Forces a
 plain-language impact restatement, assigns mitigations across immediate/short-term/
 long-term horizons, flags decisions required before action can proceed, and separates
 risk ownership from action ownership. Treats risk acceptance as a governance decision,
 not an action.
-→ [Full documentation](risk-to-action/README.md)
+→ [Full documentation](incident-risk-plan/README.md)
 
 ---
 
@@ -40,15 +40,15 @@ not an action.
 ```
 Incident occurs
       ↓
-incident-ask-builder  (who needs to give us what, by when)
+incident-asks  (who needs to give us what, by when)
       ↓
 Evidence collected
       ↓
 incident-appendix     (formal technical record)
       ↓
-executive-translate   (executive summary)
+write-exec   (executive summary)
       ↓
-risk-to-action        (what we do next)
+incident-risk-plan        (what we do next)
 ```
 
 ---
@@ -60,13 +60,13 @@ risk-to-action        (what we do next)
 **Trigger:** "We have an incident; what do we need to collect first?"
 
 ```
-incident-ask-builder  → owner-tagged evidence request plan
+incident-asks  → owner-tagged evidence request plan
       ↓
 incident-appendix     → source-backed technical appendix
       ↓
-executive-translate   → leadership-ready summary
+write-exec   → leadership-ready summary
       ↓
-risk-to-action        → mitigation plan and ownership horizon
+incident-risk-plan        → mitigation plan and ownership horizon
 ```
 
 ### Workflow 2: Post-incident risk planning
@@ -74,11 +74,11 @@ risk-to-action        → mitigation plan and ownership horizon
 **Trigger:** "Convert this finding/risk into an actionable plan"
 
 ```
-risk-to-action        → immediate/short/long-term action plan
+incident-risk-plan        → immediate/short/long-term action plan
       ↓
 incident-appendix     → supporting evidence and assumptions
       ↓
-executive-translate   → communication to decision-makers
+write-exec   → communication to decision-makers
 ```
 
 ---
@@ -87,6 +87,6 @@ executive-translate   → communication to decision-makers
 
 | Skill | Invoke when... |
 |-------|----------------|
-| `incident-ask-builder` | Early incident phase needs precise evidence asks by owner and urgency |
+| `incident-asks` | Early incident phase needs precise evidence asks by owner and urgency |
 | `incident-appendix` | You need a defensible technical record with cited facts and assumptions |
-| `risk-to-action` | Risk statement must become execution-ready mitigation plan |
+| `incident-risk-plan` | Risk statement must become execution-ready mitigation plan |

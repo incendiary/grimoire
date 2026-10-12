@@ -73,6 +73,11 @@ for cluster_root in "${cluster_roots[@]}"; do
     done
 done
 
+# Old names of renamed or retired skills are grimoire-managed too.
+while IFS=$'\t' read -r old _; do
+    [[ -n "${old}" ]] && managed_skills+=("${old}")
+done < "${SCRIPT_DIR}/scripts/renamed-skills.txt"
+
 # Deduplicate while preserving order
 unique_skills=()
 for s in "${managed_skills[@]}"; do

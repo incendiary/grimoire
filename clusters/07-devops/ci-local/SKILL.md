@@ -157,7 +157,7 @@ behaviour). Only one tool should own `.git/hooks/pre-push` per repo.
 ## Integration with other skills
 
 - **py-lint:** narrower, Python-only formatting check; this skill's auto-fix covers the same ground plus arbitrary `run:` steps.
-- **github-morning-run:** use after pushing to catch what CI found on the morning audit.
+- **orient-morning-run:** use after pushing to catch what CI found on the morning audit.
 
 ---
 

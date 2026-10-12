@@ -234,7 +234,7 @@ where it exists, is the pathway entry skill that lists its steps in order.
 | `skill-vetter` | `review-skill` | Rename |
 | `ios-signing-risk` | `review-ios-signing` | Rename |
 | `skill-keyword-lookup` | `grimoire-find` | Rename |
-| `session-skill-extractor` | `grimoire-extract` | Rename |
+| `session-skill-extractor` | `session-skill-extractor` | Unchanged (2026-10-12: Stop-hook path; name not used for discovery) |
 
 Refinements beyond the preview the owner approved: added `roadmap-*` and `grimoire-*`
 prefixes, `orient-authored-repos`, `plan-environment`, `plan-model-tier`, `ci-tests`,

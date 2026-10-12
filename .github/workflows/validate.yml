@@ -61,6 +61,8 @@ jobs:
         run: bash scripts/check-frontmatter.sh
       - name: SKILLS.md catalogue is current
         run: bash scripts/gen-catalogue.sh --check
+      - name: install-all.sh removes renamed and retired skills
+        run: bash tests/test-install-renames.sh
 
   registry-sync:
     name: Registry sync
@@ -71,7 +73,7 @@ jobs:
         run: |
           set -e
           failed=0
-          for f in $(grep -rl '> \*\*Type:\*\* action' clusters/01-meta/*/SKILL.md clusters/07-devops/*/SKILL.md 2>/dev/null); do
+          for f in $(grep -rl '> \*\*Type:\*\* action' clusters/*/*/SKILL.md 2>/dev/null); do
             if ! grep -q "\"$f\"" mcp-server/registry.json; then
               echo "ERROR: $f has Type: action but no registry entry"
               failed=1

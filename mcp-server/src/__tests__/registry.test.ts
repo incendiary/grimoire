@@ -24,7 +24,7 @@ function loadRegistry(): Registry {
 
 function findActionSkills(): string[] {
     const output = execSync(
-        `grep -rl "> \\*\\*Type:\\*\\* action" clusters/01-meta/*/SKILL.md clusters/07-devops/*/SKILL.md 2>/dev/null || true`,
+        `grep -rl "> \\*\\*Type:\\*\\* action" clusters/*/*/SKILL.md 2>/dev/null || true`,
         { cwd: REPO_ROOT, encoding: "utf-8" }
     );
     return output
