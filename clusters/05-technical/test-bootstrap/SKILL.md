@@ -312,4 +312,4 @@ tests must gate the pipeline.
 
 - `python-ci-template` — full Python CI pipeline including test stage
 - `dotnet-ci-template` — full C# CI pipeline including `dotnet test`
-- `format-before-commit` — pair with test-bootstrap to enforce formatting + tests pre-commit
+- `py-lint` — pair with test-bootstrap to enforce formatting + tests pre-commit

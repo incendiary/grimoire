@@ -129,7 +129,7 @@ Even if your analysis suggests Haiku:
 ## Integration with other skills
 
 - **task-decomposer:** When breaking a large task into chunks, use this framework to recommend model tier for each chunk
-- **roadmap-driver:** When assigning work from the roadmap, select model tier based on task characteristics
+- **roadmap:** When assigning work from the roadmap, select model tier based on task characteristics
 - **karpathy-framework:** Use this to decide which model should run the spec/verification phases
 
 ## References

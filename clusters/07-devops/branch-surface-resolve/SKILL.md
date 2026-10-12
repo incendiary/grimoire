@@ -1,6 +1,6 @@
 ---
 name: branch-surface-resolve
-description: "Audits all local and remote branches, sorts each into ready, local-only, conflict, open-PR or stale, and routes it to a PR, manual conflict review or pruning. Use when asked to 'clean up my branch state', 'I have branches everywhere', 'land everything that is ready', or for a pre-release branch hygiene pass. For overall repo state use repo-compass."
+description: "Audits all local and remote branches, sorts each into ready, local-only, conflict, open-PR or stale, and routes it to a PR, manual conflict review or pruning. Use when asked to 'clean up my branch state', 'I have branches everywhere', 'land everything that is ready', or for a pre-release branch hygiene pass. For overall repo state use orient."
 ---
 # branch-surface-resolve
 
@@ -44,7 +44,7 @@ branch-surface-resolve        → categorise all branches
 [HAS-PR branches]             → show open PR status + merge readiness
 [STALE branches]              → list for pruning decision
         ↓
-repo-compass                  → verify final repo truth state post-resolution
+orient                  → verify final repo truth state post-resolution
 ```
 
 ---

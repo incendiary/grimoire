@@ -22,7 +22,7 @@ After installing a skill, you can invoke it in two ways:
 
 **Explicit invocation** — reference the skill by name:
 ```
-/repo-compass
+/orient
 Repo: incendiary/DNSResolver
 ```
 

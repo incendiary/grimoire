@@ -1,6 +1,6 @@
 # Task RA-08: Merge `pre-push-validation` into `local-ci` as `ci-local`
 
-> Status: pending
+> Status: done
 > Parent: discoverability and consolidation programme
 > Model: opus
 > Fallback: none (escalate to owner)

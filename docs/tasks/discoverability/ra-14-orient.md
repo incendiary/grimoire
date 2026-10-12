@@ -1,6 +1,6 @@
 # Task RA-14: Rename `repo-compass` to `orient`, absorbing the push check
 
-> Status: pending
+> Status: done
 > Parent: discoverability and consolidation programme
 > Model: haiku
 > Fallback: sonnet

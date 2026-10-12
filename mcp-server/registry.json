@@ -2,108 +2,63 @@
     "tools": [
         {
             "name": "github-authored-repos",
-            "skill": "clusters/01-meta/github-authored-repos/SKILL.md",
-            "description": "List GitHub repos authored by the authenticated user"
+            "skill": "clusters/01-meta/github-authored-repos/SKILL.md"
         },
         {
-            "name": "repo-compass",
-            "skill": "clusters/07-devops/repo-compass/SKILL.md",
-            "description": "Session-start orientation - GitHub state + README roadmap"
-        },
-        {
-            "name": "format-before-commit",
-            "skill": "clusters/07-devops/format-before-commit/SKILL.md",
-            "description": "Run black/ruff format check before every commit"
-        },
-        {
-            "name": "git-push-protocol-handler",
-            "skill": "clusters/07-devops/git-push-protocol-handler/SKILL.md",
-            "description": "Execute git push with pre-push protocol checks"
-        },
-        {
-            "name": "github-release-workflow",
-            "skill": "clusters/07-devops/github-release-workflow/SKILL.md",
-            "description": "Tag, create GitHub release, and verify publication"
-        },
-        {
-            "name": "github-history-wipe",
-            "skill": "clusters/07-devops/github-history-wipe/SKILL.md",
-            "description": "Rewrite git history to remove sensitive content"
-        },
-        {
-            "name": "local-ci",
-            "skill": "clusters/07-devops/local-ci/SKILL.md",
-            "description": "Run your GitHub Actions workflows locally before pushing; optional pre-commit/pre-push hooks"
-        },
-        {
-            "name": "github-morning-run",
-            "skill": "clusters/07-devops/github-morning-run/SKILL.md",
-            "description": "Audit repos, auto-merge dependabot PRs, check CI status"
-        },
-        {
-            "name": "repo-security-bootstrap",
-            "skill": "clusters/07-devops/repo-security-bootstrap/SKILL.md",
-            "description": "Bootstrap secret scanning and security tooling on a repo"
-        },
-        {
-            "name": "portfolio-readme-generator",
-            "skill": "clusters/07-devops/portfolio-readme-generator/SKILL.md",
-            "description": "Generate portfolio README from GitHub repo metadata"
-        },
-        {
-            "name": "python-ci-lint-precheck",
-            "skill": "clusters/07-devops/python-ci-lint-precheck/SKILL.md",
-            "description": "Run Python linters locally before pushing to CI"
-        },
-        {
-            "name": "python-lint-gate",
-            "skill": "clusters/07-devops/python-lint-gate/SKILL.md",
-            "description": "Run a unified Ruff + Black gate in check or fix mode"
-        },
-        {
-            "name": "roadmap-sync",
-            "skill": "clusters/07-devops/roadmap-sync/SKILL.md",
-            "description": "Sync README roadmap checkboxes with actual project state"
-        },
-        {
-            "name": "npm-lockfile-integrity",
-            "skill": "clusters/07-devops/npm-lockfile-integrity/SKILL.md",
-            "description": "Verify npm lockfile integrity and hash consistency"
-        },
-        {
-            "name": "python-lockfile-integrity",
-            "skill": "clusters/07-devops/python-lockfile-integrity/SKILL.md",
-            "description": "Verify Python lockfile integrity (pip/poetry/uv)"
-        },
-        {
-            "name": "readme-version-pin",
-            "skill": "clusters/07-devops/readme-version-pin/SKILL.md",
-            "description": "Verify README version references match VERSION file"
-        },
-        {
-            "name": "grimoire-roadmap-status",
-            "skill": "clusters/01-meta/grimoire-roadmap-status/SKILL.md",
-            "description": "Query roadmap totals, open clusters, and infrastructure status"
+            "name": "roadmap",
+            "skill": "clusters/01-meta/roadmap/SKILL.md"
         },
         {
             "name": "skill-keyword-lookup",
-            "skill": "clusters/01-meta/skill-keyword-lookup/SKILL.md",
-            "description": "Find relevant skills by keyword intent and rank likely matches"
-        },
-        {
-            "name": "roadmap-driver",
-            "skill": "clusters/01-meta/roadmap-driver/SKILL.md",
-            "description": "Select next implementation-ready roadmap task and execution chain"
+            "skill": "clusters/01-meta/skill-keyword-lookup/SKILL.md"
         },
         {
             "name": "branch-surface-resolve",
-            "skill": "clusters/07-devops/branch-surface-resolve/SKILL.md",
-            "description": "Audit all branches, categorise by state, and resolve via PRs or surface conflicts"
+            "skill": "clusters/07-devops/branch-surface-resolve/SKILL.md"
         },
         {
-            "name": "pre-push-validation",
-            "skill": "clusters/07-devops/pre-push-validation/SKILL.md",
-            "description": "Run all local checks before pushing to GitHub using spec-driven validation"
+            "name": "ci-local",
+            "skill": "clusters/07-devops/ci-local/SKILL.md"
+        },
+        {
+            "name": "deps-integrity",
+            "skill": "clusters/07-devops/deps-integrity/SKILL.md"
+        },
+        {
+            "name": "github-history-wipe",
+            "skill": "clusters/07-devops/github-history-wipe/SKILL.md"
+        },
+        {
+            "name": "github-morning-run",
+            "skill": "clusters/07-devops/github-morning-run/SKILL.md"
+        },
+        {
+            "name": "github-release-workflow",
+            "skill": "clusters/07-devops/github-release-workflow/SKILL.md"
+        },
+        {
+            "name": "orient",
+            "skill": "clusters/07-devops/orient/SKILL.md"
+        },
+        {
+            "name": "portfolio-readme-generator",
+            "skill": "clusters/07-devops/portfolio-readme-generator/SKILL.md"
+        },
+        {
+            "name": "py-lint",
+            "skill": "clusters/07-devops/py-lint/SKILL.md"
+        },
+        {
+            "name": "readme-version-pin",
+            "skill": "clusters/07-devops/readme-version-pin/SKILL.md"
+        },
+        {
+            "name": "repo-security-bootstrap",
+            "skill": "clusters/07-devops/repo-security-bootstrap/SKILL.md"
+        },
+        {
+            "name": "roadmap-sync",
+            "skill": "clusters/07-devops/roadmap-sync/SKILL.md"
         }
     ]
 }

@@ -45,15 +45,17 @@ for skill_md in "${SKILL_PATHS[@]}"; do
     skill_dir="$(dirname "${skill_md}")"
     skill_name="$(basename "${skill_dir}")"
 
-    # Extract description (first paragraph after ## Description)
-    description=$(sed -n '/^## Description/,/^##/{/^## Description/d;/^##/d;p;}' "${skill_md}" | head -5 | sed '/^$/d' | tr '\n' ' ' | sed 's/  */ /g;s/^ //;s/ $//')
+    # Extract description from frontmatter (single source); fall back to the old scrape
+    description=$(sed -n '1,6s/^description: "\(.*\)"$/\1/p' "${skill_md}" | head -1)
+    if [[ -z "${description}" ]]; then
+        echo "WARNING: ${skill_name} has no frontmatter description; scraping ## Description" >&2
+        description=$(sed -n '/^## Description/,/^##/{/^## Description/d;/^##/d;p;}' "${skill_md}" | head -5 | sed '/^$/d' | tr '\n' ' ' | sed 's/  */ /g;s/^ //;s/ $//')
+        description="${description:0:200}"
+        description="${description//\"/\\\"}"
+    fi
 
     # Extract the main content (everything from ## Description onward, excluding header)
     content=$(sed -n '/^## Description/,$p' "${skill_md}")
-
-    # Escape quotes in description for YAML front matter
-    safe_description="${description:0:200}"
-    safe_description="${safe_description//\"/\\\"}"
 
     # Generate .prompt.md
     output_file="${PROMPTS_DIR}/${skill_name}.prompt.md"
@@ -61,7 +63,7 @@ for skill_md in "${SKILL_PATHS[@]}"; do
     {
         echo "---"
         echo "mode: agent"
-        echo "description: \"${safe_description}\""
+        echo "description: \"${description}\""
         echo "---"
         echo ""
         echo "# ${skill_name}"

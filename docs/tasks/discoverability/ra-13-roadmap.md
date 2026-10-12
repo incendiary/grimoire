@@ -1,6 +1,6 @@
 # Task RA-13: Delete `grimoire-roadmap-status`; rename `roadmap-driver` to `roadmap`
 
-> Status: pending
+> Status: done
 > Parent: discoverability and consolidation programme
 > Model: haiku
 > Fallback: sonnet

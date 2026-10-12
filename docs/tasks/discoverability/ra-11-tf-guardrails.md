@@ -1,6 +1,6 @@
 # Task RA-11: Merge three Terraform skills into `tf-guardrails`
 
-> Status: pending
+> Status: done
 > Parent: discoverability and consolidation programme
 > Model: haiku
 > Fallback: sonnet
@@ -58,10 +58,10 @@ content lost.
    ```
    In the "Suggested scripts" text, update script paths to `tf-guardrails/<script>`.
 3. Write `clusters/07-devops/tf-guardrails/README.md`:
-   - Title, one-line summary, `## What this skill does` (three bullets, one per area).
-   - `## When to use it` (merge the three lists, dedupe identical lines).
-   - `## Installation`: copy the section from `terraform-version-compat/README.md` and
-     replace the old skill name with `tf-guardrails` throughout it.
+   - Title, one-line summary, then `## What this skill does` and `## When to use it`, each
+     holding every source's text verbatim under `### Provider version compatibility`,
+     `### AWS provider syntax`, `### Checkov skip placement` subheadings. Dedupe only
+     character-identical lines. No `## Installation` section (removed repo-wide by RA-24).
    - Then, unchanged, these sections in this order: "Invocation", "Workflow", "What it won't do"
      (from version-compat); "Block vs attribute quick reference", "Provider version matrix"
      (from aws-syntax); "Skip placement rule", "Common skip patterns and justifications"
@@ -110,7 +110,7 @@ content lost.
 - [ ] Step 6 grep prints nothing.
 - [ ] `shellcheck clusters/07-devops/tf-guardrails/*.sh` prints nothing.
 - [ ] `bash scripts/check-frontmatter.sh clusters/07-devops/tf-guardrails/SKILL.md` exits 0.
-- [ ] `grep -c '^## Installation' clusters/07-devops/tf-guardrails/README.md` prints `1`.
+- [ ] `grep -c '^## Installation' clusters/07-devops/tf-guardrails/README.md` prints `0`.
 - [ ] `check-roadmap-sync.sh . --check` exits 0 after `--fix`.
 
 ## Return signal

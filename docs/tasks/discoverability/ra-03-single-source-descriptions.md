@@ -1,6 +1,6 @@
 # Task RA-03: Make frontmatter the only description source (prompts and MCP)
 
-> Status: pending
+> Status: done
 > Parent: discoverability and consolidation programme
 > Model: sonnet
 > Fallback: opus
