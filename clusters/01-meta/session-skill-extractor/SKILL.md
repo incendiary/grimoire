@@ -1,6 +1,6 @@
 ---
 name: session-skill-extractor
-description: "Analyses the current session transcript for repeated patterns such as context re-explanation, correction loops, and boilerplate, and drafts SKILL.md stubs for review. Use when a session is ending, when asked 'what patterns did we repeat?', or when asked to 'extract skills from this session'. To vet a third-party skill use skill-vetter."
+description: "Analyses the current session transcript for repeated patterns such as context re-explanation, correction loops, and boilerplate, and drafts SKILL.md stubs for review. Use when a session is ending, when asked 'what patterns did we repeat?', or when asked to 'extract skills from this session'. To vet a third-party skill use review-skill."
 ---
 # session-skill-extractor
 
@@ -22,7 +22,7 @@ This skill implements the principle that rules should get smarter with every ses
 1. **Context re-explanation** — user explaining the same thing more than once (architecture, constraints, naming conventions, audience). Signals a missing grounding skill.
 2. **Correction loops** — Claude making the same class of mistake repeatedly in one session (style, terminology, scope, abstraction level). Signals a Gotchas section is missing from an existing or needed skill.
 3. **Boilerplate regeneration** — Claude writing the same scaffolding from scratch each session (imports, file structure, error handling patterns). Signals a code template skill.
-4. **Style corrections** — user correcting tone, format, British English, no em dashes, Oxford comma. Signals the human-rewrite or tone-check skills need updating.
+4. **Style corrections** — user correcting tone, format, British English, no em dashes, Oxford comma. Signals the write-human or write-tone skills need updating.
 5. **Unstated assumptions** — Claude making assumptions the user had to correct (e.g. using WinAPI when manual parsing was expected). Signals missing constraint documentation.
 
 ### Minimum threshold
@@ -74,7 +74,7 @@ python3 scripts/extract_patterns.py --sessions 5 | python3 scripts/generate_stub
 Proposed stubs are drafts — review before promoting:
 
 1. Read the stub at `~/.claude/proposed-skills/<name>/SKILL.md`
-2. Run `/skill-vetter` on the stub before copying to `~/.claude/skills/`
+2. Run `/review-skill` on the stub before copying to `~/.claude/skills/`
 3. Adjust the stub's trigger condition, constraints, and gotchas from real session context
 4. Copy to `~/.claude/skills/<name>/` and commit to `loadout` under the appropriate cluster
 

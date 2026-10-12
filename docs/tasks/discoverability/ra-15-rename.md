@@ -1,6 +1,6 @@
 # Task RA-15: Execute the pathway-prefix rename
 
-> Status: pending
+> Status: done
 > Parent: discoverability and consolidation programme
 > Model: sonnet
 > Review: opus (master reviews the full diff before integrating)
@@ -23,7 +23,9 @@ updated, and installing on a machine that has the old names removes them.
 - **Script file names do not change** (for example `branch-surface-resolve.sh` stays as it is inside
   `orient-branches/`). The owner's tooling may call them by name.
 
-## Rename list (32)
+## Rename list (32; 31 applied)
+
+> 2026-10-12: `session-skill-extractor` was not renamed. It runs only from the owner's Stop hook in `~/.claude/settings.json`, which references its install path; renaming would break the hook, and the name has no discoverability value.
 
 | Old | New |
 |---|---|

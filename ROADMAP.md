@@ -6,7 +6,7 @@
 > run `bash scripts/roadmap-collect.sh` (or `--json` for machine-readable output) and
 > `bash clusters/07-devops/ci-standards/check-roadmap-sync.sh . --fix`.
 
-**Last updated:** 2026-10-09
+**Last updated:** 2026-10-12
 **Open items:** 9 | **Completed:** 190
 
 ---
@@ -54,7 +54,7 @@ Tick the first column when a task's brief reaches `> Status: done`.
 | [x] | RA-12 | `ci-standards` = the DevOps standard + its updater | sonnet | opus | 3 | [ra-12](docs/tasks/discoverability/ra-12-ci-standards.md) |
 | [x] | RA-13 | `roadmap-driver` → `roadmap`; delete `grimoire-roadmap-status` | haiku | sonnet | 3 | [ra-13](docs/tasks/discoverability/ra-13-roadmap.md) |
 | [x] | RA-14 | `repo-compass` → `orient`, absorbing the push check | haiku | sonnet | 3 | [ra-14](docs/tasks/discoverability/ra-14-orient.md) |
-| [ ] | RA-15 | Pathway-prefix rename (32 skills), install-side clean-up | sonnet + opus review | opus | 4 | [ra-15](docs/tasks/discoverability/ra-15-rename.md) |
+| [x] | RA-15 | Pathway-prefix rename (31 skills), install-side clean-up | sonnet + opus review | opus | 4 | [ra-15](docs/tasks/discoverability/ra-15-rename.md) |
 | [ ] | RA-16 | Pathway tables in `orient`, `plan`, `release`, `publish` | haiku | sonnet | 5 | [ra-16](docs/tasks/discoverability/ra-16-pathway-entries.md) |
 | [ ] | RA-17 | Delete `PROJECT-WORKFLOWS.md`, short README table | haiku | sonnet | 6 | [ra-17](docs/tasks/discoverability/ra-17-workflows-doc.md) |
 | [ ] | RA-18 | Report old names outside the repo (read-only; owner approves edits) | haiku | sonnet | 5 | [ra-18](docs/tasks/discoverability/ra-18-cross-repo-report.md) |
@@ -78,12 +78,12 @@ Revised by the 2026-10-04 over-engineering audit (see `REVIEW.md`). Open owner d
 <!-- ROADMAP-COLLECT:START (auto-generated — do not hand-edit; run check-roadmap-sync.sh --fix) -->
 ### 01-meta
 
-  - **task-handoff**: Add `--auto` mode: triggered automatically when context exceeds a threshold
+  - **plan-handoff**: Add `--auto` mode: triggered automatically when context exceeds a threshold
 
 ### 05-technical
 
-  - **codebase-holistic-review**: Add worked example: Python web service holistic review (before/after findings)
-  - **codebase-holistic-review**: Add worked example: Node.js monorepo review
+  - **review-codebase**: Add worked example: Python web service holistic review (before/after findings)
+  - **review-codebase**: Add worked example: Node.js monorepo review
 
 ### 07-devops
 
@@ -91,7 +91,7 @@ Revised by the 2026-10-04 over-engineering audit (see `REVIEW.md`). Open owner d
   - **ci-local**: Pin detection for pyproject.toml / poetry.lock / constraints files
   - **ci-local**: Job dependency graph (`needs:`) and matrix expansion awareness
   - **ci-local**: Caching of discovered jobs (skip re-parsing on each run)
-  - **portfolio-readme-generator**: Planned enhancement
+  - **publish-readme**: Planned enhancement
   - **tf-guardrails**: **Version compat:** Add known-good version matrix for frequently used module combinations
 
 ---
@@ -118,7 +118,7 @@ These are repo-level improvements not tied to individual skills:
 - [x] Add `uninstall-all.sh` — removes grimoire-managed skills from a target skills directory (default: `~/.claude/skills`)
 - [x] Timestamped versioned backups for `install-all.sh` (Claude Code) — same pattern as install-vscode.sh (date-stamped, keep last 5)
 - [x] Add `--update` mode to `install-all.sh` — backs up existing skill to `.backups/<skill>-YYYYMMDD-HHMMSS/`, overwrites with latest, prunes to 5 backups. `--force` to overwrite without backup. Default remains skip-if-exists for safety.
-- [x] Add `roadmap-driver` skill (01-meta) — reads outstanding roadmap items, selects next work item, invokes karpathy-framework to plan and execute. Chains: repo-compass (assess) → task-decomposer (break down) → karpathy-framework (plan) → karpathy-verify (confirm). Trigger: "what should I work on next?" / "pick up from the roadmap"
+- [x] Add `roadmap-driver` skill (01-meta) — reads outstanding roadmap items, selects next work item, invokes plan to plan and execute. Chains: repo-compass (assess) → plan-decompose (break down) → plan (plan) → plan-verify (confirm). Trigger: "what should I work on next?" / "pick up from the roadmap"
 - [x] Cluster README "when to use" enhancement — each cluster README gains a workflow section explaining when/how each skill should be invoked, with trigger phrases and ideal sequencing. ~~Start with 07-devops as template, then roll out to all clusters (01-meta through 09-odpc)~~ completed for public clusters (2026-06-15); private clusters were handled in `grimoire-private` (06-study and 09-odpc).
 - [x] Add MCP server logging — file-based + stderr, structured format with timestamps, context, and metadata (`mcp-server/src/logger.ts`)
 - [x] Add fail-open error handling — tool failures return error content instead of crashing the server; registry load failure starts with 0 tools; global uncaught exception/rejection handlers keep server alive

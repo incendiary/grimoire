@@ -11,13 +11,13 @@ Adjust based on your specific context.
 
 **Always** begin with these three skills, regardless of project type:
 
-### 1. **karpathy-spec** (01-meta)
+### 1. **plan-spec** (01-meta)
 
 Convert vague requirements into precise, testable success criteria.
 
 ```
 Prompt: "Build a CLI tool that processes CSV files"
-                              ↓ karpathy-spec
+                              ↓ plan-spec
 Output: Spec with:
   - Success criteria (handles 10k+ rows, <1s overhead, strict error handling)
   - Scope boundaries (CSV only, no spreadsheet formats, no streaming)
@@ -26,14 +26,14 @@ Output: Spec with:
 
 → This prevents 80% of "rebuild it" requests downstream.
 
-### 2. **task-decomposer** (01-meta)
+### 2. **plan-decompose** (01-meta)
 
 If this is multi-session or >100K lines of code, pre-split into independent chunks.
 
 ```
-karpathy-spec output
+plan-spec output
             ↓
-   task-decomposer    →   5 task files, each with:
+   plan-decompose    →   5 task files, each with:
             ↓                 - Self-contained scope
       [Task 1]              - Verifiable done criteria
       [Task 2]              - No cross-task context needed
@@ -48,12 +48,12 @@ karpathy-spec output
 
 ## Project type: Node.js library or service
 
-**Skill stack:** karpathy-spec → task-decomposer → [dev] → deps-integrity → github-release-workflow → docker-ghcr-publish (optional)
+**Skill stack:** plan-spec → plan-decompose → [dev] → deps-integrity → release → release-docker-ghcr (optional)
 
 ### Pre-development
 
-1. **karpathy-spec** — Define the API surface, success criteria, breaking-change boundaries
-2. **task-decomposer** — Split into: (1) core API, (2) tests, (3) docs, (4) release prep
+1. **plan-spec** — Define the API surface, success criteria, breaking-change boundaries
+2. **plan-decompose** — Split into: (1) core API, (2) tests, (3) docs, (4) release prep
 
 ### Development
 
@@ -62,23 +62,23 @@ karpathy-spec output
 ### Pre-release
 
 1. **deps-integrity** — Audit `package-lock.json` for integrity coverage
-2. **github-release-workflow** — Version bump → PR → CI → merge → tag → release
-3. **docker-ghcr-publish** (optional) — Build and push images to GHCR
+2. **release** — Version bump → PR → CI → merge → tag → release
+3. **release-docker-ghcr** (optional) — Build and push images to GHCR
 
 ### Post-release
 
-1. **karpathy-verify** — Test the release against the original spec criteria
+1. **plan-verify** — Test the release against the original spec criteria
 
 ---
 
 ## Project type: Python CLI tool or library
 
-**Skill stack:** karpathy-spec → task-decomposer → [dev] → py-lint → python-ci-template → github-release-workflow
+**Skill stack:** plan-spec → plan-decompose → [dev] → py-lint → ci-python → release
 
 ### Pre-development
 
-1. **karpathy-spec** — Define the CLI interface, success criteria, error handling model
-2. **task-decomposer** — Split into: (1) core logic, (2) CLI wrapper, (3) tests, (4) docs
+1. **plan-spec** — Define the CLI interface, success criteria, error handling model
+2. **plan-decompose** — Split into: (1) core logic, (2) CLI wrapper, (3) tests, (4) docs
 
 ### Development
 
@@ -86,46 +86,46 @@ karpathy-spec output
 
 ### Release prep
 
-1. **python-ci-template** — Generate standardised CI (ruff, black, pytest, coverage matrix 3.9–3.12)
-2. **github-release-workflow** — Version bump → PR → CI → merge → tag → release
+1. **ci-python** — Generate standardised CI (ruff, black, pytest, coverage matrix 3.9–3.12)
+2. **release** — Version bump → PR → CI → merge → tag → release
 
 ### Post-release
 
-1. **karpathy-verify** — Verify release against spec
+1. **plan-verify** — Verify release against spec
 
 ---
 
 ## Project type: .NET / C# tool or library
 
-**Skill stack:** karpathy-spec → task-decomposer → [dev] → dotnet-ci-template → github-release-workflow
+**Skill stack:** plan-spec → plan-decompose → [dev] → ci-dotnet → release
 
 ### Pre-development
 
-1. **karpathy-spec** — Define namespace structure, breaking-change boundaries, target frameworks
-2. **task-decomposer** — Split into: (1) core logic, (2) unit tests, (3) integration tests, (4) docs
+1. **plan-spec** — Define namespace structure, breaking-change boundaries, target frameworks
+2. **plan-decompose** — Split into: (1) core logic, (2) unit tests, (3) integration tests, (4) docs
 
 ### Development
 
-1. **dotnet-ci-template** — Generate standardised CI (build matrix Debug/Release, `dotnet format --verify-no-changes`, xUnit/NUnit coverage)
+1. **ci-dotnet** — Generate standardised CI (build matrix Debug/Release, `dotnet format --verify-no-changes`, xUnit/NUnit coverage)
 
 ### Release prep
 
-1. **github-release-workflow** — Version bump → PR → CI → merge → tag → release
+1. **release** — Version bump → PR → CI → merge → tag → release
 
 ### Post-release
 
-1. **karpathy-verify** — Verify release against spec
+1. **plan-verify** — Verify release against spec
 
 ---
 
 ## Project type: Terraform / IaC infrastructure
 
-**Skill stack:** karpathy-spec → task-decomposer → [dev] → terraform-* skills → repo-security-bootstrap → github-release-workflow
+**Skill stack:** plan-spec → plan-decompose → [dev] → terraform-* skills → publish-secret-scan → release
 
 ### Pre-development
 
-1. **karpathy-spec** — Define the target cloud state, success criteria, disaster-recovery assumptions
-2. **task-decomposer** — Split into: (1) networking, (2) compute, (3) security, (4) monitoring, (5) docs
+1. **plan-spec** — Define the target cloud state, success criteria, disaster-recovery assumptions
+2. **plan-decompose** — Split into: (1) networking, (2) compute, (3) security, (4) monitoring, (5) docs
 
 ### Development
 
@@ -133,22 +133,22 @@ karpathy-spec output
 
 ### Security
 
-1. **repo-security-bootstrap** — Deploy `.gitleaks.toml` + `secret-scan.yml` workflow
+1. **publish-secret-scan** — Deploy `.gitleaks.toml` + `secret-scan.yml` workflow
 
 ### Release prep
 
-1. **github-release-workflow** — Version bump → PR → CI → merge → tag → release
+1. **release** — Version bump → PR → CI → merge → tag → release
 
 ---
 
 ## Project type: Security tool / Exploit
 
-**Skill stack:** karpathy-spec → [07-devops security bootstrap] → [05-technical conventions] → [08-offsec conventions] → portfolio-readme-generator → github-release-workflow
+**Skill stack:** plan-spec → [07-devops security bootstrap] → [05-technical conventions] → [08-offsec conventions] → publish-readme → release
 
 ### Pre-development
 
-1. **karpathy-spec** — Define the attack surface, success criteria, OPSEC constraints
-2. **repo-security-bootstrap** — Deploy secret scanning upfront (credentials leak risk)
+1. **plan-spec** — Define the attack surface, success criteria, OPSEC constraints
+2. **publish-secret-scan** — Deploy secret scanning upfront (credentials leak risk)
 
 ### Development
 
@@ -157,48 +157,48 @@ karpathy-spec output
 
 ### Pre-release
 
-1. **portfolio-readme-generator** — Write portfolio-quality README with authorised-use disclaimer
-2. **github-release-workflow** — Version bump → PR → CI → merge → tag → release
+1. **publish-readme** — Write portfolio-quality README with authorised-use disclaimer
+2. **release** — Version bump → PR → CI → merge → tag → release
 
 ---
 
 ## Project type: Prompt / AI skill (for grimoire)
 
-**Skill stack:** session-skill-extractor → karpathy-spec → [01-meta README standards] → skill-vetter → github-release-workflow
+**Skill stack:** session-skill-extractor → plan-spec → [01-meta README standards] → review-skill → release
 
 ### Extraction
 
 1. **session-skill-extractor** — Proposed SKILL.md stub auto-generated from session transcript
-2. **karpathy-spec** — Define when the skill activates, what it outputs, success criteria
+2. **plan-spec** — Define when the skill activates, what it outputs, success criteria
 
 ### Vetting
 
-1. **skill-vetter** — Safety audit (repo health, script calls, prompt injection)
+1. **review-skill** — Safety audit (repo health, script calls, prompt injection)
 
 ### Integration
 
 1. Update grimoire cluster README with skill entry
 2. Add to `registry.json` if action-type
-3. **github-release-workflow** — Create PR → CI → merge → tag → release
+3. **release** — Create PR → CI → merge → tag → release
 
 ---
 
 ## Workflow: Multi-repo bulk operations
 
-**Skill stack:** github-authored-repos → [bulk task] → roadmap-sync → github-release-workflow
+**Skill stack:** orient-authored-repos → [bulk task] → roadmap-sync → release
 
 ### Setup
 
-1. **github-authored-repos** — Filter to authored repos only (prevent forks from being processed)
+1. **orient-authored-repos** — Filter to authored repos only (prevent forks from being processed)
 
 ### Bulk task
 
-1. Apply the operation (e.g., `repo-security-bootstrap` on 16 repos, or `python-ci-template` on 12 repos)
+1. Apply the operation (e.g., `publish-secret-scan` on 16 repos, or `ci-python` on 12 repos)
 
 ### Cleanup
 
 1. **roadmap-sync** — Tick completed items in each repo's README
-2. **github-release-workflow** — Batch version bumps across all repos
+2. **release** — Batch version bumps across all repos
 
 ---
 
@@ -218,9 +218,9 @@ karpathy-spec output
 1. If you need the roadmap broken down into executable chunks:
    - **roadmap** → selects next implementation-ready item and chains to:
      - `orient` (full state)
-     - `task-decomposer` (break into chunks)
-     - `karpathy-framework` (decide which Karpathy layer)
-     - `karpathy-verify` (evaluate output)
+     - `plan-decompose` (break into chunks)
+     - `plan` (decide which Karpathy layer)
+     - `plan-verify` (evaluate output)
 
 ---
 
@@ -230,7 +230,7 @@ karpathy-spec output
 
 ```
         ↓
-task-handoff      →  package state for a fresh session to continue
+plan-handoff      →  package state for a fresh session to continue
         ↓
 [new session loads handoff document]
 ```
@@ -239,11 +239,11 @@ task-handoff      →  package state for a fresh session to continue
 
 ## Workflow: Review and verification
 
-**Skill stack:** karpathy-verify
+**Skill stack:** plan-verify
 
 ### After development
 
-1. **karpathy-verify** — Second-opinion evaluation against your original spec criteria
+1. **plan-verify** — Second-opinion evaluation against your original spec criteria
    - Different model or role review
    - External signal testing (run it, check output)
    - Feedback loops improve quality 2–3× per invocation
@@ -255,7 +255,7 @@ task-handoff      →  package state for a fresh session to continue
 Load this before diving into project-specific work:
 
 ```
-github-authored-repos  →  (multi-repo only) "Scope to authored repos"
+orient-authored-repos  →  (multi-repo only) "Scope to authored repos"
 ```
 
 ---
@@ -277,7 +277,7 @@ Once installed (via `bash install-all.sh` or `bash install-vscode.sh`), invoke a
 **Explicit:** Reference by name
 
 ```
-/karpathy-spec
+/plan-spec
 Build a CLI tool that converts Markdown to Word documents, with embedded images.
 ```
 

@@ -9,30 +9,30 @@ without repetition.
 
 ## Skills
 
-### [test-bootstrap](test-bootstrap/) ✅ complete
+### [ci-tests](ci-tests/) ✅ complete
 
 Adds a unit test layer to projects with no tests, or fills coverage gaps in partially
 tested projects. Detects language/framework, scaffolds failing tests first (red-first),
 implements assertions, and wires test execution into CI.
-→ [Full documentation](test-bootstrap/README.md)
+→ [Full documentation](ci-tests/README.md)
 
-### [ui-ux-product-audit](ui-ux-product-audit/) ✅ complete
+### [review-ui](review-ui/) ✅ complete
 
 Production-grade UI/UX audit and implementation loop for frontend applications.
 Evaluates product experience from code (hierarchy, consistency, responsiveness,
 accessibility, states, design system quality), ranks findings by severity, and requires
 an actionable implementation plan grouped into Today / This week / Later with exact files.
-Chains with `karpathy-spec` and `karpathy-verify`.
-→ [Full documentation](ui-ux-product-audit/README.md)
+Chains with `plan-spec` and `plan-verify`.
+→ [Full documentation](review-ui/README.md)
 
-### [codebase-holistic-review](codebase-holistic-review/) ✅ complete
+### [review-codebase](review-codebase/) ✅ complete
 
 Structured, predictive review across 8 phases: architecture map, risk inventory,
 failure prediction, test coverage gaps, dependency audit, CI/CD gap analysis, findings
 document, and action roadmap. Produces a `REVIEW.md` with action items written in
 enough detail for a lesser-capable agent to execute them independently. Chains to
 `roadmap-sync` to extract items to a dedicated file.
-→ [Full documentation](codebase-holistic-review/README.md)
+→ [Full documentation](review-codebase/README.md)
 
 ---
 
@@ -43,11 +43,11 @@ enough detail for a lesser-capable agent to execute them independently. Chains t
 **Trigger:** "This project has no tests" / "Add coverage for this module"
 
 ```
-test-bootstrap             → detect framework, scaffold failing tests, implement assertions
+ci-tests             → detect framework, scaffold failing tests, implement assertions
  ↓
 [run tests]                → confirm red-first then green
  ↓
-python-ci-template / dotnet-ci-template / workflow update
+ci-python / ci-dotnet / workflow update
        → ensure CI enforces test execution
 ```
 
@@ -56,15 +56,15 @@ python-ci-template / dotnet-ci-template / workflow update
 **Trigger:** "Review this codebase" / "What will break as this scales?" / "Audit before a release"
 
 ```
-karpathy-spec             → (large repos) define what "healthy" looks like first
+plan-spec             → (large repos) define what "healthy" looks like first
         ↓
-codebase-holistic-review  → 8-phase review: architecture, risks, failures, tests, deps, CI
+review-codebase  → 8-phase review: architecture, risks, failures, tests, deps, CI
         ↓
 [REVIEW.md + action roadmap committed]
         ↓
 roadmap-sync              → move items to ROADMAP.md if >15 items
         ↓
-task-decomposer           → (optional) chunk items for multi-session execution
+plan-decompose           → (optional) chunk items for multi-session execution
 ```
 
 ---
@@ -73,8 +73,8 @@ task-decomposer           → (optional) chunk items for multi-session execution
 
 | Skill | Invoke when... |
 |-------|----------------|
-| `test-bootstrap` | Repo lacks tests or a changed module/class needs baseline coverage and CI wiring |
-| `codebase-holistic-review` | Auditing a codebase holistically; predicting future failure modes; producing a detailed action roadmap before scaling or releasing |
+| `ci-tests` | Repo lacks tests or a changed module/class needs baseline coverage and CI wiring |
+| `review-codebase` | Auditing a codebase holistically; predicting future failure modes; producing a detailed action roadmap before scaling or releasing |
 
 ---
 

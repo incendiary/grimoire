@@ -1,20 +1,16 @@
 {
     "tools": [
         {
-            "name": "github-authored-repos",
-            "skill": "clusters/01-meta/github-authored-repos/SKILL.md"
+            "name": "grimoire-find",
+            "skill": "clusters/01-meta/grimoire-find/SKILL.md"
+        },
+        {
+            "name": "orient-authored-repos",
+            "skill": "clusters/01-meta/orient-authored-repos/SKILL.md"
         },
         {
             "name": "roadmap",
             "skill": "clusters/01-meta/roadmap/SKILL.md"
-        },
-        {
-            "name": "skill-keyword-lookup",
-            "skill": "clusters/01-meta/skill-keyword-lookup/SKILL.md"
-        },
-        {
-            "name": "branch-surface-resolve",
-            "skill": "clusters/07-devops/branch-surface-resolve/SKILL.md"
         },
         {
             "name": "ci-local",
@@ -25,36 +21,40 @@
             "skill": "clusters/07-devops/deps-integrity/SKILL.md"
         },
         {
-            "name": "github-history-wipe",
-            "skill": "clusters/07-devops/github-history-wipe/SKILL.md"
+            "name": "orient-branches",
+            "skill": "clusters/07-devops/orient-branches/SKILL.md"
         },
         {
-            "name": "github-morning-run",
-            "skill": "clusters/07-devops/github-morning-run/SKILL.md"
-        },
-        {
-            "name": "github-release-workflow",
-            "skill": "clusters/07-devops/github-release-workflow/SKILL.md"
+            "name": "orient-morning-run",
+            "skill": "clusters/07-devops/orient-morning-run/SKILL.md"
         },
         {
             "name": "orient",
             "skill": "clusters/07-devops/orient/SKILL.md"
         },
         {
-            "name": "portfolio-readme-generator",
-            "skill": "clusters/07-devops/portfolio-readme-generator/SKILL.md"
+            "name": "publish-history-wipe",
+            "skill": "clusters/07-devops/publish-history-wipe/SKILL.md"
+        },
+        {
+            "name": "publish-readme",
+            "skill": "clusters/07-devops/publish-readme/SKILL.md"
+        },
+        {
+            "name": "publish-secret-scan",
+            "skill": "clusters/07-devops/publish-secret-scan/SKILL.md"
         },
         {
             "name": "py-lint",
             "skill": "clusters/07-devops/py-lint/SKILL.md"
         },
         {
-            "name": "readme-version-pin",
-            "skill": "clusters/07-devops/readme-version-pin/SKILL.md"
+            "name": "release-readme-pin",
+            "skill": "clusters/07-devops/release-readme-pin/SKILL.md"
         },
         {
-            "name": "repo-security-bootstrap",
-            "skill": "clusters/07-devops/repo-security-bootstrap/SKILL.md"
+            "name": "release",
+            "skill": "clusters/07-devops/release/SKILL.md"
         },
         {
             "name": "roadmap-sync",

@@ -8,14 +8,14 @@ communication workflows.
 
 ## Skills
 
-### [ios-signing-risk](ios-signing-risk/) ✅ complete
+### [review-ios-signing](review-ios-signing/) ✅ complete
 
 Structured analysis of iOS signing risk. Covers IPA integrity (hash and codesign
 verification), certificate authenticity and validity, OTA manifest verification,
 and revocation timing analysis with OCSP propagation lag. Always enforces the
 redeploy-before-revoke sequencing rule. Produces a finding of confirmed safe /
 confirmed compromised / inconclusive with what evidence would resolve it.
-→ [Full documentation](ios-signing-risk/README.md)
+→ [Full documentation](review-ios-signing/README.md)
 
 ---
 
@@ -24,11 +24,11 @@ confirmed compromised / inconclusive with what evidence would resolve it.
 ```
 Signing anomaly or incident reported
               ↓
-ios-signing-risk          (technical analysis)
+review-ios-signing          (technical analysis)
               ↓
-incident-ask-builder      (evidence collection)
+incident-asks      (evidence collection)
               ↓
-executive-translate       (stakeholder notification)
+write-exec       (stakeholder notification)
               ↓
 incident-appendix         (formal documentation)
 ```
@@ -42,11 +42,11 @@ incident-appendix         (formal documentation)
 **Trigger:** "Is this app signing chain compromised or safe to continue?"
 
 ```
-ios-signing-risk          → integrity/cert/manifest/revocation analysis
+review-ios-signing          → integrity/cert/manifest/revocation analysis
               ↓
-incident-ask-builder      → collect missing evidence to resolve uncertainty
+incident-asks      → collect missing evidence to resolve uncertainty
               ↓
-executive-translate       → stakeholder decision brief
+write-exec       → stakeholder decision brief
               ↓
 incident-appendix         → preserve full technical record
 ```
@@ -57,4 +57,4 @@ incident-appendix         → preserve full technical record
 
 | Skill | Invoke when... |
 |-------|----------------|
-| `ios-signing-risk` | You need structured technical assessment of IPA signing integrity and revocation state |
+| `review-ios-signing` | You need structured technical assessment of IPA signing integrity and revocation state |

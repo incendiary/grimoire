@@ -21,7 +21,7 @@ as new skills. Runs passively at session end — no manual invocation required.
 
 1. **Analyses the session transcript** for repeated context-setting, rule enforcement, or multi-step procedures
 2. **Generates stub SKILL.md files** in `~/.claude/proposed-skills/`
-3. **Flags stubs for vetting** via the `skill-vetter` promotion workflow
+3. **Flags stubs for vetting** via the `review-skill` promotion workflow
 
 ---
 
@@ -80,4 +80,4 @@ Edit `config.json` in the skill directory:
 - [x] Multi-session aggregation (combine patterns across sessions)
 - [x] Per-project pattern weighting
 - [x] Confidence scoring improvements
-- [x] `skill-vetter` integration — promotion workflow documented in SKILL.md
+- [x] `review-skill` integration — promotion workflow documented in SKILL.md

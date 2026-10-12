@@ -16,8 +16,8 @@ appendix that can be attached to an executive summary or incident report. The ou
 consistent, citation-backed, and defensible — every factual claim traces to a named
 evidence source.
 
-Pairs with `incident-ask-builder` (to determine what evidence to collect) and
-`executive-translate` (to write the executive summary that sits in front of this appendix).
+Pairs with `incident-asks` (to determine what evidence to collect) and
+`write-exec` (to write the executive summary that sits in front of this appendix).
 
 ---
 

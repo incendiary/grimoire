@@ -15,83 +15,83 @@ stubs in `~/.claude/proposed-skills/`. Wired to the Claude Code Stop hook. The e
 that feeds this entire library — every promoted skill originated here.
 → [Full documentation](session-skill-extractor/README.md)
 
-### [skill-vetter](skill-vetter/) ✅ complete
+### [review-skill](review-skill/) ✅ complete
 
 Due diligence checklist before installing any third-party Claude Code skill. Reviews
 the repo health, all script files (network calls, env var access, dynamic execution),
 and the SKILL.md itself for prompt injection. Outputs a PASS / FLAG / REJECT verdict.
-→ [Full documentation](skill-vetter/README.md)
+→ [Full documentation](review-skill/README.md)
 
-### [github-authored-repos](github-authored-repos/) ✅ complete
+### [orient-authored-repos](orient-authored-repos/) ✅ complete
 
 Prevents forks and reference clones from being included in multi-repo operations.
 Enforces the canonical authored-repo list from CLAUDE.md. Extracted after forks were
 incorrectly processed in three separate bulk operations.
-→ [Full documentation](github-authored-repos/README.md)
+→ [Full documentation](orient-authored-repos/README.md)
 
-### [karpathy-framework](karpathy-framework/) ✅ complete
+### [plan](plan/) ✅ complete
 
 Umbrella entry point for the Karpathy three-layer framework. Routes to the right layer
 (spec, verify, environment) based on where you are in a task. No content of its own —
 use when unsure which Karpathy layer to start with.
-→ [Full documentation](karpathy-framework/README.md)
+→ [Full documentation](plan/README.md)
 
-### [karpathy-spec](karpathy-spec/) ✅ complete
+### [plan-spec](plan-spec/) ✅ complete
 
 Layer 1 of the Karpathy framework. Transforms vague requests into precise, agile specs
-before work begins. Defines success criteria upfront so `karpathy-verify` has something
+before work begins. Defines success criteria upfront so `plan-verify` has something
 concrete to test against.
-→ [Full documentation](karpathy-spec/README.md)
+→ [Full documentation](plan-spec/README.md)
 
-### [karpathy-verify](karpathy-verify/) ✅ complete
+### [plan-verify](plan-verify/) ✅ complete
 
 Layer 2 of the Karpathy framework. Evaluates output against defined criteria via second
 opinion (different model or role) and external signal (test claims against reality).
 Feedback loops improve output quality 2–3× per invocation.
-→ [Full documentation](karpathy-verify/README.md)
+→ [Full documentation](plan-verify/README.md)
 
-### [karpathy-environment](karpathy-environment/) ✅ complete
+### [plan-environment](plan-environment/) ✅ complete
 
 Layer 3 of the Karpathy framework. Builds the durable workspace that makes Layers 1 and 2
 faster over time: CLAUDE.md, structured knowledge base, custom skills roadmap, and guardrails.
 Compounds — each session setup is faster than the last.
-→ [Full documentation](karpathy-environment/README.md)
+→ [Full documentation](plan-environment/README.md)
 
-### [model-selection-framework](model-selection-framework/) ✅ complete
+### [plan-model-tier](plan-model-tier/) ✅ complete
 
 Cost-benefit framework for choosing LLM model tier (Haiku, Sonnet, Opus) based on task
 characteristics—verifiability and blast radius—not just capability. Prevents false savings and
 overspending.
-→ [Full documentation](model-selection-framework/README.md)
+→ [Full documentation](plan-model-tier/README.md)
 
 ### [roadmap](roadmap/) ✅ complete
 
 Shows roadmap status from `ROADMAP.md` and picks the next implementation-ready item, then
 outputs a focused execution chain. Designed for "what should I work on next?", "show roadmap
-status" and "pick up from the roadmap" prompts. Chains: `orient` → `task-decomposer` →
-`karpathy-framework` → `karpathy-verify`.
+status" and "pick up from the roadmap" prompts. Chains: `orient` → `plan-decompose` →
+`plan` → `plan-verify`.
 → [Full documentation](roadmap/README.md)
 
-### [skill-keyword-lookup](skill-keyword-lookup/) ✅ complete
+### [grimoire-find](grimoire-find/) ✅ complete
 
 Keyword-to-skill lookup utility for grimoire. Ranks matching skills from plain-language
 queries (intent keywords) so you can find the right skill even when you do not remember
 its exact name.
-→ [Full documentation](skill-keyword-lookup/README.md)
+→ [Full documentation](grimoire-find/README.md)
 
-### [task-decomposer](task-decomposer/) ✅ complete
+### [plan-decompose](plan-decompose/) ✅ complete
 
 Proactively breaks large tasks into self-contained chunks before context limits become an
 issue. Each chunk is a task file with everything a fresh session needs to execute independently.
 Used at the start of multi-session work to prevent context-window collisions.
-→ [Full documentation](task-decomposer/README.md)
+→ [Full documentation](plan-decompose/README.md)
 
-### [task-handoff](task-handoff/) ✅ complete
+### [plan-handoff](plan-handoff/) ✅ complete
 
 Reactively packages the current session's state into a handoff document when context pressure
 is building mid-task. Captures git state, completed work, decisions made, and next chunk with
 verifiable done criteria. Enables a fresh session to pick up cleanly without replaying history.
-→ [Full documentation](task-handoff/README.md)
+→ [Full documentation](plan-handoff/README.md)
 
 ---
 
@@ -102,19 +102,19 @@ verifiable done criteria. Enables a fresh session to pick up cleanly without rep
 **Trigger:** "Build X" / "Implement Y" / any task that feels multi-step or vague
 
 ```
-karpathy-framework        → route to the right layer (usually spec first)
+plan        → route to the right layer (usually spec first)
         ↓
-karpathy-spec             → break the vague request into precise agile specs
+plan-spec             → break the vague request into precise agile specs
         ↓
-task-decomposer           → (if multi-session) split into independent chunks
+plan-decompose           → (if multi-session) split into independent chunks
         ↓
-model-selection-framework → (for each chunk) pick model tier based on verifiability & blast radius
+plan-model-tier → (for each chunk) pick model tier based on verifiability & blast radius
         ↓
 [do the work]
         ↓
-karpathy-verify           → evaluate output against spec criteria
+plan-verify           → evaluate output against spec criteria
         ↓
-karpathy-environment      → (if patterns emerged) capture in CLAUDE.md / skills
+plan-environment      → (if patterns emerged) capture in CLAUDE.md / skills
 ```
 
 ### Workflow 2: Mid-session context pressure
@@ -123,7 +123,7 @@ karpathy-environment      → (if patterns emerged) capture in CLAUDE.md / skill
 
 ```
         ↓
-task-handoff              → package state for a fresh session to continue
+plan-handoff              → package state for a fresh session to continue
         ↓
 [new session starts from handoff document]
 ```
@@ -135,7 +135,7 @@ task-handoff              → package state for a fresh session to continue
 ```
         ↓
         ↓
-github-authored-repos     → (if multi-repo) scope to authored repos only
+orient-authored-repos     → (if multi-repo) scope to authored repos only
 ```
 
 ### Workflow 4: Evaluating existing output
@@ -143,7 +143,7 @@ github-authored-repos     → (if multi-repo) scope to authored repos only
 **Trigger:** "Is this good enough?" / reviewing generated code / before accepting AI output
 
 ```
-karpathy-verify           → second-opinion evaluation against criteria
+plan-verify           → second-opinion evaluation against criteria
         ↓
 ```
 
@@ -154,9 +154,9 @@ karpathy-verify           → second-opinion evaluation against criteria
 ```
 session-skill-extractor   → scan transcript, propose new SKILL.md stubs
         ↓
-skill-vetter              → (if third-party skill) review for safety before installing
+review-skill              → (if third-party skill) review for safety before installing
         ↓
-karpathy-environment      → update CLAUDE.md, knowledge base, skill roadmap
+plan-environment      → update CLAUDE.md, knowledge base, skill roadmap
 ```
 
 ### Workflow 6: Installing or vetting new skills
@@ -164,7 +164,7 @@ karpathy-environment      → update CLAUDE.md, knowledge base, skill roadmap
 **Trigger:** "Should I trust this skill?" / found a third-party skill to install
 
 ```
-skill-vetter              → repo health, script audit, prompt injection check
+review-skill              → repo health, script audit, prompt injection check
         ↓
 [PASS / FLAG / REJECT decision]
 ```
@@ -174,7 +174,7 @@ skill-vetter              → repo health, script audit, prompt injection check
 **Trigger:** "Which skill covers this?" / concept known but skill name forgotten
 
 ```
-skill-keyword-lookup      → rank likely matching skills from keywords
+grimoire-find      → rank likely matching skills from keywords
         ↓
 [pick top match]          → invoke selected skill directly
 ```
@@ -186,9 +186,9 @@ skill-keyword-lookup      → rank likely matching skills from keywords
 ```
 roadmap                   → select the next implementation-ready roadmap item
         ↓
-task-decomposer           → break that item into self-contained chunks with clear done criteria
+plan-decompose           → break that item into self-contained chunks with clear done criteria
         ↓
-model-selection-framework → (for each chunk) assign model tier based on task characteristics
+plan-model-tier → (for each chunk) assign model tier based on task characteristics
         ↓
 roadmap-sync              → move completed README roadmap items into ROADMAP.md or PROJECT-ROADMAP.md
         ↓
@@ -196,7 +196,7 @@ roadmap-sync              → move completed README roadmap items into ROADMAP.m
 ```
 
 Use this when you want a roadmap item turned into lesser-agent-friendly work
-packages. `roadmap` chooses the item, `task-decomposer` writes the chunk files,
+packages. `roadmap` chooses the item, `plan-decompose` writes the chunk files,
 and `roadmap-sync` keeps the README roadmap from becoming the long-term source of truth.
 
 ---
@@ -205,14 +205,14 @@ and `roadmap-sync` keeps the README roadmap from becoming the long-term source o
 
 | Skill | Invoke when... |
 |-------|---------------|
-| `karpathy-framework` | Unsure which layer to start with; onboarding someone to the framework |
-| `karpathy-spec` | Task is vague, large, or multi-step; need to define "done" before starting |
-| `karpathy-verify` | Output exists; need to evaluate quality before accepting; want a second opinion |
-| `karpathy-environment` | Session felt repetitive; patterns emerged worth capturing; setting up CLAUDE.md |
-| `model-selection-framework` | Choosing model tier for a task; avoiding false savings on high-risk work; assigning models to chunks |
-| `task-decomposer` | Task will span multiple sessions; need independent chunks before starting |
-| `task-handoff` | Context pressure building mid-task; need to hand off cleanly to a fresh session |
+| `plan` | Unsure which layer to start with; onboarding someone to the framework |
+| `plan-spec` | Task is vague, large, or multi-step; need to define "done" before starting |
+| `plan-verify` | Output exists; need to evaluate quality before accepting; want a second opinion |
+| `plan-environment` | Session felt repetitive; patterns emerged worth capturing; setting up CLAUDE.md |
+| `plan-model-tier` | Choosing model tier for a task; avoiding false savings on high-risk work; assigning models to chunks |
+| `plan-decompose` | Task will span multiple sessions; need independent chunks before starting |
+| `plan-handoff` | Context pressure building mid-task; need to hand off cleanly to a fresh session |
 | `session-skill-extractor` | Session ending; want to extract reusable patterns into proposed skills |
-| `skill-vetter` | Evaluating a third-party skill before installing; need safety/quality check |
-| `github-authored-repos` | Multi-repo operation starting; need to exclude forks and reference clones |
-| `skill-keyword-lookup` | You know the workflow concept but not the skill name; need ranked skill matches |
+| `review-skill` | Evaluating a third-party skill before installing; need safety/quality check |
+| `orient-authored-repos` | Multi-repo operation starting; need to exclude forks and reference clones |
+| `grimoire-find` | You know the workflow concept but not the skill name; need ranked skill matches |

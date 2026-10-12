@@ -104,8 +104,8 @@ ci-standards                  → audit current state
         ↓
 [review violations]
         ↓
-github-release-workflow       → set up proper release process
-readme-version-pin            → pin all refs
+release       → set up proper release process
+release-readme-pin            → pin all refs
         ↓
 check-version-sync.sh         → verify version sync
 check-clone-refs.sh           → verify ref pinning
@@ -127,16 +127,16 @@ bash clusters/07-devops/ci-standards/check-test-baseline.sh
 
 | Skill | Relationship |
 |-------|-------------|
-| `github-release-workflow` | Implements the versioning practice |
-| `readme-version-pin` | Implements clone-ref pinning |
-| `project-delivery-workflow` | Implements PR discipline |
-| `test-bootstrap` (05-technical) | Implements test framework setup |
+| `release` | Implements the versioning practice |
+| `release-readme-pin` | Implements clone-ref pinning |
+| `roadmap-deliver` | Implements PR discipline |
+| `ci-tests` (05-technical) | Implements test framework setup |
 
 ## Evolving this standard
 
 When a session reveals a new repeating practice, follow "Evolving this standard" in
 `SKILL.md`: classify the practice, add the rule to the correct category, and update
 enforcement scripts if it is automatable. Related: `session-skill-extractor` (01-meta)
-discovers patterns; `karpathy-environment` (01-meta) captures broader workspace-level ones.
+discovers patterns; `plan-environment` (01-meta) captures broader workspace-level ones.
 
 ---

@@ -16,7 +16,7 @@ roadmap item and providing a clear action sequence.
 
 ## Chain
 
-`orient` -> `task-decomposer` -> `karpathy-framework` -> `karpathy-verify`
+`orient` -> `plan-decompose` -> `plan` -> `plan-verify`
 
 ## Output
 

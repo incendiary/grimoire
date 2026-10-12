@@ -45,6 +45,7 @@ workflow.
 
 ### Changed
 
+- Skills renamed to pathway prefixes (`orient-`, `plan-`, `release-`, `publish-`, `ci-`, `write-`, `incident-`, `review-`, `grimoire-`, `roadmap-`); 31 renames, full mapping in `scripts/renamed-skills.txt`. `install-all.sh --update` now removes and backs up installed copies under old names; `uninstall-all.sh` treats old names as managed.
 - build.sh and the MCP server now read descriptions from SKILL.md frontmatter; registry.json no longer carries descriptions.
 - **Breaking:** `local-ci` is now `ci-local` and absorbs `pre-push-validation` (new `--strict` and `--no-hook` flags; script still `local-ci.sh`). Remove any old `pre-push-validation` hook before installing `ci-local`'s pre-push hook.
 

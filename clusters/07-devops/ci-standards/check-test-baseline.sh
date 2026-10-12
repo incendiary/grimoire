@@ -71,7 +71,7 @@ CLONE_TEST_FOUND=false
 if grep -rlq '@main\|@master\|clone.*ref\|pin.*version' tests/ test/ .github/workflows/ 2>/dev/null; then
   CLONE_TEST_FOUND=true
 fi
-# Also check if readme-version-pin scripts are present
+# Also check if release-readme-pin scripts are present
 if [ -f scripts/check_readme_version.sh ] || find .github/workflows/ -name '*version-pin*' -print -quit 2>/dev/null | grep -q .; then
   CLONE_TEST_FOUND=true
 fi

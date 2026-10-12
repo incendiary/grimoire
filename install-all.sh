@@ -109,6 +109,23 @@ done
 
 done  # end cluster_root loop
 
+# Remove installed copies of skills that were renamed or retired (scripts/renamed-skills.txt).
+retired=()
+while IFS=$'\t' read -r old _; do
+    [[ -n "${old}" && -d "${SKILLS_DIR}/${old}" ]] || continue
+    [[ -n "$(find "${CLUSTERS_DIR}" -mindepth 2 -maxdepth 2 -type d -name "${old}")" ]] && continue
+    if [[ "${UPDATE_MODE}" == "true" ]]; then
+        mkdir -p "${BACKUP_ROOT}"
+        backup_skill_dir "${old}" "${SKILLS_DIR}/${old}"
+        retired+=("${old}")
+    elif [[ "${FORCE_MODE}" == "true" ]]; then
+        rm -rf "${SKILLS_DIR:?}/${old}"
+        retired+=("${old}")
+    else
+        echo "Stale skill under an old name: ${old} (run with --update to remove it)"
+    fi
+done < "${SCRIPT_DIR}/scripts/renamed-skills.txt"
+
 # Wire the Stop hook for session-skill-extractor if it was just installed
 if [[ " ${installed[*]:-} " == *" session-skill-extractor "* ]]; then
     if [[ -f "${SKILLS_DIR}/session-skill-extractor/install.sh" ]]; then
@@ -138,6 +155,11 @@ if [[ ${#forced[@]} -gt 0 ]]; then
     for s in "${forced[@]}"; do echo "  ! ${s}"; done
 else
     echo "Overwritten (force): none"
+fi
+
+if [[ ${#retired[@]} -gt 0 ]]; then
+    echo "Removed old names (${#retired[@]}):"
+    for s in "${retired[@]}"; do echo "  - ${s}"; done
 fi
 
 if [[ ${#skipped[@]} -gt 0 ]]; then
