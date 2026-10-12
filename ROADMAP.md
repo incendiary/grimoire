@@ -67,7 +67,7 @@ Tick the first column when a task's brief reaches `> Status: done`.
 | [x] | RA-26 | Drop version-sync checks superseded by release-please | haiku | sonnet | 1 | [ra-26](docs/tasks/discoverability/ra-26-version-sync-ci.md) |
 | [x] | RA-27 | Share duplicated installer functions | sonnet | opus | 1 | [ra-27](docs/tasks/discoverability/ra-27-installer-dedupe.md) |
 | [ ] | RA-28 | Post-programme ponytail-debt ledger and ponytail-audit re-run | sonnet | opus | 7 | [ra-28](docs/tasks/discoverability/ra-28-ponytail-followup.md) |
-| [ ] | RA-29 | MCP tools run one registered script, not every SKILL.md bash block (security) | sonnet + opus review | opus | 5 | [ra-29](docs/tasks/discoverability/ra-29-mcp-explicit-script.md) |
+| [x] | RA-29 | MCP tools run one registered script, not every SKILL.md bash block (security) | sonnet + opus review | opus | 5 | [ra-29](docs/tasks/discoverability/ra-29-mcp-explicit-script.md) |
 
 Revised by the 2026-10-04 over-engineering audit (see `REVIEW.md`). Open owner decisions are listed at the end of `REVIEW.md`.
 

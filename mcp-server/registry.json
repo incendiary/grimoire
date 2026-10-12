@@ -2,63 +2,84 @@
     "tools": [
         {
             "name": "grimoire-find",
-            "skill": "clusters/01-meta/grimoire-find/SKILL.md"
+            "skill": "clusters/01-meta/grimoire-find/SKILL.md",
+            "script": "clusters/01-meta/grimoire-find/find-skill.sh"
         },
         {
             "name": "orient-authored-repos",
-            "skill": "clusters/01-meta/orient-authored-repos/SKILL.md"
+            "skill": "clusters/01-meta/orient-authored-repos/SKILL.md",
+            "script": "clusters/01-meta/orient-authored-repos/list-authored.sh"
         },
         {
             "name": "roadmap",
-            "skill": "clusters/01-meta/roadmap/SKILL.md"
-        },
-        {
-            "name": "ci-local",
-            "skill": "clusters/07-devops/ci-local/SKILL.md"
-        },
-        {
-            "name": "deps-integrity",
-            "skill": "clusters/07-devops/deps-integrity/SKILL.md"
-        },
-        {
-            "name": "orient-branches",
-            "skill": "clusters/07-devops/orient-branches/SKILL.md"
-        },
-        {
-            "name": "orient-morning-run",
-            "skill": "clusters/07-devops/orient-morning-run/SKILL.md"
+            "skill": "clusters/01-meta/roadmap/SKILL.md",
+            "script": "scripts/roadmap-collect.sh"
         },
         {
             "name": "orient",
-            "skill": "clusters/07-devops/orient/SKILL.md"
+            "skill": "clusters/07-devops/orient/SKILL.md",
+            "script": "clusters/07-devops/orient/repo-compass.sh"
         },
         {
-            "name": "publish-history-wipe",
-            "skill": "clusters/07-devops/publish-history-wipe/SKILL.md"
-        },
-        {
-            "name": "publish-readme",
-            "skill": "clusters/07-devops/publish-readme/SKILL.md"
-        },
-        {
-            "name": "publish-secret-scan",
-            "skill": "clusters/07-devops/publish-secret-scan/SKILL.md"
+            "name": "ci-local",
+            "skill": "clusters/07-devops/ci-local/SKILL.md",
+            "script": "clusters/07-devops/ci-local/local-ci.sh --no-hook"
         },
         {
             "name": "py-lint",
-            "skill": "clusters/07-devops/py-lint/SKILL.md"
+            "skill": "clusters/07-devops/py-lint/SKILL.md",
+            "script": "clusters/07-devops/py-lint/lint-gate.sh"
+        },
+        {
+            "name": "deps-integrity-npm",
+            "skill": "clusters/07-devops/deps-integrity/SKILL.md",
+            "script": "clusters/07-devops/deps-integrity/check-lockfile-integrity.sh"
+        },
+        {
+            "name": "deps-integrity-python",
+            "skill": "clusters/07-devops/deps-integrity/SKILL.md",
+            "script": "clusters/07-devops/deps-integrity/check-python-lockfile-integrity.sh"
+        },
+        {
+            "name": "deps-integrity-provenance",
+            "skill": "clusters/07-devops/deps-integrity/SKILL.md",
+            "script": "clusters/07-devops/deps-integrity/check-provenance.sh"
         },
         {
             "name": "release-readme-pin",
-            "skill": "clusters/07-devops/release-readme-pin/SKILL.md"
-        },
-        {
-            "name": "release",
-            "skill": "clusters/07-devops/release/SKILL.md"
+            "skill": "clusters/07-devops/release-readme-pin/SKILL.md",
+            "script": "clusters/07-devops/release-readme-pin/check_readme_version.sh"
         },
         {
             "name": "roadmap-sync",
-            "skill": "clusters/07-devops/roadmap-sync/SKILL.md"
+            "skill": "clusters/07-devops/roadmap-sync/SKILL.md",
+            "script": "clusters/07-devops/roadmap-sync/update_roadmap.py"
+        }
+    ],
+    "excluded": [
+        {
+            "skill": "clusters/07-devops/orient-branches/SKILL.md",
+            "reason": "--resolve/--prune-stale push branches, open PRs and delete remote branches"
+        },
+        {
+            "skill": "clusters/07-devops/orient-morning-run/SKILL.md",
+            "reason": "auto-merges dependabot PRs by default"
+        },
+        {
+            "skill": "clusters/07-devops/publish-history-wipe/SKILL.md",
+            "reason": "history wipe and force push; never run unattended"
+        },
+        {
+            "skill": "clusters/07-devops/publish-readme/SKILL.md",
+            "reason": "no script; instructional workflow"
+        },
+        {
+            "skill": "clusters/07-devops/publish-secret-scan/SKILL.md",
+            "reason": "bootstrap-security.sh commits and pushes to target repos"
+        },
+        {
+            "skill": "clusters/07-devops/release/SKILL.md",
+            "reason": "release.sh merges, tags and creates GitHub releases"
         }
     ]
 }

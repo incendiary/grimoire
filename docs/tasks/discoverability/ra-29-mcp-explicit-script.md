@@ -1,6 +1,6 @@
 # Task RA-29: MCP tools run one named script, not every bash block
 
-> Status: pending
+> Status: done
 > Parent: discoverability and consolidation programme
 > Model: sonnet
 > Review: opus (master reviews the full diff before integrating)

@@ -14,33 +14,16 @@ export interface ToolDefinition {
     execute: (args: Record<string, unknown>) => Promise<string>;
 }
 
-interface RegistryEntry {
+export interface RegistryEntry {
     name: string;
     skill: string;
+    /** Repo-relative script path, optionally followed by fixed arguments. */
+    script: string;
     description?: string;
 }
 
 interface Registry {
     tools: RegistryEntry[];
-}
-
-/**
- * Parses a SKILL.md to extract shell commands from code blocks
- * following "## What to do" or within the tool's action sections.
- */
-function extractCommands(skillContent: string): string[] {
-    const commands: string[] = [];
-    const codeBlockRegex = /```(?:bash|sh)\n([\s\S]*?)```/g;
-    let match: RegExpExecArray | null;
-
-    while ((match = codeBlockRegex.exec(skillContent)) !== null) {
-        const block = match[1].trim();
-        if (block && !block.startsWith("#")) {
-            commands.push(block);
-        }
-    }
-
-    return commands;
 }
 
 /** Returns the one-line quoted `description:` from the leading frontmatter, if any. */
@@ -51,6 +34,13 @@ export function parseFrontmatterDescription(skillContent: string): string | unde
         if (m) return m[1];
     }
     return undefined;
+}
+
+/** The exact argv a tool call runs: interpreter, script, fixed args, then caller args. */
+export function resolveCommand(entry: RegistryEntry, callerArgs: string[] = []): string[] {
+    const [script, ...fixed] = entry.script.split(" ").filter(Boolean);
+    const interpreter = script.endsWith(".py") ? "python3" : "bash";
+    return [interpreter, resolve(REPO_ROOT, script), ...fixed, ...callerArgs];
 }
 
 /**
@@ -66,7 +56,6 @@ export async function loadRegistry(): Promise<ToolDefinition[]> {
     for (const entry of registry.tools) {
         const skillPath = resolve(REPO_ROOT, entry.skill);
         const skillContent = await readFile(skillPath, "utf-8");
-        const commands = extractCommands(skillContent);
         let description = parseFrontmatterDescription(skillContent);
         if (!description) {
             description = entry.description || entry.name;
@@ -83,11 +72,16 @@ export async function loadRegistry(): Promise<ToolDefinition[]> {
                         type: "string",
                         description: "Working directory to execute commands in (defaults to cwd)",
                     },
+                    args: {
+                        type: "array",
+                        items: { type: "string" },
+                        description: "Arguments passed to the tool's script",
+                    },
                 },
             },
             execute: async (args: Record<string, unknown>) => {
                 const cwd = (args.workingDirectory as string) || process.cwd();
-                return executeTool(commands, cwd);
+                return executeTool(resolveCommand(entry, (args.args as string[]) ?? []), cwd);
             },
         });
     }
