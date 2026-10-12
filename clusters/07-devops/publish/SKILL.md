@@ -9,6 +9,16 @@ description: "Walks through preparing a private repo for public release, coverin
 > **Type:** instructional
 > **Merged from:** `precommit-bootstrap`, `publish`, `github-repo-prep`
 
+## Pathway
+
+| Step | Skill | When |
+|---|---|---|
+| 1 | `publish` | Preparing a private repo for public release |
+| 2 | `publish-history-wipe` | History contains sensitive material |
+| 3 | `publish-secret-scan` | Before the first public push |
+| 4 | `ci-local` | Verify CI locally (`--sync`) |
+| 5 | `publish-readme` | README is missing or a placeholder |
+
 ## Description
 End-to-end checklist for preparing a private repo for public release: file-size audit,
 history sanitisation decision, and language-appropriate pre-commit wiring.

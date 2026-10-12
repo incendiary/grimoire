@@ -14,6 +14,7 @@ workflow.
 
 ### Removed
 
+- `PROJECT-WORKFLOWS.md` (replaced by the pathway tables and a short README summary).
 - `npm-lockfile-integrity`, `python-lockfile-integrity` and `npm-provenance-attestation` (replaced by `deps-integrity`).
 
 ### Fixed
@@ -23,6 +24,7 @@ workflow.
 
 ### Added
 
+- Pathway tables in the `orient`, `plan`, `release` and `publish` entry skills.
 - `ci-standards` skill: merges `devops-practices` and `devops-practices-updater` (updater is now the "Evolving this standard" section); check scripts moved to `clusters/07-devops/ci-standards/`.
 - `deps-integrity` skill (RA-10): merges lockfile and provenance checks. MCP registry shape: one `deps-integrity` entry, because `executor.ts` runs every bash block in the `SKILL.md` and cannot select a script per entry.
 - YAML frontmatter (name, description) on every SKILL.md, so Claude Code can select skills by intent.

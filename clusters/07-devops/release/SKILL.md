@@ -8,6 +8,15 @@ description: "Runs the full release flow for a repo (release branch, version bum
 > **Cluster:** 07-devops
 > **Type:** action
 
+## Pathway
+
+| Step | Skill | When |
+|---|---|---|
+| 1 | `release` | Cutting a release |
+| 2 | `release-readme-pin` | README install lines need the new tag |
+| 3 | `release-docker-ghcr` | The repo ships a container image |
+| 4 | `roadmap-sync` | Tick roadmap items the release closed |
+
 ## Description
 Execute the full issue → branch → PR → CI wait → merge → tag → GitHub release flow
 in sequence, with correct commit message formatting and SSH/HTTPS fallback awareness.
