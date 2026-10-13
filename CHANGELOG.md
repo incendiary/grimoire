@@ -14,6 +14,7 @@ workflow.
 
 ### Removed
 
+- `orient-authored-repos` (replaced by a `gh repo list --source` line in global CLAUDE.md), `grimoire-find`, `plan-environment`, `ci-tests`; `review-ios-signing` moved to `archive/`; empty `04-security` cluster.
 - `PROJECT-WORKFLOWS.md` (replaced by the pathway tables and a short README summary).
 - `npm-lockfile-integrity`, `python-lockfile-integrity` and `npm-provenance-attestation` (replaced by `deps-integrity`).
 
@@ -47,6 +48,7 @@ workflow.
 
 ### Changed
 
+- Merged `write-tone`, `write-human`, `write-exec` into `write` (three modes); `plan-handoff` into `plan-decompose` (mid-task handoff section); `roadmap-deliver` into `roadmap` (versions from release-please, no protection bypass). 41 to 32 skills.
 - `session-skill-extractor` renamed `grimoire-extract` and made on-demand only: Stop hook and `install.sh` removed, stub bar raised to 3 occurrences, and `generate_stubs.py` refuses to write past 20 queued stubs (`REVIEW DUE`), prompting a review with the owner.
 - `roadmap-sync` no longer adds planned items; it ticks and removes only.
 - `docs/skill-review-2026-10.md`: review of every skill; work items SR-1 to SR-7 in `ROADMAP.md`.

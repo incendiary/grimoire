@@ -81,7 +81,7 @@ patterns that pass first time, and scoped pylint exceptions (W0621, E0401, R0914
 
 Generates a portfolio-quality README from code — reads first, then writes with a
 fixed 6-section structure. Mandates an authorised-use disclaimer for any security tool.
-Applies write-human style rules.
+Applies write (humanise mode) style rules.
 → [Full documentation](publish-readme/README.md)
 
 ### [release](release/) ✅ complete
@@ -99,13 +99,6 @@ ticks completed items, adds new ones, removes stale items. Always a standalone c
 ### [tf-guardrails](tf-guardrails/) ✅ complete
 Terraform guardrails: provider version compatibility, AWS provider syntax, and checkov skip placement.
 → [Full documentation](tf-guardrails/README.md)
-
-### [roadmap-deliver](roadmap-deliver/) ✅ complete
-
-End-to-end delivery loop for a GitHub project: cold clone, read all nested READMEs
-to extract the roadmap, work each item as a feature branch → PR → CI check → merge,
-tick READMEs and bump versions throughout, close with a major version bump and release.
-→ [Full documentation](roadmap-deliver/README.md)
 
 ### [release-readme-pin](release-readme-pin/) ✅ complete
 
@@ -283,6 +276,5 @@ orient                  → verify final clean repo state
 | `release-readme-pin` | Release tagged; README install instructions reference old version |
 | `deps-integrity` | Auditing Node.js or Python deps; lockfile hashes enforced, packages have Sigstore provenance |
 | `tf-guardrails` | Writing or reviewing Terraform; adding modules, AWS resources, or checkov skips |
-| `roadmap-deliver` | Full delivery loop: clone → roadmap → feature branches → PRs → release |
 | `ci-standards` | Establishing standards on a repo; auditing compliance; onboarding a project; capturing a newly discovered practice |
 | `orient-branches` | Branches have accumulated across sessions; need to audit, surface conflicts, and land work via PRs |}

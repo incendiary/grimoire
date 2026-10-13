@@ -31,7 +31,7 @@ Load at the start of any session where you need to know what's actually outstand
 - "Pick up where we left off"
 - "Review the roadmap"
 - "Is this project tidy?"
-- Before starting a delivery session (pairs with `roadmap-deliver`)
+- Before starting a delivery session (pairs with `roadmap`)
 
 ---
 
@@ -75,7 +75,7 @@ True state:
   README sync needed:  0
   Discrepancies:       0
 
-Recommendation: 2 items to action. Proceed with roadmap-deliver.
+Recommendation: 2 items to action. Proceed with roadmap.
 ```
 
 ---
@@ -85,7 +85,7 @@ Recommendation: 2 items to action. Proceed with roadmap-deliver.
 ```
 orient             (where are we?)
         ↓
-roadmap-deliver  (execute outstanding items)
+roadmap  (execute outstanding items)
         ↓
 roadmap-sync             (keep READMEs ticked after each merge)
         ↓

@@ -129,14 +129,13 @@ bash clusters/07-devops/ci-standards/check-test-baseline.sh
 |-------|-------------|
 | `release` | Implements the versioning practice |
 | `release-readme-pin` | Implements clone-ref pinning |
-| `roadmap-deliver` | Implements PR discipline |
-| `ci-tests` (05-technical) | Implements test framework setup |
+| `roadmap` | Implements PR discipline |
 
 ## Evolving this standard
 
 When a session reveals a new repeating practice, follow "Evolving this standard" in
 `SKILL.md`: classify the practice, add the rule to the correct category, and update
 enforcement scripts if it is automatable. Related: `grimoire-extract` (01-meta)
-discovers patterns; `plan-environment` (01-meta) captures broader workspace-level ones.
+discovers patterns.
 
 ---

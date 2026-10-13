@@ -120,10 +120,5 @@ Tally results and decide.
 
 ## Completion
 
-When output is accepted → move forward with the work. If this was part of a workspace
-setup or you've identified recurring patterns worth capturing, invoke `plan-environment`
-to formalise them.
-
-```
-Invoke plan-environment to capture patterns from this task.
-```
+When output is accepted, move forward with the work. If a correction recurred, record it
+in memory or CLAUDE.md rather than in a new skill.

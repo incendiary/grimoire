@@ -98,25 +98,25 @@ When done, report back so the run-book can be updated.
 Change only `[task-name]` once, then reuse the same prompt text for every chunk.
 The agent finds the next unfinished chunk itself.
 
-### When to use `plan-handoff` instead
+### Mid-task handoff
 
-If you are already midway through a chunk and the context window is getting tight,
-use `plan-handoff` to package the current session state. Use `plan-decompose`
-up front, and `plan-handoff` reactively.
+If you are already midway through a chunk and the context window is getting tight, ask
+for a handoff: the skill packages the current state into one task file for a fresh
+session (see "Mid-task handoff" in `SKILL.md`).
 
 ---
 
 ## Worked example
 
-**Task:** Add worked examples to all three 02-comms skills (write-exec,
-write-human, write-tone) — a multi-file documentation task spanning one or two sessions.
+**Task:** Add worked examples to all three 03-incident skills (incident-asks,
+incident-appendix, incident-risk-plan) — a multi-file documentation task spanning one or two sessions.
 
 **Input to plan-decompose:**
 ```
 Task: Add worked examples to 02-comms cluster
-Files: clusters/02-comms/write-exec/README.md
-       clusters/02-comms/write-human/README.md
-       clusters/02-comms/write-tone/README.md
+Files: clusters/03-incident/incident-asks/README.md
+       clusters/03-incident/incident-appendix/README.md
+       clusters/03-incident/incident-risk-plan/README.md
 Scope: No SKILL.md changes. README-only additions. One PR, one release.
 ```
 
@@ -152,9 +152,9 @@ Done criteria: CI green, PR merged, v1.6.7 tagged.
 
 **01-executive-translate.md (chunk file):**
 ```markdown
-# Chunk 1 — write-exec worked examples
+# Chunk 1 — incident-asks worked examples
 
-File: clusters/02-comms/write-exec/README.md
+File: clusters/03-incident/incident-asks/README.md
 Insert before: ## Roadmap
 
 Add a "## Worked examples" section with 3 subsections:

@@ -46,7 +46,6 @@ Invoke plan-verify on [output].
 ## Pairs with
 
 - `plan-spec` — runs before verify; produces the criteria used in Phase 1
-- `plan-environment` — captures evaluation patterns that worked well into reusable skills
 - `plan` — umbrella entry point if unsure which layer to start with
 
 ---

@@ -1,6 +1,6 @@
 ---
 name: plan-decompose
-description: "Splits a large task into self-contained task files, each with objective, background, files to read, constraints, and success criteria, so a fresh session can run each chunk cold. Use when starting work that spans several sessions, or when handing a multi-step plan to an agent. Use before work starts; if context is already full use plan-handoff."
+description: "Splits a large task into self-contained task files, each with objective, background, files to read, constraints, and success criteria, so a fresh session can run each chunk cold. Use when starting work that spans several sessions, or when handing a multi-step plan to an agent. Also packages a mid-task handoff when context is already full."
 ---
 # plan-decompose
 
@@ -180,6 +180,24 @@ When invoked with `--resume [output dir]` instead of a task description:
 
 This only works if `Status:` headers are kept current — see the gotcha below.
 
+## Mid-task handoff
+
+Use when context is already full and the next chunk should run in a fresh session.
+Signals: the conversation is long and earlier decisions are being lost or re-asked; a
+large reading phase is about to start; a natural pause (PR merged, chunk finished).
+
+1. **Capture git state:** `git status`, `git log --oneline -10`, current branch, and whether
+   it is ahead of `main`.
+2. **Summarise this session:** work landed (commit hashes, PRs), decisions the next session
+   must know, and anything tried and rejected.
+3. **Pick the next chunk.** If there are several candidates, ask the owner to choose.
+4. **Write `.claude/tasks/handoff-<date>-<slug>.md`** in the task-file format above, with two
+   extra sections at the top:
+   - `## Current state`: branch, last commit, uncommitted changes.
+   - `## Do not redo or re-litigate`: rejected approaches and final decisions, with reasons.
+5. **Tell the owner** the file path and a one-line summary. The new session starts by reading
+   that file.
+
 ## Task file location conventions
 
 | Context | Default location |
@@ -216,9 +234,7 @@ Add `.claude/tasks/` to `.gitignore` if needed.
 
 ## Related skills
 
-- `plan-handoff` — reactive complement: packages current session state mid-task
-  when context pressure is already high
-- `roadmap-deliver` — higher-level delivery planning across PRs
+- `roadmap` — higher-level delivery planning across PRs
 
 ## Roadmap
 

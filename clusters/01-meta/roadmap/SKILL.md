@@ -93,6 +93,22 @@ fi
 echo "No implementation-ready roadmap item found."
 ```
 
+## Working the whole roadmap
+
+When asked to deliver every outstanding item ("work through this repo's roadmap"):
+
+1. **Start cold:** run `orient` before touching code. Read nested READMEs; the real roadmap
+   is often one level down. Check the code before treating an unticked item as outstanding.
+2. **Propose the delivery plan** (order, one PR per logical batch) and get agreement first.
+3. **Loop per item:** feature branch, PR, CI green, squash merge, then `roadmap-sync` to tick
+   it. Do not start the next item until CI is green.
+4. **Versions and releases come from release-please** (see `release`): never bump versions
+   by hand. In a monorepo, scope each PR to one package where feasible.
+5. **Finish with a clean state:** no stale branches, no open PRs, every tag backed by a release.
+
+Stage specific files only (never `git add -A`). If branch protection blocks a merge, ask
+the owner; never bypass protection.
+
 ## Gotchas
 - Do not auto-close roadmap items; closure is a separate explicit step.
 - If only "requires real session" items remain, output that explicitly and stop.

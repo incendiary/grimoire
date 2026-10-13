@@ -46,7 +46,7 @@ Evidence collected
       ↓
 incident-appendix     (formal technical record)
       ↓
-write-exec   (executive summary)
+write (exec mode)   (executive summary)
       ↓
 incident-risk-plan        (what we do next)
 ```
@@ -64,7 +64,7 @@ incident-asks  → owner-tagged evidence request plan
       ↓
 incident-appendix     → source-backed technical appendix
       ↓
-write-exec   → leadership-ready summary
+write (exec mode)   → leadership-ready summary
       ↓
 incident-risk-plan        → mitigation plan and ownership horizon
 ```
@@ -78,7 +78,7 @@ incident-risk-plan        → immediate/short/long-term action plan
       ↓
 incident-appendix     → supporting evidence and assumptions
       ↓
-write-exec   → communication to decision-makers
+write (exec mode)   → communication to decision-makers
 ```
 
 ---

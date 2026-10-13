@@ -13,7 +13,7 @@ Phosphor, Slice-N-Dice, and DNSResolver.
 
 Reads the actual repo code first, then produces a README with a fixed structure:
 description → features (only what exists) → requirements → installation → usage →
-roadmap → disclaimer → licence. Applies British English and write-human style rules.
+roadmap → disclaimer → licence. Applies British English and write (humanise mode) style rules.
 
 The authorised-use disclaimer is mandatory for all security tools — no exceptions.
 

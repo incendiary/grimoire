@@ -57,7 +57,7 @@ audit; "establish my devops practices on this repo"; periodic health check.
 | PR description references issue | Link the issue being addressed (if one exists) |
 
 **Enforcement:** Rules only (human discipline). PR title checked by CI where available.
-**Existing skills:** `roadmap-deliver`
+**Existing skills:** `roadmap`
 
 ---
 
@@ -91,7 +91,6 @@ test_clone_refs_pinned() {
 ```
 
 **Enforcement:** `check-test-baseline.sh`
-**Existing skills:** `ci-tests` (05-technical)
 
 ---
 
@@ -227,8 +226,7 @@ When a practice needs more than enforcement — it needs *implementation* — ro
 | Cut a release with proper tagging | `release` |
 | Pin README install refs to version | `release-readme-pin` |
 | Sync roadmap after PR merge or release | `roadmap-sync` |
-| Full delivery loop (branch → PR → release) | `roadmap-deliver` |
-| Bootstrap test framework in a new repo | `ci-tests` (05-technical) |
+| Full delivery loop (branch → PR → release) | `roadmap` |
 | Deploy secret scanning | `publish-secret-scan` |
 
 ---

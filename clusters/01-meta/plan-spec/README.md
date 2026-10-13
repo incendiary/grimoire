@@ -49,7 +49,6 @@ Use plan-spec to break this into agile specs before we start.
 ## Pairs with
 
 - `plan-verify` — runs after spec; uses the criteria from Phase 3 to evaluate output
-- `plan-environment` — captures recurring spec patterns into reusable skills
 - `plan` — umbrella entry point if unsure which layer to start with
 
 ---
