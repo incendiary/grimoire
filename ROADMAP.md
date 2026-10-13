@@ -73,8 +73,8 @@ Tick the first column when a task's brief reaches `> Status: done`.
 | [x] | RA-13 | `roadmap-driver` → `roadmap`; delete `grimoire-roadmap-status` | haiku | sonnet | 3 | [ra-13](docs/tasks/discoverability/ra-13-roadmap.md) |
 | [x] | RA-14 | `repo-compass` → `orient`, absorbing the push check | haiku | sonnet | 3 | [ra-14](docs/tasks/discoverability/ra-14-orient.md) |
 | [x] | RA-15 | Pathway-prefix rename (31 skills), install-side clean-up | sonnet + opus review | opus | 4 | [ra-15](docs/tasks/discoverability/ra-15-rename.md) |
-| [ ] | RA-16 | Pathway tables in `orient`, `plan`, `release`, `publish` | haiku | sonnet | 5 | [ra-16](docs/tasks/discoverability/ra-16-pathway-entries.md) |
-| [ ] | RA-17 | Delete `PROJECT-WORKFLOWS.md`, short README table | haiku | sonnet | 6 | [ra-17](docs/tasks/discoverability/ra-17-workflows-doc.md) |
+| [x] | RA-16 | Pathway tables in `orient`, `plan`, `release`, `publish` | haiku | sonnet | 5 | [ra-16](docs/tasks/discoverability/ra-16-pathway-entries.md) |
+| [x] | RA-17 | Delete `PROJECT-WORKFLOWS.md`, short README table | haiku | sonnet | 6 | [ra-17](docs/tasks/discoverability/ra-17-workflows-doc.md) |
 | [ ] | RA-18 | Report old names outside the repo (read-only; owner approves edits) | haiku | sonnet | 5 | [ra-18](docs/tasks/discoverability/ra-18-cross-repo-report.md) |
 | [x] | RA-19 | `npm audit fix` in `mcp-server` | haiku | sonnet | 1 | [ra-19](docs/tasks/discoverability/ra-19-npm-audit-dependabot.md) |
 | [x] | RA-20 | Align TruffleHog, SHA-pin actions | haiku | sonnet | 1 | [ra-20](docs/tasks/discoverability/ra-20-pin-versions.md) |

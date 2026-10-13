@@ -8,6 +8,18 @@ description: "Entry point for the Karpathy three-layer framework, routing to the
 > **Cluster:** 01-meta
 > **Type:** instructional
 
+## Pathway
+
+| Step | Skill | When |
+|---|---|---|
+| 1 | `plan` | Unsure which planning step applies |
+| 2 | `plan-spec` | Before work: define success criteria |
+| 3 | `plan-decompose` | Work spans several sessions |
+| 4 | `plan-model-tier` | Delegating to sub-agents |
+| 5 | `plan-verify` | Output exists and needs evaluation |
+| side | `plan-handoff` | Context is already full |
+| side | `plan-environment` | Setting up a workspace or CLAUDE.md |
+
 ## Description
 Entry point for the Karpathy three-layer framework — a meta-system for doing better
 work with Claude. Routes you to the right layer based on where you are in a task.

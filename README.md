@@ -160,17 +160,19 @@ bash install-all.sh (or install-vscode.sh)
 
 ## Project Workflows
 
-**New to grimoire?** See [PROJECT-WORKFLOWS.md](PROJECT-WORKFLOWS.md) for skill stacks for common project types:
+Skills are named by pathway: the prefix says when you need it. Type a prefix (for
+example `/release`) in Claude Code, or `#release` in Copilot Chat, to see the pathway.
+The entry skills `orient`, `plan`, `release` and `publish` list their steps in order.
+Full list: [SKILLS.md](SKILLS.md).
 
-- Node.js libraries and services
-- Python CLI tools
-- .NET / C# libraries
-- Terraform / IaC infrastructure
-- Security tools and exploits
-- Multi-repo bulk operations
-- Repository assessment
-
-Each workflow shows which skills to invoke, in what order, and why.
+| Project type | Pathways, in order |
+|---|---|
+| Python tool | `orient`, `plan`, `py-lint`, `ci-python`, `release` |
+| .NET tool | `orient`, `plan`, `ci-dotnet`, `release` |
+| Node service | `orient`, `plan`, `deps-integrity`, `release`, `release-docker-ghcr` |
+| Terraform | `orient`, `plan`, `tf-guardrails`, `publish-secret-scan`, `release` |
+| Security tool | `orient`, `plan-spec`, `publish-secret-scan`, `publish-readme`, `release` |
+| Going public | `publish` (follow its pathway table) |
 
 ---
 

@@ -8,6 +8,15 @@ description: "Session-start orientation for a GitHub repo: true state from PRs, 
 > **Cluster:** 07-devops
 > **Type:** action
 
+## Pathway
+
+| Step | Skill | When |
+|---|---|---|
+| 1 | `orient` | Start or resume a session on a repo |
+| 2 | `orient-branches` | Branches are scattered or unclear |
+| 3 | `orient-morning-run` | Routine PR and dependabot upkeep |
+| 4 | `orient-authored-repos` | Work spans several repos |
+
 ## Description
 Session-start orientation for any GitHub repository. Produces a "true state" summary
 by combining GitHub platform state (PRs, issues, CI, releases) with README roadmap

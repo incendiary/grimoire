@@ -1,6 +1,6 @@
 # Task RA-17: Delete PROJECT-WORKFLOWS.md, keep a short table in README
 
-> Status: pending
+> Status: done
 > Parent: discoverability and consolidation programme
 > Model: haiku
 > Fallback: sonnet

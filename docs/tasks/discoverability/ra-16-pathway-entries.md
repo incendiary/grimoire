@@ -1,6 +1,6 @@
 # Task RA-16: Pathway tables in the four entry skills
 
-> Status: pending
+> Status: done
 > Parent: discoverability and consolidation programme
 > Model: haiku
 > Fallback: sonnet
