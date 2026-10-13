@@ -19,6 +19,12 @@ jobs:
         run: sudo apt-get install -y shellcheck
       - name: Lint all shell scripts
         run: find . -name "*.sh" -not -path "./.git/*" -not -path "./clusters-*/*" -exec shellcheck {} +
+      - name: Scripts must run on macOS bash 3.2 (no mapfile, readarray, declare -A)
+        run: |
+          if grep -rnE '^\s*(mapfile|readarray)\b|declare -A' --include='*.sh' . --exclude-dir=.git --exclude-dir=node_modules --exclude-dir=.claude; then
+            echo "ERROR: bash 4 builtins found; macOS ships bash 3.2"
+            exit 1
+          fi
 
   structure:
     name: Skill structure

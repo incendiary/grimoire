@@ -56,12 +56,14 @@ git fetch --all --prune --quiet 2>/dev/null || true
 # ─── Collect branches ───────────────────────────────────────────────────────
 
 # All local branches except main/master
-readarray -t LOCAL_BRANCHES < <(
+LOCAL_BRANCHES=()
+while IFS= read -r _line; do LOCAL_BRANCHES+=("$_line"); done < <(
     git branch --format='%(refname:short)' | grep -v "^${MAIN_BRANCH}$" | sort
 )
 
 # All remote branches except HEAD/main/master
-readarray -t REMOTE_BRANCHES < <(
+REMOTE_BRANCHES=()
+while IFS= read -r _line; do REMOTE_BRANCHES+=("$_line"); done < <(
     git branch -r --format='%(refname:short)' \
     | sed 's|^origin/||' \
     | grep -v "^HEAD$" \
@@ -70,14 +72,10 @@ readarray -t REMOTE_BRANCHES < <(
 )
 
 # Union: all unique branch names
-declare -A SEEN
 ALL_BRANCHES=()
-for b in "${LOCAL_BRANCHES[@]}" "${REMOTE_BRANCHES[@]}"; do
-    if [[ -z "${SEEN[${b}]+x}" ]]; then
-        ALL_BRANCHES+=("${b}")
-        SEEN["${b}"]=1
-    fi
-done
+while IFS= read -r _line; do
+    [[ -n "${_line}" ]] && ALL_BRANCHES+=("${_line}")
+done < <(printf '%s\n' "${LOCAL_BRANCHES[@]+"${LOCAL_BRANCHES[@]}"}" "${REMOTE_BRANCHES[@]+"${REMOTE_BRANCHES[@]}"}" | sort -u)
 
 if [[ ${#ALL_BRANCHES[@]} -eq 0 ]]; then
     echo "No branches found other than ${MAIN_BRANCH}. Repository is clean."

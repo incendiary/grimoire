@@ -93,7 +93,8 @@ if [[ "$STAGED_ONLY" == "true" ]]; then
         echo "ERROR: --staged requires a git repository" >&2
         exit 2
     fi
-    mapfile -t STAGED_PY < <(git diff --cached --name-only -- '*.py' 2>/dev/null)
+    STAGED_PY=()
+    while IFS= read -r _line; do STAGED_PY+=("$_line"); done < <(git diff --cached --name-only -- '*.py' 2>/dev/null)
     if [[ ${#STAGED_PY[@]} -eq 0 ]]; then
         echo "[lint-gate] no staged Python files — nothing to check"
         exit 0
