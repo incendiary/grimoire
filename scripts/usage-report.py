@@ -17,7 +17,6 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-HOOK_DRIVEN = {"session-skill-extractor"}
 LOG_RE = re.compile(r"^\[([^\]]+)\].*\[tool-call\] Executing: (\S+)")
 SLASH_RE = re.compile(r"<command-name>/([^<\s]+)</command-name>")
 SOURCES = ("skill-tool", "slash", "mcp")
@@ -171,14 +170,9 @@ def print_report(usage):
     print()
 
     used = {name for _, name, _ in rows}
-    never = sorted(n for n in usage.stats if n not in used and n not in HOOK_DRIVEN)
+    never = sorted(n for n in usage.stats if n not in used)
     print("Never used:")
     for name in never:
-        print(f"  {name}")
-    print()
-
-    print("Hook-driven (not counted):")
-    for name in sorted(HOOK_DRIVEN & set(usage.stats)):
         print(f"  {name}")
 
 

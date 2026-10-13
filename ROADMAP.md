@@ -6,8 +6,8 @@
 > run `bash scripts/roadmap-collect.sh` (or `--json` for machine-readable output) and
 > `bash clusters/07-devops/ci-standards/check-roadmap-sync.sh . --fix`.
 
-**Last updated:** 2026-10-12
-**Open items:** 9 | **Completed:** 190
+**Last updated:** 2026-10-13
+**Open items:** 9 | **Completed:** 183
 
 ---
 
@@ -21,6 +21,24 @@ Most open items fall into two categories:
 | 📝 **Worked example** | Needs a concrete before/after or step-by-step | Author when time allows |
 
 Items marked "Ship: copy to ~/.claude/skills/..." are legacy — the install path is now automated via `install-all.sh`.
+
+---
+
+## Skill review programme (priority: top)
+
+From [docs/skill-review-2026-10.md](docs/skill-review-2026-10.md) (2026-10-13): a review of
+every skill for whether it earns its place. Details, scope and done-when per item are in
+that file. Done by the master session directly (no sub-agents) unless noted.
+
+| | ID | Item | PR |
+|---|---|---|---|
+| [x] | SR-1 | Stop the creep: extractor on demand as `grimoire-extract`, queue review at 20 stubs; `roadmap-sync` stops inventing items | 1 |
+| [ ] | SR-2 | Remove 4 skills, archive 1, merge 6 into 3 (41 to 32) | 2 |
+| [ ] | SR-3 | Bash 3.2 compatibility for 7 scripts, plus a CI gate | 3 |
+| [ ] | SR-4 | `release` on release-please; `orient-morning-run` report-only; drop unsourced claims | 4 |
+| [ ] | SR-5 | Agent dispatch section in `plan-decompose` | 5 |
+| [ ] | SR-6 | Toolchain preflight in `orient`; bash 3.2 rule in global CLAUDE.md | 5 |
+| [ ] | SR-7 | Accepted advisories in `deps-integrity` | 5 |
 
 ---
 
@@ -96,7 +114,7 @@ Revised by the 2026-10-04 over-engineering audit (see `REVIEW.md`). Open owner d
 
 ---
 
-**Summary:** 9 open items | 190 completed items
+**Summary:** 9 open items | 183 completed items
 <!-- ROADMAP-COLLECT:END -->
 
 > **08-offsec** roadmap items now live in the private `grimoire-offsec` submodule

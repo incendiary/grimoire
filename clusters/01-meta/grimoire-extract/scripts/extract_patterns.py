@@ -375,7 +375,7 @@ def main():
                         default=Path.home() / ".claude" / "projects",
                         help="Base directory for all projects (default: ~/.claude/projects)")
     parser.add_argument("--config", type=Path,
-                        default=Path.home() / ".claude" / "skills" / "session-skill-extractor" / "config.json")
+                        default=Path.home() / ".claude" / "skills" / "grimoire-extract" / "config.json")
     parser.add_argument("--min-turns", type=int,
                         help="Override min_turns from config")
     parser.add_argument("--sessions", type=int,

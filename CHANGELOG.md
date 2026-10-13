@@ -45,6 +45,9 @@ workflow.
 
 ### Changed
 
+- `session-skill-extractor` renamed `grimoire-extract` and made on-demand only: Stop hook and `install.sh` removed, stub bar raised to 3 occurrences, and `generate_stubs.py` refuses to write past 20 queued stubs (`REVIEW DUE`), prompting a review with the owner.
+- `roadmap-sync` no longer adds planned items; it ticks and removes only.
+- `docs/skill-review-2026-10.md`: review of every skill; work items SR-1 to SR-7 in `ROADMAP.md`.
 - Skills renamed to pathway prefixes (`orient-`, `plan-`, `release-`, `publish-`, `ci-`, `write-`, `incident-`, `review-`, `grimoire-`, `roadmap-`); 31 renames, full mapping in `scripts/renamed-skills.txt`. `install-all.sh --update` now removes and backs up installed copies under old names; `uninstall-all.sh` treats old names as managed.
 - build.sh and the MCP server now read descriptions from SKILL.md frontmatter; registry.json no longer carries descriptions.
 - **Breaking:** `local-ci` is now `ci-local` and absorbs `pre-push-validation` (new `--strict` and `--no-hook` flags; script still `local-ci.sh`). Remove any old `pre-push-validation` hook before installing `ci-local`'s pre-push hook.

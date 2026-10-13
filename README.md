@@ -143,7 +143,7 @@ unmanaged VS Code profile.
 ```
 Claude Code session
        ↓
-session-skill-extractor fires at session end
+grimoire-extract fires at session end
        ↓
 Transcript analysed for repeated patterns
        ↓

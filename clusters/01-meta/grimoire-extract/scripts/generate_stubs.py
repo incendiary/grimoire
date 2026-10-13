@@ -12,6 +12,8 @@ Usage:
 """
 
 import argparse
+
+REVIEW_THRESHOLD = 20
 import json
 import sys
 from pathlib import Path
@@ -171,6 +173,12 @@ def main():
 
     output_dir = args.output_dir.expanduser()
     output_dir.mkdir(parents=True, exist_ok=True)
+
+    queued = [d for d in output_dir.iterdir() if d.is_dir()]
+    if len(queued) >= REVIEW_THRESHOLD:
+        print(f"REVIEW DUE: {len(queued)} stubs queued in {output_dir}; review them with the "
+              "owner before generating more.", file=sys.stderr)
+        return
 
     patterns = result.get("patterns", [])
     if not patterns:

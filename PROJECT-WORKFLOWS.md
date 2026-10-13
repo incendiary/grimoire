@@ -164,11 +164,11 @@ plan-spec output
 
 ## Project type: Prompt / AI skill (for grimoire)
 
-**Skill stack:** session-skill-extractor → plan-spec → [01-meta README standards] → review-skill → release
+**Skill stack:** grimoire-extract → plan-spec → [01-meta README standards] → review-skill → release
 
 ### Extraction
 
-1. **session-skill-extractor** — Proposed SKILL.md stub auto-generated from session transcript
+1. **grimoire-extract** — Proposed SKILL.md stub auto-generated from session transcript
 2. **plan-spec** — Define when the skill activates, what it outputs, success criteria
 
 ### Vetting

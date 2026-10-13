@@ -8,12 +8,12 @@ multi-repo operations.
 
 ## Skills
 
-### [session-skill-extractor](session-skill-extractor/) ✅ implemented
+### [grimoire-extract](grimoire-extract/) ✅ implemented
 
 Scans a Claude Code session transcript at session end and generates proposed `SKILL.md`
 stubs in `~/.claude/proposed-skills/`. Wired to the Claude Code Stop hook. The engine
 that feeds this entire library — every promoted skill originated here.
-→ [Full documentation](session-skill-extractor/README.md)
+→ [Full documentation](grimoire-extract/README.md)
 
 ### [review-skill](review-skill/) ✅ complete
 
@@ -152,7 +152,7 @@ plan-verify           → second-opinion evaluation against criteria
 **Trigger:** End of a productive session / "I keep doing the same thing" / session felt repetitive
 
 ```
-session-skill-extractor   → scan transcript, propose new SKILL.md stubs
+grimoire-extract   → scan transcript, propose new SKILL.md stubs
         ↓
 review-skill              → (if third-party skill) review for safety before installing
         ↓
@@ -212,7 +212,7 @@ and `roadmap-sync` keeps the README roadmap from becoming the long-term source o
 | `plan-model-tier` | Choosing model tier for a task; avoiding false savings on high-risk work; assigning models to chunks |
 | `plan-decompose` | Task will span multiple sessions; need independent chunks before starting |
 | `plan-handoff` | Context pressure building mid-task; need to hand off cleanly to a fresh session |
-| `session-skill-extractor` | Session ending; want to extract reusable patterns into proposed skills |
+| `grimoire-extract` | Session ending; want to extract reusable patterns into proposed skills |
 | `review-skill` | Evaluating a third-party skill before installing; need safety/quality check |
 | `orient-authored-repos` | Multi-repo operation starting; need to exclude forks and reference clones |
 | `grimoire-find` | You know the workflow concept but not the skill name; need ranked skill matches |

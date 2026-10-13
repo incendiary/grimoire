@@ -2,8 +2,8 @@
 
 > **Cluster:** 07-devops | **Status:** complete | **Added:** 2026-05-24
 
-Keeps the README roadmap in sync after merges and releases. Ticks completed items,
-adds near-term planned items, removes stale ones. Extracted after the same roadmap
+Keeps the README roadmap in sync after merges and releases. Ticks completed items
+and removes stale ones; it never adds items. Extracted after the same roadmap
 update pattern appeared 3 times in a DNSResolver session.
 
 ---
@@ -13,15 +13,14 @@ update pattern appeared 3 times in a DNSResolver session.
 After a PR merges or a release ships, reads the actual README, ticks the completed
 items, and commits the update as a standalone documentation commit.
 
-Enforces: always read before writing, keep planned items to 3–5 realistic ones, never
-make a roadmap that looks abandoned.
+Enforces: always read before writing; never add items (new work enters the roadmap
+only when the owner asks).
 
 ---
 
 ## When to use it
 
 - Immediately after `gh pr merge` or `gh release create`
-- At the start of a new development sprint to review what is planned
 - When the roadmap is known to be out of date
 
 ---
@@ -31,7 +30,6 @@ make a roadmap that looks abandoned.
 ```
 /roadmap-sync
 Completed: issues #56 and #57 (retry logic and output formatting)
-New planned items: add --json flag, add IPv6 support
 ```
 
 ---
