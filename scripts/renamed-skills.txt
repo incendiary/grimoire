@@ -52,3 +52,5 @@ ui-ux-product-audit	review-ui
 skill-vetter	review-skill
 ios-signing-risk	review-ios-signing
 skill-keyword-lookup	grimoire-find
+session-skill-extractor	grimoire-extract
+session-skill-extractor	grimoire-extract

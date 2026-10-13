@@ -136,7 +136,7 @@ bash clusters/07-devops/ci-standards/check-test-baseline.sh
 
 When a session reveals a new repeating practice, follow "Evolving this standard" in
 `SKILL.md`: classify the practice, add the rule to the correct category, and update
-enforcement scripts if it is automatable. Related: `session-skill-extractor` (01-meta)
+enforcement scripts if it is automatable. Related: `grimoire-extract` (01-meta)
 discovers patterns; `plan-environment` (01-meta) captures broader workspace-level ones.
 
 ---

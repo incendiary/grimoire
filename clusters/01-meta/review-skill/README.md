@@ -86,5 +86,5 @@ User decides whether to install
 - [x] SKILL.md written and validated
 - [x] Write `vetting-checklist.md` as a printable record template
 - [x] Add PyPI package reputation check step
-- [x] Add integration note for `session-skill-extractor` (auto-flag proposed stubs for vetting)
+- [x] Add integration note for `grimoire-extract` (auto-flag proposed stubs for vetting)
 - [x] Ship: copy to `~/.claude/skills/review-skill/`

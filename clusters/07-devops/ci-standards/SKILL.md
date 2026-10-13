@@ -283,6 +283,6 @@ Guardrails:
 - [ ] Add `--fix` mode to `check-clone-refs.sh` (auto-update refs to current VERSION)
 - [ ] Add GitHub Actions version-pinning check (not just docs, also workflow files)
 - [x] Add scheduled CI template for periodic test execution — `validate.yml` now runs weekly (`schedule: cron`) in addition to push/PR
-- [ ] Add automatic detection: chain with `session-skill-extractor` to route devops patterns here
+- [ ] Add automatic detection: chain with `grimoire-extract` to route devops patterns here
 - [ ] Add `--dry-run` mode for "Evolving this standard": show what would change without writing
 - [ ] Add practice versioning: track when each rule was added and by whom

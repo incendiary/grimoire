@@ -126,14 +126,6 @@ while IFS=$'\t' read -r old _; do
     fi
 done < "${SCRIPT_DIR}/scripts/renamed-skills.txt"
 
-# Wire the Stop hook for session-skill-extractor if it was just installed
-if [[ " ${installed[*]:-} " == *" session-skill-extractor "* ]]; then
-    if [[ -f "${SKILLS_DIR}/session-skill-extractor/install.sh" ]]; then
-        echo "Running session-skill-extractor/install.sh..."
-        bash "${SKILLS_DIR}/session-skill-extractor/install.sh"
-    fi
-fi
-
 echo ""
 echo "=== install-all summary ==="
 if [[ ${#installed[@]} -gt 0 ]]; then
