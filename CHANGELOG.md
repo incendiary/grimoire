@@ -75,6 +75,7 @@ workflow.
 
 ### Security
 
+- MCP tools run one registered script via `execFile` (no shell) instead of every bash block in `SKILL.md`. Tools whose scripts push, merge, or delete (`orient-branches`, `orient-morning-run`, `publish-history-wipe`, `publish-secret-scan`, `release`) and `publish-readme` (no script) are no longer exposed over MCP; `deps-integrity` is split into `-npm`, `-python`, and `-provenance` tools. Pre-commit TruffleHog aligned with CI (v3.99.0).
 - GitHub Actions pinned to commit SHAs; TruffleHog pre-commit aligned with CI (v3.98.0).
 - mcp-server: @modelcontextprotocol/sdk 1.29.0 to 1.32.1 and npm audit fix for transitive advisories.
 

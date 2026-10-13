@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { readFileSync, existsSync } from "node:fs";
 import { resolve } from "node:path";
 import { execSync } from "node:child_process";
-import { loadRegistry as loadTools, parseFrontmatterDescription } from "../loader.js";
+import { loadRegistry as loadTools, parseFrontmatterDescription, resolveCommand } from "../loader.js";
 
 const REPO_ROOT = resolve(import.meta.dirname, "../../..");
 const REGISTRY_PATH = resolve(import.meta.dirname, "../../registry.json");
@@ -15,6 +15,7 @@ interface RegistryEntry {
 
 interface Registry {
     tools: RegistryEntry[];
+    excluded: { skill: string; reason: string }[];
 }
 
 function loadRegistry(): Registry {
@@ -68,15 +69,33 @@ describe("registry.json bidirectional validation", () => {
         }
     });
 
-    it("every SKILL.md with Type: action has a registry entry", () => {
-        const actionSkills = findActionSkills();
-        const registeredPaths = new Set(registry.tools.map((t) => t.skill));
+    it("every SKILL.md with Type: action is registered or excluded with a reason", () => {
+        const covered = new Set([
+            ...registry.tools.map((t) => t.skill),
+            ...registry.excluded.filter((e) => e.reason.trim()).map((e) => e.skill),
+        ]);
+        for (const skillPath of findActionSkills()) {
+            expect(covered.has(skillPath), `${skillPath} is neither registered nor excluded`).toBe(true);
+        }
+    });
 
-        for (const skillPath of actionSkills) {
-            expect(
-                registeredPaths.has(skillPath),
-                `SKILL.md at "${skillPath}" has Type: action but no registry entry`
-            ).toBe(true);
+    it("every entry's script exists", () => {
+        for (const tool of registry.tools) {
+            const script = tool.script.split(" ")[0];
+            expect(existsSync(resolve(REPO_ROOT, script)), `${tool.name}: missing ${script}`).toBe(true);
+        }
+    });
+
+    it("a tool call runs only its registered script plus caller args", () => {
+        for (const tool of registry.tools) {
+            const [script, ...fixed] = tool.script.split(" ");
+            const argv = resolveCommand(tool, ["--x"]);
+            expect(argv).toEqual([
+                script.endsWith(".py") ? "python3" : "bash",
+                resolve(REPO_ROOT, script),
+                ...fixed,
+                "--x",
+            ]);
         }
     });
 
@@ -100,15 +119,4 @@ describe("registry.json bidirectional validation", () => {
         }
     });
 
-    it("registers deps-integrity once and no longer registers the merged skills", () => {
-        const names = registry.tools.map((t) => t.name);
-        expect(names.filter((n) => n === "deps-integrity")).toHaveLength(1);
-        for (const old of [
-            "npm-lockfile-integrity",
-            "python-lockfile-integrity",
-            "npm-provenance-attestation",
-        ]) {
-            expect(names).not.toContain(old);
-        }
-    });
 });

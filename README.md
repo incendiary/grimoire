@@ -114,8 +114,9 @@ SKILL.md (canonical)
 ### MCP server
 
 The `mcp-server/` directory contains a TypeScript MCP server that exposes
-action skills as callable tools. It reads `registry.json` at startup and
-resolves each skill's shell scripts for execution.
+action skills as callable tools. Each tool runs exactly one script named in
+`registry.json` (via `execFile`, no shell), with the caller's arguments. Action skills whose
+scripts push, merge, or delete are listed under `excluded` with a reason and are not exposed.
 
 - Runtime: Node 22+, TypeScript, ESM
 - Transport: stdio (compatible with VS Code, Cursor, any MCP client)

@@ -14,6 +14,7 @@ const toolInputSchema = {
         .string()
         .optional()
         .describe("Working directory to execute commands in (defaults to cwd)"),
+    args: z.array(z.string()).optional().describe("Arguments passed to the tool's script"),
 };
 
 // Track startup time for health-check
