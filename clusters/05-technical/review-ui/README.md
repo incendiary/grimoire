@@ -43,8 +43,8 @@ Use `plan-decompose` if implementation scope is large.
 - `plan-spec` (01-meta)
 - `plan-verify` (01-meta)
 - `plan-decompose` (01-meta)
-- `write-human` (02-comms)
-- `write-tone` (02-comms)
+- `write (humanise mode)` (02-comms)
+- `write (tone check mode)` (02-comms)
 
 ---
 

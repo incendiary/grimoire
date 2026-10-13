@@ -9,13 +9,6 @@ without repetition.
 
 ## Skills
 
-### [ci-tests](ci-tests/) ✅ complete
-
-Adds a unit test layer to projects with no tests, or fills coverage gaps in partially
-tested projects. Detects language/framework, scaffolds failing tests first (red-first),
-implements assertions, and wires test execution into CI.
-→ [Full documentation](ci-tests/README.md)
-
 ### [review-ui](review-ui/) ✅ complete
 
 Production-grade UI/UX audit and implementation loop for frontend applications.
@@ -43,7 +36,6 @@ enough detail for a lesser-capable agent to execute them independently. Chains t
 **Trigger:** "This project has no tests" / "Add coverage for this module"
 
 ```
-ci-tests             → detect framework, scaffold failing tests, implement assertions
  ↓
 [run tests]                → confirm red-first then green
  ↓
@@ -73,7 +65,6 @@ plan-decompose           → (optional) chunk items for multi-session execution
 
 | Skill | Invoke when... |
 |-------|----------------|
-| `ci-tests` | Repo lacks tests or a changed module/class needs baseline coverage and CI wiring |
 | `review-codebase` | Auditing a codebase holistically; predicting future failure modes; producing a detailed action roadmap before scaling or releasing |
 
 ---

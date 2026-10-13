@@ -136,4 +136,4 @@ Iterates through all authored repos, applies same logic.
 - **Cluster**: 07-devops
 - **Type**: action
 - **Trigger**: "check my repos", "morning run", "GitHub status"
-- **Routing**: for issues requiring deeper work, route to `release` or `roadmap-deliver`
+- **Routing**: for issues requiring deeper work, route to `release` or `roadmap`

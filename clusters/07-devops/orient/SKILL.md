@@ -15,7 +15,6 @@ description: "Session-start orientation for a GitHub repo: true state from PRs, 
 | 1 | `orient` | Start or resume a session on a repo |
 | 2 | `orient-branches` | Branches are scattered or unclear |
 | 3 | `orient-morning-run` | Routine PR and dependabot upkeep |
-| 4 | `orient-authored-repos` | Work spans several repos |
 
 ## Description
 Session-start orientation for any GitHub repository. Produces a "true state" summary
@@ -126,7 +125,7 @@ report a project as tidy if the roadmap disagrees.
 ### 5. Recommend next action
 
 After the summary:
-- If outstanding items exist → propose delivery plan (or hand off to `roadmap-deliver`)
+- If outstanding items exist → propose delivery plan (or hand off to `roadmap`)
 - If only README lag → run `roadmap-sync` to tick completed items
 - If genuinely tidy → confirm and stop; do not invent work
 
@@ -197,6 +196,6 @@ After the summary:
 
 ## Related skills
 
-- `roadmap-deliver` — use after orient to execute the delivery
+- `roadmap` — use after orient to execute the delivery
 - `roadmap-sync` — standalone README tick-off after a PR merges
 - `release` — for the tag → release mechanics in detail

@@ -7,7 +7,7 @@
 > `bash clusters/07-devops/ci-standards/check-roadmap-sync.sh . --fix`.
 
 **Last updated:** 2026-10-13
-**Open items:** 9 | **Completed:** 183
+**Open items:** 8 | **Completed:** 143
 
 ---
 
@@ -33,7 +33,7 @@ that file. Done by the master session directly (no sub-agents) unless noted.
 | | ID | Item | PR |
 |---|---|---|---|
 | [x] | SR-1 | Stop the creep: extractor on demand as `grimoire-extract`, queue review at 20 stubs; `roadmap-sync` stops inventing items | 1 |
-| [ ] | SR-2 | Remove 4 skills, archive 1, merge 6 into 3 (41 to 32) | 2 |
+| [x] | SR-2 | Remove 4 skills, archive 1, merge 6 into 3 (41 to 32) | 2 |
 | [ ] | SR-3 | Bash 3.2 compatibility for 7 scripts, plus a CI gate | 3 |
 | [ ] | SR-4 | `release` on release-please; `orient-morning-run` report-only; drop unsourced claims | 4 |
 | [ ] | SR-5 | Agent dispatch section in `plan-decompose` | 5 |
@@ -94,10 +94,6 @@ Revised by the 2026-10-04 over-engineering audit (see `REVIEW.md`). Open owner d
 ## Open items by cluster
 
 <!-- ROADMAP-COLLECT:START (auto-generated — do not hand-edit; run check-roadmap-sync.sh --fix) -->
-### 01-meta
-
-  - **plan-handoff**: Add `--auto` mode: triggered automatically when context exceeds a threshold
-
 ### 05-technical
 
   - **review-codebase**: Add worked example: Python web service holistic review (before/after findings)
@@ -114,7 +110,7 @@ Revised by the 2026-10-04 over-engineering audit (see `REVIEW.md`). Open owner d
 
 ---
 
-**Summary:** 9 open items | 183 completed items
+**Summary:** 8 open items | 143 completed items
 <!-- ROADMAP-COLLECT:END -->
 
 > **08-offsec** roadmap items now live in the private `grimoire-offsec` submodule

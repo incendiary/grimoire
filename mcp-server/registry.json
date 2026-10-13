@@ -1,16 +1,6 @@
 {
     "tools": [
         {
-            "name": "grimoire-find",
-            "skill": "clusters/01-meta/grimoire-find/SKILL.md",
-            "script": "clusters/01-meta/grimoire-find/find-skill.sh"
-        },
-        {
-            "name": "orient-authored-repos",
-            "skill": "clusters/01-meta/orient-authored-repos/SKILL.md",
-            "script": "clusters/01-meta/orient-authored-repos/list-authored.sh"
-        },
-        {
             "name": "roadmap",
             "skill": "clusters/01-meta/roadmap/SKILL.md",
             "script": "scripts/roadmap-collect.sh"

@@ -22,13 +22,6 @@ the repo health, all script files (network calls, env var access, dynamic execut
 and the SKILL.md itself for prompt injection. Outputs a PASS / FLAG / REJECT verdict.
 → [Full documentation](review-skill/README.md)
 
-### [orient-authored-repos](orient-authored-repos/) ✅ complete
-
-Prevents forks and reference clones from being included in multi-repo operations.
-Enforces the canonical authored-repo list from CLAUDE.md. Extracted after forks were
-incorrectly processed in three separate bulk operations.
-→ [Full documentation](orient-authored-repos/README.md)
-
 ### [plan](plan/) ✅ complete
 
 Umbrella entry point for the Karpathy three-layer framework. Routes to the right layer
@@ -50,13 +43,6 @@ opinion (different model or role) and external signal (test claims against reali
 Feedback loops improve output quality 2–3× per invocation.
 → [Full documentation](plan-verify/README.md)
 
-### [plan-environment](plan-environment/) ✅ complete
-
-Layer 3 of the Karpathy framework. Builds the durable workspace that makes Layers 1 and 2
-faster over time: CLAUDE.md, structured knowledge base, custom skills roadmap, and guardrails.
-Compounds — each session setup is faster than the last.
-→ [Full documentation](plan-environment/README.md)
-
 ### [plan-model-tier](plan-model-tier/) ✅ complete
 
 Cost-benefit framework for choosing LLM model tier (Haiku, Sonnet, Opus) based on task
@@ -72,26 +58,12 @@ status" and "pick up from the roadmap" prompts. Chains: `orient` → `plan-decom
 `plan` → `plan-verify`.
 → [Full documentation](roadmap/README.md)
 
-### [grimoire-find](grimoire-find/) ✅ complete
-
-Keyword-to-skill lookup utility for grimoire. Ranks matching skills from plain-language
-queries (intent keywords) so you can find the right skill even when you do not remember
-its exact name.
-→ [Full documentation](grimoire-find/README.md)
-
 ### [plan-decompose](plan-decompose/) ✅ complete
 
 Proactively breaks large tasks into self-contained chunks before context limits become an
 issue. Each chunk is a task file with everything a fresh session needs to execute independently.
 Used at the start of multi-session work to prevent context-window collisions.
 → [Full documentation](plan-decompose/README.md)
-
-### [plan-handoff](plan-handoff/) ✅ complete
-
-Reactively packages the current session's state into a handoff document when context pressure
-is building mid-task. Captures git state, completed work, decisions made, and next chunk with
-verifiable done criteria. Enables a fresh session to pick up cleanly without replaying history.
-→ [Full documentation](plan-handoff/README.md)
 
 ---
 
@@ -114,7 +86,6 @@ plan-model-tier → (for each chunk) pick model tier based on verifiability & bl
         ↓
 plan-verify           → evaluate output against spec criteria
         ↓
-plan-environment      → (if patterns emerged) capture in CLAUDE.md / skills
 ```
 
 ### Workflow 2: Mid-session context pressure
@@ -122,8 +93,7 @@ plan-environment      → (if patterns emerged) capture in CLAUDE.md / skills
 **Trigger:** "Context is getting long" / session feels sluggish / about to hit limits
 
 ```
-        ↓
-plan-handoff              → package state for a fresh session to continue
+plan-decompose (handoff)  → package state for a fresh session to continue
         ↓
 [new session starts from handoff document]
 ```
@@ -132,11 +102,7 @@ plan-handoff              → package state for a fresh session to continue
 
 **Trigger:** Opening a new session / "where was I?" / resuming work
 
-```
-        ↓
-        ↓
-orient-authored-repos     → (if multi-repo) scope to authored repos only
-```
+Use `orient` (07-devops); its pathway table lists the session-start steps in order.
 
 ### Workflow 4: Evaluating existing output
 
@@ -156,7 +122,6 @@ grimoire-extract   → scan transcript, propose new SKILL.md stubs
         ↓
 review-skill              → (if third-party skill) review for safety before installing
         ↓
-plan-environment      → update CLAUDE.md, knowledge base, skill roadmap
 ```
 
 ### Workflow 6: Installing or vetting new skills
@@ -174,7 +139,6 @@ review-skill              → repo health, script audit, prompt injection check
 **Trigger:** "Which skill covers this?" / concept known but skill name forgotten
 
 ```
-grimoire-find      → rank likely matching skills from keywords
         ↓
 [pick top match]          → invoke selected skill directly
 ```
@@ -208,11 +172,7 @@ and `roadmap-sync` keeps the README roadmap from becoming the long-term source o
 | `plan` | Unsure which layer to start with; onboarding someone to the framework |
 | `plan-spec` | Task is vague, large, or multi-step; need to define "done" before starting |
 | `plan-verify` | Output exists; need to evaluate quality before accepting; want a second opinion |
-| `plan-environment` | Session felt repetitive; patterns emerged worth capturing; setting up CLAUDE.md |
 | `plan-model-tier` | Choosing model tier for a task; avoiding false savings on high-risk work; assigning models to chunks |
 | `plan-decompose` | Task will span multiple sessions; need independent chunks before starting |
-| `plan-handoff` | Context pressure building mid-task; need to hand off cleanly to a fresh session |
 | `grimoire-extract` | Session ending; want to extract reusable patterns into proposed skills |
 | `review-skill` | Evaluating a third-party skill before installing; need safety/quality check |
-| `orient-authored-repos` | Multi-repo operation starting; need to exclude forks and reference clones |
-| `grimoire-find` | You know the workflow concept but not the skill name; need ranked skill matches |

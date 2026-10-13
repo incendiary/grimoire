@@ -17,7 +17,7 @@ consistent, citation-backed, and defensible — every factual claim traces to a 
 evidence source.
 
 Pairs with `incident-asks` (to determine what evidence to collect) and
-`write-exec` (to write the executive summary that sits in front of this appendix).
+`write (exec mode)` (to write the executive summary that sits in front of this appendix).
 
 ---
 

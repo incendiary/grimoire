@@ -15,7 +15,7 @@ model) and produces a structured action plan table. Mitigations are sorted into 
 short-term, and long-term buckets. Decisions required before action can proceed are
 separated into a decision log with named decision-makers and consequences.
 
-Pairs with `write-exec` to produce the executive-facing version of the action plan.
+Pairs with `write (exec mode)` to produce the executive-facing version of the action plan.
 
 ---
 

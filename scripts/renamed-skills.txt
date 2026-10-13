@@ -54,3 +54,13 @@ ios-signing-risk	review-ios-signing
 skill-keyword-lookup	grimoire-find
 session-skill-extractor	grimoire-extract
 session-skill-extractor	grimoire-extract
+orient-authored-repos	-
+grimoire-find	-
+plan-environment	-
+ci-tests	-
+review-ios-signing	-
+write-tone	write
+write-human	write
+write-exec	write
+plan-handoff	plan-decompose
+roadmap-deliver	roadmap

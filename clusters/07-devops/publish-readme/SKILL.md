@@ -68,7 +68,7 @@ phrases: "write a README for this", "generate the README", "this repo needs docs
    ```
    This is non-negotiable for offensive tools. Do not omit it.
 
-4. **Apply `write-human` style rules** to the full output: British English, active
+4. **Apply `write (humanise mode)` style rules** to the full output: British English, active
    voice, no corporate filler.
 
 ## Gotchas
