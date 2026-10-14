@@ -2,13 +2,14 @@
 set -euo pipefail
 
 # github-morning-run.sh — GitHub repository maintenance routine
-# Audits open PRs, auto-merges simple dependabot updates, checks CI status
+# Audits open PRs, lists Dependabot updates (merges them only with --merge), checks CI status
 #
 # Usage:
 #   bash github-morning-run.sh                # interactive scope selection
 #   bash github-morning-run.sh --current      # current repo only
 #   bash github-morning-run.sh --all          # all incendiary-authored repos
 #   bash github-morning-run.sh --repo owner/repo  # specific repo
+#   add --merge to any of the above to merge passing Dependabot PRs
 
 set_scope() {
     local arg="${1:-}"
@@ -83,7 +84,7 @@ get_repos() {
             ;;
         all)
             # List repos from incendiary (requires gh auth)
-            gh repo list incendiary --json nameWithOwner -q '.[].nameWithOwner'
+            gh repo list incendiary --source --no-archived --limit 200 --json nameWithOwner -q '.[].nameWithOwner'
             ;;
         specific)
             echo "${REPO}"
@@ -139,14 +140,17 @@ process_repo() {
         if [[ "${author}" == *"dependabot"* ]]; then
             echo -n "  [#${pr_num}] ${title:0:50}... "
 
+            if [[ "${MERGE}" != "true" ]]; then
+                echo "(Dependabot; run with --merge to merge)"
+                flagged=$((flagged + 1))
             # Try to merge; gh will report if it fails (conflicts, CI, etc)
-            if gh pr merge -R "${repo}" "${pr_num}" --squash --delete-branch --auto 2>/dev/null; then
+            elif gh pr merge -R "${repo}" "${pr_num}" --squash --delete-branch --auto 2>/dev/null; then
                 echo "✓ (merged)"
-                ((auto_merged++))
+                auto_merged=$((auto_merged + 1))
             else
                 # Merge failed; likely due to conflict, CI, or protection
                 echo "⚠️  (needs review)"
-                ((flagged++))
+                flagged=$((flagged + 1))
             fi
         else
             echo "  [#${pr_num}] ${title:0:50}... (review needed)"
@@ -184,7 +188,7 @@ main() {
 
     while IFS= read -r repo; do
         [[ -z "${repo}" ]] && continue
-        ((total_repos++))
+        total_repos=$((total_repos + 1))
         process_repo "${repo}"
     done <<< "${repos}"
 
@@ -193,4 +197,9 @@ main() {
     echo "Repos checked: ${total_repos}"
 }
 
-main "$@"
+MERGE=false
+args=()
+for a in "$@"; do
+    if [[ "${a}" == "--merge" ]]; then MERGE=true; else args+=("${a}"); fi
+done
+main "${args[@]+"${args[@]}"}"

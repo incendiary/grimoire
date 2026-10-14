@@ -10,8 +10,7 @@ description: "Layer 2 of the Karpathy framework. Evaluates finished output again
 
 ## Description
 Layer 2 of the Karpathy framework. Evaluates output against precise criteria by routing
-it through a second opinion and grounding claims in external signal. Feedback loops
-improve output quality 2–3× per invocation (per Boris Chernsey, Claude Code creator).
+it through a second opinion and grounding claims in external signal.
 
 Invoke when: output exists and needs quality evaluation before acceptance; specific
 factual claims can be tested; previous similar work had errors or drift; before shipping,

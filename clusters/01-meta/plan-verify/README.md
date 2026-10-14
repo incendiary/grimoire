@@ -4,8 +4,7 @@
 
 Layer 2 of the Karpathy framework. Evaluates output quality before accepting it by
 running it through a second opinion (different model, role, or fresh pass) and grounding
-claims in external signal (test execution, source checks, live system state). Feedback
-loops improve output quality 2–3× per invocation.
+claims in external signal (test execution, source checks, live system state).
 
 ---
 

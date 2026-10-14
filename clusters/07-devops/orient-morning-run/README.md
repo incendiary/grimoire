@@ -2,7 +2,7 @@
 
 > **Cluster:** 07-devops | **Status:** complete | **Added:** 2022-06-22
 
-Routine GitHub repository maintenance for one or more authored repos. Audits open PRs, auto-merges simple dependabot updates when CI passes, checks GitHub Actions status, and flags complex issues for human review.
+Routine GitHub repository maintenance for one or more authored repos. Audits open PRs, lists (and with `--merge`, merges) simple dependabot updates when CI passes, checks GitHub Actions status, and flags complex issues for human review.
 
 ---
 
@@ -63,7 +63,7 @@ bash github-morning-run.sh --repo owner/repo
    - Show review status (approved, needs review, failing CI)
    - Identify dependabot PRs for processing
 
-2. **Auto-merge safe dependabot PRs**
+2. **Dependabot PRs** (report-only by default; merged only with `--merge`)
    - ✅ CI passes
    - ✅ No merge conflicts
    - ✅ Single dependency (not a batch)

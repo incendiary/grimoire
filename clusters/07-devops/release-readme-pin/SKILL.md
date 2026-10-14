@@ -98,13 +98,10 @@ Add a step to your CI workflow:
 
 This skill fits naturally after `release`:
 
-1. `release.sh` bumps VERSION, tags, pushes tag, creates GitHub Release
+1. Merge the release-please PR (creates the tag and GitHub release)
 2. `pin_readme_version.sh` rewrites README install instructions to the new tag
 3. `check_readme_version.sh` verifies the result
-4. Commit the README changes to main
-
-Or automate step 2–3 inside `release.sh` itself — add a call to
-`pin_readme_version.sh` before the `git push`.
+4. Commit the README changes to main (`docs:` prefix, so no new release is triggered)
 
 ## Version detection order
 
