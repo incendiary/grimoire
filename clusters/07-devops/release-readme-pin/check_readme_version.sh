@@ -54,7 +54,8 @@ echo "  Expected version : $VERSION  (from $VERSION_SOURCE)"
 echo ""
 
 # ── Find README files ─────────────────────────────────────────────────────
-mapfile -t READMES < <(find . -name "README*" -not -path "*/.git/*" | sort)
+READMES=()
+while IFS= read -r _line; do READMES+=("$_line"); done < <(find . -name "README*" -not -path "*/.git/*" -not -path "*/node_modules/*" | sort)
 
 FAILED=false
 

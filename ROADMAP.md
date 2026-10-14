@@ -34,7 +34,7 @@ that file. Done by the master session directly (no sub-agents) unless noted.
 |---|---|---|---|
 | [x] | SR-1 | Stop the creep: extractor on demand as `grimoire-extract`, queue review at 20 stubs; `roadmap-sync` stops inventing items | 1 |
 | [x] | SR-2 | Remove 4 skills, archive 1, merge 6 into 3 (41 to 32) | 2 |
-| [ ] | SR-3 | Bash 3.2 compatibility for 7 scripts, plus a CI gate | 3 |
+| [x] | SR-3 | Bash 3.2 compatibility for 7 scripts, plus a CI gate | 3 |
 | [ ] | SR-4 | `release` on release-please; `orient-morning-run` report-only; drop unsourced claims | 4 |
 | [ ] | SR-5 | Agent dispatch section in `plan-decompose` | 5 |
 | [ ] | SR-6 | Toolchain preflight in `orient`; bash 3.2 rule in global CLAUDE.md | 5 |

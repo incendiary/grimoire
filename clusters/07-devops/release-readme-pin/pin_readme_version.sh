@@ -88,7 +88,8 @@ $DRY_RUN && echo "  Mode     : DRY RUN — no files will be changed"
 echo ""
 
 # ── Find README files ─────────────────────────────────────────────────────
-mapfile -t READMES < <(find . -name "README*" -not -path "*/.git/*" | sort)
+READMES=()
+while IFS= read -r _line; do READMES+=("$_line"); done < <(find . -name "README*" -not -path "*/.git/*" -not -path "*/node_modules/*" | sort)
 
 if [[ ${#READMES[@]} -eq 0 ]]; then
     echo "  [WARN] No README files found."

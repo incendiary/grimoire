@@ -17,7 +17,8 @@ echo "  Root: $(realpath "$SCAN_ROOT")"
 echo ""
 
 # ── Find all .tf files ────────────────────────────────────────────────────
-mapfile -t TF_FILES < <(find "$SCAN_ROOT" -name "*.tf" -not -path "*/.git/*" -not -path "*/.terraform/*" | sort)
+TF_FILES=()
+while IFS= read -r _line; do TF_FILES+=("$_line"); done < <(find "$SCAN_ROOT" -name "*.tf" -not -path "*/.git/*" -not -path "*/.terraform/*" | sort)
 
 if [[ ${#TF_FILES[@]} -eq 0 ]]; then
     echo "  [WARN] No .tf files found under $SCAN_ROOT"

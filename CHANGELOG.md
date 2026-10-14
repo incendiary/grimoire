@@ -20,6 +20,7 @@ workflow.
 
 ### Fixed
 
+- Seven scripts in `py-lint`, `tf-guardrails`, `release-readme-pin`, `deps-integrity` and `orient-branches` used bash 4 builtins and failed on macOS's bash 3.2; rewritten, with a CI gate against `mapfile`, `readarray` and `declare -A`. `release-readme-pin` scripts now skip `node_modules`.
 - `check-roadmap-sync.sh --check` no longer fails every PR opened on a later day than the last ROADMAP regeneration (it compared the Last updated stamp against today).
 - RA-19 and RA-20 briefs: Dependabot already exists; RA-20 pins whatever versions are current.
 

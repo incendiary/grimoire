@@ -209,7 +209,8 @@ echo "--- CI pipeline check (best-effort) ---"
 echo ""
 
 CI_FILES=()
-mapfile -t CI_FILES < <(find "$PROJECT_DIR" \
+CI_FILES=()
+while IFS= read -r _line; do CI_FILES+=("$_line"); done < <(find "$PROJECT_DIR" \
     -name "*.yml" -o -name "*.yaml" \
     | grep -E "(\.github/workflows|\.gitlab-ci|\.circleci)" \
     | head -20 || true)
