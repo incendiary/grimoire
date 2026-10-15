@@ -129,6 +129,17 @@ After the summary:
 - If only README lag → run `roadmap-sync` to tick completed items
 - If genuinely tidy → confirm and stop; do not invent work
 
+## Toolchain check
+
+Run once at session start, before relying on local scripts or `ci-local`:
+```bash
+bash ~/.claude/skills/orient/toolchain-check.sh .
+```
+Read-only. It flags bash 4 builtins in a repo's scripts (macOS ships bash 3.2), a Node
+version below `engines.node` or different from `.nvmrc`, missing PyYAML for `ci-local`,
+and broken pyenv shims. Fix with a project-local venv or `nvm use`; never install
+toolchains system-wide.
+
 ## Push protocol check
 
 ### What to do

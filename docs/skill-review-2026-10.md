@@ -130,13 +130,14 @@ Done when: a fresh session can run a multi-task plan from the skill alone.
   `node -v` against `package.json` `engines` and `.nvmrc`, Python modules the repo's CI
   needs (for example PyYAML for `ci-local`), and broken shims (`pyenv` pointing at a missing binary).
 - Global CLAUDE.md: "Shell scripts must run on macOS /bin/bash 3.2."
-- Done when: on this Mac, orient flags Node 16 and the broken pyenv shim.
+- Done when: on this Mac, orient flags the broken pyenv shim and missing PyYAML (2026-10-15: done; Node had since been switched to 22, so it passes).
 
 ### SR-7: Accepted advisories in `deps-integrity` (gap: about 20 stubs)
 - A "Known, accepted advisories" section: record each accepted CVE in `SECURITY.md` (or
   `.github/accepted-advisories.md`) with ID, reason no fix exists, owner, and re-check
   trigger (upstream release); suppress per ID, never blanket; treat "expected red" CI only
   when it matches a recorded entry.
-- Done when: the section exists with a template, and the npm check prints accepted IDs
-  separately from new findings.
+- Done when: the section exists with a template. (2026-10-15: the npm check verifies lockfile
+  hashes and never runs `npm audit`, so there is no output to split; the register drives
+  ignore lists instead.)
 

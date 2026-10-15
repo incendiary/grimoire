@@ -32,6 +32,28 @@ Run the provenance check after `npm ci`; it is complementary to the lockfile che
 (hashes prove content is unchanged since the lockfile was written, provenance proves
 where it came from). If npm is older than 9.5.0, fall back to the Node lockfile check.
 
+## Accepted advisories
+
+Some advisories have no upstream fix, or do not apply (for example a vulnerable code path
+the project never reaches). Record each one so it is handled once, not rediscovered on every
+CI run or audit.
+
+- **Register:** `.github/accepted-advisories.md` (or a section of `SECURITY.md`), one entry
+  per advisory ID. Template:
+  ```markdown
+  | ID | Package | Why accepted | Owner | Re-check when |
+  |---|---|---|---|---|
+  | GHSA-xxxx-xxxx-xxxx | fast-uri@3.1.5 | Transitive via the MCP SDK; HTTP transport unused (stdio only) | owner | SDK release that bumps fast-uri |
+  ```
+- **Suppress per ID, never by severity or package.** If the tool supports an ignore list
+  (for example `pip-audit --ignore-vuln <ID>`, or an `.nsprc` / audit-ci allowlist for npm),
+  generate it from the register so the two cannot drift.
+- **Expected-red CI is only acceptable when every finding matches a register entry.** Any
+  finding not in the register is new and must be triaged before merging.
+- **Re-check** each entry when its trigger happens (an upstream release, a dependency bump)
+  and at least on every release; delete entries that no longer apply.
+- Accepting an advisory is the owner's decision; propose entries, do not add them unasked.
+
 ## Node lockfile integrity
 
 ### Context needed
