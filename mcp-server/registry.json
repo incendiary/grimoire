@@ -66,10 +66,6 @@
         {
             "skill": "clusters/07-devops/publish-secret-scan/SKILL.md",
             "reason": "bootstrap-security.sh commits and pushes to target repos"
-        },
-        {
-            "skill": "clusters/07-devops/release/SKILL.md",
-            "reason": "release.sh merges, tags and creates GitHub releases"
         }
     ]
 }

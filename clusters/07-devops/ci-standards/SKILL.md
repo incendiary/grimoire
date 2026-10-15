@@ -27,18 +27,18 @@ audit; "establish my devops practices on this repo"; periodic health check.
 
 ### 1. Versioning
 
-**Standard:** Semantic versioning (major.minor.patch).
+**Standard:** Semantic versioning (major.minor.patch), managed by release-please. Never
+bump versions or create tags by hand; `release` sets release-please up where it is missing.
 
 | Rule | Detail |
 |------|--------|
+| release-please owns VERSION, tag, and release | Merging its standing release PR bumps, tags, and publishes in one step |
 | VERSION file is source of truth | Single file at repo root, one line: `X.Y.Z` |
 | Git tag must match VERSION | Tag format: `vX.Y.Z` (with `v` prefix) |
 | GitHub release must match tag | Release title includes version; tag is the release ref |
-| Patch = related PR batch | Group several PRs on the same subject into one patch bump |
-| Minor = feature batch | New capability added |
-| Major = breaking change | API or interface contract broken |
+| Bump level comes from commits | `fix:` patch, `feat:` minor, `feat!:` or `BREAKING CHANGE:` major |
 
-**Enforcement:** `check-version-sync.sh`
+**Enforcement:** `check-version-sync.sh` (repos without release-please only; with release-please it is red on the release PR itself, so do not make it required)
 **Existing skills:** `release`, `release-readme-pin`
 
 ---
@@ -53,7 +53,7 @@ audit; "establish my devops practices on this repo"; periodic health check.
 | Conventional commit titles | `feat:`, `fix:`, `docs:`, `ci:`, `chore:` prefix |
 | Squash merge to main | Never merge commits; history stays linear |
 | Never rebase published branches | Use `git merge main` to catch up; rebase silently drops commits |
-| Group PRs into point releases | 3 PRs improving CI → single patch bump after the batch |
+| Batch releases | Merge the release PR when ready to ship what is queued |
 | PR description references issue | Link the issue being addressed (if one exists) |
 
 **Enforcement:** Rules only (human discipline). PR title checked by CI where available.

@@ -49,6 +49,9 @@ workflow.
 
 ### Changed
 
+- `release` rewritten around release-please (merge the standing release PR, or set release-please up); `release.sh` removed. `ci-standards` states release-please as the versioning default.
+- `orient-morning-run` is report-only by default; `--merge` merges passing Dependabot PRs. `--all` now lists only non-fork, non-archived repos, and counters no longer exit under `set -e` on bash 4.1+.
+- Removed the unsourced "2-3x quality per invocation" claim from `plan-verify`.
 - Merged `write-tone`, `write-human`, `write-exec` into `write` (three modes); `plan-handoff` into `plan-decompose` (mid-task handoff section); `roadmap-deliver` into `roadmap` (versions from release-please, no protection bypass). 41 to 32 skills.
 - `session-skill-extractor` renamed `grimoire-extract` and made on-demand only: Stop hook and `install.sh` removed, stub bar raised to 3 occurrences, and `generate_stubs.py` refuses to write past 20 queued stubs (`REVIEW DUE`), prompting a review with the owner.
 - `roadmap-sync` no longer adds planned items; it ticks and removes only.

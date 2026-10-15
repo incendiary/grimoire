@@ -40,7 +40,6 @@ concrete to test against.
 
 Layer 2 of the Karpathy framework. Evaluates output against defined criteria via second
 opinion (different model or role) and external signal (test claims against reality).
-Feedback loops improve output quality 2–3× per invocation.
 → [Full documentation](plan-verify/README.md)
 
 ### [plan-model-tier](plan-model-tier/) ✅ complete

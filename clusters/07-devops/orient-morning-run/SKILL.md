@@ -1,6 +1,6 @@
 ---
 name: orient-morning-run
-description: "Audits open PRs, auto-merges simple passing dependabot updates, checks recent CI runs and flags complex or failing items across one repo or all authored repos. Use when asked to 'check my GitHub repos', 'morning run', 'GitHub status', or 'any routine repo maintenance'. For a single repo's true state at session start use orient."
+description: "Audits open PRs, lists passing Dependabot updates (merging them only when run with --merge), checks recent CI runs and flags complex or failing items across one repo or all authored repos. Use when asked to 'check my GitHub repos', 'morning run', 'GitHub status', or 'any routine repo maintenance'. For a single repo's true state at session start use orient."
 ---
 # orient-morning-run
 
@@ -10,7 +10,7 @@ description: "Audits open PRs, auto-merges simple passing dependabot updates, ch
 
 ## Description
 Routine GitHub maintenance for one or more repositories. Audits open PRs, identifies
-and auto-merges simple dependabot updates when CI passes, checks action run status,
+and lists Dependabot updates that pass CI (merging them only with `--merge`), checks action run status,
 and flags complex issues for discussion. Designed for daily or weekly repo hygiene.
 
 Invoke when: "check my GitHub repos", "morning run", "GitHub status", "any routine repo maintenance".
@@ -124,8 +124,7 @@ CI runs: 15
 
 ## Roadmap
 
-- [ ] Add `--auto-merge-all` flag to skip prompts and merge all safe dependabots
-- [ ] Add `--report-only` mode (no merges, just audit)
+- [x] Report-only by default; `--merge` to merge passing Dependabot PRs (2026-10-14)
 - [ ] Persist "acknowledged failures" to skip re-reporting old known issues
 - [ ] Integration with Slack/email notifications for critical issues
 - [ ] Add dependency update grouping (e.g., "merge all ESLint family updates together")
