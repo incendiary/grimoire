@@ -1,6 +1,6 @@
 ---
 name: ci-standards
-description: "Applies and audits the owner's standard DevOps practices on a repo (version sync, roadmap sync, clone-ref pinning, test baseline), routing to the right skill for each practice, and records new practices when a session reveals one. Use when setting up a new repo, auditing a repo against the standard, doing a periodic health check, or asked to 'add this to my devops practices'."
+description: "Applies and audits the owner's standard DevOps practices on a repo (version sync, clone-ref pinning, test baseline), routing to the right skill for each practice, and records new practices when a session reveals one. Use when setting up a new repo, auditing a repo against the standard, doing a periodic health check, or asked to 'add this to my devops practices'."
 ---
 # ci-standards
 
@@ -157,7 +157,7 @@ README.md
 ```
 
 **Enforcement:** No automated script; managed via `roadmap-sync` skill on each PR merge.
-**Existing skills:** `roadmap-sync` (keep README and ROADMAP.md in sync after changes)
+**Existing skills:** `roadmap-sync` (tick completed items after changes)
 
 ---
 
@@ -208,12 +208,6 @@ for script in check-version-sync.sh check-clone-refs.sh check-test-baseline.sh; 
 done
 ```
 
-**grimoire-repo-specific (not portable):** `check-roadmap-sync.sh` — verifies
-`ROADMAP.md`'s generated block matches the source-of-truth `## Roadmap` sections in
-every skill's README, via `scripts/roadmap-collect.sh`. Depends on grimoire's own file
-layout and marker convention; won't work in an arbitrary downstream repo. Lives
-alongside the three portable scripts to reuse the same check-script convention and
-CI/pre-push wiring — `--check` (gate, exit 1 on drift) / `--fix` (auto-regenerate).
 
 ---
 
@@ -274,13 +268,3 @@ Guardrails:
 - Keep rules concise: one sentence per rule, detail in the "Detail" column.
 
 ---
-
-## Roadmap
-
-- [ ] Add CI workflow snippet that runs all three check scripts on PR
-- [ ] Add `--fix` mode to `check-clone-refs.sh` (auto-update refs to current VERSION)
-- [ ] Add GitHub Actions version-pinning check (not just docs, also workflow files)
-- [x] Add scheduled CI template for periodic test execution — `validate.yml` now runs weekly (`schedule: cron`) in addition to push/PR
-- [ ] Add automatic detection: chain with `grimoire-extract` to route devops patterns here
-- [ ] Add `--dry-run` mode for "Evolving this standard": show what would change without writing
-- [ ] Add practice versioning: track when each rule was added and by whom

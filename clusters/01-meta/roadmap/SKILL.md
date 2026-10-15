@@ -9,7 +9,7 @@ description: "Shows roadmap status and picks the next implementation-ready item 
 > **Type:** action
 
 ## Description
-**Status only:** run `bash scripts/roadmap-collect.sh` (add `--json` for machine-readable output) and summarise the counts.
+**Status only:** read the open items in `ROADMAP.md` (or the README roadmap) and summarise them.
 
 Selects the next roadmap work item and frames an execution chain automatically.
 Designed for prompts like "what should I work on next?" and "pick up from roadmap".
@@ -113,8 +113,3 @@ the owner; never bypass protection.
 - Do not auto-close roadmap items; closure is a separate explicit step.
 - If only "requires real session" items remain, output that explicitly and stop.
 - Keep one item per run to preserve atomic PR discipline.
-
-## Roadmap
-- [ ] Add `--cluster` filter for targeted routing
-- [ ] Add `--json` output for MCP consumers
-- [ ] Add confidence scoring for candidate items

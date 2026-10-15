@@ -14,6 +14,7 @@ workflow.
 
 ### Removed
 
+- Per-skill `README.md` files (3,131 lines duplicating `SKILL.md`), cluster READMEs, `docs/skill-readme-template.md`, the roadmap collection tooling (`roadmap-collect.sh`, `check-roadmap-sync.sh`, its pre-commit hook and CI step), finished discoverability task briefs, and speculative roadmap items in `SKILL.md` files. `ROADMAP.md` now lists open work directly; `SKILLS.md` is the index.
 - `orient-authored-repos` (replaced by a `gh repo list --source` line in global CLAUDE.md), `grimoire-find`, `plan-environment`, `ci-tests`; `review-ios-signing` moved to `archive/`; empty `04-security` cluster.
 - `PROJECT-WORKFLOWS.md` (replaced by the pathway tables and a short README summary).
 - `npm-lockfile-integrity`, `python-lockfile-integrity` and `npm-provenance-attestation` (replaced by `deps-integrity`).

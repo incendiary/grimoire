@@ -8,8 +8,10 @@ Read this at session start; merge with global `~/.claude/CLAUDE.md`.
 ## Repo overview
 
 Private skill library (cloned locally; path varies per machine).
-Nine clusters (`01-meta` through `09-odpc`); each skill directory contains `SKILL.md` + `README.md`
-and zero or more scripts/templates.
+Skills live in `clusters/<cluster>/<skill>/`: a `SKILL.md` (with `name`/`description`
+frontmatter) and zero or more scripts or templates. No per-skill or cluster READMEs:
+`SKILLS.md` is the generated index (`bash scripts/gen-catalogue.sh`), and open work lives
+in `ROADMAP.md`.
 
 **Multi-platform delivery:**
 - Claude Code: `install-all.sh` copies skill folders to `~/.claude/skills/`
@@ -22,7 +24,7 @@ CI workflows:
 - `validate.yml` — shellcheck, skill structure, registry sync
 - `ci-mcp.yml` — TypeScript build, lint, test (path-filtered to `mcp-server/`)
 - `secret-scan.yml` — gitleaks + TruffleHog
-- `devops-check.yml` — clone-ref pinning, test baseline, roadmap sync
+- `devops-check.yml` — clone-ref pinning, test baseline
 - `release-please.yml` — see "Releases" below
 
 VERSION file: semver, managed entirely by `release-please` (see "Releases"). Feature PRs
@@ -36,7 +38,7 @@ never touch it — don't hand-edit `VERSION`, `CHANGELOG.md`, or create tags you
 git checkout -b feat/<name> main
 # write files
 chmod +x any .sh files
-# tick README roadmap items
+# tick ROADMAP.md items
 git add <specific files> && git commit -m "feat: ..."
 git push -u origin feat/<name>
 gh pr create ...
@@ -132,27 +134,11 @@ Always run CI before merging — shellcheck is stricter than local review.
 
 ---
 
-## README sync when branching from an older base
-
-When a new feature branch is cut before a recent PR merges to main, the branch won't
-have that PR's changes to shared files (e.g. `clusters/07-devops/README.md`).
-
-Before opening a PR, check:
-```bash
-git diff origin/main HEAD -- <shared-file>
-```
-
-If the file has a regression (content in main that's missing from the branch), add a
-fixup commit to the branch before the PR. Common culprit:
-- `clusters/07-devops/README.md` — new skill entries added by intervening PRs
-
----
-
 ## Commit message conventions
 
 - `feat:` — new skill file or script
 - `fix:` — bug fix in an existing script (including ShellCheck fixes)
-- `docs:` — README updates, roadmap ticks
+- `docs:` — documentation and roadmap ticks
 - `chore:` — merge commits, housekeeping (never hand-bump VERSION — see "Releases")
 - `ci:` — changes to `.github/workflows/`
 
@@ -172,21 +158,6 @@ fix: <short description>
 docs: <short description>
 ci: <short description>
 ```
-
----
-
-## Cluster README entries
-
-When a new skill is added to a cluster, add an entry to `clusters/<cluster>/README.md`.
-Format:
-```markdown
-### [<skill-dir-name>](<skill-dir-name>/) ✅ complete
-One-sentence description of what the skill does and when.
-→ [Full documentation](<skill-dir-name>/README.md)
-```
-
-If branching before a recent PR's cluster README update lands on main, the entry may
-be missing — add it explicitly in a fixup commit.
 
 ---
 
