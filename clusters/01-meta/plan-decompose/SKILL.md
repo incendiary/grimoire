@@ -180,6 +180,42 @@ When invoked with `--resume [output dir]` instead of a task description:
 
 This only works if `Status:` headers are kept current — see the gotcha below.
 
+## Dispatching to agents
+
+When the task files will be run by sub-agents rather than by fresh sessions you start
+yourself, the session that wrote them becomes the **master**: it dispatches, verifies, and
+integrates. Proven on the grimoire discoverability programme (2026-10).
+
+**First, decide whether to delegate at all.** Spawning an agent costs its whole context
+plus your brief. Do small tasks (a few commands, one file) directly. Delegate only work
+that is large, independent, and fully specified by its brief.
+
+**Brief header fields** (add to each task file):
+`Model` (haiku, sonnet, or opus), `Fallback`, `Depends on`, `Touches` (files, so you can
+spot clashes), and a `Done when` list of commands that prove the result.
+
+**Model tier** (see `plan-model-tier`): haiku only when every judgement is pre-made in the
+brief (exact wording, exact commands); sonnet when the agent must read code and write; opus
+for merges where capability could be silently lost, and for reviewing large diffs.
+
+**Dispatch:** one git worktree per agent, so parallel agents never share a checkout. The
+prompt is fixed: read the shared conventions, read your task file, execute it, do not
+push, finish with the return signal. If an agent needs context the brief lacks, fix the
+brief, not the prompt.
+
+**Verify, never trust:** after each return signal, the master re-runs every `Done when`
+command itself and reads the diff. Most real problems in the grimoire programme were caught
+here, not by the agents.
+
+**Escalate:** a failed check is re-dispatched once on the `Fallback` model with the failing
+output; a second failure goes to the owner. If an agent reports that the brief is wrong,
+the master corrects the brief and re-dispatches; that is not an owner decision.
+
+**Integrate serially** onto one branch per wave, one PR per wave: union-merge append-only
+files (CHANGELOG, rename lists), keep one side of generated files and regenerate them, and
+re-run the full checks after the last merge. Before merging, compare any renamed or deleted
+CI job against the branch-protection required checks.
+
 ## Mid-task handoff
 
 Use when context is already full and the next chunk should run in a fresh session.

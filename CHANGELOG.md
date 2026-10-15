@@ -26,6 +26,9 @@ workflow.
 
 ### Added
 
+- `plan-decompose`: "Dispatching to agents" section (brief fields, model tier, worktrees, verify-not-trust, escalation, serial integration), generalised from the discoverability programme.
+- `orient/toolchain-check.sh`: read-only check for bash 4 builtins, Node vs `engines`/`.nvmrc`, PyYAML for `ci-local`, and broken pyenv shims.
+- `deps-integrity`: "Accepted advisories" register with template and rules.
 - Pathway tables in the `orient`, `plan`, `release` and `publish` entry skills.
 - `ci-standards` skill: merges `devops-practices` and `devops-practices-updater` (updater is now the "Evolving this standard" section); check scripts moved to `clusters/07-devops/ci-standards/`.
 - `deps-integrity` skill (RA-10): merges lockfile and provenance checks. MCP registry shape: one `deps-integrity` entry, because `executor.ts` runs every bash block in the `SKILL.md` and cannot select a script per entry.
