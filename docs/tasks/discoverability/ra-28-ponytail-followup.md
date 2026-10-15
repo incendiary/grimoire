@@ -1,6 +1,6 @@
 # Task RA-28: Post-programme ponytail-debt ledger and audit re-run
 
-> Status: pending
+> Status: done
 > Parent: discoverability and consolidation programme
 > Model: sonnet
 > Fallback: opus

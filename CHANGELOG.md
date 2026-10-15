@@ -26,6 +26,7 @@ workflow.
 
 ### Added
 
+- `docs/ponytail-review-2026-10-16.md`: post-programme debt ledger (clean) and audit; RA-23 interim usage snapshot.
 - `plan-decompose`: "Dispatching to agents" section (brief fields, model tier, worktrees, verify-not-trust, escalation, serial integration), generalised from the discoverability programme.
 - `orient/toolchain-check.sh`: read-only check for bash 4 builtins, Node vs `engines`/`.nvmrc`, PyYAML for `ci-local`, and broken pyenv shims.
 - `deps-integrity`: "Accepted advisories" register with template and rules.
