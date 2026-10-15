@@ -183,9 +183,3 @@ This honesty gap itself is a quality signal worth paying for on high-risk tasks.
 | **Opus** | High-risk: breaking refactors, low verifiability, large blast radius, subtle correctness requirements. Tasks where a weak model would create a false saving tax you can't absorb. | Low-risk, mechanical tasks (waste of money). |
 
 ---
-
-## Roadmap
-
-- [ ] Add per-language examples (Python, TypeScript, Go, Rust)
-- [ ] Integrate with `plan-decompose` so agents self-select their tier when planning work
-- [ ] Gather cost data from real work to validate the framework

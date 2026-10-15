@@ -88,9 +88,3 @@ said otherwise. Write PR titles and bodies from the branch name + commit log.
 - Dry-run merge detection uses `git merge --no-commit --no-ff`; always abort after
 
 ---
-
-## Roadmap
-- [ ] Add `--dry-run` mode (report only, no push/PR actions)
-- [ ] Add `--target <branch>` to use a non-main base
-- [ ] Add confidence score per branch (commit count, recency, author)
-- [ ] Add PR body template population from commit messages

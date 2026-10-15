@@ -105,9 +105,3 @@ Use this template for paste-ready roadmap entries:
 - [ ] Accessibility checks for modified UI paths (focus, labels, contrast)
 - [ ] Mobile/desktop snapshots manually reviewed
 - [ ] Plan updated (`Today`/`This week`/`Later`) and roadmap snippet produced
-
-## Roadmap
-
-- [ ] Add worked example: SaaS dashboard audit with 10 prioritized fixes
-- [ ] Add stack-specific heuristics (React + Tailwind + component library patterns)
-- [ ] Test on 3 real frontend repos and collect recurring anti-patterns

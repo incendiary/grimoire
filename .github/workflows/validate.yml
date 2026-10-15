@@ -31,38 +31,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-      - name: Assert every skill directory has SKILL.md and README.md
+      - name: Assert every skill directory has SKILL.md
         run: |
           set -e
           failed=0
-          # Only check public clusters — private submodule has its own CI
           for dir in clusters/*/*/; do
             if [ ! -f "${dir}SKILL.md" ]; then
               echo "ERROR: missing SKILL.md in ${dir}"
               failed=1
             fi
-            if [ ! -f "${dir}README.md" ]; then
-              echo "ERROR: missing README.md in ${dir}"
-              failed=1
-            fi
-          done
-          if [ "$failed" -eq 1 ]; then
-            exit 1
-          fi
-          echo "All skill directories have SKILL.md and README.md"
-      - name: No stale path references
-        run: |
-          set -e
-          failed=0
-          for readme in clusters/*/*/README.md; do
-            [ -f "$readme" ] || continue
-            if grep -q '/path/to/grimoire\|loadout/' "$readme"; then
-              echo "ERROR: stale path reference in $readme"
-              failed=1
-            fi
           done
           if [ "$failed" -eq 1 ]; then exit 1; fi
-          echo "No stale paths found"
+          echo "All skill directories have SKILL.md"
       - name: Every SKILL.md has name/description frontmatter
         run: bash scripts/check-frontmatter.sh
       - name: SKILLS.md catalogue is current

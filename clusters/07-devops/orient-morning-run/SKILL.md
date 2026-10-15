@@ -121,10 +121,3 @@ CI runs: 15
 - Timestamps on older issues
 
 ---
-
-## Roadmap
-
-- [x] Report-only by default; `--merge` to merge passing Dependabot PRs (2026-10-14)
-- [ ] Persist "acknowledged failures" to skip re-reporting old known issues
-- [ ] Integration with Slack/email notifications for critical issues
-- [ ] Add dependency update grouping (e.g., "merge all ESLint family updates together")

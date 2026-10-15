@@ -38,8 +38,7 @@ bash install-all.sh --force
 ```
 
 Copies every skill folder into `~/.claude/skills/`. Skills activate automatically
-when Claude recognises their trigger conditions. See [clusters/README.md](clusters/README.md)
-for how Claude Code skill invocation works.
+when Claude matches a request to a skill's frontmatter description, or by name (`/<skill>`).
 
 Remove installed grimoire-managed skills:
 
@@ -178,15 +177,14 @@ Full list: [SKILLS.md](SKILLS.md).
 
 ## Clusters
 
-Seven public clusters + two private (via submodule). See [clusters/README.md](clusters/README.md).
+Five public clusters + private ones (via submodule). The skills in each are listed in [SKILLS.md](SKILLS.md).
 
 | # | Cluster | Location | Purpose |
-|---|---------|----------|---------||
+|---|---------|----------|---------|
 | 01 | [meta](clusters/01-meta/) | public | Skill management, session extraction, task decomposition |
-| 02 | [comms](clusters/02-comms/) | public | Tone review, style rewriting, executive translation |
+| 02 | [comms](clusters/02-comms/) | public | Drafting: tone check, humanise, exec |
 | 03 | [incident](clusters/03-incident/) | public | Evidence collection, incident docs, risk action plans |
-| 04 | [security](clusters/04-security/) | public | iOS signing risk analysis |
-| 05 | [technical](clusters/05-technical/) | public | Test bootstrapping |
+| 05 | [technical](clusters/05-technical/) | public | Codebase and UI reviews |
 | 06 | study | **private** | Burst study sessions, material triage, YouTube curation |
 | 07 | [devops](clusters/07-devops/) | public | CI templates, repo publication, history wiping, secrets |
 | 08 | offsec | **private** | Shellcode, BOFs, process injection, EDR, C2 |

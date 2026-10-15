@@ -244,14 +244,9 @@ and `review-ios-signing`. Change them in this table before RA-15 runs if unwante
 
 ## Action roadmap
 
-The 23 work items (RA-01 to RA-23) are executable task briefs in
-[`docs/tasks/discoverability/`](docs/tasks/discoverability/), one file per item, in the
-`task-decomposer` format. Each brief is written for an agent with no context, and gives
-the model tier, fallback, dependencies, files touched, exact steps, and verification
-commands. A master agent starts at
-[`00-runbook.md`](docs/tasks/discoverability/00-runbook.md), which sets dispatch waves,
-the prompt template, verification, escalation, and integration order. `ROADMAP.md` tracks
-completion.
+The work items (RA-01 to RA-29) were executable task briefs under `docs/tasks/discoverability/`,
+removed on 2026-10-16 after completion and kept in git history. The dispatch protocol
+lives on in `plan-decompose` ("Dispatching to agents"). `ROADMAP.md` lists what remains.
 
 ---
 

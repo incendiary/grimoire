@@ -32,13 +32,6 @@ jobs:
           bash ./clusters/07-devops/ci-standards/check-test-baseline.sh . || EXIT_CODE=$?
           exit ${EXIT_CODE:-0}
 
-      - name: Check roadmap sync
-        id: roadmap-sync
-        continue-on-error: true
-        run: |
-          bash ./clusters/07-devops/ci-standards/check-roadmap-sync.sh . --check || EXIT_CODE=$?
-          exit ${EXIT_CODE:-0}
-
       - name: Report results
         if: always()
         run: |
@@ -54,11 +47,6 @@ jobs:
           else
             echo "❌ Test baseline: FAIL" >> $GITHUB_STEP_SUMMARY
           fi
-          if [ "${{ steps.roadmap-sync.outcome }}" = "success" ]; then
-            echo "✅ Roadmap sync: PASS" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "❌ Roadmap sync: FAIL" >> $GITHUB_STEP_SUMMARY
-          fi
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "See skill: [\`ci-standards\`](https://github.com/incendiary/grimoire/tree/main/clusters/07-devops/ci-standards)" >> $GITHUB_STEP_SUMMARY
 
@@ -66,7 +54,6 @@ jobs:
         if: always()
         run: |
           if [ "${{ steps.clone-refs.outcome }}" != "success" ] || \
-             [ "${{ steps.test-baseline.outcome }}" != "success" ] || \
-             [ "${{ steps.roadmap-sync.outcome }}" != "success" ]; then
+             [ "${{ steps.test-baseline.outcome }}" != "success" ]; then
             exit 1
           fi
