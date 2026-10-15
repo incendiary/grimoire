@@ -1,6 +1,6 @@
 # Task RA-18: Report old skill names used outside this repo (read-only)
 
-> Status: pending
+> Status: done
 > Parent: discoverability and consolidation programme
 > Model: haiku
 > Fallback: sonnet
