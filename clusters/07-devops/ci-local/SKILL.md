@@ -1,6 +1,6 @@
 ---
 name: ci-local
-description: "Runs this repo's GitHub Actions workflow steps locally before pushing, auto-fixes Black/Ruff when tool versions match CI, and installs pre-commit (fast, informational) or pre-push (full, blocking) hooks. Use when asked to 'run CI locally', 'test before pushing', 'preview what CI will do', or 'gate my pushes on CI'. For a quick Python lint only use py-lint."
+description: "Runs this repo's GitHub Actions workflow steps locally before pushing, auto-fixes Black/Ruff and prettier/eslint when tool versions match CI, and installs pre-commit (fast, informational) or pre-push (full, blocking) hooks. Use when asked to 'run CI locally', 'test before pushing', 'preview what CI will do', or 'gate my pushes on CI'. For a quick Python lint only use py-lint."
 ---
 # ci-local
 
@@ -134,8 +134,9 @@ Manual attention needed: 1 job(s)
 
 ## Limitations
 
-- **No auto-fix beyond black/ruff.** Other failures are reported only; fix manually.
-- **Version parity is only verified for black/ruff.** Other tools (pytest, mypy, eslint, etc.) run with whatever's on PATH/in the venv; the tool doesn't check their versions against CI. It never *writes* with them, so this is a reporting-accuracy caveat, not a corruption risk.
+- **Auto-fix covers black/ruff and prettier/eslint only.** Other failures are reported only; fix manually.
+- **prettier/eslint fix only when CI runs `npm ci`** (so `package-lock.json` is CI's pin) and the job's local `node_modules` has the same version. The fix re-runs the step's own command in write mode (`--fix`, or prettier `--check` → `--write`), including through a one-line `npm run <script>`; a multi-command step or script is report-only. Not shown in the toolchain table, since `node_modules` only exists after the job's `npm ci` step runs.
+- **Version parity is only verified for black/ruff and prettier/eslint.** Other tools (pytest, mypy, etc.) run with whatever's on PATH/in the venv; the tool doesn't check their versions against CI. It never *writes* with them, so this is a reporting-accuracy caveat, not a corruption risk.
 - **Pin detection covers** inline `pip install X==Y`, `-r` requirements and `-c` constraints files, `poetry.lock` when CI runs `poetry install`, `uv.lock` when CI runs `uv sync`, and exact `==` pins in `pyproject.toml` when CI installs the project. Ranges (`^`, `~=`, `>=`) and versions baked into a container image read as "CI unpinned" → report-only, and `--sync` cannot help there.
 - **Without a venv and without `--sync`, `pip install` steps run against your ambient Python** (they're real CI commands, so they execute) — which can touch your user/global site-packages. Use a project `venv`/`.venv`, or `--sync` (isolated ephemeral env), to keep installs contained.
 - **CI-only steps are skipped, not simulated.** Anything gated on GitHub context, secrets, or OS package installs won't be verified locally; check those in CI.
