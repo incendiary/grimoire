@@ -354,7 +354,7 @@ discover_jobs() {
     local tmpfile="$1"
     local wf_filter="$2"
     python3 - "$tmpfile" "$wf_filter" <<'PYEOF'
-import base64, glob, os, re, shlex, sys
+import base64, glob, json, os, re, shlex, sys
 
 try:
     import yaml
@@ -413,6 +413,16 @@ def read_file(rel, wd):
     return ''
 
 def extract_pins(cmd, wd, pins):
+    # `npm ci` installs package-lock.json exactly, so its versions are CI's pins.
+    if re.search(r'\bnpm\s+ci\b', cmd):
+        try:
+            pkgs = json.loads(read_file('package-lock.json', wd)).get('packages', {})
+        except ValueError:
+            pkgs = {}
+        for tool in ('prettier', 'eslint'):
+            ver = pkgs.get('node_modules/' + tool, {}).get('version')
+            if ver:
+                pins.setdefault(tool, ver)
     if 'install' not in cmd and 'sync' not in cmd:
         return
     if not re.search(r'\b(pip|uv|poetry)\b', cmd):
@@ -490,7 +500,7 @@ attempt_fix() {
     local job_name="$1" command="$2" tool=""
     [[ "$command" == *black* ]] && tool="black"
     [[ "$command" == *ruff*  ]] && tool="ruff"
-    [[ -z "$tool" ]] && return 1   # nothing we know how to fix
+    [[ -z "$tool" ]] && { attempt_js_fix "$job_name" "$command"; return; }
 
     if ! tool_can_autofix "$tool"; then
         echo -e "  ${YELLOW}Auto-fix skipped ($tool): version not verified against CI's pin — report-only.${NC}"
@@ -514,6 +524,52 @@ attempt_fix() {
             PASSED_JOBS+=("$job_name")
             return 0
         fi
+    fi
+    return 1
+}
+
+# prettier/eslint. CI's version is package-lock.json's (read at `npm ci`); the
+# local one is what this job's own `npm ci` step just put in node_modules. Fix by
+# re-running the step's own command in write mode, so scope matches CI exactly.
+attempt_js_fix() {
+    local job_name="$1" command="$2" cd_line="" body tool="" pin lv fix
+    body="$command"
+    if [[ "$command" == "cd "* ]]; then
+        cd_line="${command%%$'\n'*}"
+        body="${command#*$'\n'}"
+    fi
+    if [[ "$body" =~ ^npm\ run\ ([A-Za-z0-9:_-]+)$ ]]; then
+        body=$(eval "$cd_line"; node -p "require('./package.json').scripts['${BASH_REMATCH[1]}'] || ''" 2>/dev/null)
+    fi
+    [[ "$body" == *prettier* ]] && tool="prettier"
+    [[ "$body" == *eslint* ]] && tool="eslint"
+    [[ -z "$tool" ]] && return 1
+    # Only a single plain command can be safely turned into its fix form.
+    if [[ "$body" == *$'\n'* || "$body" =~ [\;\|\&] ]]; then
+        echo -e "  ${YELLOW}Auto-fix skipped ($tool): step is not a single command.${NC}"
+        return 1
+    fi
+
+    pin=$(pin_for_tool "$tool")
+    lv=$(eval "$cd_line"; node -p "require('./node_modules/$tool/package.json').version" 2>/dev/null)
+    if [[ -z "$pin" || "$lv" != "$pin" ]]; then
+        echo -e "  ${YELLOW}Auto-fix skipped ($tool): local ${lv:-not installed} vs CI lockfile ${pin:-unpinned} (needs npm ci in CI) — report-only.${NC}"
+        return 1
+    fi
+
+    if [[ "$tool" == "eslint" ]]; then
+        fix="$body --fix"
+    else
+        fix=$(echo "$body" | sed -E 's/(^|[[:space:]])(--check|-c|--list-different|-l)([[:space:]]|$)/\1--write\3/')
+        [[ "$fix" == "$body" ]] && return 1
+    fi
+    echo "  Attempting auto-fix with $tool $lv (CI-matched): $fix"
+    if (eval "$cd_line"; PATH="$PWD/node_modules/.bin:$PATH"; eval "$fix") >/dev/null 2>&1 \
+        && eval "$command" >/dev/null 2>&1; then
+        echo -e "  ${GREEN}✓ $tool auto-fixed files${NC}"
+        FIXED_JOBS+=("$job_name ($tool)")
+        PASSED_JOBS+=("$job_name")
+        return 0
     fi
     return 1
 }

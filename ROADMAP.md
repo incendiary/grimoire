@@ -8,10 +8,6 @@ this file only when the owner asks for them.
 - [ ] **RA-23: evidence-based prune** of skills with no use, once both machines have 60 days
   of transcripts (from 2026-10-08). Brief: [docs/tasks/ra-23-usage-prune.md](docs/tasks/ra-23-usage-prune.md).
   Interim snapshot in [docs/ponytail-review-2026-10-16.md](docs/ponytail-review-2026-10-16.md).
-- [ ] **ci-local:** auto-fix for prettier and eslint (JS/TS projects).
-- [ ] **ci-local:** job dependency graph (`needs:`) and matrix expansion awareness.
-- [ ] **ci-local:** cache discovered jobs to skip re-parsing on each run.
-- [ ] **tf-guardrails:** known-good version matrix for frequently used module combinations.
 
 ## Completed programmes
 
