@@ -12,11 +12,6 @@ This project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 Release automation migrated to `release-please`; retired the manual VERSION-bump/tag
 workflow.
 
-### Added
-
-- `ci-standards`: `check-clone-refs.sh` now fails when a workflow `uses:` line is not
-  pinned to a 40-character commit SHA (local and `docker://` actions exempt).
-
 ### Removed
 
 - Per-skill `README.md` files (3,131 lines duplicating `SKILL.md`), cluster READMEs, `docs/skill-readme-template.md`, the roadmap collection tooling (`roadmap-collect.sh`, `check-roadmap-sync.sh`, its pre-commit hook and CI step), finished discoverability task briefs, and speculative roadmap items in `SKILL.md` files. `ROADMAP.md` now lists open work directly; `SKILLS.md` is the index.
@@ -32,6 +27,8 @@ workflow.
 
 ### Added
 
+- `ci-standards`: `check-clone-refs.sh` now fails when a workflow `uses:` line is not
+  pinned to a 40-character commit SHA (local and `docker://` actions exempt).
 - `ci-local` detects CI tool pins from `-c` constraints files, `poetry.lock` (`poetry install`), `uv.lock` (`uv sync`), and exact `==` pins in `pyproject.toml`, so auto-fix and `--sync` work in Poetry and uv projects.
 - `docs/ponytail-review-2026-10-16.md`: post-programme debt ledger (clean) and audit; RA-23 interim usage snapshot.
 - `plan-decompose`: "Dispatching to agents" section (brief fields, model tier, worktrees, verify-not-trust, escalation, serial integration), generalised from the discoverability programme.
