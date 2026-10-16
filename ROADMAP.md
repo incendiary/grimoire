@@ -12,7 +12,6 @@ this file only when the owner asks for them.
 - [ ] **ci-local:** pin detection for `pyproject.toml`, `poetry.lock`, and constraints files.
 - [ ] **ci-local:** job dependency graph (`needs:`) and matrix expansion awareness.
 - [ ] **ci-local:** cache discovered jobs to skip re-parsing on each run.
-- [ ] **ci-standards:** check that GitHub Actions in workflow files are pinned to commit SHAs.
 - [ ] **tf-guardrails:** known-good version matrix for frequently used module combinations.
 - [ ] **plan-decompose:** for code tasks, use Serena's symbol overview to choose chunk
   boundaries (per class or module, not line counts). Python, TypeScript, and C# first.

@@ -8,6 +8,7 @@ REPO_ROOT="${1:-.}"
 cd "$REPO_ROOT"
 
 COUNT=0
+FAIL=
 
 # Patterns that indicate unpinned references
 PATTERNS='@main\|@master\|@latest'
@@ -58,9 +59,28 @@ EOF
     echo ""
     echo "$FILTERED"
     echo "$COUNT violation(s). Pin to specific versions (@vX.Y.Z or @sha)."
-    exit 1
+    FAIL=1
   fi
 fi
 
-echo "✓ All references are pinned. No @main/@master/@latest found."
+[ -z "$FAIL" ] && echo "✓ All references are pinned. No @main/@master/@latest found."
+
+# Actions must be pinned to a full commit SHA; tags can be moved. Local (./) and
+# docker:// actions are exempt.
+if [ -d .github/workflows ]; then
+  UNPINNED=$(grep -rnE '^[[:space:]-]*uses:[[:space:]]' .github/workflows 2>/dev/null \
+    | grep -vE 'uses:[[:space:]]*["'"'"']?(\./|docker://)' \
+    | grep -vE '@[0-9a-f]{40}([[:space:]"'"'"']|$)' || true)
+  if [ -n "$UNPINNED" ]; then
+    echo ""
+    echo "✗ Actions not pinned to a commit SHA:"
+    echo "$UNPINNED"
+    echo "Pin as owner/action@<40-char sha> # vX.Y.Z"
+    FAIL=1
+  else
+    echo "✓ All workflow actions are pinned to commit SHAs."
+  fi
+fi
+
+[ -z "$FAIL" ] || exit 1
 exit 0
