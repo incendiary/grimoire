@@ -9,7 +9,6 @@ this file only when the owner asks for them.
   of transcripts (from 2026-10-08). Brief: [docs/tasks/ra-23-usage-prune.md](docs/tasks/ra-23-usage-prune.md).
   Interim snapshot in [docs/ponytail-review-2026-10-16.md](docs/ponytail-review-2026-10-16.md).
 - [ ] **ci-local:** auto-fix for prettier and eslint (JS/TS projects).
-- [ ] **ci-local:** pin detection for `pyproject.toml`, `poetry.lock`, and constraints files.
 - [ ] **ci-local:** job dependency graph (`needs:`) and matrix expansion awareness.
 - [ ] **ci-local:** cache discovered jobs to skip re-parsing on each run.
 - [ ] **ci-standards:** check that GitHub Actions in workflow files are pinned to commit SHAs.
