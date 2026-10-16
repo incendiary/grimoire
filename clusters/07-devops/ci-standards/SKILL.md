@@ -101,7 +101,7 @@ test_clone_refs_pinned() {
 | Rule | Detail |
 |------|--------|
 | No `@main` or `@master` in docs | Every ref must be `@vX.Y.Z` or a commit SHA |
-| GitHub Actions refs pinned | `uses: owner/action@vX.Y.Z` not `@main` |
+| GitHub Actions refs pinned to SHA | `uses: owner/action@<40-char sha> # vX.Y.Z`; tags can be moved (local `./` and `docker://` exempt) |
 | Install commands versioned | `pip install pkg==X.Y.Z`, `npm install pkg@X.Y.Z` |
 | Cross-check against VERSION | Pinned version must match current release |
 
@@ -198,7 +198,7 @@ All scripts are portable POSIX-compatible shell, runnable in any repo:
 | Script | What it checks | Exit code |
 |--------|---------------|-----------|
 | `check-version-sync.sh` | VERSION == git tag == GH release | 0 = synced, 1 = drift |
-| `check-clone-refs.sh` | No `@main`/`@master` in docs | 0 = clean, 1 = violations |
+| `check-clone-refs.sh` | No `@main`/`@master` in docs; workflow `uses:` pinned to a commit SHA | 0 = clean, 1 = violations |
 | `check-test-baseline.sh` | CI exists, baseline tests present | 0 = compliant, 1 = gaps |
 
 Run all three for a full audit:
@@ -254,8 +254,8 @@ the user says "add this to my devops practices", or an existing practice needs r
 Examples:
 
 - "Update CHANGELOG before release" fits Versioning; rules only (enforcement deferred).
-- "GitHub Actions should pin to SHA" fits Clone-ref pinning; enforceable, so extend
-  `check-clone-refs.sh` to check `uses:` lines in workflow files.
+- "GitHub Actions should pin to SHA" fits Clone-ref pinning; enforceable, so it was added
+  to `check-clone-refs.sh`.
 - "Documentation freshness" fits no category: add a new H3 section with rules, enforcement
   notes, and related skills, and update the README category list.
 
