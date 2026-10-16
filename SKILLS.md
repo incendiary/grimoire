@@ -14,6 +14,7 @@
 | `plan-verify` | instructional | Layer 2 of the Karpathy framework. Evaluates finished output against precise criteria by routing it through a second opinion and checking claims against external signal. Use when output exists and needs a quality check, factual claims can be tested, or before shipping, publishing, submitting, or deploying anything. Use after output exists; to define criteria first use plan-spec. |
 | `review-skill` | instructional | Runs a due diligence checklist before installing any third-party Claude Code skill and returns a verdict. Use when asked to 'install this skill', 'add this skill', given a GitHub URL to a skill repo, or shown a SKILL.md from an external source. To create skills from your own sessions use grimoire-extract. |
 | `roadmap` | action | Shows roadmap status and picks the next implementation-ready item from ROADMAP.md or README roadmaps, then frames the execution chain (state, decompose, plan, verify). Use when asked 'what should I work on next', 'show roadmap status', 'what is still open', or 'pick up from the roadmap'. To tick items after a merge use roadmap-sync. |
+| `roadmap-plan` | instructional | Turns a codebase review, ponytail audit, or other findings into a ROADMAP.md that cheaper agents can execute cold: every item carries tier, dependencies, files, context, steps, verification with a negative check, a do-not list, done-when, and a conventional PR title, enforced by a completeness check. Use when asked to 'write a roadmap from this review', 'plan the fixes for agents', or 'turn these findings into work items'. To pick the next item use roadmap; to tick items after a merge use roadmap-sync. |
 
 ## 02-comms
 
@@ -59,4 +60,4 @@
 | `roadmap-sync` | action | Updates a repo README roadmap after a PR merges, an issue closes, or a release ships, ticking completed items and removing stale ones; it never adds items. Use when a PR has been merged, an issue closed, or a version released, or asked to 'update the roadmap', 'mark this as done in the README', or 'sync the roadmap'. To choose what to work on next use roadmap. |
 | `tf-guardrails` | instructional | Prevents common Terraform failures: provider version conflicts when adding or upgrading modules, AWS provider block-versus-attribute syntax errors, and checkov skip comments placed where checkov ignores them. Use when writing or reviewing Terraform, when 'terraform init' or 'validate' fails on constraints, or when checkov skips are not taking effect. |
 
-Total: 32 skills
+Total: 33 skills
