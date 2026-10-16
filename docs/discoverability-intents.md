@@ -12,6 +12,7 @@ invokes the expected skill. Map old names through scripts/renamed-skills.txt.
 | My context is nearly full, write me something I can resume from in a new session. | task-handoff |
 | What should I work on next from the roadmap? | roadmap-driver |
 | That PR just merged, tick off the roadmap items it finished. | roadmap-sync |
+| Turn this review into a roadmap cheaper agents can execute without asking me anything. | roadmap-plan |
 | Is the grimoire roadmap up to date, and what's outstanding in it? | grimoire-roadmap-status |
 | Run the GitHub Actions checks on my laptop before I push. | local-ci |
 | Quick check that my Python passes Black and Ruff, nothing else. | python-lint-gate |

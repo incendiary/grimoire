@@ -27,6 +27,9 @@ workflow.
 
 ### Added
 
+- `roadmap-plan`: writes a `ROADMAP.md` from a review or audit to a nine-field item standard
+  (tier, dependencies, files, context, steps, verify with a negative check, do-not, done-when,
+  PR title) so cheaper agents can execute items cold; `check-items.py` enforces completeness.
 - `ci-local` auto-fixes prettier and eslint failures when CI runs `npm ci` and the local
   `node_modules` version matches `package-lock.json`, by re-running the step's command in
   write mode (also through a one-line `npm run <script>`).
