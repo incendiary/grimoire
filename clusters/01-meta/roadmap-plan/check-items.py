@@ -42,6 +42,8 @@ def gaps(rest):
     order = [f for _, f in sorted(found)]
     if order != [f for f in FIELDS if f in order]:
         out.append("fields out of order")
+    # ponytail: keyword match, so an unrelated "break" or "revert" passes; a
+    # labelled sub-field ("Negative check:") if false passes show up in practice.
     if "Verify" in order and not re.search(r"(?i)negative|break|revert|should fail|must fail",
                                            rest.split("**Verify:**", 1)[1].split("**Do not:**", 1)[0]):
         out.append("Verify has no negative check")
@@ -49,8 +51,9 @@ def gaps(rest):
 
 
 def check(text):
-    report = [(t, g) for t, r in items(text) for g in [gaps(r)] if g]
-    return report, sum(1 for _ in items(text))
+    its = list(items(text))
+    report = [(t, g) for t, r in its for g in [gaps(r)] if g]
+    return report, len(its)
 
 
 def self_test():
