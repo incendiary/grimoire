@@ -32,6 +32,7 @@ workflow.
 
 ### Added
 
+- `ci-local` detects CI tool pins from `-c` constraints files, `poetry.lock` (`poetry install`), `uv.lock` (`uv sync`), and exact `==` pins in `pyproject.toml`, so auto-fix and `--sync` work in Poetry and uv projects.
 - `docs/ponytail-review-2026-10-16.md`: post-programme debt ledger (clean) and audit; RA-23 interim usage snapshot.
 - `plan-decompose`: "Dispatching to agents" section (brief fields, model tier, worktrees, verify-not-trust, escalation, serial integration), generalised from the discoverability programme.
 - `orient/toolchain-check.sh`: read-only check for bash 4 builtins, Node vs `engines`/`.nvmrc`, PyYAML for `ci-local`, and broken pyenv shims.

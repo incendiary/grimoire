@@ -394,30 +394,50 @@ def b64(s):
     return base64.b64encode(s.encode()).decode()
 
 # Parse CI's pinned tool versions — the authoritative versions we must match
-# before we're allowed to auto-fix. Sources: inline `pip install X==Y` in a
-# run step, and requirements files it references via `-r <file>`.
+# before we're allowed to auto-fix. Sources: inline `pip install X==Y`,
+# requirements and constraints files (`-r` / `-c`), `poetry.lock` when CI runs
+# `poetry install`, `uv.lock` when CI runs `uv sync`, and exact `==` pins in
+# `pyproject.toml` when CI installs the project itself. Regex, not tomllib, so
+# this runs on Python 3.9.
 PIN_RE = re.compile(r'([A-Za-z0-9_.\-]+)==([0-9][A-Za-z0-9_.\-]*)')
+LOCK_RE = re.compile(r'\[\[package\]\]\s*\nname\s*=\s*"([^"]+)"\s*\nversion\s*=\s*"([^"]+)"')
+POETRY_EXACT_RE = re.compile(r'^\s*([A-Za-z0-9_.\-]+)\s*=\s*"(?:==)?([0-9][A-Za-z0-9_.\-]*)"\s*$', re.M)
+
+def read_file(rel, wd):
+    for cand in ([os.path.join(wd, rel)] if wd else []) + [rel]:
+        try:
+            with open(cand) as rf:
+                return rf.read()
+        except OSError:
+            continue
+    return ''
 
 def extract_pins(cmd, wd, pins):
-    if 'install' not in cmd:
+    if 'install' not in cmd and 'sync' not in cmd:
         return
-    if 'pip' not in cmd and 'uv' not in cmd:
+    if not re.search(r'\b(pip|uv|poetry)\b', cmd):
         return
     for m in PIN_RE.finditer(cmd):
         pins.setdefault(m.group(1).lower(), m.group(2))
-    for m in re.finditer(r'-r\s+(\S+)', cmd):
-        rel = m.group(1)
-        for cand in ([os.path.join(wd, rel)] if wd else []) + [rel]:
-            try:
-                with open(cand) as rf:
-                    for line in rf:
-                        line = line.split('#', 1)[0].strip()
-                        rm = PIN_RE.match(line)
-                        if rm:
-                            pins.setdefault(rm.group(1).lower(), rm.group(2))
-                break
-            except OSError:
-                continue
+    for m in re.finditer(r'-[rc]\s+(\S+)', cmd):
+        for line in read_file(m.group(1), wd).splitlines():
+            rm = PIN_RE.match(line.split('#', 1)[0].strip())
+            if rm:
+                pins.setdefault(rm.group(1).lower(), rm.group(2))
+    lock = ('poetry.lock' if re.search(r'\bpoetry\s+install\b', cmd)
+            else 'uv.lock' if re.search(r'\buv\s+sync\b', cmd) else None)
+    if lock:
+        for name, ver in LOCK_RE.findall(read_file(lock, wd)):
+            pins.setdefault(name.lower(), ver)
+    if lock or re.search(r'install\s.*(?<![\w/])\.(\[[^\]]*\])?(\s|$)', cmd):
+        text = read_file('pyproject.toml', wd)
+        for m in re.finditer(r'"([^"]+)"', text):
+            pm = PIN_RE.fullmatch(m.group(1).replace(' ', ''))
+            if pm:
+                pins.setdefault(pm.group(1).lower(), pm.group(2))
+        for name, ver in POETRY_EXACT_RE.findall(text):
+            if name not in ('version', 'python'):
+                pins.setdefault(name.lower(), ver)
 
 files = sorted(set(glob.glob('.github/workflows/*.yml') +
                    glob.glob('.github/workflows/*.yaml')))
