@@ -27,6 +27,8 @@ workflow.
 
 ### Added
 
+- `plan-decompose`: code tasks are chunked on symbol boundaries (Serena `get_symbols_overview`),
+  with cross-chunk callers found by `find_referencing_symbols`.
 - `ci-standards`: `check-clone-refs.sh` now fails when a workflow `uses:` line is not
   pinned to a 40-character commit SHA (local and `docker://` actions exempt).
 - `ci-local` detects CI tool pins from `-c` constraints files, `poetry.lock` (`poetry install`), `uv.lock` (`uv sync`), and exact `==` pins in `pyproject.toml`, so auto-fix and `--sync` work in Poetry and uv projects.
