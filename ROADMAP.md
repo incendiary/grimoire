@@ -8,8 +8,6 @@ this file only when the owner asks for them.
 - [ ] **RA-23: evidence-based prune** of skills with no use, once both machines have 60 days
   of transcripts (from 2026-10-08). Brief: [docs/tasks/ra-23-usage-prune.md](docs/tasks/ra-23-usage-prune.md).
   Interim snapshot in [docs/ponytail-review-2026-10-16.md](docs/ponytail-review-2026-10-16.md).
-- [ ] **plan-decompose:** for code tasks, use Serena's symbol overview to choose chunk
-  boundaries (per class or module, not line counts). Python, TypeScript, and C# first.
 
 ## Completed programmes
 

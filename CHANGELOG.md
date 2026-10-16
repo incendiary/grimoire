@@ -30,6 +30,8 @@ workflow.
 - `ci-local` auto-fixes prettier and eslint failures when CI runs `npm ci` and the local
   `node_modules` version matches `package-lock.json`, by re-running the step's command in
   write mode (also through a one-line `npm run <script>`).
+- `plan-decompose`: code tasks are chunked on symbol boundaries (Serena `get_symbols_overview`),
+  with cross-chunk callers found by `find_referencing_symbols`.
 - `ci-standards`: `check-clone-refs.sh` now fails when a workflow `uses:` line is not
   pinned to a 40-character commit SHA (local and `docker://` actions exempt).
 - `ci-local` detects CI tool pins from `-c` constraints files, `poetry.lock` (`poetry install`), `uv.lock` (`uv sync`), and exact `==` pins in `pyproject.toml`, so auto-fix and `--sync` work in Poetry and uv projects.

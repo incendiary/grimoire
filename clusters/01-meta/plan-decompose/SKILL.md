@@ -66,6 +66,13 @@ Good chunks are:
 
 Aim for 3–8 chunks. If you need more, consider a two-level decomposition (phases → chunks).
 
+**Code tasks: cut on symbols, not line counts.** If Serena is available, run
+`get_symbols_overview` on the files in scope and draw boundaries per class or module.
+Before finalising, run `find_referencing_symbols` on anything a chunk changes: callers in
+another chunk's files are coupling, so either move them into the same chunk or make the
+changed signature that chunk's stated output. Without Serena, use the same rule by reading
+the files.
+
 ### Step 3 — Write task files
 
 For each chunk, write a file to the output directory:
